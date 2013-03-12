@@ -350,17 +350,23 @@ function bapi_option_update($old,$new){
 		//print_r($mymenu);exit();
 		//print($menuID);exit();
 		$defpages = array();
-		$defpages[] = array("Title"=>"Home", "URL"=>"", "IntID"=>"bapi_home", "Parent"=>'', "Order" => 1, "Template" => 'page-templates/front-page.php', "Content" => '/default-content/homepage-content.php');
-		$defpages[] = array("Title"=>"Search", "URL"=>"RentalSearch", "IntID"=>"bapi_search", "Parent"=>'', "Order" => 2, "Template" => 'page-templates/search-page.php', "Content" => '');
-		$defpages[] = array("Title"=>"All Rentals", "URL"=>"RentalGrid", "IntID"=>"bapi_property_grid", "Parent"=>'Search', "Order" => 1, "Template" => 'page-templates/full-width.php', "Content" => '');
-		$defpages[] = array("Title"=>"Property Finders", "URL"=>"PropertyFinders", "IntID"=>"bapi_property_finders", "Parent"=>'Search', "Order" => 2, "Template" => 'page-templates/content-page.php', "Content" => '');
-		$defpages[] = array("Title"=>"Specials", "URL"=>"Specials", "IntID"=>"bapi_specials", "Parent"=>'Search', "Order" => 3, "Template" => 'page-templates/search-page.php', "Content" => '');
-		$defpages[] = array("Title"=>"Developments", "URL"=>"Developments", "IntID"=>"bapi_developments", "Parent"=>'Search', "Order" => 4, "Template" => 'page-templates/search-page.php', "Content" => '');
-		$defpages[] = array("Title"=>"Attractions", "URL"=>"Attractions", "IntID"=>"bapi_attractions", "Parent"=>'', "Order" => 3, "Template" => 'page-templates/search-page.php', "Content" => '');
-		$defpages[] = array("Title"=>"Services", "URL"=>"Services", "IntID"=>"bapi_services", "Parent"=>'', "Order" => 4, "Template" => 'page-templates/content-page.php', "Content" => '/default-content/ourservices-content.php');
-		$defpages[] = array("Title"=>"About Us", "URL"=>"AboutUs", "IntID"=>"bapi_about_us", "Parent"=>'', "Order" => 5, "Template" => 'page-templates/content-page.php', "Content" => '/default-content/aboutus-content.php');
-		$defpages[] = array("Title"=>"Blog", "URL"=>"Blog", "IntID"=>"bapi_blog", "Parent"=>'About Us', "Order" => 1, "Template" => 'page-templates/content-page.php', "Content" => '');
-		$defpages[] = array("Title"=>"Contact Us", "URL"=>"Contact", "IntID"=>"bapi_contact", "Parent"=>'', "Order" => 6, "Template" => 'page-templates/content-page.php', "Content" => '/default-content/contactus-content.php');
+		$defpages[] = array("Title"=>"Home", "URL"=>"", "IntID"=>"bapi_home", "Parent"=>'', "Order" => 1, "Template" => 'page-templates/front-page.php', "Content" => '/default-content/homepage-content.php', "AddToMenu"=>true);
+		$defpages[] = array("Title"=>"Search", "URL"=>"RentalSearch", "IntID"=>"bapi_search", "Parent"=>'', "Order" => 2, "Template" => 'page-templates/search-page.php', "Content" => '', "AddToMenu"=>true);
+		$defpages[] = array("Title"=>"All Rentals", "URL"=>"RentalGrid", "IntID"=>"bapi_property_grid", "Parent"=>'Search', "Order" => 1, "Template" => 'page-templates/full-width.php', "Content" => '', "AddToMenu"=>true);
+		$defpages[] = array("Title"=>"Property Finders", "URL"=>"PropertyFinders", "IntID"=>"bapi_property_finders", "Parent"=>'Search', "Order" => 2, "Template" => 'page-templates/content-page.php', "Content" => '', "AddToMenu"=>true);
+		$defpages[] = array("Title"=>"Specials", "URL"=>"Specials", "IntID"=>"bapi_specials", "Parent"=>'Search', "Order" => 3, "Template" => 'page-templates/search-page.php', "Content" => '', "AddToMenu"=>true);
+		$defpages[] = array("Title"=>"Developments", "URL"=>"Developments", "IntID"=>"bapi_developments", "Parent"=>'Search', "Order" => 4, "Template" => 'page-templates/search-page.php', "Content" => '', "AddToMenu"=>true);
+		$defpages[] = array("Title"=>"Attractions", "URL"=>"Attractions", "IntID"=>"bapi_attractions", "Parent"=>'', "Order" => 3, "Template" => 'page-templates/search-page.php', "Content" => '', "AddToMenu"=>true);
+		$defpages[] = array("Title"=>"Services", "URL"=>"Services", "IntID"=>"bapi_services", "Parent"=>'', "Order" => 4, "Template" => 'page-templates/content-page.php', "Content" => '/default-content/ourservices-content.php', "AddToMenu"=>true);
+		$defpages[] = array("Title"=>"About Us", "URL"=>"AboutUs", "IntID"=>"bapi_about_us", "Parent"=>'', "Order" => 5, "Template" => 'page-templates/content-page.php', "Content" => '/default-content/aboutus-content.php', "AddToMenu"=>true);
+		$defpages[] = array("Title"=>"Blog", "URL"=>"Blog", "IntID"=>"bapi_blog", "Parent"=>'About Us', "Order" => 1, "Template" => 'page-templates/content-page.php', "Content" => '', "AddToMenu"=>true);
+		$defpages[] = array("Title"=>"Contact Us", "URL"=>"Contact", "IntID"=>"bapi_contact", "Parent"=>'', "Order" => 6, "Template" => 'page-templates/content-page.php', "Content" => '/default-content/contactus-content.php', "AddToMenu"=>true);
+		$defpages[] = array("Title"=>"Booking Details", "URL"=>"BookingDetails", "IntID"=>"bapi_booking_detail", "Parent"=>'', "Order" => 7, "Template" => 'page-templates/full-width.php', "Content" => '/default-content/booking-detail-content.php', "AddToMenu"=>false);
+		$defpages[] = array("Title"=>"Make a Payment", "URL"=>"BookingPayment", "IntID"=>"bapi_booking_payment", "Parent"=>'', "Order" => 8, "Template" => 'page-templates/full-width.php', "Content" => '/default-content/booking-payment-content.php', "AddToMenu"=>false);
+		$defpages[] = array("Title"=>"Booking Confirmation", "URL"=>"BookingConfirmation", "IntID"=>"bapi_booking_confirm", "Parent"=>'', "Order" => 9, "Template" => 'page-templates/full-width.php', "Content" => '/default-content/booking-confirmation-content.php', "AddToMenu"=>false);
+		$defpages[] = array("Title"=>"Rental Policy", "URL"=>"RentalPolicy", "IntID"=>"bapi_booking_terms", "Parent"=>'', "Order" => 10, "Template" => 'page-templates/content-page.php', "Content" => '/default-content/rental-policy-content.php', "AddToMenu"=>false);
+		$defpages[] = array("Title"=>"Privacy Policy", "URL"=>"PrivacyPolicy", "IntID"=>"bapi_site_privacy", "Parent"=>'', "Order" => 11, "Template" => 'page-templates/content-page.php', "Content" => '/default-content/privacy-policy-content.php', "AddToMenu"=>false);
+		$defpages[] = array("Title"=>"Terms of Use", "URL"=>"TermsOfUse", "IntID"=>"bapi_site_terms", "Parent"=>'', "Order" => 12, "Template" => 'page-templates/content-page.php', "Content" => '/default-content/tos-content.php', "AddToMenu"=>false);
 		//$defpages[] = array("Title"=>"Owner Login", "URL"=>"/Owners", "IntID"=>"bapi_owners", "Parent"=>''); //TO be added to footer menu only
 		//print_r($defpages);
 		//exit();
@@ -382,7 +388,7 @@ function bapi_option_update($old,$new){
 				$post['post_parent'] = 0;
 				$post['comment_status'] = 'closed';
 				if($page['Content']!=''){
-					$c = file_get_contents('https://connect.bookt.biz/js/bapi.context?apikey='.$apiKey);
+					$c = file_get_contents('https://'.BAPI_API_LOCATION.'/js/bapi.context?apikey='.$apiKey);
 					$data = json_decode($c,TRUE);
 					$t = file_get_contents(plugins_url($page['Content'], __FILE__));
 					$m = new Mustache_Engine();
@@ -397,14 +403,16 @@ function bapi_option_update($old,$new){
 				$pid = wp_insert_post($post);
 				add_post_meta($pid, 'bapi_page_id', $page['IntID'], true);
 				add_post_meta($pid, '_wp_page_template', $page['Template'], true);
-				$miid = wp_update_nav_menu_item($menu_id, 0, array('menu-item-title' => $page['Title'],
-                                           'menu-item-object' => 'page',
-                                           'menu-item-object-id' => $pid,
-                                           'menu-item-type' => 'post_type',
-                                           'menu-item-status' => 'publish',
-										   'menu-item-parent-id' => $navmap[$post['post_parent']],
-										   'menu-item-position' => $page['Order']));
-				$navmap[$pid] = $miid;
+				if($page['AddToMenu']){
+					$miid = wp_update_nav_menu_item($menu_id, 0, array('menu-item-title' => $page['Title'],
+											   'menu-item-object' => 'page',
+											   'menu-item-object-id' => $pid,
+											   'menu-item-type' => 'post_type',
+											   'menu-item-status' => 'publish',
+											   'menu-item-parent-id' => $navmap[$post['post_parent']],
+											   'menu-item-position' => $page['Order']));
+					$navmap[$pid] = $miid;
+				}
 				if($page['Title']=='Home'){
 					update_option( 'page_on_front', $pid);
 					update_option( 'show_on_front', 'page');
@@ -422,15 +430,18 @@ function bapi_option_update($old,$new){
 }
 
 function mod_post_builder($propid,$postid,$p,$tmpl='tmpl-properties-detail',$entity='property',$parentid=-1){
+	if(!defined('BAPI_API_LOCATION')){
+		define('BAPI_API_LOCATION','connect.bookt.com');
+	}
 	$solId = get_option('solution_id');
 	$apiKey = get_option('api_key');
-	$data = file_get_contents('http://connect.bookt.biz/ws/?method=get&apikey='.$apiKey.'&entity='.$entity.'&seo=1&rates=1&poi=1&reviews=1&descrip=1&avail=1&ids='.$propid);
+	$data = file_get_contents('http://'.BAPI_API_LOCATION.'/ws/?method=get&apikey='.$apiKey.'&entity='.$entity.'&seo=1&rates=1&poi=1&reviews=1&descrip=1&avail=1&ids='.$propid);
 	$data = json_decode($data,TRUE);
 	//print_r($data['result'][0]); exit();
 
-	$c = file_get_contents('https://connect.bookt.biz/js/bapi.context?apikey='.$apiKey);
+	$c = file_get_contents('https://'.BAPI_API_LOCATION.'/js/bapi.context?apikey='.$apiKey);
 	$config = json_decode($c,TRUE);
-	$td = file_get_contents('https://connect.bookt.biz/ws/?method=get&entity=textdata&apikey='.$apiKey);
+	$td = file_get_contents('https://'.BAPI_API_LOCATION.'/ws/?method=get&entity=textdata&apikey='.$apiKey);
 	$textdata = json_decode($td,TRUE);
 	
 	$data['config'] = $config['Config'];

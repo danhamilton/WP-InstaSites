@@ -25,6 +25,10 @@ License: GPL2
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+if(!defined('BAPI_API_LOCATION')){
+	define('BAPI_API_LOCATION','connect.bookt.com');
+}
+	
 //require_once(dirname( __FILE__ ).'/bapi-config.php'); //Deprecated
 //include_once(dirname( __FILE__ ).'/bapi.php'); //Deprecated
 include_once(dirname( __FILE__ ).'/admin.php');
