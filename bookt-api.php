@@ -25,9 +25,9 @@ License: GPL2
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-if(!defined('BAPI_API_LOCATION')){
-	define('BAPI_API_LOCATION','connect.bookt.com');
-}
+//if(!defined('BAPI_API_LOCATION')){
+//	define('BAPI_API_LOCATION','connect.bookt.com');
+//}
 	
 //require_once(dirname( __FILE__ ).'/bapi-config.php'); //Deprecated
 //include_once(dirname( __FILE__ ).'/bapi.php'); //Deprecated
@@ -61,8 +61,8 @@ add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Prop_Qu
 add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Featured_Properties" );' ) );
 add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Inquiry_Form" );' ) );
 add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Similar_Properties" );' ) );
-add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Property_Finders" );' ) );
-add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Specials_Widget" );' ) );
+//add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Property_Finders" );' ) );
+//add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Specials_Widget" );' ) );
 
 
 require_once('mustache.php-2.1.0/src/Mustache/Autoloader.php');

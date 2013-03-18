@@ -11,7 +11,7 @@ function bapi_create_menu() {
 function bapi_options_init(){
 	register_setting('bapi_options','api_key');
 	register_setting('bapi_options','solution_id');
-	register_setting('bapi_options','property_template');
+	register_setting('bapi_options','bapi_baseurl');	
 	register_setting('bapi_options','search_css');
 	register_setting('bapi_options','search_template');
 	register_setting('bapi_options','update_action'); 
@@ -28,14 +28,7 @@ function bapi_options_init(){
 	register_setting('bapi_options','bapi_slideshow_caption3');
 	register_setting('bapi_options','bapi_slideshow_caption4');
 	register_setting('bapi_options','bapi_slideshow_caption5');
-	register_setting('bapi_options','bapi_slideshow_caption6');
-	//register_setting('bapi_options','property_category_name');
-}
-
-function bapi_option_category($old,$new){
-	if($old!=$new){
-		wp_create_category($new);
-	}
+	register_setting('bapi_options','bapi_slideshow_caption6');	
 }
 
 function bapi_settings_page() {
@@ -43,23 +36,14 @@ function bapi_settings_page() {
 	if(get_option('bapi_site_cdn_domain')){
 		$cdn_url = get_option('bapi_site_cdn_domain');
 	}
-	/* Removed after migrating to mustache */
-	/*$t = get_option('property_template');
-	if(empty($t)){
-		$t = file_get_contents(plugins_url('/default-content/property-template.php', __FILE__));
+	
+	$bapi_baseurl = 'connect.bookt.com';
+	if(get_option('bapi_baseurl')){
+		$bapi_baseurl = get_option('bapi_baseurl');
 	}
-	$p = get_option('property_category_name');
-	if(empty($p)){
-		$p = "Properties";
+	if(empty($bapi_baseurl)){
+		$bapi_baseurl = 'connect.bookt.com';
 	}
-	$sc = get_option('search_css');
-	if(empty($sc)){
-		$sc = file_get_contents(plugins_url('/default-content/search-template.css', __FILE__));
-	}
-	$st = get_option('search_template');
-	if(empty($st)){
-		$st = file_get_contents(plugins_url('/default-content/search-template.php', __FILE__));
-	}*/
 ?>
 <style type="text/css">
 	.available-tags ul { margin:0; padding:0; }
@@ -86,6 +70,11 @@ function bapi_settings_page() {
             <td><input type="text" name="api_key" size="60" value="<?php echo get_option('api_key'); ?>" /> 
             </td>
             </tr>
+			<tr valign="top" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">
+            <th scope="row">BAPI Base URL</th>
+            <td><input type="text" name="bapi_baseurl" size="60" value="<?php echo $bapi_baseurl; ?>" /> 
+            </td>
+            </tr>
             <tr valign="top" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">
             <th scope="row">CDN Site URL</th>
             <td><input type="text" name="bapi_site_cdn_domain" size="60" value="<?php echo $cdn_url; ?>" /> 
@@ -97,10 +86,6 @@ function bapi_settings_page() {
         </table>
         <h3>Slideshow Options</h3>
         <table class="form-table">
-            <!--<tr valign="top">
-            <th scope="row">Property Post Category</th>
-            <td><input type="text" name="property_category_name" size="60" value="<?php //echo $p ?>" /></td>
-            </tr>-->
             <tr>
             <th scope="row">Slide 1</th>
             <td>
@@ -144,55 +129,6 @@ function bapi_settings_page() {
             </td>
             </tr>
         </table>
-     <!--   <h3>Property Options</h3>
-        <table class="form-table">
-            <!--<tr valign="top">
-            <th scope="row">Property Post Category</th>
-            <td><input type="text" name="property_category_name" size="60" value="<?php //echo $p ?>" /></td>
-            </tr>
-            <tr>
-            <th scope="row">Property Page Template</th>
-            <td>
-            	<div id="bapi-options-shown_prop_template">
-                	<a href="javascript:toggle_template('prop_template');">Display Template Editor</a>
-                </div>
-            	<div id="bapi-options-hidden_prop_template" style="display:none;">
-                    <a href="javascript:toggle_template_off('prop_template');">Hide</a>
-                    <br/>
-                    <textarea name="property_template" cols="150" rows="20" style="float:left;"><?php echo $t; ?></textarea>
-                </div>
-            </td>
-            </tr>
-        </table>
-        <h3>Search Options</h3>
-        <table class="form-table">
-            <tr>
-            <th scope="row">Search Page CSS</th>
-            <td>
-            	<div id="bapi-options-shown_search_css">
-                	<a href="javascript:toggle_template('search_css');">Display CSS Editor</a>
-                </div>
-            	<div id="bapi-options-hidden_search_css" style="display:none;">
-                    <a href="javascript:toggle_template_off('search_css');">Hide</a>
-                    <br/>
-                    <textarea name="search_css" cols="150" rows="16" style="float:left;"><?php echo $sc; ?></textarea>
-                </div>
-            </td>
-            </tr>
-            <tr>
-            <th scope="row">Search Page Template</th>
-            <td>
-            	<div id="bapi-options-shown_search_template">
-                	<a href="javascript:toggle_template('search_template');">Display Template Editor</a>
-                </div>
-            	<div id="bapi-options-hidden_search_template" style="display:none;">
-                    <a href="javascript:toggle_template_off('search_template');">Hide</a>
-                    <br/>
-                    <textarea name="search_template" cols="150" rows="16" style="float:left;"><?php echo $st; ?></textarea>
-                </div>
-            </td>
-            </tr>
-        </table>-->
         <?php // property_list(); ?>
         <?php submit_button(); ?>
     </form>
