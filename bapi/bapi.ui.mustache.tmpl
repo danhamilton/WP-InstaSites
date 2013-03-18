@@ -1,0 +1,1034 @@
+
+/*
+	Group: Searching	
+*/
+<script id="tmpl-search-homepage" type="text/html">
+<h3>{{textdata.Search for Availability}}</h3>
+<div class="property-search-block">
+{{#config.checkin.enabled}}
+<div class="category-block">
+	<input type="text" class="txtb quicksearch sessioncheckin datepickercheckin" data-field="checkin" />
+</div>
+{{/config.checkin.enabled}}
+{{#config.checkout.enabled}}
+<div class="category-block">
+	<input type="text" class="txtb quicksearch sessioncheckout datepickercheckout" data-field="checkout" />
+</div>
+{{/config.checkout.enabled}}
+{{#config.los.enabled}}
+<div class="category-block">
+	<select class="property-search-input quicksearch sessionlos" data-field="los">
+		<option value="">-{{config.los.prompt}}-</option>		
+		{{#config.los.values}}<option value="{{Data}}">{{Label}}</option>{{/config.los.values}}
+	</select>
+</div>
+{{/config.los.enabled}}
+{{#config.adults.enabled}}
+<div class="category-block">
+	<select class="property-search-input quicksearch sessionadultsmin" data-field="adults[min]">
+		<option value="">-{{config.adults.prompt}}-</option>		
+		{{#config.adults.values}}<option value="{{Data}}">{{Label}}</option>{{/config.adults.values}}
+	</select>
+</div>
+{{/config.adults.enabled}}
+{{#config.children.enabled}}
+<div class="category-block">
+	<select class="property-search-input quicksearch sessionchildrenmin" data-field="children[min]">
+		<option value="">-{{config.children.prompt}}-</option>		
+		{{#config.children.values}}<option value="{{Data}}">{{Label}}</option>{{/config.children.values}}
+	</select>
+</div>
+{{/config.children.enabled}}
+{{#config.category.enabled}}
+<div class="category-block">
+	<select class="property-search-input quicksearch sessioncategory" data-field="category">
+		<option value="">-{{config.category.prompt}}-</option>		
+		{{#config.category.values}}<option value="{{Data}}">{{Label}}</option>{{/config.category.values}}
+	</select>
+</div>
+{{/config.category.enabled}}
+{{#config.dev.enabled}}
+<div class="category-block">
+	<select class="property-search-input quicksearch sessiondevid" data-field="devid">
+		<option value="">-{{config.dev.prompt}}-</option>		
+		{{#config.dev.values}}<option value="{{Data}}">{{Label}}</option>{{/config.dev.values}}
+	</select>
+</div>
+{{/config.dev.enabled}}
+{{#config.sleeps.enabled}}
+<div class="category-block">
+	<select class="property-search-input quicksearch sessionsleepsmin" data-field="sleeps[min]">
+		<option value="">-{{config.sleeps.prompt}}-</option>
+		{{#config.sleeps.values}}<option value="{{Data}}">{{Label}}</option>{{/config.sleeps.values}}
+	</select>
+</div>
+{{/config.sleeps.enabled}}
+{{#config.beds.enabled}}
+<div class="category-block">
+	<select class="property-search-input quicksearch sessionbedsmin" data-field="beds[min]">
+		<option value="">-{{config.beds.prompt}}-</option>
+		{{#config.beds.values}}<option value="{{Data}}">{{Label}}</option>{{/config.beds.values}}
+	</select>
+</div>
+{{/config.beds.enabled}}
+{{#config.baths.enabled}}
+<div class="category-block">
+	<select class="property-search-input quicksearch sessionbathsmin" data-field="baths[min]">
+		<option value="">-{{config.baths.prompt}}-</option>
+		{{#config.baths.values}}<option value="{{Data}}">{{Label}}</option>{{/config.baths.values}}
+	</select>
+</div>
+{{/config.baths.enabled}}
+{{#config.location.enabled}}
+<div class="category-block">
+	<input type="text" class="property-search-input quicksearch sessionlocation" data-field="location" />
+</div>
+{{/config.location.enabled}}
+{{#config.rate.enabled}}
+<div class="category-block">
+	<select class="property-search-input quicksearch sessionratemin" data-field="rate[min]">
+		<option value="">-{{config.rate.prompt}}-</option>
+		{{#config.rate.values}}<option value="{{Data}}">{{Label}}</option>{{/config.rate.values}}
+	</select>
+</div>
+{{/config.rate.enabled}}
+{{#config.rooms.enabled}}
+<div class="category-block">
+	<select class="property-search-input quicksearch sessionroomsmin" data-field="rooms[min]">
+		<option value="">-{{config.rooms.prompt}}-</option>
+		{{#config.rooms.values}}<option value="{{Data}}">{{Label}}</option>{{/config.rooms.values}}
+	</select>
+</div>
+{{/config.rooms.enabled}}
+{{#config.headline.enabled}}
+<div class="category-block">
+	<input type="text" class="property-search-input quicksearch sessionheadline" data-field="headline" />
+</div>
+{{/config.headline.enabled}}
+{{#config.altid.enabled}}
+<div class="category-block">
+	<input type="text" class="txtb quicksearch sessinoaltid" data-field="altid" />
+</div>
+{{/config.altid.enabled}}
+<div class="property-search-button-block search-button-block">
+	<a class="quicksearch-dosearch" data-field-selector="quicksearch" href="javascript:void(0)">{{textdata.Search}}</a>&nbsp;
+	<a class="quicksearch-doclear"  data-field-selector="quicksearch" href="javascript:void(0)">{{textdata.Clear}}</a>&nbsp;
+	<a class="quicksearch-doadvanced" data-field-selector="quicksearch" href="javascript:void(0)">{{textdata.Advanced}}</a>&nbsp;
+</div>
+</script>
+
+<script id="tmpl-search-rateblock" type="text/html">
+<div class="nrate-block">
+	<h1 class="rate-value"></h1>        
+	<div class="check">		
+		<input id="checkin" type="text" class="txtb quicksearch sessioncheckin datepickercheckin" data-field="checkin" />
+		<input id="checkout" type="text" class="txtb quicksearch sessioncheckout datepickercheckout" data-field="checkout" />
+		<a class="quicksearch-getquote" data-field-selector="quicksearch"><img src="//booktplatform.s3.amazonaws.com/App_SharedStyles/images/arrow-refresh.png" alt="refresh" width="16px" /></a>                    
+	</div>                  
+</div>
+</script>
+
+/*
+	Group: Properties
+*/
+<script id="tmpl-propertysearch-galleryview" type="text/html">
+<div class="gallery-block">
+	<div class="gallery-block-inner">
+		<div class="gallery-block-left">
+			<div class="gallery-thumbnail">
+				<div class="rownumber">1</div>
+				<a hef="#"><img class="gallery-imgpropthumb" alt="Beautiful Layout, Comfort Stay!" src="http://s3.amazonaws.com/cdnmedia.bookt.com/3085/3452390b-e863-4557-8764-c6a6548339d1.jpg"></a>
+			</div>
+		</div>
+		<div class="clear2"></div>
+		<a href="/rentalsearch/v2/house-davenport-wi-fi-176-115929" class="btn-Details">All Details &amp; Photos<span class="gallery-arrow"></span></a>
+		<div class="clear_5px"></div>
+		<a href="/booking/bookingsummary.aspx?KeyID=27176" class="btn-quote">Get a Quote<span class="gallery-arrow"></span></a>
+	</div>
+	<div class="gallery-info">
+		<h2 class="property-headline">
+			<a href="/rentalsearch/v2/house-davenport-wi-fi-176-115929"><span>Step Out the Door of Your Door and Bask in the Florida Sunshine </span></a>
+		</h2>
+		<div class="clear"></div>
+		<div class="gallery-room"><b>Beds:</b> 4 | <b>Baths:</b> 3.5 | <b>Sleeps:</b> 9</div>
+		<div class="top-amenities">Wi-Fi, Tennis, Basketball Court, DVD Player, Gas Grill</div>
+		<h2 class="property-rate-value">From: $189/Night</h2>
+		<div class="compare"><a href="/rentalsearch/compareproperties.aspx">Compare</a>
+			<input type="checkbox" class="favorite" data-id="27176"></input>
+	</div>
+	</div>
+	<div style="clear:both">
+	</div>
+</div>
+</script>
+
+<script id="tmpl-propertysearch-listview" type="text/html">
+<div class="list-view-page">
+{{#result}}
+<div class="portal-result">
+    <div class="portal-inner-left">
+        <div class="portal-thumbnail">
+            <div class="rownumber" data-id="{{ID}}">{{ContextData.ItemIndex}}</div>
+            <a href="{{&ContextData.SEO.DetailURL}}">
+                <img class="portal-thumb-img" alt="thumbnail" src="{{&Images.0.ThumbnailURL}}" />
+            </a>
+        </div>
+        <div class="portal-info">
+            <h2><a href="{{&ContextData.SEO.DetailURL}}"><span>{{Headline}}</span></a></h2>
+            <small>{{#NumReviews}}{{AvgReview}}{{/NumReviews}}{{^NumReviews}}{{textdata.No reviews yet}}{{/NumReviews}}</small>
+            <div class="clear"></div>
+            <p class="first"><span><b>City:</b> {{City}}</span></p>
+            <p><b>{{#Bedrooms}}{{textdata.Beds}}</b>: {{Bedrooms}} | {{/Bedrooms}}{{#Bathrooms}}<b>{{textdata.Baths}}</b>: {{Bathrooms}} | {{/Bathrooms}}<b>{{textdata.Sleeps}}</b>: {{Sleeps}}</p>
+			<div class="portal-rates">{{ContextData.Quote.PublicNotes}}</div>
+        </div>
+    </div>
+</div>
+{{/result}}
+</div>
+<div class="clear2"></div>
+{{^islastpage}}<div><a href='javascript:void(0)' class='showmore'>{{textdata.Show More Results}} ({{totalcount}})</a></div>{{/islastpage}}
+{{#islastpage}}<div>{{textdata.There are no more results}}</div>{{/islastpage}}
+</script>
+
+<script id="tmpl-allproperties" type="text/html">
+<div class="grid-search-result">
+<table border="0" cellspacing="0" id='tbl-search-result'>
+<tr>
+	<th class="first-th"><strong>{{textdata.Compare}}</strong></th>
+	<th class="mid-th"><strong>{{textdata.Property Name}}</strong></th>
+	<th class="mid-th"><strong>{{textdata.Category}}</strong></th>
+	<th class="mid-th"><strong>{{textdata.Beds}}</strong></th>
+	<th class="mid-th"><strong>{{textdata.Baths}}</strong></th>
+	<th class="mid-th"><strong>{{textdata.Sleeps}}</strong></th>
+	<th class="mid-th"><strong>{{textdata.Amenities}}</strong></th>
+	<th class="mid-th"><strong>&nbsp;</strong></th>	
+	<th class="last-th"><strong>&nbsp;</strong></th>	
+</tr>
+{{#result}}
+<tr data-pkid="{{ID}}">
+	<td><input type='checkbox' /></td>
+	<td>{{Headline}}</td>
+	<td>{{Type}}</td>
+	<td>{{Bedrooms}}</td>
+	<td>{{Bathrooms}}</td>
+	<td>{{Sleeps}}</td>
+	<td><span class="trunc{{curpage}}">{{Amenities}}</span></td>
+	<td>{{ContextData.Quote.PublicNotes}}</td>
+	<td>{{^IsBookable}}<a href='{{ContextData.SEO.DetailURL}}'>{{textdata.Details & Availability}}</a>{{/IsBookable}}{{#IsBookable}}<a href='{{ContextData.SEO.BookingURL}}'>{{textdata.Book Now}}</a>{{/IsBookable}}</a></td>
+</tr>
+{{/result}}
+</table>
+<div class="clear2"></div>
+{{^islastpage}}<div><a href='javascript:void(0)' class='showmore'>{{textdata.Show More Results}} ({{totalcount}})</a></div>{{/islastpage}}
+{{#islastpage}}<div>THE END!</div>{{/islastpage}}
+</script>
+
+<script id="tmpl-properties-detail" type="text/html">
+{{#result}}
+<input type="hidden" id="pkid" value="{{ID}}" />
+<h1 class="property-headline">{{Headline}}</h1>
+
+<div class="mainTabs alwaysvisible">
+    <a href="#tabs-1">{{textdata.General}}</a>&nbsp;&nbsp;
+	<a href="#tabs-2">{{textdata.Rates & Availability}}</a>&nbsp;&nbsp;
+	<a href="#tabs-3">{{textdata.Amenities}}</a>&nbsp;&nbsp;
+	{{#config.hasreviews}}<a href="#tabs-4">{{textdata.Reviews}}</a>&nbsp;&nbsp;{{/config.hasreviews}}
+	<a href="#tabs-5">{{textdata.Map & Attractions}}</a>&nbsp;&nbsp;
+</div>
+
+<div id="tabs-1" class="shadow-box">	
+	<div id="ad-gallery" class="ad-gallery">
+		<div id="propertyimages" class="cycle-slideshow ad-image-wrapper pics">
+			<div class="cycle-pager"></div>
+			{{#Images}}
+			<img src="{{MediumURL}}" alt="{{Caption}}" caption="{{Caption}}" />
+			{{/Images}}
+		</div>
+		<div class="cycle-caption"></div>
+	</div>
+</div>
+<div class="clear2"></div>	
+<div class="shadow-box general-lower">                              
+	<div class="description">
+		<div class="desc-text"><h1 class="desc-title">{{textdata.Description}}</h1></div>
+		<div class="clear"></div>
+		{{{Description}}}
+	</div>		
+</div>
+
+<div id="tabs-2" class="shadow-box">
+	<h1>{{textdata.Rates}}</h1>
+	<div id="rates" class="rate-grid"></div>               	
+	<div class="clear2"></div>
+	<h1 class="availabilityprompt">{{textdata.Availability}}</h1>
+	<div id="availability" class="availability"></div>
+
+	<div class="clear2"></div>
+	<div class="clear2"></div>              	
+</div>
+
+<div id="tabs-3" class="shadow-box">	
+	<div class="amenities">
+		<h1 class="ameni-title">{{textdata.Amenities}}</h1>
+		<div class="ameni-list">
+			<ul>
+			{{#Amenities}}
+				<li>{{.}}</li>
+			{{/Amenities}}
+			</ul>		
+		</div>
+		<div class="clear"></div>    
+	</div>
+</div>                    
+
+{{#config.hasreviews}}
+<div id="tabs-4" class="shadow-box">
+	<p></p>		
+	<div class="clear"></div>
+	</div>
+	<div class="clear"></div>                            
+{{/config.hasreviews}}
+
+<div id="tabs-5" class="shadow-box">
+	<div id="poimap" style="width:100%; height:500px; border:1px solid black"></div>      
+	<div class="clear"></div>
+	<div id="poigrid"></div>
+</div>
+{{/result}}
+</script>
+
+<script id="tmpl-propertyrates-grid" type="text/html">
+{{#result.ContextData.Rates}}
+<table>
+	<tr>
+{{#Keys}}
+		<th>{{.}}</th>		
+{{/Keys}}
+	</tr>
+{{#Values}}
+	<tr>
+		<td>{{.}}</td>
+	</tr>
+{{/Values}}	
+</table>
+{{/result.ContextData.Rates}}
+{{^result.ContextData.Rates}}
+<div>{{textdata.No rates available}}</div>
+{{/result.ContextData.Rates}}
+</script>
+
+
+<script id="tmpl-attractionsforproperty-grid" type="text/html">
+{{#result}}
+<table>
+	<tr>
+		<th></th>
+		<th>{{textdata.Attraction}}</th>
+		<th>{{textdata.Category}}</th>
+		<th>{{textdata.Distance}}</th>
+	</tr>
+	{{#ContextData.Attractions}}
+	<tr>
+		<td></td>
+		<td>{{Name}}</td>
+		<td>{{Type}}</td>
+		<td>{{ContextData.Distance}}</td>
+	</tr>
+	{{/ContextData.Attractions}}
+</table>
+{{/result}}
+</script>
+
+/* Featured Properties (horizontal) */
+<script id="tmpl-featuredproperties-horiz" type="text/html">
+{{#result}}
+<div class="fp-featured">    
+	<div class="fp-image">
+		<a href="{{ContextData.SEO.DetailURL}}"><img width="155px" src="{{PrimaryImage.ThumbnailURL}}" alt="{{PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" /></a>
+	</div>
+	<div class="fp-outer">	
+		<div class="fp-title"><a href='{{ContextData.SEO.DetailURL}}'>{{Headline}}</a></div>
+		{{#NumReviews}}<div class="fpstar{{AvgReview}}"></div>{{/NumReviews}}
+		<div class="fp-details">
+			<b class="smarthide">{{textdata.Beds}}: {{Bedrooms}}</b>		
+			<b class="smarthide">{{textdata.Baths}}: {{Bathrooms}}</b>		
+			<b class="smarthide">{{textdata.Sleeps}}: {{Sleeps}}</b>							
+		</div>
+		<div class="clear"></div>
+		<div class="fp-rates">{{ContextData.Quote.PublicNotes}}</div>		
+	</div>
+</div>
+{{/result}}
+</script>
+
+/* Featured Properties (vertical) */
+<script id="tmpl-featuredproperties" type="text/html">
+{{#result}}
+{{#textdata.You May Also Like}}<h1>{{textdata.You May Also Like}}</h1>{{/textdata.You May Also Like}}
+<div class="sp-featured">
+	<div class="sp-image">
+		<a href="{{ContextData.SEO.DetailURL}}">
+			<img width="155px" src="{{PrimaryImage.ThumbnailURL}}" alt="{{PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />
+		</a>
+	</div>
+	<div class="sp-outer">
+		<div class="sp-title">
+			{{Headline}}
+			<div class="sp-details">
+				{{#Bedrooms}}<b>{{textdata.Beds}}:</b>{{Bedrooms}}&nbsp;|&nbsp;{{/Bedrooms}}
+				{{#Bathrooms}}<b>{{textdata.Baths}}:</b>{{Bathrooms}}&nbsp;|&nbsp;{{/Bathrooms}}
+				{{#Sleeps}}<b>{{textdata.Sleeps}}:</b>{{Sleeps}}{{/Sleeps}}
+			</div>
+			<div class="sp-rates">
+				{{ContextData.Quote.PublicNotes}}
+			</div>
+		</div>		
+	</div>
+</div>
+{{/result}}
+</script>
+
+/* Consumer Site: Property Detail - Attractions */
+<script id="tmpl-propertyattractionsgrid" type="text/html">
+<table class="rate-table">
+<thead>
+	<tr class="rate-table-trhead">
+		<th scope="col" class="rate-table-th"></th>
+		<th scope="col" class="rate-table-th">Attraction</th>
+		<th scope="col" class="rate-table-th">Category</th>
+		<th scope="col" class="rate-table-th">Distance</th>
+	</tr>
+</thead>
+<tbody>
+	<tr class="rate-table-tr">
+		<td><a onclick="alert(&quot;clicked-&gt;needs to open infowindow&quot;);" class="rate-table-td">1</a></td>
+		<td class="rate-table-td">The Awesome Corner</td>
+		<td class="rate-table-td">null</td><td class="rate-table-td">0 Feet</td>
+	</tr>
+</tbody>
+</table>
+</script>
+
+/*
+	Group: Developments
+*/
+<script id="tmpl-developments-summary-list" type="text/html">
+{{#result}}
+<div class="portal-result" data-pkid="{{ID}}">
+    <div class="portal-inner-left">
+        <div class="portal-thumbnail">
+            <div class="rownumber">{{ContextData.ItemIndex}}</div>
+            <a href="{{ContextData.SEO.DetailURL}}">
+                <img class="portal-thumb-img" alt="thumbnail" caption="{{PrimaryImage.Caption}}" src="{{PrimaryImage.ThumbnailURL}}" />
+            </a>
+        </div>
+        <div class="portal-info">
+            <h2><a href="{{ContextData.SEO.DetailURL}}"><span>{{Name}}</span></a></h2>
+			<p>{{Summary}}</p>
+			<div class="top-amenities trunc{{curpage}}" trunc="75">{{Amenities}}</div>		            
+        </div>
+    </div>
+</div>
+<div class="clear2"></div>
+{{/result}}
+{{^islastpage}}<div><a href='javascript:void(0)' class='showmore'>{{textdata.Show More Results}} ({{totalcount}})</a></div>{{/islastpage}}
+{{#islastpage}}<div>{{textdata.There are no more results}}</div>{{/islastpage}}
+</script>
+
+<script id="tmpl-developments-detail" type="text/html">
+<div class="developments-content">
+{{#result}}
+<input type="hidden" id="pkid" value="{{ID}}" />
+<div id="general">
+	<div style="float:left">
+		<img src="{{PrimaryImage.MediumURL}}" caption="{{PrimaryImage.Caption}}" alt={{PrimaryImage.Caption}} />
+	</div>
+	<div class="general-info">
+		<h2>{{Name}}</h2>
+		<div class="clear"></div>
+		<dl>
+			<dt>Category:</dt>
+			<dd>{{Type}}</dd>
+		</dl>
+		<dl>
+			<dt>Address:</dt>
+			<dd>{{Address1}}<br/>{{City}}, {{State}} {{PostalCode}}</dd>
+		</dl>
+		<div class="clear2"></div>
+		<div class="clear2"></div>
+		<div class="clear2"></div>
+		<div class="general-info-desc">
+			<h1>Description</h1>
+			{{{Description}}}
+		</div>
+	</div>
+</div>
+{{/result}}
+</div>
+</script>
+
+/*
+	Group: Attractions
+*/
+<script id="tmpl-attractions-summary-list" type="text/html">
+{{#result}}
+<div class="portal-result">
+    <div class="portal-inner-left">
+        <div class="portal-thumbnail">
+            <div class="rownumber" data-id="{{ID}}">{{index}}</div>
+            <a href="{{ContextData.DetailURL}}">
+                <img class="portal-thumb-img" alt="thumbnail" caption="{{PrimaryImage.Caption}}" src="{{PrimaryImage.ThumbnailURL}}" />
+            </a>
+        </div>
+        <div class="portal-info">
+            <h2><a href="{{&ContextData.DetailURL}}"><span>{{Name}}</span></a></h2>
+			<p>{{Summary}}</p>			
+        </div>
+    </div>
+</div>
+<div class="clear2"></div>
+{{/result}}
+</script>
+
+<script id="tmpl-attractions-detail" type="text/html">
+<div class="developments-content">
+{{#result}}
+<input type="hidden" id="pkid" value="{{ID}}" />
+<div id="general">
+	<div style="float:left">
+		<img src="{{PrimaryImage.MediumURL}}" caption="{{PrimaryImage.Caption}}" alt={{PrimaryImage.Caption}} />
+	</div>
+	<div class="general-info">
+		<h2>{{Name}}</h2>
+		<div class="clear"></div>
+		<dl>
+			<dt>{{textdata.Category}}:</dt>
+			<dd>{{Type}}</dd>
+		</dl>
+		<dl>
+			<dt>{{textdata.Address}}:</dt>
+			<dd>{{Address1}}<br/>{{City}}, {{State}} {{PostalCode}}</dd>
+		</dl>
+		{{#PrimaryPhone}}
+		<dl>
+			<dt>{{textdata.Phone}}:</dt>
+			<dd>{{PrimaryPhone}}</dd>
+		</dl>
+		{{/PrimaryPhone}}
+		{{#TollFree}}
+		<dl>
+			<dt>{{textdata.Toll Free}}:</dt>
+			<dd>{{TollFree}}</dd>
+		</dl>
+		{{/TollFree}}
+		{{#Website}}
+		<dl>
+			<dt>{{textdata.Web Address}}:</dt>
+			<dd>{{Website}}</dd>
+		</dl>
+		{{/Website}}
+		<div class="clear2"></div>
+		<div class="clear2"></div>
+		<div class="clear2"></div>
+		{{#Description}}
+		<div class="general-info-desc">
+			<h1>{{textdata.Description}}</h1>
+			{{{Description}}}
+		</div>
+		{{/Description}}		
+		<div class="clear2"></div>
+		<div class="clear2"></div>
+		
+		<h1>{{textdata.Map}}</div>
+		<div id="map" class="propertymap" data-lat="{{Latitude}}" data-lng="{{Longitude}}"></div>
+		<div class="clear2"></div>
+	</div>
+</div>
+{{/result}}
+</div>
+</script>
+
+/* 
+	Group: Specials
+*/
+<script id="tmpl-specials-summary" type="text/html">
+{{#result}}
+<div class="grid-search-result">
+<a href="{{DetailURL}}"> 
+	{{#Images.Count}}<img class="imgpropthumb" src="{{PrimaryImage.ThumbnailURL}}" alt="{{PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />{{/Images.Count}}
+</a>
+<div class="special-content" data-pkid="{{ID}}">
+	<h1><a href="{{ContextData.SEO.DetailURL}}">{{Name}}</a></h1>
+	<p>{{Summary}}</p>
+	<dl>
+		<dt>{{textdata.Effective Date}}:</dt>
+		<dd>{{EffectiveDate.ShortDate}} - {{ExpirationDate.ShortDate}}</dd>		
+	</dl>
+	{{#AppliesToSolution}}
+	<dl>
+		<dt>{{textdata.Applies To}}:</dt>
+		<dd>{{.}}</dd>
+	</dl>
+	{{/AppliesToSolution}}
+</div>
+<div class="clear2"></div>
+<div class="clear2"></div>
+<div class="clear2"></div>
+</div>
+{{/result}}
+{{^islastpage}}<div><a href='javascript:void(0)' class='showmore'>{{textdata.Show More Results}} ({{totalcount}})</a></div>{{/islastpage}}
+{{#islastpage}}<div>{{textdata.There are no more results}}</div>{{/islastpage}}
+</script>
+
+<script id="tmpl-specials-detail" type="text/html">
+<div class="specials-details">
+{{#result}}
+<input type="hidden" id="pkid" value="{{ID}}" />
+<div class="special-content">
+	<div class="special-content"></div>
+	<div>
+	<dl>
+		<dt>Effective Date:</dt>
+		<dd>{{EffectiveDate.ShortDate}} - {{ExpirationDate.ShortDate}}</dd>
+	</dl>
+	</div>
+	<div>
+	<dl>
+		<dt>Coupon Code:</dt>
+		<dd>{{CouponCode}}&nbsp;<a href='javascript:void(0)'><span class="activate">ACTIVATE</span></a></dd>
+	</dl>	
+	</div>	
+</div>
+{{/result}}
+</div>
+</script>
+
+<script id="tmpl-specials-vert" type="text/html">
+{{#result}}
+<div class="special-holder">
+	<a href="{{DetailURL}}">
+		{{#Images.Count}}<img width="185px" src="{{PrimaryImage.ThumbnailURL}}" alt="{{PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />{{/Images.Count}}
+		<div class="clear"></div>
+		<div class="special-widget-content">
+			<h2>{{Name}}</h2>
+			{{Summary}}
+			<div class="clear"></div>			
+		</div>
+		<div class="clear"></div>
+	</a>
+</div>
+{{/result}}
+</script>
+
+
+/* 
+	Group: Predefined Searches 
+*/
+<script id="tmpl-searches-summary" type="text/html">
+<div class="grid-search-result">
+{{#result}}
+<div class="pf-ip" data-pkid="{{ID}}">
+<div class="pfpage-image left">	
+	<a href="{{DetailURL}}"> 
+		<img width="150px" src="{{PrimaryImage.ThumbnailURL}}" alt="{{PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />
+	</div>    
+	<div class="pfpage-content">
+		<h4><a href="{{DetailURL}}">{{Name}}</a></h4>
+		<p class="trunc400">{{{Description}}}</p>
+	</div>
+	<div class="clear2"></div>
+</div>
+<div class="clear"></div>
+{{/result}}
+</div>
+<div class="clear2"></div>
+{{^islastpage}}<div><a href='javascript:void(0)' class='showmore'>{{textdata.Show More Results}} ({{totalcount}})</a></div>{{/islastpage}}
+{{#islastpage}}<div>{{textdata.There are no more results}}</div>{{/islastpage}}
+</script>
+
+<script id="tmpl-searches-detail" type="text/html">
+{{#result}}
+<input type="hidden" id="pkid" value="{{ID}}" />
+<div class="propertyfinderdetailpage">
+	<div id="pf-player-wrapper">
+		<img style="width:450px" src="{{PrimaryImage.MediumURL}}" alt="{{PrimaryImage.MediumURL}}" title="{{PrimaryImage.Caption}}" />
+	</div>
+	<div id="pf-desc-wrapper">
+		<h2>{{Name}}</h2>
+		<div class="clear2"></div>
+		{{{Description}}}
+	</div>
+	<div class="clear2"></div>	
+</div>
+{{/result}}
+</script>
+
+<script id="tmpl-searches-horiz" type="text/html">
+{{#result}}
+<div class="pf-featured">    
+<div class="pf-image">
+	<a href="{{DetailURL}}">
+		<img width="185px" src="{{PrimaryImage.ThumbnailURL}}" alt="{{PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />
+	</a>
+</div>
+<div class="pf-outer">
+	<div class="fp-inner">
+		<a href='{{DetailURL}}'>{{Name}}</a>		
+	</div>
+	<div class="pf-description">{{{Description}}}</div>
+</div>
+</div>
+{{/result}}
+</script>
+
+/*
+	Group: Lead Request Forms
+*/
+<script id="tmpl-leadrequestform-propertyinquiry" type="text/html">
+<div id="questions-block">	
+	<div id="questions-block-inner">		
+		<h1>{{textdata.Have a Question?}}</h1>
+		<fieldset id="have-question" class="leadrequest">			
+			<dl id="phoneform">
+				<dt for="txtName">{{textdata.Name}}:<b class="val">*</b></dt>
+				<dd><input type="text" id="txtName" class="leadrequestfield required input-text" minlength="2" data-field="fullname" /></dd>
+			</dl>
+			<dl id="emailform">
+				<dt for="txtEmail">{{textdata.Email}}:<b class="val">*</b></dt>
+				<dd><input type="text" id="txtEmail" class="leadrequestfield required input-text" size="25" data-field="email" /></dd>
+			</dl>
+			<dl id="phoneform">
+				<dt for="txtPhone">{{textdata.Phone}}:<b class="val">*</b></dt>
+				<dd><input type="text" id="txtPhone" class="leadrequestfield required email input-text" data-field="phone" /></dd>				
+			</dl>
+			{{#config.hasdatesoninquiryform}}
+			<dl id="checkinform">
+				<dt for="txtCheckIn">{{textdata.Check-In}}</dt>
+				<dd><input type="text" id="txtCheckIn" class="leadrequestfield input-text datepickercheckin" data-field="checkin" /></dd>
+			</dl>
+			<dl id="checkoutform">
+				<dt for="txtCheckOut">{{textdata.Check-Out}}</dt>
+				<dd><input type="text" id="txtCheckOut" class="leadrequestfield input-text datepickercheckout" data-field="checkout" /></dd>
+			</dl>
+			{{/config.hasdatesoninquiryform}}
+			<dl id="lsform">
+				<dt for="ddlLS">{{textdata.How Did You Hear About Us?}}</dt>
+				<dd><input type="text" id="ddlLS" class="leadrequestfield input-text" data-field="ls" /></dd>
+			</dl>
+			<dl id="commentsform">
+				<dt for="txtComments">{{textdata.Comments}}</dt>
+				<dd><textarea id="txtComments" rows="2" cols="20" class="leadrequestfield" data-field="publicnotes" /></dd>
+			</dl>
+			<dl id="specialform" class="specialform">
+				<dt for="txtSpecial">Special</dt>
+				<dd><input type="text" autocomplete="off" id="txtSpecial" class="leadrequestfield input-text" data-field="special" /></dd>
+			</dl>
+			<div class="clear2"></div>
+			<input type="button" id="btn-leadrequest" class="doleadrequest" value='{{textdata.Submit}}' data-field-selector="leadrequestfield" />			
+		</fieldset>
+	</div>
+</div>
+</script>
+
+/*
+	Group: Booking
+*/
+<script id="tmpl-booking-makebooking-masterlayout" type="text/html">
+<div style="width:400px" class="left">
+<div id="stayinfo"></div>
+<div id="statement"></div>
+</div>
+
+<div style="width:50px" class="left">
+    &nbsp;
+</div>
+
+<div style="width:400px" class="left">
+<div id="renter"></div>
+<div id="creditcard"></div>
+</div>
+</script>
+
+<script id="tmpl-booking-makebooking-stayinfo" type="text/html">
+<div class="booking-questions">
+	<h4>{{textdata.Have a Question?}}</h4>
+	<p>{{textdata.Call for assistance}}
+	<span class="phonumber-caption">{{textdata.Phone}}:</span>
+	{{site.phone}}
+	</p>
+</div>
+<div class="clear2"></div>
+
+<h3>{{textdata.Booking Details}}</h3>
+<h2>{{#result}}{{Headline}}<small style="font-wieight:normal">{{ManagedBy}}</small>{{/result}}</h2>
+<div class="clear2"></div>
+{{#result}}
+{{^ContextData.Quote.IsValid}}
+<div class="system-msg-error">{{ContextData.Quote.ValidationMessage}}</div>
+{{/ContextData.Quote.IsValid}}
+{{/result}}
+<dl>
+	<dt>{{textdata.Check-In}}:<b class="val">*</b></dt>
+	<dd><input id="checkin" type="text" class="quicksearch bookingfield required datepickercheckin" data-field="scheckin" value="{{session.searchparams.scheckin}}" /></dd>
+</dl>
+<dl>
+	<dt>{{textdata.Check-Out}}:<b class="val">*</b></dt>
+	<dd><input id="checkout" type="text" class="quicksearch bookingfield required datepickercheckout" data-field="scheckout" value="{{session.searchparams.scheckout}}" /></dd>
+</dl>
+<dl>
+	<dt>{{textdata.Adults}}:<b class="val">*</b></dt>
+	<dd><input type="text" class="quicksearch bookingfield required" data-field="numadults" value="{{#session.searchparams.adults.min}}{{session.searchparams.adults.min}}{{/session.searchparams.adults.min}}{{^session.searchparams.adults.min}}2{{/session.searchparams.adults.min}}" /><dd>
+</dl>
+<dl>
+	<dt>{{textdata.Children}}:</dt>
+	<dd><input type="text" class="quicksearch bookingfield" data-field="numchildren" value="{{session.searchparams.chilren.min}}" /><dd>
+</dl>
+<dl>
+	<dt>{{textdata.Coupon Code}}:</dt>
+	<dd><input type="text" class="quicksearch bookingfield sessionncoupon" data-field="coupon" /><dd>
+</dl>
+<div class="right">		
+	<input type="button" class="quicksearch-getquote" data-field-selector="quicksearch" value="{{textdata.Update}}" />
+</div>
+<div class="clear"></div>
+<div class="right">
+	<small><a href='/' target="_blank">{{textdata.Rental Policy}}</a></small>
+</div>
+<div class="clear"></div>
+</script>
+
+<script id="tmpl-booking-makebooking-statement" type="text/html">
+{{#result}}
+{{#ContextData.Quote.IsValid}}
+{{#ContextData.Quote.Statement.Services.length}}
+<h5>{{textdata.Rent}}</h5>
+<table style="width:100%">
+{{/ContextData.Quote.Statement.Services.length}}
+{{#ContextData.Quote.Statement.Services}}
+</tr>
+	<td>{{{Notes}}}</td><td style="text-align:right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</td>
+</tr>
+{{/ContextData.Quote.Statement.Services}}
+{{#ContextData.Quote.Statement.Services.length}}
+<tr>
+	<td>{{textdata.Sub Total}}</td><td style="text-align:right">{{ContextData.Quote.Statement.CurrencySymbol}}{{ContextData.Quote.Statement.ServicesTotal.SValue2}}</td>
+</tr>
+</table>
+<div class="clear2"></div>
+{{/ContextData.Quote.Statement.Services.length}}
+
+{{#ContextData.Quote.Statement.Fees.length}}
+<h5>{{textdata.Fees}}</h5>
+<table style="width:100%">
+{{/ContextData.Quote.Statement.Fees.length}}
+{{#ContextData.Quote.Statement.Fees}}
+</tr>
+	<td>{{{Notes}}}</td><td style="text-align:right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</td>
+</tr>
+{{/ContextData.Quote.Statement.Fees}}
+{{#ContextData.Quote.Statement.Fees.length}}
+</table>
+<div class="clear2"></div>
+{{/ContextData.Quote.Statement.Fees.length}}
+
+{{#ContextData.Quote.Statement.OptionalFees.length}}
+<h5>{{textdata.Optional Fees & Services}}</h5>
+<table style="width:100%">
+{{/ContextData.Quote.Statement.OptionalFees.length}}
+{{#ContextData.Quote.Statement.OptionalFees}}
+</tr>	
+	<td>{{{Notes}}}</td>	
+	<td>
+		{{#BoolField}}<input type="checkbox" />{{/BoolField}}
+		{{^BoolField}}<input type="text" value="{{Quantity}}" />{{/BoolField}} 
+		&nbsp;@&nbsp;{{CurrencySymbol}}{{Amount}}&nbsp;
+	</td>
+	<td style="text-align:right">	
+	{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}
+	</td>
+</tr>
+{{/ContextData.Quote.Statement.OptionalFees}}
+{{#ContextData.Quote.Statement.OptionalFees.length}}
+</table>
+<div class="clear2"></div>
+{{/ContextData.Quote.Statement.OptionalFees.length}}
+
+{{#ContextData.Quote.Statement.Taxes.length}}
+<h5>{{textdata.Taxes}}</h5>
+<table style="width:100%">
+{{/ContextData.Quote.Statement.Taxes.length}}
+{{#ContextData.Quote.Statement.Taxes}}
+</tr>
+	<td>{{{Notes}}}</td><td style="text-align:right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</td>
+</tr>
+{{/ContextData.Quote.Statement.Taxes}}
+{{#ContextData.Quote.Statement.Taxes.length}}
+</table>
+<div class="clear2"></div>
+{{/ContextData.Quote.Statement.Taxes.length}}
+
+{{#ContextData.Quote.Statement.Deposits.length}}
+<h5>{{textdata.Deposits}}</h5>
+<table style="width:100%">
+{{/ContextData.Quote.Statement.Deposits.length}}
+{{#ContextData.Quote.Statement.Deposits}}
+</tr>
+	<td>{{{Notes}}}</td><td style="text-align:right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</td>
+</tr>
+{{/ContextData.Quote.Statement.Deposits}}
+{{#ContextData.Quote.Statement.Deposits.length}}
+</table>
+<div class="clear2"></div>
+{{/ContextData.Quote.Statement.Deposits.length}}
+
+{{#ContextData.Quote.Statement.Discounts.length}}
+<h5>{{textdata.Discounts}}</h5>
+<table style="width:100%">
+{{/ContextData.Quote.Statement.Discounts.length}}
+{{#ContextData.Quote.Statement.Discounts}}
+</tr>
+	<td>{{{Notes}}}</td><td style="text-align:right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</td>
+</tr>
+{{/ContextData.Quote.Statement.Discounts}}
+{{#ContextData.Quote.Statement.Discounts.length}}
+</table>
+<div class="clear2"></div>
+{{/ContextData.Quote.Statement.Discounts.length}}
+
+{{/ContextData.Quote.IsValid}}
+{{/result}}
+
+{{#config.rentalpolicysummary}}
+<div class="booking-questions">
+	<div class="ratedisclaimer-headline"><b>{{textdata.Booking Disclaimer}}</div>
+	<div class="ratedisclaimer">
+		<small>{{config.rentalpolicysummary}}</small>
+	</div>
+</div>
+{{/config.rentalpolicysummary}}
+</script>
+
+<script id="tmpl-booking-makebooking-renter" type="text/html">
+<div class="clear2"></div>
+<h3>{{textdata.Guest Information}}</h3>
+{{textdata.First Name}}:<b class="val">*</b> <input type="text" class="bookingfield required" data-field="renterfirstname" size="25" /> <br/>
+{{textdata.Last Name}}:<b class="val">*</b> <input type="text" class="bookingfield required" data-field="renterlastname" size="25" /> <br/>
+{{textdata.Email}}:<b class="val">*</b> <input type="text" class="bookingfield required" data-field="renteremail" size="25" /> <br/>
+{{textdata.Phone}}:<b class="val">*</b> <input type="text" class="bookingfield required" data-field="renterphone" size="25" /> <br/>
+{{textdata.How Did You Hear About Us?}}:  <input type="text" class="bookingfield" data-field="leadsource" size="25" /> <br/>
+<div class="clear2"></div>
+
+<h3>{{textdata.Special Requests}}</h3>
+<textarea rows="3" cols="20" class="bookingfield" data-field="publicnotes" />
+<div class="clear2"></div>
+</script>
+
+<script id="tmpl-booking-makebooking-creditcard" type="text/html">
+<h3>{{textdata.Billing Address}}</h3>
+{{textdata.Address}}:<b class="val">*</b> <input type="text" class="bookingfield" data-field="billingaddress" size="25" /> <br/>
+{{textdata.Addtl Address}}: <input type="text" class="bookingfield" data-field="billingaddress2" size="25" /> <br/>
+{{textdata.City}}: <input type="text" class="bookingfield" data-field="billingcity" size="25" /> <br/>
+{{textdata.Postal Code}}:<b class="val">*</b> <input type="text" class="bookingfield" data-field="billingpostalcode" size="25" /> <br/>
+{{textdata.Country}}: <input type="text" class="bookingfield" data-field="billingcountry" size="25" /> <br/>
+<div class="clear2"></div>
+
+<h3>{{textdata.Credit Card Information}}</h3>
+{{textdata.Name on Card}}:<b class="val">*</b> <input type="text" class="bookingfield required" data-field="ccnameoncard" size="25" /> <br/>
+{{textdata.Card Type}}: <input type="text" class="bookingfield" data-field="cctype" size="25" /> <br/>
+{{textdata.Card Number}}:<b class="val">*</b> <input type="text" class="bookingfield required ccnum" data-field="cccardnum" size="25" /> <br/>
+{{textdata.Expiration}}&nbsp;<small>MM/YY</small>:<b class="val">*</b> <input type="text" class="bookingfield required ccexpiry" data-field="ccexpiry" size="25" /> <br/>
+{{textdata.Security Code}}:<b class="val">*</b>  <input type="text" class="bookingfield required cccvv" data-field="cccvv" size="25" /> <br/>
+<div id="specialform" class="specialform">
+Special:<input type="text" autocomplete="off" id="txtSpecial" class="bookingfield" data-field="special" />
+</div>
+		
+{{textdata.I have read and accept the terms and conditions}}&nbsp;<a target="_blank" href="/book/rentalpolicy">{{textdata.Review Now}}</a>
+<br/>
+<a href="javascript:void(0);" class="makebooking" data-field-selector="bookingfield">{{textdata.Reserve Now}}</a>
+</script>
+
+<script id="tmpl-booking-rentalpolicy" type="text/html">
+<div style="padding:10px;">
+{{{config.rentalpolicy}}}
+</div>
+</script>
+
+/*
+	Group: Misc Widgets
+*/
+<script id="tmpl-currencyselector" type="text/html">
+<ul>
+{{#currencies}}
+	<li><a href='javascript:void(0)' class='changecurrency' data-currency='{{RegionInfo.ISOCurrencySymbol}}'>{{RegionInfo.ISOCurrencySymbol}} {{RegionInfo.CurrencyEnglishName}}</a></li>
+{{/currencies}}
+</ul>
+</script>
+
+/* Control Panel: Tape Chart Booking Detail */
+<script id="tmpl-cp-tapechart-bookingdetail" type="text/html">
+<div>
+<div class="dl-2col">
+<dl>
+    <dt>Booking ID:</dt>
+    <dd>{{BookingID}}</dd>
+</dl>
+<div class="clear"></div>
+<dl>
+    <dt>Type:</dt>
+    <dd>{{Type}}</dd>
+</dl>
+<dl>
+    <dt>Status:</dt>
+    <dd>{{Status}}</dd>
+</dl>
+<dl>
+    <dt>Check-in:</dt>
+    <dd>{{CheckInDisplay}}</dd>
+</dl>
+<dl>
+    <dt>Check-out:</dt>
+    <dd>{{CheckOutDisplay}}</dd>
+</dl>
+<dl>
+    <dt>#Nights:</dt>
+    <dd>{{LOS}}</dd>
+</dl>
+<dl>
+    <dt>Unit Booked:</dt>
+    <dd>{{PropertyHeadline}}</dd>
+</dl>
+<div class="clear2"></div>
+
+<h5>Renter</h5>
+<dl>
+    <dt>Name:</dt>
+    <dd>{{RenterName}}</dd>
+</dl>
+<div class="clear"></div>
+<dl>
+    <dt>Phone:</dt>
+    <dd>{{Phone}}</dd>
+</dl>
+<dl>
+    <dt>Email:</dt>
+    <dd>{{Email}}</dd>
+</dl>
+<div class="clea2"></div>
+
+<h5>Statement</h5>
+<dl>
+    <dt>Total Stay:</dt>
+    <dd>{{Amount}}</dd>
+</dl>
+<div class="clear"></div>
+<dl>
+    <dt>Total Due:</dt>
+    <dd></dd>
+</dl>
+<dl>
+    <dt>Due On:</dt>
+    <dd>{{DueOn}}</dd>
+</dl>
+</div>
+</div>
+</script>
