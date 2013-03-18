@@ -15,8 +15,6 @@ function getconfig(){
 		<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />
 		<link rel="stylesheet" type="text/css" href="<?= plugins_url('/slideshow.css', __FILE__) ?>" />
 		
-		<script src="//code.jquery.com/jquery-1.9.1.min.js"></script>
-		<script src="//code.jquery.com/jquery-migrate-1.0.0.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/i18n/jquery-ui-i18n.min.js"></script>
 		
