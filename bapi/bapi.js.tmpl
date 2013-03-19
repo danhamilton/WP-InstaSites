@@ -341,7 +341,8 @@ context.site = {
 /* Templates */
 context.templates = {
 	all: function() { return _config.result.templates; },
-	get: function(tmpl) { return $($.parseHTML(context.config().templates)).filter('#' + tmpl).html(); }
+	get: function(tmpl) { return $($.parseHTML(context.config().templates)).filter('#' + tmpl).html(); },
+	set: function(tmpl) { _config.result.templates = tmpl; }
 }
 
 /* Logging */
