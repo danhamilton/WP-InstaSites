@@ -18,9 +18,9 @@ class BAPI_HP_Slideshow extends WP_Widget {
         <div id="bapi-hp-slideshow"></div>
         <script type="text/javascript">
 			$(document).ready(function () {
-				var imgurl = BAPI.site().slideshowimages[0].imgurl;
-				var logourl = BAPI.site().logo;
-				var tagline = BAPI.site().tagline;
+				var imgurl = ''; //BAPI.site().slideshowimages[0].imgurl;
+				var logourl = BAPI.site.logo;
+				var tagline = BAPI.site.tagline;
 				$('#bapi-hp-slideshow').parent().css('min-height','350px');
 				$('#bapi-hp-slideshow').parent().css('background-image','url(\''+imgurl+'\') ');
 				$('#bapi-hp-slideshow').parent().css('background-repeat','no-repeat');
@@ -35,7 +35,7 @@ class BAPI_HP_Slideshow extends WP_Widget {
 						if(t>=i){t=0};
 				    	slidesLoop(i,t);
 				   	}, 8000)
-				})(BAPI.site().slideshowimages.length,1); 
+				})(BAPI.site.slideshowimages.length,1); 
 			});
         </script>
         <?php
@@ -86,8 +86,8 @@ class BAPI_HP_LogoWithTagline extends WP_Widget {
         <div id="logo-replace"></div>
         <script type="text/javascript">
 			$(document).ready(function () {
-				var logourl = BAPI.site().logo;
-				var tagline = BAPI.site().tagline;
+				var logourl = BAPI.site.logo;
+				var tagline = BAPI.site.tagline;
 				$('#logo-replace').parent().prepend('<img src="'+logourl+'" alt=""><h2>'+tagline+'</h2>');
 			});
         </script>
@@ -142,7 +142,7 @@ class BAPI_HP_Logo extends WP_Widget {
         <div id="bapi-logo"></div>
         <script type="text/javascript">
 			$(document).ready(function () {
-				var logourl = BAPI.site().logo;
+				var logourl = BAPI.site.logo;
 				$('#bapi-logo').html('<img src="'+logourl+'" alt="">');
 			});
         </script>
@@ -190,15 +190,17 @@ class BAPI_HP_Search extends WP_Widget {
 
 	public function widget( $args, $instance ) {
 		extract( $args );
-		$title = apply_filters( 'widget_title', $instance['title'] );
+		//$title = apply_filters( 'widget_title', $instance['title'] );
 
 		echo $before_widget;
-		if ( ! empty( $title ) )
-			echo $before_title . $title . $after_title;
-		?>
+		//if ( ! empty( $title ) )
+			//echo $before_title . $title . $after_title;
+		//?>
         <div id="bapi-hp-search"></div>
         <script type="text/javascript">
-			BAPI.UI.createSearchWidget('#bapi-hp-search', { "searchurl": "/rentalsearch", "template": BAPI.templates.get('tmpl-search-homepage') });
+			$(document).ready(function () {
+				BAPI.UI.createSearchWidget('#bapi-hp-search', { "searchurl": "/rentalsearch", "template": BAPI.templates.get('tmpl-search-homepage') });
+			});
         </script>
         <?php
 		echo $after_widget;
@@ -253,9 +255,11 @@ class BAPI_Prop_Inquiry extends WP_Widget {
 		?>
         <div id="inquiryform"></div>
         <script>
-		var pkid = <?= get_post_meta(get_the_ID(),'property_id',true) ?>;
 		$(document).ready(function () {
-			BAPI.UI.createInquiryForm('#inquiryform', { "pikd": pkid, "hasdatesoninquiryform": true });
+			var pkid = <?= get_post_meta(get_the_ID(),'property_id',true) ?>;
+			$(document).ready(function () {
+				BAPI.UI.createInquiryForm('#inquiryform', { "pikd": pkid, "hasdatesoninquiryform": true });
+			});
 		});
 		</script>
         <?php
@@ -481,6 +485,157 @@ class BAPI_Featured_Properties extends WP_Widget {
 	}
 
 } // class BAPI_Featured_Properties
+
+
+
+
+
+/**
+ * Adds BAPI_Property_Finders widget.
+ */
+class BAPI_Property_Finders extends WP_Widget {
+
+	public function __construct() {
+		parent::__construct(
+	 		'bapi_property_finders', // Base ID
+			'Bookt Predefined Searches', // Name
+			array( 'description' => __( 'Bookt Property Finders', 'text_domain' ), ) // Args
+		);
+	}
+
+	public function widget( $args, $instance ) {
+		extract($args);
+		$title = apply_filters('widget_title',$instance['title']);
+		$pagesize = esc_textarea($instance['text']);
+		echo $before_widget;
+		if(!empty($title))
+			echo $before_title.$title.$after_title;
+		?>
+        <div class="propertyfinders"></div>
+		<script>
+			$(document).ready(function () {
+				BAPI.UI.createSummaryWidget('.propertyfinders',
+				{
+		   			searchoptions: { "pagesize": <?= $pagesize ?>, "sort": "random" },
+					"entity": BAPI.entities.searches,
+					"template": BAPI.templates.get('tmpl-searches-horiz')
+				});
+			});
+        </script>
+        <?php
+		echo $after_widget;
+	}
+
+	public function update( $new_instance, $old_instance ) {
+		$instance = array();
+		$instance['title'] = strip_tags( $new_instance['title'] );
+		if ( current_user_can('unfiltered_html') )
+			$instance['text'] =  $new_instance['text'];
+		else
+			$instance['text'] = stripslashes( wp_filter_post_kses( addslashes($new_instance['text']) ) ); // wp_filter_post_kses() expects slashed
+		return $instance;
+	}
+
+	public function form( $instance ) {
+		if ( isset( $instance[ 'title' ] ) ) {
+			$title = $instance[ 'title' ];
+		}
+		else {
+			$title = __( 'Property Finders', 'text_domain' );
+		}
+		if ( isset( $instance[ 'text' ] ) ) {
+			$pagesize =  esc_textarea($instance['text']);
+		}
+		else {
+			$pagesize = __( '4', 'text_domain' );
+		}
+		?>
+		<p>
+		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
+		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+        <label for="<?php echo $this->get_field_id( 'text' ); ?>"><?php _e( '# of Properties:' ); ?></label>
+        <input id="<?php echo $this->get_field_id( 'text' ); ?>" name="<?php echo $this->get_field_name( 'text' ); ?>" type="text" value="<?php echo esc_attr( $pagesize ); ?>" />
+        
+		</p>
+		<?php 
+	}
+
+} // class BAPI_Property_Finders
+
+
+
+
+/**
+ * Adds BAPI_Specials_Widget widget.
+ */
+class BAPI_Specials_Widget extends WP_Widget {
+
+	public function __construct() {
+		parent::__construct(
+	 		'bapi_specials_widget', // Base ID
+			'Bookt Specials', // Name
+			array( 'description' => __( 'Bookt Specials', 'text_domain' ), ) // Args
+		);
+	}
+
+	public function widget( $args, $instance ) {
+		extract($args);
+		$title = apply_filters('widget_title',$instance['title']);
+		$pagesize = esc_textarea($instance['text']);
+		echo $before_widget;
+		if(!empty($title))
+			echo $before_title.$title.$after_title;
+		?>
+        <div class="specials-widget"></div>
+		<script>
+			$(document).ready(function () {
+				BAPI.UI.createSummaryWidget('.specials-widget',
+				{
+		   			searchoptions: { "pagesize": <?= $pagesize ?>, "sort": "random" },
+					"entity": BAPI.entities.specials,
+					"template": BAPI.templates.get('tmpl-specials-vert')
+				});
+			});
+        </script>
+        <?php
+		echo $after_widget;
+	}
+
+	public function update( $new_instance, $old_instance ) {
+		$instance = array();
+		$instance['title'] = strip_tags( $new_instance['title'] );
+		if ( current_user_can('unfiltered_html') )
+			$instance['text'] =  $new_instance['text'];
+		else
+			$instance['text'] = stripslashes( wp_filter_post_kses( addslashes($new_instance['text']) ) ); // wp_filter_post_kses() expects slashed
+		return $instance;
+	}
+
+	public function form( $instance ) {
+		if ( isset( $instance[ 'title' ] ) ) {
+			$title = $instance[ 'title' ];
+		}
+		else {
+			$title = __( 'Special Offers', 'text_domain' );
+		}
+		if ( isset( $instance[ 'text' ] ) ) {
+			$pagesize =  esc_textarea($instance['text']);
+		}
+		else {
+			$pagesize = __( '4', 'text_domain' );
+		}
+		?>
+		<p>
+		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
+		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+        <label for="<?php echo $this->get_field_id( 'text' ); ?>"><?php _e( '# of Properties:' ); ?></label>
+        <input id="<?php echo $this->get_field_id( 'text' ); ?>" name="<?php echo $this->get_field_name( 'text' ); ?>" type="text" value="<?php echo esc_attr( $pagesize ); ?>" />
+        
+		</p>
+		<?php 
+	}
+
+} // class BAPI_Specials_Widget
 
 
 

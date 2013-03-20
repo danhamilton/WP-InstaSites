@@ -166,28 +166,34 @@
 <div class="list-view-page">
 {{#result}}
 <div class="portal-result">
-    <div class="portal-inner-left">
-        <div class="portal-thumbnail">
-            <div class="rownumber" data-id="{{ID}}">{{ContextData.ItemIndex}}</div>
-            <a href="{{&ContextData.SEO.DetailURL}}">
-                <img class="portal-thumb-img" alt="thumbnail" src="{{&Images.0.ThumbnailURL}}" />
-            </a>
-        </div>
-        <div class="portal-info">
-            <h2><a href="{{&ContextData.SEO.DetailURL}}"><span>{{Headline}}</span></a></h2>
-            <small>{{#NumReviews}}{{AvgReview}}{{/NumReviews}}{{^NumReviews}}{{textdata.No reviews yet}}{{/NumReviews}}</small>
-            <div class="clear"></div>
-            <p class="first"><span><b>City:</b> {{City}}</span></p>
-            <p><b>{{#Bedrooms}}{{textdata.Beds}}</b>: {{Bedrooms}} | {{/Bedrooms}}{{#Bathrooms}}<b>{{textdata.Baths}}</b>: {{Bathrooms}} | {{/Bathrooms}}<b>{{textdata.Sleeps}}</b>: {{Sleeps}}</p>
-			<div class="portal-rates">{{ContextData.Quote.PublicNotes}}</div>
-        </div>
-    </div>
-</div>
+            <div class="portal-inner row-fluid shadow">
+              <div class="portal-images span4">
+                <div class="flexslider">
+                  <ul class="slides">
+				  {{#Images}}
+                    <li><img alt="{{Caption}}" src="{{&MediumURL}}" /> </li>
+                  {{/Images}}  
+                  </ul>
+                </div>
+              </div>
+              <div class="portal-info span8">
+                <div class="property-info">
+                  <h2 class="property-title">{{Headline}}</h2>
+                  <div class="location"><span><b>City:</b> {{City}}</span> {{#Bedrooms}}<b>{{textdata.Beds}}</b>: {{Bedrooms}} | {{/Bedrooms}}{{#Bathrooms}}<b>{{textdata.Baths}}</b>: {{Bathrooms}} | {{/Bathrooms}}<b>{{textdata.Sleeps}}</b>: {{Sleeps}}</div>
+                  <div class="brick-wrap">
+                    <div class="description">{{&Summary}}</div>
+                  </div>
+                  <div class="rates clearfix">
+                    <div class="portal-rates pull-left">{{ContextData.Quote.PublicNotes}}</div>
+                    <a class="property-link pull-right" href="{{&ContextData.SEO.DetailURL}}">Details <span>&rarr;</span></a> </div>
+                </div>
+              </div>
+            </div>
+          </div>
 {{/result}}
 </div>
-<div class="clear2"></div>
 {{^islastpage}}<div><a href='javascript:void(0)' class='showmore'>{{textdata.Show More Results}} ({{totalcount}})</a></div>{{/islastpage}}
-{{#islastpage}}<div>{{textdata.There are no more results}}</div>{{/islastpage}}
+{{#islastpage}}<div class="nomore">{{textdata.There are no more results}}</div>{{/islastpage}}
 </script>
 
 <script id="tmpl-allproperties" type="text/html">

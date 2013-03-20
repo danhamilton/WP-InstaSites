@@ -10,11 +10,9 @@ function bapi_create_menu() {
 
 function bapi_options_init(){
 	register_setting('bapi_options','api_key');
+	register_setting('bapi_options','bapi_language');
 	register_setting('bapi_options','solution_id');
 	register_setting('bapi_options','bapi_baseurl');	
-	register_setting('bapi_options','search_css');
-	register_setting('bapi_options','search_template');
-	register_setting('bapi_options','update_action'); 
 	register_setting('bapi_options','bapi_custom_tmpl_loc');
 	register_setting('bapi_options','bapi_site_cdn_domain'); 
 	register_setting('bapi_options','bapi_slideshow_image1');
@@ -52,37 +50,35 @@ function bapi_settings_page() {
 <div class="wrap">
 <h1><img src="<?= plugins_url('/img/logo.png', __FILE__) ?>" /></h1>
 <h2>Bookt API Plugin Settings</h2>
-<!-- Use h4 below for debug messages -->
-<h4><?php 
-//$tmpl = bapi_get_templates();
-//echo $tmpl['tmpl-leadrequestform-propertyinquiry'];
- ?></h4>
+	<!-- Use h4 below for debug messages -->
+	<h4></h4>
     <form method="post" action="options.php" id="bapi-options-form" enctype="multipart/form-data">
     	<input type="hidden" name="update_action" id="bapi-update-action" value="" />
         <?php settings_fields( 'bapi_options' ); ?>
         <table class="form-table">
-            <tr valign="top">
-            <th scope="row">Solution ID</th>
-            <td><input type="text" name="solution_id" size="6" value="<?php echo get_option('solution_id'); ?>" /></td>
-            </tr> 
-            <tr valign="top">
-            <th scope="row">API Key</th>
-            <td><input type="text" name="api_key" size="60" value="<?php echo get_option('api_key'); ?>" /> 
-            </td>
-            </tr>
-			<tr valign="top" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">
-            <th scope="row">BAPI Base URL</th>
-            <td><input type="text" name="bapi_baseurl" size="60" value="<?php echo $bapi_baseurl; ?>" /> 
-            </td>
-            </tr>
-            <tr valign="top" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">
-            <th scope="row">CDN Site URL</th>
-            <td><input type="text" name="bapi_site_cdn_domain" size="60" value="<?php echo $cdn_url; ?>" /> 
-            </td>
-            </tr>
-            <tr>
-            <td colspan="2"><em>If you do not already have an API key for Bookt, please contact <a href="mailto:support@bookt.com?subject=API%20Key%20-%20Wordpress%20Plugin">support@bookt.com</a> to obtain an API key.</em></td>
-            </tr>
+		<tr valign="top">
+			<th scope="row">Solution ID</th>
+			<td><input type="text" name="solution_id" size="6" value="<?php echo get_option('solution_id'); ?>" /></td>
+		</tr> 
+		<tr valign="top">
+			<th scope="row">API Key</th>
+			<td><input type="text" name="api_key" size="60" value="<?php echo get_option('api_key'); ?>" /></td>
+		</tr>
+		<tr valign="top">
+			<th scope="row">Language</th>
+			<td><input type="text" name="bapi_language" size="60" value="<?php echo get_option('bapi_language'); ?>" /></td>
+		</tr>
+		<tr valign="top" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">
+			<th scope="row">BAPI Base URL</th>
+			<td><input type="text" name="bapi_baseurl" size="60" value="<?php echo $bapi_baseurl; ?>" /></td>
+		</tr>
+		<tr valign="top" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">
+			<th scope="row">CDN Site URL</th>
+			<td><input type="text" name="bapi_site_cdn_domain" size="60" value="<?php echo $cdn_url; ?>" /></td>
+		</tr>
+		<tr>
+			<td colspan="2"><em>If you do not already have an API key for Bookt, please contact <a href="mailto:support@bookt.com?subject=API%20Key%20-%20Wordpress%20Plugin">support@bookt.com</a> to obtain an API key.</em></td>
+		</tr>
         </table>
         <h3>Slideshow Options</h3>
         <table class="form-table">
@@ -138,13 +134,15 @@ function bapi_settings_page() {
     <hr />
     <h4>The following section is only available to Super Admins</h4>
     <hr />
+	
     <h3>Bulk Update Actions</h3>
     <div id="bapi-import-update" style="margin-top:-20px;">
     	<p class="submit" style="float:left;">
         	<input class="button-primary" value="Update All Properties" onClick="javascript:update_all_properties()"> <span id="loading-update"><img src="<?= plugins_url('/img/ajax-loader.gif', __FILE__) ?>" style="display:none;" height="20" valign="middle"></span>
         </p>
     	<p class="submit" style="float:left;margin-left:20px;">
-        	<input class="button-primary" value="Import All Properties" onClick="javascript:import_all_properties()"> <span id="loading-import"><img src="<?= plugins_url('/img/ajax-loader.gif', __FILE__) ?>" style="display:none;" height="20" valign="middle"></span>
+        	<input class="button-primary import" value="Import All Properties" data-action="import" data-entity="property" data-template="tmpl-properties-detail" data-parentmenu="bapi_search"> 
+			<span id="loading-import"><img src="<?= plugins_url('/img/ajax-loader.gif', __FILE__) ?>" style="display:none;" height="20" valign="middle"></span>
         </p>
     </div>
     <div class="clear"></div>
@@ -153,7 +151,8 @@ function bapi_settings_page() {
         	<input class="button-primary" value="Update Developments" onClick="javascript:update_all_developments()"> <span id="loading-update-dev"><img src="<?= plugins_url('/img/ajax-loader.gif', __FILE__) ?>" style="display:none;" height="20" valign="middle"></span>
         </p>
     	<p class="submit" style="float:left;margin-left:20px;">
-        	<input class="button-primary" value="Import Developments" onClick="javascript:import_all_developments()"> <span id="loading-import-dev"><img src="<?= plugins_url('/img/ajax-loader.gif', __FILE__) ?>" style="display:none;" height="20" valign="middle"></span>
+        	<input class="button-primary import" value="Import All Developments" data-action="import" data-entity="development" data-template="tmpl-development-detail" data-parentmenu=""> 
+			<span id="loading-import-dev"><img src="<?= plugins_url('/img/ajax-loader.gif', __FILE__) ?>" style="display:none;" height="20" valign="middle"></span>
         </p>
     </div>
     <div class="clear"></div>
@@ -186,16 +185,29 @@ function bapi_settings_page() {
     </div>
     <div class="clear"></div>
     <h3>Initial Configuration</h3>
+	<small>Note: Permalink Settings should be set to Post name for the menu structure to function correctly.</small>
     <div id="bapi-import-update" style="margin-top:-20px;">
     	<p class="submit" style="float:left;">
-        	<input class="button-primary" value="Create Default Pages" onClick="javascript:initial_import()"> <span id="loading-initial"><img src="<?= plugins_url('/img/ajax-loader.gif', __FILE__) ?>" style="display:none;" height="20" valign="middle"></span>
+        	<input class="button-primary import" value="Create Default Pages" data-action="initial_import"> 
+			<span id="loading-initial"><img src="<?= plugins_url('/img/ajax-loader.gif', __FILE__) ?>" style="display:none;" height="20" valign="middle"></span>
         </p>
     </div>
+	
+	<div id="dlg-result" style="display:none; width:600px">
+		<div id="dlg-txtresult" style="padding:10px"></div>
+	</div>
+	
     <?php
 	}
 	?>
 </div>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/jquery.ui/jquery-ui-1.10.2.min.css', __FILE__) ?>" />
+<link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/jquery.ad-gallery.min.css', __FILE__) ?>" />
+
+<script type="text/javascript" src="<?= plugins_url('/js/jquery.1.9.1.min.js', __FILE__) ?>" ></script>
+<script type="text/javascript" src="<?= plugins_url('/js/jquery-migrate-1.0.0.min.js', __FILE__) ?>" ></script>		
+<script type="text/javascript" src="<?= plugins_url('/js/jquery-ui-1.10.2.min.js', __FILE__) ?>" ></script>
+<script type="text/javascript" src="<?= plugins_url('/js/jquery-ui-i18n.min.js', __FILE__) ?>" ></script>			
 <script type="text/javascript">
 	function toggle_template(id){
 		$('#bapi-options-hidden_'+id).css('display','');
@@ -204,118 +216,29 @@ function bapi_settings_page() {
 	function toggle_template_off(id){
 		$('#bapi-options-hidden_'+id).css('display','none');
 		$('#bapi-options-shown_'+id).css('display','');
-	}
-	function update_all_properties(){
-		var apiKey = '<?= get_option('api_key') ?>';
-		//alert(apiKey);
-		var c = confirm("This action will affect the content in all posts linked to Bookt API.\n\nExisting content will be replaced using the Property Page Template and current property data from the Bookt platform.\n\nThis action will not remove or add properties");
-		if(c){
-			$('#bapi-update-action').val('update-props');
-			$('#loading-update img').css('display','');
-			$('#bapi-options-form #submit').click();
-		}
-	}
-	function import_all_properties(){
-		var apiKey = '<?= get_option('api_key') ?>';
-		//alert(apiKey);
-		var c = confirm("This action will import all active properties from the Bookt account linked to the curent API key and add them as Pages on this site.\n\nExisting content will not be affected.");
-		if(c){
-			$('#bapi-update-action').val('import-props');
-			$('#loading-import img').css('display','');
-			$('#bapi-options-form #submit').click();
-		}
-	}
-	function update_all_developments(){
-		var apiKey = '<?= get_option('api_key') ?>';
-		//alert(apiKey);
-		var c = confirm("This action will affect the content in all posts linked to Bookt API.\n\nExisting content will be replaced using the Development Page Template and current development data from the Bookt platform.\n\nThis action will not remove or add properties");
-		if(c){
-			$('#bapi-update-action').val('update-devs');
-			$('#loading-update-dev img').css('display','');
-			$('#bapi-options-form #submit').click();
-		}
-	}
-	function import_all_developments(){
-		var apiKey = '<?= get_option('api_key') ?>';
-		//alert(apiKey);
-		var c = confirm("This action will import all active developments from the Bookt account linked to the curent API key and add them as Pages on this site.\n\nExisting content will not be affected.");
-		if(c){
-			$('#bapi-update-action').val('import-devs');
-			$('#loading-import-dev img').css('display','');
-			$('#bapi-options-form #submit').click();
-		}
-	}
-	function update_all_specials(){
-		var apiKey = '<?= get_option('api_key') ?>';
-		//alert(apiKey);
-		var c = confirm("This action will affect the content in all posts linked to Bookt API.\n\nExisting content will be replaced using the Special Page Template and current specials data from the Bookt platform.\n\nThis action will not remove or add properties");
-		if(c){
-			$('#bapi-update-action').val('update-specials');
-			$('#loading-update-specials img').css('display','');
-			$('#bapi-options-form #submit').click();
-		}
-	}
-	function import_all_specials(){
-		var apiKey = '<?= get_option('api_key') ?>';
-		//alert(apiKey);
-		var c = confirm("This action will import all active specials from the Bookt account linked to the curent API key and add them as Pages on this site.\n\nExisting content will not be affected.");
-		if(c){
-			$('#bapi-update-action').val('import-specials');
-			$('#loading-import-specials img').css('display','');
-			$('#bapi-options-form #submit').click();
-		}
-	}
-	function update_all_searches(){
-		var apiKey = '<?= get_option('api_key') ?>';
-		//alert(apiKey);
-		var c = confirm("This action will affect the content in all posts linked to Bookt API.\n\nExisting content will be replaced using the Search Page Template and current specials data from the Bookt platform.\n\nThis action will not remove or add properties");
-		if(c){
-			$('#bapi-update-action').val('update-searches');
-			$('#loading-update-searches img').css('display','');
-			$('#bapi-options-form #submit').click();
-		}
-	}
-	function import_all_searches(){
-		var apiKey = '<?= get_option('api_key') ?>';
-		//alert(apiKey);
-		var c = confirm("This action will import all active searches from the Bookt account linked to the curent API key and add them as Pages on this site.\n\nExisting content will not be affected.");
-		if(c){
-			$('#bapi-update-action').val('import-searches');
-			$('#loading-import-searches img').css('display','');
-			$('#bapi-options-form #submit').click();
-		}
-	}
-	function update_all_attractions(){
-		var apiKey = '<?= get_option('api_key') ?>';
-		//alert(apiKey);
-		var c = confirm("This action will affect the content in all posts linked to Bookt API.\n\nExisting content will be replaced using the Search Page Template and current attractions data from the Bookt platform.\n\nThis action will not remove or add properties");
-		if(c){
-			$('#bapi-update-action').val('update-attractions');
-			$('#loading-update-attractions img').css('display','');
-			$('#bapi-options-form #submit').click();
-		}
-	}
-	function import_all_attractions(){
-		var apiKey = '<?= get_option('api_key') ?>';
-		//alert(apiKey);
-		var c = confirm("This action will import all active attractions from the Bookt account linked to the curent API key and add them as Pages on this site.\n\nExisting content will not be affected.");
-		if(c){
-			$('#bapi-update-action').val('import-attractions');
-			$('#loading-import-attractions img').css('display','');
-			$('#bapi-options-form #submit').click();
-		}
-	}
-	function initial_import(){
-		var apiKey = '<?= get_option('api_key') ?>';
-		//alert(apiKey);
-		var c = confirm("This action will add a default set of content pages and link them to your main navigation.\n\nTHIS ACTION SHOULD ONLY BE PERFORMED ONCE DURING INITIAL SETUP!");
-		if(c){
-			$('#bapi-update-action').val('initial_import');
-			$('#loading-initial img').css('display','');
-			$('#bapi-options-form #submit').click();
-		}
-	}
-	jQuery(document).ready(function($){
+	}	
+	
+	$(document).ready(function($){
+	
+		$(".import").on("click", function () {			
+			if (confirm("Are you sure you want to import this data?")) {
+				var url = '<?= plugins_url('/import.php', __FILE__) ?>' + 
+					'?apikey=<?= getbapiapikey() ?>' +
+					'&bapiurl=<?= urlencode(getbapiurl()) ?>' +
+					'&action=' + $(this).attr("data-action") + 
+					'&entity=' + $(this).attr("data-entity") + 
+					'&template=' + $(this).attr("data-template") + 
+					'&parent=' + $(this).attr("data-parentmenu");
+				console.log(url);
+				$('#loading-initial img').show();
+				$.get(url, function(res) {					
+					$('#dlg-txtresult').html(res);
+					$('#dlg-result').dialog({width:700});
+					$('#loading-initial img').hide();
+				});
+			}
+		});
+	
 		$('input#bapi_slideshow_image1,input#image-pick1').click(function(){
 			//alert('test');
 			wp.media.editor.send.attachment = function(props, attachment){

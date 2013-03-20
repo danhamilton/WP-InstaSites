@@ -24,17 +24,9 @@ License: GPL2
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-
-//if(!defined('BAPI_API_LOCATION')){
-//	define('BAPI_API_LOCATION','connect.bookt.com');
-//}
 	
-//require_once(dirname( __FILE__ ).'/bapi-config.php'); //Deprecated
-//include_once(dirname( __FILE__ ).'/bapi.php'); //Deprecated
-include_once(dirname( __FILE__ ).'/admin.php');
 include_once(dirname( __FILE__ ).'/functions.php');
-include_once(dirname( __FILE__ ).'/import.php');
-include_once(dirname( __FILE__ ).'/property.php');
+include_once(dirname( __FILE__ ).'/admin.php');
 include_once(dirname( __FILE__ ).'/search.php');
 include_once(dirname( __FILE__ ).'/widgets.php');
 include_once(dirname( __FILE__ ).'/cdn-linker/wp-cdn-linker.php');
@@ -67,6 +59,4 @@ add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Similar
 
 require_once('mustache.php-2.1.0/src/Mustache/Autoloader.php');
 Mustache_Autoloader::register();
-
-
 ?>

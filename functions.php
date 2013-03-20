@@ -1,40 +1,65 @@
 <?php
 
-function getconfig(){
-	if(!defined('BAPI_API_LOCATION')){
-		define('BAPI_API_LOCATION','connect.bookt.com');
+function gettemplatelocation() {
+	return "http://bapi.s3.amazonaws.com/dev/bapi.ui.mustache.tmpl";
+}
+
+function getbapiurl() {
+	$bapi_baseurl = 'connect.bookt.com';
+	if(get_option('bapi_baseurl')){
+		$bapi_baseurl = get_option('bapi_baseurl');
 	}
+	if(empty($bapi_baseurl)){
+		$bapi_baseurl = 'connect.bookt.com';
+	}
+	if (stripos($bapi_baseurl, "localhost", 0) === 0) {
+		return "http://" . $bapi_baseurl;
+	}
+	return "https://" . $bapi_baseurl;
+}
+
+function getbapilangauge() {
+	$language = get_option('bapi_language');	
+	if(empty($language)) {
+		$language = "en-US";
+	}
+	return $language;	
+}
+
+function getbapijsurl($apiKey) {
+	return getbapiurl() . "/js/bapi.js?apikey=" . $apiKey . "&uitmploc=" . urlencode(gettemplatelocation()) . "&language=" . getbapilangauge();
+}
+
+function getbapiapikey() {
+	return get_option('api_key');
+}
+
+function getconfig(){
 	if(get_option('api_key')){
 		$apiKey = get_option('api_key');
-		$useCustomTemplatesLoc = get_option('bapi_custom_tmpl_loc');
-		$tmplLoc = '';
-		if(strlen($useCustomTemplatesLoc)>0){
-			$tmplLoc = '&uitmploc='.urlencode($useCustomTemplatesLoc);
-		}
+		$language = getbapilangauge();
 		?>
-		<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" />
-		<link rel="stylesheet" type="text/css" href="<?= plugins_url('/slideshow.css', __FILE__) ?>" />
+		<link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/slideshow.css', __FILE__) ?>" />
+		<link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/jquery.ui/jquery-ui-1.10.2.min.css', __FILE__) ?>" />
+		<link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/jquery.ad-gallery.min.css', __FILE__) ?>" />		
 		
-		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js"></script>
-		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/i18n/jquery-ui-i18n.min.js"></script>
+		<script type="text/javascript" src="<?= plugins_url('/js/jquery.1.9.1.min.js', __FILE__) ?>" ></script>
+		<script type="text/javascript" src="<?= plugins_url('/js/jquery-migrate-1.0.0.min.js', __FILE__) ?>" ></script>		
+		<script type="text/javascript" src="<?= plugins_url('/js/jquery-ui-1.10.2.min.js', __FILE__) ?>" ></script>
+		<script type="text/javascript" src="<?= plugins_url('/js/jquery-ui-i18n.min.js', __FILE__) ?>" ></script>			
 		
-		<script src="//bapi.s3.amazonaws.com/lib/jquery.cycle2.min.js" type="text/javascript"></script>
-		<script src="//bapi.s3.amazonaws.com/lib/validity.js" type="text/javascript"></script>
+		<script type="text/javascript" src="<?= plugins_url('/js/jquery.cycle2.min.js', __FILE__) ?>" ></script>
+		<script type="text/javascript" src="<?= plugins_url('/js/slides.min.jquery.js', __FILE__) ?>" ></script>
+		<script type="text/javascript" src="<?= plugins_url('/js/jquery.ad-gallery.min.js', __FILE__) ?>" ></script>
+		<script type="text/javascript" src="<?= plugins_url('/js/validity.js', __FILE__) ?>" ></script>
+		<script type="text/javascript" src="<?= plugins_url('/js/mustache.min.js', __FILE__) ?>" ></script>
 		
-		<script src="//cdnjs.cloudflare.com/ajax/libs/mustache.js/0.7.0/mustache.min.js" type="text/javascript"></script>
-		
-		<script src="//<?= BAPI_API_LOCATION ?>/js/bapi.js?apikey=<?= $apiKey ?><?= $tmplLoc ?>" type="text/javascript"></script>
-		<script src="//bapi.s3.amazonaws.com/dev/bapi.ui.js" type="text/javascript"></script>
-		<script src="//<?= BAPI_API_LOCATION ?>/js/bapi.textdata.js?apikey=<?= $apiKey ?>" type="text/javascript"></script>
-		
-		<script type="text/javascript" src="<?= plugins_url('/slides.min.jquery.js', __FILE__) ?>" ></script>
-		<link rel="stylesheet" type="text/css" href="http://coffeescripter.com/code/ad-gallery/jquery.ad-gallery.css" />
-		<script src="//booktplatform.s3.amazonaws.com/App_SharedStyles/JavaScript/jquery.ad-gallery.min.js" type="text/javascript"></script>
+		<script type="text/javascript" src="<?= getbapijsurl($apiKey) ?>"></script>
+		<script type="text/javascript" src="<?= plugins_url('/bapi/bapi.ui.js', __FILE__) ?>" ></script>		
+		<script src="<?= getbapiurl() ?>/js/bapi.textdata.js?apikey=<?= $apiKey ?>&language=<?= $language ?>" type="text/javascript"></script>
 		<script type="text/javascript">		
-			BAPI.defaultOptions.baseURL = 'https://<?= BAPI_API_LOCATION ?>';
-			$(document).ready(function () {
-				BAPI.init('<?= $apiKey ?>');
-			});
+			BAPI.defaultOptions.baseURL = '<?= getbapiurl() ?>';
+			BAPI.init('<?= $apiKey ?>');			
 		</script>
 		<?php
 		

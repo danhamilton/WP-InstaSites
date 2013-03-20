@@ -254,14 +254,14 @@ context.createStaticPropertyMap = function (id, prop, options) {
 /*
 	Group: Summary
 */
-context.createSummaryWidget = function (targetid, options) {
+context.createSummaryWidget = function (targetid, options, callback) {
 	options = initOptions(options, 10, 'tmpl-base-summary');
 	if (options.log) { BAPI.log("--options--"); BAPI.log(options); }
 	var ids=[], alldata=[];
 	context.loading.show();		
 	BAPI.search(options.entity, options.searchoptions, function (data) { 
 		ids = data.result; 
-		doSearch(targetid, ids, options.entity, options, alldata); 
+		doSearch(targetid, ids, options.entity, options, alldata, callback); 
 	});
 }
 
@@ -745,7 +745,7 @@ function initOptions(options, initpagesize, inittemplatename) {
 	return options;
 }
 
-function doSearch(targetid, ids, entity, options, alldata) {
+function doSearch(targetid, ids, entity, options, alldata, callback) {
 	BAPI.log("Showing page: " + options.searchoptions.page);
 	BAPI.get(ids, entity, options.searchoptions, function (data) {
 		context.loading.hide(); // hide any loading indicator
@@ -760,12 +760,13 @@ function doSearch(targetid, ids, entity, options, alldata) {
 		data.config = BAPI.config(); 						
 		data.textdata = options.textdata;
 		var html = Mustache.render(options.template, data); // do the mustache call
-		$(targetid).html(html); // update the target
+		$(targetid).html(html); // update the target		
 		applyTruncate('.trunc' + data.curpage, 75);
+		if (callback) { callback(data); }
 		$(".showmore").on("click", function () { 				
 			options.searchoptions.page++; 
 			$(this).block({ message: "<img src='//booktplatform.s3.amazonaws.com/App_SharedStyles/CCImages/loading.gif' />" });
-			doSearch(targetid, ids, entity, options, alldata); 
+			doSearch(targetid, ids, entity, options, alldata, callback); 
 		});
 	});
 }
