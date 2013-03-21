@@ -132,35 +132,36 @@
 	Group: Properties
 */
 <script id="tmpl-propertysearch-galleryview" type="text/html">
-<div class="gallery-block">
-	<div class="gallery-block-inner">
-		<div class="gallery-block-left">
-			<div class="gallery-thumbnail">
-				<div class="rownumber">1</div>
-				<a hef="#"><img class="gallery-imgpropthumb" alt="Beautiful Layout, Comfort Stay!" src="http://s3.amazonaws.com/cdnmedia.bookt.com/3085/3452390b-e863-4557-8764-c6a6548339d1.jpg"></a>
-			</div>
-		</div>
-		<div class="clear2"></div>
-		<a href="/rentalsearch/v2/house-davenport-wi-fi-176-115929" class="btn-Details">All Details &amp; Photos<span class="gallery-arrow"></span></a>
-		<div class="clear_5px"></div>
-		<a href="/booking/bookingsummary.aspx?KeyID=27176" class="btn-quote">Get a Quote<span class="gallery-arrow"></span></a>
-	</div>
-	<div class="gallery-info">
-		<h2 class="property-headline">
-			<a href="/rentalsearch/v2/house-davenport-wi-fi-176-115929"><span>Step Out the Door of Your Door and Bask in the Florida Sunshine </span></a>
-		</h2>
-		<div class="clear"></div>
-		<div class="gallery-room"><b>Beds:</b> 4 | <b>Baths:</b> 3.5 | <b>Sleeps:</b> 9</div>
-		<div class="top-amenities">Wi-Fi, Tennis, Basketball Court, DVD Player, Gas Grill</div>
-		<h2 class="property-rate-value">From: $189/Night</h2>
-		<div class="compare"><a href="/rentalsearch/compareproperties.aspx">Compare</a>
-			<input type="checkbox" class="favorite" data-id="27176"></input>
-	</div>
-	</div>
-	<div style="clear:both">
-	</div>
+<div class="gallery-view-page">
+{{#result}}
+<div class="span6">
+<div class="portal-result">
+    <div class="portal-inner">    
+        <div class="portal-images">
+			  <div class="flexslider">
+				  <ul class="slides">
+					  {{#Images}}
+					  <li><a class="property-link" href="{{&ContextData.SEO.DetailURL}}"><img alt="{{Caption}}" src="{{&MediumURL}}" /></a></li>
+					  {{/Images}} 
+				  </ul>
+			  </div>            
+        </div>
+        
+        <div class="portal-info">
+			<h2 class="property-title"><a href="{{&ContextData.SEO.DetailURL}}">{{Headline}}</a></h2>
+			<div class="location"><span><b>{{textdata.City}}:</b> {{City}}</span> {{#Bedrooms}}<b>{{textdata.Beds}}</b>: {{Bedrooms}} | {{/Bedrooms}}{{#Bathrooms}}<b>{{textdata.Baths}}</b>: {{Bathrooms}} | {{/Bathrooms}}<b>{{textdata.Sleeps}}</b>: {{Sleeps}}</div>
+			
+            <div class="portal-rates">{{ContextData.Quote.PublicNotes}}</div>			
+        </div>
+        
+    </div>
 </div>
-</script>
+</div>
+{{/result}}
+</div>
+{{^islastpage}}<div><a href='javascript:void(0)' class='showmore'>{{textdata.Show More Results}} ({{totalcount}})</a></div>{{/islastpage}}
+{{#islastpage}}<div class="nomore">{{textdata.There are no more results}}</div>{{/islastpage}}
+</script> 
 
 <script id="tmpl-propertysearch-listview" type="text/html">
 <div class="list-view-page">
@@ -197,37 +198,48 @@
 </script>
 
 <script id="tmpl-allproperties" type="text/html">
-<div class="grid-search-result">
-<table border="0" cellspacing="0" id='tbl-search-result'>
+<table class="table table-bordered table-striped">
+<thead>
 <tr>
-	<th class="first-th"><strong>{{textdata.Compare}}</strong></th>
-	<th class="mid-th"><strong>{{textdata.Property Name}}</strong></th>
-	<th class="mid-th"><strong>{{textdata.Category}}</strong></th>
-	<th class="mid-th"><strong>{{textdata.Beds}}</strong></th>
-	<th class="mid-th"><strong>{{textdata.Baths}}</strong></th>
-	<th class="mid-th"><strong>{{textdata.Sleeps}}</strong></th>
-	<th class="mid-th"><strong>{{textdata.Amenities}}</strong></th>
-	<th class="mid-th"><strong>&nbsp;</strong></th>	
-	<th class="last-th"><strong>&nbsp;</strong></th>	
+	<th>{{textdata.Compare}}</th>
+	<th>{{textdata.Property Name}}</th>
+	<th>{{textdata.Category}}</th>
+	<th>{{textdata.Beds}}</th>
+	<th>{{textdata.Baths}}</th>
+	<th>{{textdata.Sleeps}}</th>
+	<th>{{textdata.Amenities}}</th>
+	<th>{{textdata.Rates}}</th>
+	<th>{{textdata.Book Now}}</th>
 </tr>
+</thead>
+<tbody>
 {{#result}}
-<tr data-pkid="{{ID}}">
-	<td><input type='checkbox' /></td>
-	<td>{{Headline}}</td>
-	<td>{{Type}}</td>
-	<td>{{Bedrooms}}</td>
-	<td>{{Bathrooms}}</td>
-	<td>{{Sleeps}}</td>
-	<td><span class="trunc{{curpage}}">{{Amenities}}</span></td>
-	<td>{{ContextData.Quote.PublicNotes}}</td>
-	<td>{{^IsBookable}}<a href='{{ContextData.SEO.DetailURL}}'>{{textdata.Details & Availability}}</a>{{/IsBookable}}{{#IsBookable}}<a href='{{ContextData.SEO.BookingURL}}'>{{textdata.Book Now}}</a>{{/IsBookable}}</a></td>
+<tr>
+    <td>
+		<input type='checkbox' />
+ 	</td>	
+    <td><a href="{{&ContextData.SEO.DetailURL}}">{{Headline}}</a></td>
+    <td>{{Type}}</td>
+    <td>{{Bedrooms}}</td> 
+    <td>{{Bathrooms}}</td> 
+    <td>{{Sleeps}}</td> 
+    <td><span class="trunc{{curpage}}">{{Amenities}}</span></td>   
+    <td>{{ContextData.Quote.PublicNotes}}</td> 
+    <td>
+		{{^IsBookable}}
+		<a class="btn btn-small btn-primary" href='{{ContextData.SEO.DetailURL}}'>Select</a>
+		{{/IsBookable}}
+		{{#IsBookable}}
+		<a class="btn btn-small btn-primary" href='{{ContextData.SEO.BookingURL}}'>Select</a>
+		{{/IsBookable}}
+	</td>   
 </tr>
 {{/result}}
+</tbody>
 </table>
-<div class="clear2"></div>
 {{^islastpage}}<div><a href='javascript:void(0)' class='showmore'>{{textdata.Show More Results}} ({{totalcount}})</a></div>{{/islastpage}}
-{{#islastpage}}<div>THE END!</div>{{/islastpage}}
-</script>
+{{#islastpage}}<div class="nomore">{{textdata.There are no more results}}</div>{{/islastpage}}
+</script> 
 
 <script id="tmpl-properties-detail" type="text/html">
 {{#result}}
@@ -247,7 +259,7 @@
 		<div id="propertyimages" class="cycle-slideshow ad-image-wrapper pics">
 			<div class="cycle-pager"></div>
 			{{#Images}}
-			<img src="{{MediumURL}}" alt="{{Caption}}" caption="{{Caption}}" />
+			<img src="{{&MediumURL}}" alt="{{Caption}}" caption="{{Caption}}" />
 			{{/Images}}
 		</div>
 		<div class="cycle-caption"></div>
@@ -350,7 +362,7 @@
 {{#result}}
 <div class="fp-featured">    
 	<div class="fp-image">
-		<a href="{{ContextData.SEO.DetailURL}}"><img width="155px" src="{{PrimaryImage.ThumbnailURL}}" alt="{{PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" /></a>
+		<a href="{{ContextData.SEO.DetailURL}}"><img width="155px" src="{{&PrimaryImage.ThumbnailURL}}" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" /></a>
 	</div>
 	<div class="fp-outer">	
 		<div class="fp-title"><a href='{{ContextData.SEO.DetailURL}}'>{{Headline}}</a></div>
@@ -374,7 +386,7 @@
 <div class="sp-featured">
 	<div class="sp-image">
 		<a href="{{ContextData.SEO.DetailURL}}">
-			<img width="155px" src="{{PrimaryImage.ThumbnailURL}}" alt="{{PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />
+			<img width="155px" src="{{&PrimaryImage.ThumbnailURL}}" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />
 		</a>
 	</div>
 	<div class="sp-outer">
@@ -425,7 +437,7 @@
         <div class="portal-thumbnail">
             <div class="rownumber">{{ContextData.ItemIndex}}</div>
             <a href="{{ContextData.SEO.DetailURL}}">
-                <img class="portal-thumb-img" alt="thumbnail" caption="{{PrimaryImage.Caption}}" src="{{PrimaryImage.ThumbnailURL}}" />
+                <img class="portal-thumb-img" alt="thumbnail" caption="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" />
             </a>
         </div>
         <div class="portal-info">
@@ -447,7 +459,7 @@
 <input type="hidden" id="pkid" value="{{ID}}" />
 <div id="general">
 	<div style="float:left">
-		<img src="{{PrimaryImage.MediumURL}}" caption="{{PrimaryImage.Caption}}" alt={{PrimaryImage.Caption}} />
+		<img src="{{&PrimaryImage.MediumURL}}" caption="{{PrimaryImage.Caption}}" alt={{PrimaryImage.Caption}} />
 	</div>
 	<div class="general-info">
 		<h2>{{Name}}</h2>
@@ -483,7 +495,7 @@
         <div class="portal-thumbnail">
             <div class="rownumber" data-id="{{ID}}">{{index}}</div>
             <a href="{{ContextData.DetailURL}}">
-                <img class="portal-thumb-img" alt="thumbnail" caption="{{PrimaryImage.Caption}}" src="{{PrimaryImage.ThumbnailURL}}" />
+                <img class="portal-thumb-img" alt="thumbnail" caption="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" />
             </a>
         </div>
         <div class="portal-info">
@@ -502,7 +514,7 @@
 <input type="hidden" id="pkid" value="{{ID}}" />
 <div id="general">
 	<div style="float:left">
-		<img src="{{PrimaryImage.MediumURL}}" caption="{{PrimaryImage.Caption}}" alt={{PrimaryImage.Caption}} />
+		<img src="{{&PrimaryImage.MediumURL}}" caption="{{PrimaryImage.Caption}}" alt={{PrimaryImage.Caption}} />
 	</div>
 	<div class="general-info">
 		<h2>{{Name}}</h2>
@@ -561,7 +573,7 @@
 {{#result}}
 <div class="grid-search-result">
 <a href="{{DetailURL}}"> 
-	{{#Images.Count}}<img class="imgpropthumb" src="{{PrimaryImage.ThumbnailURL}}" alt="{{PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />{{/Images.Count}}
+	{{#Images.Count}}<img class="imgpropthumb" src="{{&PrimaryImage.ThumbnailURL}}" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />{{/Images.Count}}
 </a>
 <div class="special-content" data-pkid="{{ID}}">
 	<h1><a href="{{ContextData.SEO.DetailURL}}">{{Name}}</a></h1>
@@ -613,7 +625,7 @@
 {{#result}}
 <div class="special-holder">
 	<a href="{{DetailURL}}">
-		{{#Images.Count}}<img width="185px" src="{{PrimaryImage.ThumbnailURL}}" alt="{{PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />{{/Images.Count}}
+		{{#Images.Count}}<img width="185px" src="{{&PrimaryImage.ThumbnailURL}}" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />{{/Images.Count}}
 		<div class="clear"></div>
 		<div class="special-widget-content">
 			<h2>{{Name}}</h2>
@@ -636,7 +648,7 @@
 <div class="pf-ip" data-pkid="{{ID}}">
 <div class="pfpage-image left">	
 	<a href="{{DetailURL}}"> 
-		<img width="150px" src="{{PrimaryImage.ThumbnailURL}}" alt="{{PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />
+		<img width="150px" src="{{&PrimaryImage.ThumbnailURL}}" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />
 	</div>    
 	<div class="pfpage-content">
 		<h4><a href="{{DetailURL}}">{{Name}}</a></h4>
@@ -657,7 +669,7 @@
 <input type="hidden" id="pkid" value="{{ID}}" />
 <div class="propertyfinderdetailpage">
 	<div id="pf-player-wrapper">
-		<img style="width:450px" src="{{PrimaryImage.MediumURL}}" alt="{{PrimaryImage.MediumURL}}" title="{{PrimaryImage.Caption}}" />
+		<img style="width:450px" src="{{&PrimaryImage.MediumURL}}" alt="{{&PrimaryImage.MediumURL}}" title="{{PrimaryImage.Caption}}" />
 	</div>
 	<div id="pf-desc-wrapper">
 		<h2>{{Name}}</h2>
@@ -674,7 +686,7 @@
 <div class="pf-featured">    
 <div class="pf-image">
 	<a href="{{DetailURL}}">
-		<img width="185px" src="{{PrimaryImage.ThumbnailURL}}" alt="{{PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />
+		<img width="185px" src="{{&PrimaryImage.ThumbnailURL}}" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />
 	</a>
 </div>
 <div class="pf-outer">

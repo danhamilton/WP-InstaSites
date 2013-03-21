@@ -50,9 +50,17 @@ function bapi_settings_page() {
 <div class="wrap">
 <h1><img src="<?= plugins_url('/img/logo.png', __FILE__) ?>" /></h1>
 <h2>Bookt API Plugin Settings</h2>
-	<!-- Use h4 below for debug messages -->
-	<h4></h4>
+
+<div id="tabs">
+<ul>
+		<li><a href="#tabs-1">BAPI Configuration</a></li>
+		<li><a href="#tabs-2">Slideshow</a></li>
+		<li><a href="#tabs-3">Data Synchronization</a></li>
+</ul>
+	
     <form method="post" action="options.php" id="bapi-options-form" enctype="multipart/form-data">
+		
+		<div id="tabs-1">
     	<input type="hidden" name="update_action" id="bapi-update-action" value="" />
         <?php settings_fields( 'bapi_options' ); ?>
         <table class="form-table">
@@ -80,8 +88,23 @@ function bapi_settings_page() {
 			<td colspan="2"><em>If you do not already have an API key for Bookt, please contact <a href="mailto:support@bookt.com?subject=API%20Key%20-%20Wordpress%20Plugin">support@bookt.com</a> to obtain an API key.</em></td>
 		</tr>
         </table>
+		<div class="clear"></div>
+		<?php submit_button(); ?>
+		
+		<div class="clear"></div>
+		<h3>Initial Configuration</h3>
+		<small>Note: Permalink Settings should be set to Post name for the menu structure to function correctly.</small>
+		<div id="bapi-import-update" style="margin-top:-20px;">
+			<p class="submit" style="float:left;">
+				<input class="button-primary setuppages" value="Create Default Pages"> 
+				<span id="loading-initial"><img src="<?= plugins_url('/img/ajax-loader.gif', __FILE__) ?>" style="display:none;" height="20" valign="middle"></span>
+			</p>
+		</div>			
+		</div>
+				
+		<div id="tabs-2">
         <h3>Slideshow Options</h3>
-        <table class="form-table">
+        <table class="form-table">		
             <tr>
             <th scope="row">Slide 1</th>
             <td>
@@ -125,81 +148,35 @@ function bapi_settings_page() {
             </td>
             </tr>
         </table>
-        <?php // property_list(); ?>
+        
         <?php submit_button(); ?>
+		</div>
     </form>
-    <?php
-	if(is_super_admin()){
-		?>
-    <hr />
-    <h4>The following section is only available to Super Admins</h4>
-    <hr />
 	
+	<div id="tabs-3">
     <h3>Bulk Update Actions</h3>
     <div id="bapi-import-update" style="margin-top:-20px;">
     	<p class="submit" style="float:left;">
-        	<input class="button-primary" value="Update All Properties" onClick="javascript:update_all_properties()"> <span id="loading-update"><img src="<?= plugins_url('/img/ajax-loader.gif', __FILE__) ?>" style="display:none;" height="20" valign="middle"></span>
-        </p>
-    	<p class="submit" style="float:left;margin-left:20px;">
-        	<input class="button-primary import" value="Import All Properties" data-action="import" data-entity="property" data-template="tmpl-properties-detail" data-parentmenu="bapi_search"> 
-			<span id="loading-import"><img src="<?= plugins_url('/img/ajax-loader.gif', __FILE__) ?>" style="display:none;" height="20" valign="middle"></span>
-        </p>
+        	<input class="button-primary" value="Update All"> <span id="loading-update"><img src="<?= plugins_url('/img/ajax-loader.gif', __FILE__) ?>" style="display:none;" height="20" valign="middle"></span>     
+			<input class="button-primary import" value="Import All" data-entity="property" data-template="tmpl-properties-detail" data-parentmenu="bapi_search"> 			
+        	<select id="importtype">
+				<option value="property">Property</option>
+				<option value="development">Development</option>
+				<option value="specials">Specials</option>
+				<option value="poi">Attractions</option>
+				<option value="searches">Searches</option>
+			</select>
+		</p>
     </div>
-    <div class="clear"></div>
-    <div id="bapi-import-update" style="margin-top:-20px;">
-    	<p class="submit" style="float:left;">
-        	<input class="button-primary" value="Update Developments" onClick="javascript:update_all_developments()"> <span id="loading-update-dev"><img src="<?= plugins_url('/img/ajax-loader.gif', __FILE__) ?>" style="display:none;" height="20" valign="middle"></span>
-        </p>
-    	<p class="submit" style="float:left;margin-left:20px;">
-        	<input class="button-primary import" value="Import All Developments" data-action="import" data-entity="development" data-template="tmpl-development-detail" data-parentmenu=""> 
-			<span id="loading-import-dev"><img src="<?= plugins_url('/img/ajax-loader.gif', __FILE__) ?>" style="display:none;" height="20" valign="middle"></span>
-        </p>
-    </div>
-    <div class="clear"></div>
-    <div id="bapi-import-update" style="margin-top:-20px;">
-    	<p class="submit" style="float:left;">
-        	<input class="button-primary" value="Update Specials" onClick="javascript:update_all_specials()"> <span id="loading-update-specials"><img src="<?= plugins_url('/img/ajax-loader.gif', __FILE__) ?>" style="display:none;" height="20" valign="middle"></span>
-        </p>
-    	<p class="submit" style="float:left;margin-left:20px;">
-        	<input class="button-primary" value="Import Specials" onClick="javascript:import_all_specials()"> <span id="loading-import-specials"><img src="<?= plugins_url('/img/ajax-loader.gif', __FILE__) ?>" style="display:none;" height="20" valign="middle"></span>
-        </p>
-    </div>
-    <div class="clear"></div>
-    <div id="bapi-import-update" style="margin-top:-20px;">
-    	<p class="submit" style="float:left;">
-        	<input class="button-primary" value="Update Searches" onClick="javascript:update_all_searches()"> <span id="loading-update-searches"><img src="<?= plugins_url('/img/ajax-loader.gif', __FILE__) ?>" style="display:none;" height="20" valign="middle"></span>
-        </p>
-    	<p class="submit" style="float:left;margin-left:20px;">
-        	<input class="button-primary" value="Import Searches" onClick="javascript:import_all_searches()"> <span id="loading-import-searches"><img src="<?= plugins_url('/img/ajax-loader.gif', __FILE__) ?>" style="display:none;" height="20" valign="middle"></span>
-        </p>
-    </div>
-    <div class="clear"></div>
-    <div class="clear"></div>
-    <div id="bapi-import-update" style="margin-top:-20px;">
-    	<p class="submit" style="float:left;">
-        	<input class="button-primary" value="Update Attractions" onClick="javascript:update_all_attractions()"> <span id="loading-update-attractions"><img src="<?= plugins_url('/img/ajax-loader.gif', __FILE__) ?>" style="display:none;" height="20" valign="middle"></span>
-        </p>
-    	<p class="submit" style="float:left;margin-left:20px;">
-        	<input class="button-primary" value="Import Attractions" onClick="javascript:import_all_attractions()"> <span id="loading-import-attractions"><img src="<?= plugins_url('/img/ajax-loader.gif', __FILE__) ?>" style="display:none;" height="20" valign="middle"></span>
-        </p>
-    </div>
-    <div class="clear"></div>
-    <h3>Initial Configuration</h3>
-	<small>Note: Permalink Settings should be set to Post name for the menu structure to function correctly.</small>
-    <div id="bapi-import-update" style="margin-top:-20px;">
-    	<p class="submit" style="float:left;">
-        	<input class="button-primary import" value="Create Default Pages" data-action="initial_import"> 
-			<span id="loading-initial"><img src="<?= plugins_url('/img/ajax-loader.gif', __FILE__) ?>" style="display:none;" height="20" valign="middle"></span>
-        </p>
-    </div>
-	
+    
 	<div id="dlg-result" style="display:none; width:600px">
-		<div id="dlg-txtresult" style="padding:10px"></div>
+		<div id="dlg-txtresult" style="padding:10px; height:300px; overflow: auto"></div>
 	</div>
 	
     <?php
-	}
-	?>
+		$apiKey = get_option('api_key');
+		$language = getbapilangauge();
+	?>	
 </div>
 <link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/jquery.ui/jquery-ui-1.10.2.min.css', __FILE__) ?>" />
 <link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/jquery.ad-gallery.min.css', __FILE__) ?>" />
@@ -208,26 +185,64 @@ function bapi_settings_page() {
 <script type="text/javascript" src="<?= plugins_url('/js/jquery-migrate-1.0.0.min.js', __FILE__) ?>" ></script>		
 <script type="text/javascript" src="<?= plugins_url('/js/jquery-ui-1.10.2.min.js', __FILE__) ?>" ></script>
 <script type="text/javascript" src="<?= plugins_url('/js/jquery-ui-i18n.min.js', __FILE__) ?>" ></script>			
+<script type="text/javascript" src="<?= plugins_url('/js/mustache.min.js', __FILE__) ?>" ></script>			
+<script type="text/javascript" src="<?= getbapijsurl($apiKey) ?>"></script>
+<script type="text/javascript" src="<?= plugins_url('/bapi/bapi.ui.js', __FILE__) ?>" ></script>		
+<script src="<?= getbapiurl() ?>/js/bapi.textdata.js?apikey=<?= $apiKey ?>&language=<?= $language ?>" type="text/javascript"></script>
+<script type="text/javascript">		
+	BAPI.defaultOptions.baseURL = '<?= getbapiurl() ?>';
+	BAPI.init('<?= $apiKey ?>');			
+</script>
 <script type="text/javascript">
-	function toggle_template(id){
-		$('#bapi-options-hidden_'+id).css('display','');
-		$('#bapi-options-shown_'+id).css('display','none');
+
+	function getImportParams(entity) {
+		if (entity == "property") {
+			return { "entity": entity, "template": "tmpl-properties-detail", "parent": "bapi_search" }
+		}
 	}
-	function toggle_template_off(id){
-		$('#bapi-options-hidden_'+id).css('display','none');
-		$('#bapi-options-shown_'+id).css('display','');
-	}	
-	
 	$(document).ready(function($){
 	
+		$("#tabs").tabs();  
+		
 		$(".import").on("click", function () {			
-			if (confirm("Are you sure you want to import this data?")) {
-				var url = '<?= plugins_url('/import.php', __FILE__) ?>' + 
-					'?apikey=<?= getbapiapikey() ?>' +
-					'&bapiurl=<?= urlencode(getbapiurl()) ?>' +
-					'&action=' + $(this).attr("data-action") + 
-					'&entity=' + $(this).attr("data-entity") + 
-					'&template=' + $(this).attr("data-template") + 
+			var entity = $('#importtype').val();
+			var params = getImportParams(entity);
+			var template = BAPI.templates.get(params.template);			
+			if (confirm("Are you sure you want to import this data?")) {				
+				$('#dlg-result').dialog({width:700});
+				var txtresult = $('#dlg-txtresult');
+				txtresult.html('<h5>Import</h5>');
+				txtresult.html('<div>Requesting ids from BAPI...</div>');				
+				BAPI.search(entity, null, function (data) { 
+					txtresult.html('<div>BAPI returned ' + data.result.length + ' results.</div>');
+					$.each(data.result, function (i, pkid) {
+if (i==0) {
+						BAPI.get(pkid, entity, { "avail": 1, "reviews": 1, "seo": 1, "descrip": 1, "rates": 1 }, function(pdata) {
+							pdata.config = BAPI.config();
+							pdata.textdata = BAPI.textdata;
+							var url = '<?= plugins_url('/import.php', __FILE__) ?>';
+							params.pkid = pkid;
+							params.PrimaryImage = pdata.result[0].PrimaryImage.MediumURL;
+							params.BookingURL = pdata.result[0].ContextData.SEO.BookingURL;
+							params.DetailURL = pdata.result[0].ContextData.SEO.DetailURL;
+							params.Keyword = pdata.result[0].ContextData.SEO.Keyword;
+							params.MetaDescrip = pdata.result[0].ContextData.SEO.MetaDescrip;
+							params.PageTitle = pdata.result[0].ContextData.SEO.PageTitle;
+							params.content = Mustache.to_html(template, pdata);
+							BAPI.utils.dopost(url, params, function(res) {
+								txtresult.append(res);
+							});
+						});														
+}
+					});					
+				});						
+			}
+		});
+		
+		$(".setuppages").on("click", function () {			
+			if (confirm("Are you sure you want to setup the menu system")) {
+				var url = '<?= plugins_url('/init.php', __FILE__) ?>' +
+					'?template=' + $(this).attr("data-template") + 
 					'&parent=' + $(this).attr("data-parentmenu");
 				console.log(url);
 				$('#loading-initial img').show();

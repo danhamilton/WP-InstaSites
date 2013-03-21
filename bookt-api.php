@@ -27,7 +27,6 @@ License: GPL2
 	
 include_once(dirname( __FILE__ ).'/functions.php');
 include_once(dirname( __FILE__ ).'/admin.php');
-include_once(dirname( __FILE__ ).'/search.php');
 include_once(dirname( __FILE__ ).'/widgets.php');
 include_once(dirname( __FILE__ ).'/cdn-linker/wp-cdn-linker.php');
 
