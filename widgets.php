@@ -694,4 +694,77 @@ class BAPI_Similar_Properties extends WP_Widget {
 	}
 
 } // class BAPI_Similar_Properties
+
+/**
+ * Adds BAPI_Weather widget.
+ */
+class BAPI_Weather_Widget extends WP_Widget {
+
+	public function __construct() {
+		parent::__construct(
+	 		'bapi_weather_widget', // Base ID
+			'Bookt Weather', // Name
+			array( 'description' => __( 'Bookt Weather', 'text_domain' ), ) // Args
+		);
+	}
+
+	public function widget( $args, $instance ) {
+		extract($args);
+		$title = apply_filters('widget_title',$instance['title']);
+		$woid = esc_textarea($instance['text']);
+		echo $before_widget;
+		if(!empty($title))
+			echo $before_title.$title.$after_title;
+		?>
+        <div id="weather-widget"></div>
+		<script>
+			$(document).ready(function () {
+				// weather widget uses code found here: http://www.zazar.net/developers/jquery/zweatherfeed/
+				// lookup woid here: http://woeid.rosselliot.co.nz/
+				var woid = '<?= $woid ?>';
+				if (woid!='') {
+					BAPI.UI.createWeatherWidget('#weather-widget', ['<?= $woid ?>'], { link: false, woeid: true });
+				}
+			});
+        </script>
+        <?php
+		echo $after_widget;
+	}
+
+	public function update( $new_instance, $old_instance ) {
+		$instance = array();
+		$instance['title'] = strip_tags( $new_instance['title'] );
+		if ( current_user_can('unfiltered_html') )
+			$instance['text'] =  $new_instance['text'];
+		else
+			$instance['text'] = stripslashes( wp_filter_post_kses( addslashes($new_instance['text']) ) ); // wp_filter_post_kses() expects slashed
+		return $instance;
+	}
+
+	public function form( $instance ) {
+		if ( isset( $instance[ 'title' ] ) ) {
+			$title = $instance[ 'title' ];
+		}
+		else {
+			$title = __( 'Weather', 'text_domain' );
+		}
+		if ( isset( $instance[ 'text' ] ) ) {
+			$woid =  esc_textarea($instance['text']);
+		}
+		else {
+			$woid = __( '2450022', 'text_domain' );
+		}
+		?>
+		<p>
+		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
+		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+        <label for="<?php echo $this->get_field_id( 'text' ); ?>"><?php _e( 'WOID:' ); ?></label>
+        <input id="<?php echo $this->get_field_id( 'text' ); ?>" name="<?php echo $this->get_field_name( 'text' ); ?>" type="text" value="<?php echo esc_attr( $woid ); ?>" />
+        
+		</p>
+		<?php 
+	}
+
+} // class BAPI_Weather_Widget
+
 ?>

@@ -136,15 +136,18 @@
 {{#result}}
 <div class="span6">
 <div class="portal-result">
-    <div class="portal-inner">    
+    <div class="portal-inner">
+    
         <div class="portal-images">
-			  <div class="flexslider">
-				  <ul class="slides">
-					  {{#Images}}
-					  <li><a class="property-link" href="{{&ContextData.SEO.DetailURL}}"><img alt="{{Caption}}" src="{{&MediumURL}}" /></a></li>
-					  {{/Images}} 
-				  </ul>
-			  </div>            
+
+	  <div class="flexslider">
+		  <ul class="slides">
+			  {{#Images}}
+			  <li><a class="property-link" href="{{&ContextData.SEO.DetailURL}}"><img alt="{{Caption}}" src="{{&MediumURL}}" /></a></li>
+			  {{/Images}} 
+		  </ul>
+	  </div>
+            
         </div>
         
         <div class="portal-info">
@@ -161,7 +164,7 @@
 </div>
 {{^islastpage}}<div><a href='javascript:void(0)' class='showmore'>{{textdata.Show More Results}} ({{totalcount}})</a></div>{{/islastpage}}
 {{#islastpage}}<div class="nomore">{{textdata.There are no more results}}</div>{{/islastpage}}
-</script> 
+</script>
 
 <script id="tmpl-propertysearch-listview" type="text/html">
 <div class="list-view-page">
@@ -431,27 +434,37 @@
 	Group: Developments
 */
 <script id="tmpl-developments-summary-list" type="text/html">
+<div class="development-results">
 {{#result}}
-<div class="portal-result" data-pkid="{{ID}}">
-    <div class="portal-inner-left">
-        <div class="portal-thumbnail">
-            <div class="rownumber">{{ContextData.ItemIndex}}</div>
-            <a href="{{ContextData.SEO.DetailURL}}">
-                <img class="portal-thumb-img" alt="thumbnail" caption="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" />
-            </a>
-        </div>
-        <div class="portal-info">
-            <h2><a href="{{ContextData.SEO.DetailURL}}"><span>{{Name}}</span></a></h2>
-			<p>{{Summary}}</p>
-			<div class="top-amenities trunc{{curpage}}" trunc="75">{{Amenities}}</div>		            
-        </div>
-    </div>
-</div>
-<div class="clear2"></div>
+<div class="portal-result">
+            <div class="portal-inner row-fluid shadow">
+              <div class="portal-images span4">
+			  {{^Images.0.MediumURL}}
+				<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" />
+			  {{/Images.0.MediumURL}}
+				
+			  {{#Images.0.MediumURL}}
+				<img alt="{{Images.0.Caption}}" src="{{&Images.0.MediumURL}}" />
+			  {{/Images.0.MediumURL}}
+                
+              </div>
+              <div class="portal-info span8">                
+                  <h2 class="title"><a href="{{&ContextData.SEO.DetailURL}}">{{Name}}</a></h2>
+                  <div class="type">{{Type}}</div>
+                    <strong>{{Region}}, {{State}} </strong><br/>
+                    <strong>{{textdata.Amenities}}:</strong> <span class="trunc{{curpage}}">{{Amenities}}</span>
+                  <div class="description">{{&Summary}}</div>
+                  
+              </div>
+              
+            </div>
+          </div>
 {{/result}}
+</div>
 {{^islastpage}}<div><a href='javascript:void(0)' class='showmore'>{{textdata.Show More Results}} ({{totalcount}})</a></div>{{/islastpage}}
-{{#islastpage}}<div>{{textdata.There are no more results}}</div>{{/islastpage}}
+{{#islastpage}}<div class="nomore">{{textdata.There are no more results}}</div>{{/islastpage}}
 </script>
+
 
 <script id="tmpl-developments-detail" type="text/html">
 <div class="developments-content">
@@ -571,31 +584,20 @@
 */
 <script id="tmpl-specials-summary" type="text/html">
 {{#result}}
-<div class="grid-search-result">
-<a href="{{DetailURL}}"> 
-	{{#Images.Count}}<img class="imgpropthumb" src="{{&PrimaryImage.ThumbnailURL}}" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />{{/Images.Count}}
-</a>
-<div class="special-content" data-pkid="{{ID}}">
-	<h1><a href="{{ContextData.SEO.DetailURL}}">{{Name}}</a></h1>
-	<p>{{Summary}}</p>
-	<dl>
-		<dt>{{textdata.Effective Date}}:</dt>
-		<dd>{{EffectiveDate.ShortDate}} - {{ExpirationDate.ShortDate}}</dd>		
-	</dl>
-	{{#AppliesToSolution}}
-	<dl>
-		<dt>{{textdata.Applies To}}:</dt>
-		<dd>{{.}}</dd>
-	</dl>
-	{{/AppliesToSolution}}
+<div class="span4">
+  <div class="item-result">
+	<div class="item-inner">
+	  <div class="item-images"><a href="{{&ContextData.SEO.DetailURL}}"><img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" /></a></div>
+	  <div class="item-info shadow">		
+			<h2 class="title">{{Name}}</h2>
+			<div class="description">{{&Summary}}</div>
+			<a href="{{&ContextData.SEO.DetailURL}}" class="btn">{{textata.See Details}}</a> </div>		
+	</div>
+  </div>
 </div>
-<div class="clear2"></div>
-<div class="clear2"></div>
-<div class="clear2"></div>
-</div>
-{{/result}}
+{{/result}}  
 {{^islastpage}}<div><a href='javascript:void(0)' class='showmore'>{{textdata.Show More Results}} ({{totalcount}})</a></div>{{/islastpage}}
-{{#islastpage}}<div>{{textdata.There are no more results}}</div>{{/islastpage}}
+{{#islastpage}}<div class="nomore">{{textdata.There are no more results}}</div>{{/islastpage}}
 </script>
 
 <script id="tmpl-specials-detail" type="text/html">
@@ -643,25 +645,21 @@
 	Group: Predefined Searches 
 */
 <script id="tmpl-searches-summary" type="text/html">
-<div class="grid-search-result">
 {{#result}}
-<div class="pf-ip" data-pkid="{{ID}}">
-<div class="pfpage-image left">	
-	<a href="{{DetailURL}}"> 
-		<img width="150px" src="{{&PrimaryImage.ThumbnailURL}}" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />
-	</div>    
-	<div class="pfpage-content">
-		<h4><a href="{{DetailURL}}">{{Name}}</a></h4>
-		<p class="trunc400">{{{Description}}}</p>
+<div class="span4">
+  <div class="item-result">
+	<div class="item-inner">
+	  <div class="item-images"><a href="{{&ContextData.SEO.DetailURL}}"><img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" /></a></div>
+	  <div class="item-info shadow">		
+			<h2 class="title">{{Name}}</h2>
+			<div class="description">{{&Summary}}</div>
+			<a href="{{&ContextData.SEO.DetailURL}}" class="btn">{{textdata.See Details}}</a> </div>		
 	</div>
-	<div class="clear2"></div>
+  </div>
 </div>
-<div class="clear"></div>
-{{/result}}
-</div>
-<div class="clear2"></div>
+{{/result}}  
 {{^islastpage}}<div><a href='javascript:void(0)' class='showmore'>{{textdata.Show More Results}} ({{totalcount}})</a></div>{{/islastpage}}
-{{#islastpage}}<div>{{textdata.There are no more results}}</div>{{/islastpage}}
+{{#islastpage}}<div class="nomore">{{textdata.There are no more results}}</div>{{/islastpage}}
 </script>
 
 <script id="tmpl-searches-detail" type="text/html">

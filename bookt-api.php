@@ -52,8 +52,9 @@ add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Prop_Qu
 add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Featured_Properties" );' ) );
 add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Inquiry_Form" );' ) );
 add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Similar_Properties" );' ) );
-//add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Property_Finders" );' ) );
-//add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Specials_Widget" );' ) );
+add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Property_Finders" );' ) );
+add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Specials_Widget" );' ) );
+add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Weather_Widget" );' ) );
 
 
 require_once('mustache.php-2.1.0/src/Mustache/Autoloader.php');
