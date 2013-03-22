@@ -2,67 +2,74 @@
 <h4>Params</h4>
 <?php
 	require_once ('../../../wp-load.php');
-	$template = $_REQUEST['template'];
-	$parent = $_REQUEST['parent'];
-
-	print_r('<div>Template: ' . $template . '</div>'); 
-	print_r('<div>Parent: ' . $parent . '</div>'); 
-
-	initmenu();
 	
-	$pagedef = array("Title"=>"All Rentals", "URL"=>"RentalGrid", "IntID"=>"bapi_property_grid", "Parent"=>'Search', "Order" => 1, "Template" => 'page-templates/full-width.php', "Content" => '/default-content/allproperties-php', "AddToMenu"=>true);
+	$menu_id = initmenu();
+	
 	// temp
-	$parent = $pagedef['Parent'];
+	$parent = $_REQUEST['parent'];	
 	$parentid = 0;
 	$test = get_page_by_path($parent);
 	if (!empty($test)) {
+		print_r("<div>found parent</div>");
 		$parentid = $test->ID;
 	}
-	print_r("<div>ParentID=" . $parentid . "</div>");
-	return;
-	$existing_page = get_page_by_path($page['URL']);
-	if (!empty($existing_page)) {
-		$pid = $existing_page->ID;
-	}
 	
-	$navmap = array();
+	// try to find if this page already exists
+	$pid = getPageID($parent, $_REQUEST['url'], $_REQUEST['title']);
+		
+	// create the post
 	$post = array();
-	$post['menu_order'] = $pagedef['Order'];
-	$post['post_name'] = $pagedef['URL'];
-	$post['post_title'] = $pagedef['Title'];
+	$post['ID'] = $pid;
+	$post['menu_order'] = $_REQUEST['order'];
+	$post['post_name'] = $_REQUEST['url'];
+	$post['post_title'] = $_REQUEST['title'];
 	$post['post_status'] = 'publish';
-	$post['post_parent'] = 0;
-	$post['comment_status'] = 'closed';			
-	if($pagedef['Content']!=''){				
-		$t = file_get_contents(plugins_url($pagedef['Content'], __FILE__));
+	$post['post_parent'] = $parentid;
+	$post['comment_status'] = 'closed';		
+	$content = $_REQUEST['content'];
+	if($content!=''){				
+		$t = file_get_contents(plugins_url($content, __FILE__));
 		$m = new Mustache_Engine();
+		//$c = file_get_contents(getbapiurl() . '/js/bapi.context?apikey=' . $apiKey);
+		//$data = json_decode($c,TRUE);
 		$string = $m->render($t, $data);
-		$post['post_content'] = $string;
+		$post['post_content'] = $string;		
 	}
-	$post['post_parent'] = $parentid;	
 	$post['post_type'] = 'page';			
+		
+	remove_filter('save_post','update_post_bapi');		
+	if ($pid == 0) {
+		$pid = wp_insert_post($post);
+		add_post_meta($pid, 'bapi_page_id', $_REQUEST['intid'], true);
+		update_post_meta($pid, "_wp_page_template", $_REQUEST['template']);
+		print_r('<div>Added post_id=' . $pid . ', title=' . $post['post_title'] . '</div>');
+	}
+	else {
+		wp_update_post($post);
+		add_post_meta($pid, 'bapi_page_id', $_REQUEST['intid'], true);
+		update_post_meta($pid, "_wp_page_template", $_REQUEST['template']);
+		print_r('<div>Edited post_id=' . $pid . ', title=' . $post['post_title'] . '</div>');
+	}
+	add_filter('save_post','update_post_bapi');
 	
-	print_r("<div>Added page with pageid=" . $pid . ", title=" . $post['post_title'] . ", URL=" . $post['post_name'] . "</div>");
-	return;
-	$pid = wp_insert_post($post);
-	add_post_meta($pid, 'bapi_page_id', $page['IntID'], true);
-	add_post_meta($pid, '_wp_page_template', $page['Template'], true);
-	
-	if($page['AddToMenu']){
+	$addtomenu = settype($_REQUEST['addtomenu'],'boolean');
+	if($addtomenu) {
+		print_r("ADDING TO MENU");
+		return;
 		$miid = wp_update_nav_menu_item($menu_id, 0, array('menu-item-title' => $page['Title'],
 								   'menu-item-object' => 'page',
 								   'menu-item-object-id' => $pid,
 								   'menu-item-type' => 'post_type',
 								   'menu-item-status' => 'publish',
-								   'menu-item-parent-id' => $navmap[$post['post_parent']],
-								   'menu-item-position' => $page['Order']));
+								   'menu-item-parent-id' => $menu_id,
+								   'menu-item-position' => $post['Order']));
 		$navmap[$pid] = $miid;
 	}
-	if($page['Title']=='Home'){
+	if($post['Title']=='Home'){
 		update_option( 'page_on_front', $pid);
 		update_option( 'show_on_front', 'page');
 	}
-	if($page['Title']=='Blog'){
+	if($post['Title']=='Blog'){
 		update_option( 'page_for_posts', $pid);
 	}
 
@@ -75,10 +82,11 @@
 		// If it doesn't exist, let's create it.
 		if( !$menu_exists){			
 			$menu_id = wp_create_nav_menu($menuname);
-			print_r("<div>Menu does not exist.  Created menu with menuid=" . $menu_id . ".</div>");
+			//print_r("<div>Menu does not exist.  Created menu with menuid=" . $menu_id . ".</div>");
 		}
 		else {
-			print_r("<div>Menu already existed with menuid=" . $menu_exists . ".</div>");
+			$menu_id = getMenuID($bpmenulocation);
+			//print_r("<div>Menu already exists with menuid=" . $menu_id . ".</div>");
 		}
 		
 		if( !has_nav_menu( $bpmenulocation ) ){
@@ -86,45 +94,27 @@
 			$locations[$bpmenulocation] = $menu_id;
 			set_theme_mod( 'nav_menu_locations', $locations );
 		}
+		return $menu_id;
+	}	
+	
+	/* Helper Functions */
+	function getPageID($parent, $url, $title) {
+		$testurl = $parent . '/' . $url;
+		$existing_page = get_page_by_path($testurl);
+		if (!empty($existing_page)) {
+			return $existing_page->ID;
+		}
+		$existing_page = get_page_by_title($title);
+		if (!empty($existing_page)) {
+			return $existing_page->ID;
+		}
+		return 0;
 	}
 	
-	function create_initial_menu($apiKey){
-		
-		//print_r($mymenu);exit();
-		//print($menuID);exit();
-		//$defpages = array();
-		//$defpages[] = array("Title"=>"Home", "URL"=>"", "IntID"=>"bapi_home", "Parent"=>'', "Order" => 1, "Template" => 'page-templates/front-page.php', "Content" => '/default-content/homepage-content.php', "AddToMenu"=>true);
-		//$defpages[] = array("Title"=>"Search", "URL"=>"RentalSearch", "IntID"=>"bapi_search", "Parent"=>'', "Order" => 2, "Template" => 'page-templates/search-page.php', "Content" => '', "AddToMenu"=>true);
-		//$pagedef = array("Title"=>"All Rentals", "URL"=>"RentalGrid", "IntID"=>"bapi_property_grid", "Parent"=>'Search', "Order" => 1, "Template" => 'page-templates/full-width.php', "Content" => '/default-content/allproperties-php', "AddToMenu"=>true);
-		//$defpages[] = array("Title"=>"Property Finders", "URL"=>"PropertyFinders", "IntID"=>"bapi_property_finders", "Parent"=>'Search', "Order" => 2, "Template" => 'page-templates/content-page.php', "Content" => '', "AddToMenu"=>true);
-		//$defpages[] = array("Title"=>"Specials", "URL"=>"Specials", "IntID"=>"bapi_specials", "Parent"=>'Search', "Order" => 3, "Template" => 'page-templates/search-page.php', "Content" => '', "AddToMenu"=>true);
-		//$defpages[] = array("Title"=>"Developments", "URL"=>"Developments", "IntID"=>"bapi_developments", "Parent"=>'Search', "Order" => 4, "Template" => 'page-templates/search-page.php', "Content" => '', "AddToMenu"=>true);
-		//$defpages[] = array("Title"=>"Attractions", "URL"=>"Attractions", "IntID"=>"bapi_attractions", "Parent"=>'', "Order" => 3, "Template" => 'page-templates/search-page.php', "Content" => '', "AddToMenu"=>true);
-		//$defpages[] = array("Title"=>"Services", "URL"=>"Services", "IntID"=>"bapi_services", "Parent"=>'', "Order" => 4, "Template" => 'page-templates/content-page.php', "Content" => '/default-content/ourservices-content.php', "AddToMenu"=>true);
-		//$defpages[] = array("Title"=>"About Us", "URL"=>"AboutUs", "IntID"=>"bapi_about_us", "Parent"=>'', "Order" => 5, "Template" => 'page-templates/content-page.php', "Content" => '/default-content/aboutus-content.php', "AddToMenu"=>true);
-		/*$defpages[] = array("Title"=>"Blog", "URL"=>"Blog", "IntID"=>"bapi_blog", "Parent"=>'About Us', "Order" => 1, "Template" => 'page-templates/content-page.php', "Content" => '', "AddToMenu"=>true);
-		$defpages[] = array("Title"=>"Contact Us", "URL"=>"Contact", "IntID"=>"bapi_contact", "Parent"=>'', "Order" => 6, "Template" => 'page-templates/content-page.php', "Content" => '/default-content/contactus-content.php', "AddToMenu"=>true);
-		$defpages[] = array("Title"=>"Booking Details", "URL"=>"BookingDetails", "IntID"=>"bapi_booking_detail", "Parent"=>'', "Order" => 7, "Template" => 'page-templates/full-width.php', "Content" => '/default-content/booking-detail-content.php', "AddToMenu"=>false);
-		$defpages[] = array("Title"=>"Make a Payment", "URL"=>"BookingPayment", "IntID"=>"bapi_booking_payment", "Parent"=>'', "Order" => 8, "Template" => 'page-templates/full-width.php', "Content" => '/default-content/booking-payment-content.php', "AddToMenu"=>false);
-		$defpages[] = array("Title"=>"Booking Confirmation", "URL"=>"BookingConfirmation", "IntID"=>"bapi_booking_confirm", "Parent"=>'', "Order" => 9, "Template" => 'page-templates/full-width.php', "Content" => '/default-content/booking-confirmation-content.php', "AddToMenu"=>false);
-		$defpages[] = array("Title"=>"Rental Policy", "URL"=>"RentalPolicy", "IntID"=>"bapi_booking_terms", "Parent"=>'', "Order" => 10, "Template" => 'page-templates/content-page.php', "Content" => '/default-content/rental-policy-content.php', "AddToMenu"=>false);
-		$defpages[] = array("Title"=>"Privacy Policy", "URL"=>"PrivacyPolicy", "IntID"=>"bapi_site_privacy", "Parent"=>'', "Order" => 11, "Template" => 'page-templates/content-page.php', "Content" => '/default-content/privacy-policy-content.php', "AddToMenu"=>false);
-		$defpages[] = array("Title"=>"Terms of Use", "URL"=>"TermsOfUse", "IntID"=>"bapi_site_terms", "Parent"=>'', "Order" => 12, "Template" => 'page-templates/content-page.php', "Content" => '/default-content/tos-content.php', "AddToMenu"=>false);
-		//$defpages[] = array("Title"=>"Owner Login", "URL"=>"/Owners", "IntID"=>"bapi_owners", "Parent"=>''); //TO be added to footer menu only
-		//print_r($defpages);
-		//exit();
-		*/
-		$c = file_get_contents(getbapiurl() . '/js/bapi.context?apikey=' . $apiKey);
-		$data = json_decode($c,TRUE);
-		
-		remove_filter('save_post','update_post_bapi');		
-	
-		//$args = array('meta_key' => 'bapi_page_id', 'meta_value' => $pagedef['IntID']);
-		$posts_array = get_pages($args);
-		if(empty($posts_array)){
-			$parent = get_page_by_title($page['Parent']);
-			addpage($page, $parent);
+	function getMenuID($menuname) {
+		$locations = get_nav_menu_locations();
+		if (isset($locations[$menuname])) {
+			return $locations[$menuname];
 		}
-		add_filter('save_post','update_post_bapi');
 	}
 ?>

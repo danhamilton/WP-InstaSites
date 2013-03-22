@@ -211,12 +211,12 @@ function bapi_settings_page() {
 			if (confirm("Are you sure you want to import this data?")) {				
 				$('#dlg-result').dialog({width:700});
 				var txtresult = $('#dlg-txtresult');
-				txtresult.html('<h5>Import</h5>');
-				txtresult.html('<div>Requesting ids from BAPI...</div>');				
+				txtresult.html('<h5>Importing Data</h5>');
+				txtresult.append('<div>Requesting ids from BAPI...</div>');
 				BAPI.search(entity, null, function (data) { 
-					txtresult.html('<div>BAPI returned ' + data.result.length + ' results.</div>');
+					txtresult.append('<div>BAPI returned ' + data.result.length + ' results.</div>');
 					$.each(data.result, function (i, pkid) {
-if (i==0) {
+//if (i==0) {
 						BAPI.get(pkid, entity, { "avail": 1, "reviews": 1, "seo": 1, "descrip": 1, "rates": 1 }, function(pdata) {
 							pdata.config = BAPI.config();
 							pdata.textdata = BAPI.textdata;
@@ -233,24 +233,46 @@ if (i==0) {
 								txtresult.append(res);
 							});
 						});														
-}
+//}
 					});					
 				});						
 			}
 		});
-		
+	
+
+		var pagedefs = [
+			{ "title": "Home", "url": "", "intid": "bapi_home", "parent": "", "order": 1, "template": "page-templates/front-page.php", "content": '/default-content/homepage-content.php', "addtomenu": true }
+		];
+		//$defpages[] = array("Title"=>"Home", "URL"=>"", "IntID"=>"bapi_home", "Parent"=>'', "Order" => 1, "Template" => 'page-templates/front-page.php', "Content" => '/default-content/homepage-content.php', "AddToMenu"=>true);
+		//$defpages[] = array("Title"=>"Search", "URL"=>"RentalSearch", "IntID"=>"bapi_search", "Parent"=>'', "Order" => 2, "Template" => 'page-templates/search-page.php', "Content" => '', "AddToMenu"=>true);
+		//$pagedef = array("Title"=>"All Rentals", "URL"=>"RentalGrid", "IntID"=>"bapi_property_grid", "Parent"=>'Search', "Order" => 1, "Template" => 'page-templates/full-width.php', "Content" => '/default-content/allproperties-php', "AddToMenu"=>true);
+		//$defpages[] = array("Title"=>"Property Finders", "URL"=>"PropertyFinders", "IntID"=>"bapi_property_finders", "Parent"=>'Search', "Order" => 2, "Template" => 'page-templates/content-page.php', "Content" => '', "AddToMenu"=>true);
+		//$defpages[] = array("Title"=>"Specials", "URL"=>"Specials", "IntID"=>"bapi_specials", "Parent"=>'Search', "Order" => 3, "Template" => 'page-templates/search-page.php', "Content" => '', "AddToMenu"=>true);
+		//$defpages[] = array("Title"=>"Developments", "URL"=>"Developments", "IntID"=>"bapi_developments", "Parent"=>'Search', "Order" => 4, "Template" => 'page-templates/search-page.php', "Content" => '', "AddToMenu"=>true);
+		//$defpages[] = array("Title"=>"Attractions", "URL"=>"Attractions", "IntID"=>"bapi_attractions", "Parent"=>'', "Order" => 3, "Template" => 'page-templates/search-page.php', "Content" => '', "AddToMenu"=>true);
+		//$defpages[] = array("Title"=>"Services", "URL"=>"Services", "IntID"=>"bapi_services", "Parent"=>'', "Order" => 4, "Template" => 'page-templates/content-page.php', "Content" => '/default-content/ourservices-content.php', "AddToMenu"=>true);
+		//$defpages[] = array("Title"=>"About Us", "URL"=>"AboutUs", "IntID"=>"bapi_about_us", "Parent"=>'', "Order" => 5, "Template" => 'page-templates/content-page.php', "Content" => '/default-content/aboutus-content.php', "AddToMenu"=>true);
+		/*$defpages[] = array("Title"=>"Blog", "URL"=>"Blog", "IntID"=>"bapi_blog", "Parent"=>'About Us', "Order" => 1, "Template" => 'page-templates/content-page.php', "Content" => '', "AddToMenu"=>true);
+		$defpages[] = array("Title"=>"Contact Us", "URL"=>"Contact", "IntID"=>"bapi_contact", "Parent"=>'', "Order" => 6, "Template" => 'page-templates/content-page.php', "Content" => '/default-content/contactus-content.php', "AddToMenu"=>true);
+		$defpages[] = array("Title"=>"Booking Details", "URL"=>"BookingDetails", "IntID"=>"bapi_booking_detail", "Parent"=>'', "Order" => 7, "Template" => 'page-templates/full-width.php', "Content" => '/default-content/booking-detail-content.php', "AddToMenu"=>false);
+		$defpages[] = array("Title"=>"Make a Payment", "URL"=>"BookingPayment", "IntID"=>"bapi_booking_payment", "Parent"=>'', "Order" => 8, "Template" => 'page-templates/full-width.php', "Content" => '/default-content/booking-payment-content.php', "AddToMenu"=>false);
+		$defpages[] = array("Title"=>"Booking Confirmation", "URL"=>"BookingConfirmation", "IntID"=>"bapi_booking_confirm", "Parent"=>'', "Order" => 9, "Template" => 'page-templates/full-width.php', "Content" => '/default-content/booking-confirmation-content.php', "AddToMenu"=>false);
+		$defpages[] = array("Title"=>"Rental Policy", "URL"=>"RentalPolicy", "IntID"=>"bapi_booking_terms", "Parent"=>'', "Order" => 10, "Template" => 'page-templates/content-page.php', "Content" => '/default-content/rental-policy-content.php', "AddToMenu"=>false);
+		$defpages[] = array("Title"=>"Privacy Policy", "URL"=>"PrivacyPolicy", "IntID"=>"bapi_site_privacy", "Parent"=>'', "Order" => 11, "Template" => 'page-templates/content-page.php', "Content" => '/default-content/privacy-policy-content.php', "AddToMenu"=>false);
+		$defpages[] = array("Title"=>"Terms of Use", "URL"=>"TermsOfUse", "IntID"=>"bapi_site_terms", "Parent"=>'', "Order" => 12, "Template" => 'page-templates/content-page.php', "Content" => '/default-content/tos-content.php', "AddToMenu"=>false);
+		//$defpages[] = array("Title"=>"Owner Login", "URL"=>"/Owners", "IntID"=>"bapi_owners", "Parent"=>''); //TO be added to footer menu only
+			*/
 		$(".setuppages").on("click", function () {			
 			if (confirm("Are you sure you want to setup the menu system")) {
-				var url = '<?= plugins_url('/init.php', __FILE__) ?>' +
-					'?template=' + $(this).attr("data-template") + 
-					'&parent=' + $(this).attr("data-parentmenu");
-				console.log(url);
-				$('#loading-initial img').show();
-				$.get(url, function(res) {					
-					$('#dlg-txtresult').html(res);
-					$('#dlg-result').dialog({width:700});
-					$('#loading-initial img').hide();
-				});
+				$('#dlg-result').dialog({width:700});
+				var txtresult = $('#dlg-txtresult');
+				txtresult.html('<h5>Setting up menu system</h5>');
+				$.each(pagedefs, function (i, pagedef) {
+					var url = '<?= plugins_url('/init.php', __FILE__) ?>?' + $.param(pagedef);
+					$.get(url, function(data) {
+						txtresult.append(data);						
+					});					
+				});							
 			}
 		});
 	
