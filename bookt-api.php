@@ -43,6 +43,7 @@ add_action('admin_menu', 'bapi_create_menu');
 add_action('update_option_update_action', 'bapi_option_update', 10, 2);
 add_action('update_option_property_category_name', 'bapi_option_category', 10, 2);
 
+add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Footer" );' ) );
 add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_HP_Slideshow" );' ) );
 add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_HP_Logo" );' ) );
 add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_HP_LogoWithTagline" );' ) );

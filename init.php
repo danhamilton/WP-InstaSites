@@ -32,9 +32,9 @@
 	if($content!=''){				
 		$t = file_get_contents(plugins_url($content, __FILE__));
 		$m = new Mustache_Engine();
-		//$c = file_get_contents(getbapiurl() . '/js/bapi.context?apikey=' . $apiKey);
-		//$data = json_decode($c,TRUE);
-		$string = $m->render($t, $data);
+		$wrapper = getbapisolutiondata();
+		//print_r($wrapper);
+		$string = $m->render($t, $wrapper);
 		$post['post_content'] = $string;		
 	}
 	$post['post_type'] = 'page';			

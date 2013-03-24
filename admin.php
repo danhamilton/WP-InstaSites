@@ -11,7 +11,7 @@ function bapi_create_menu() {
 function bapi_options_init(){
 	register_setting('bapi_options','api_key');
 	register_setting('bapi_options','bapi_language');
-	register_setting('bapi_options','solution_id');
+	register_setting('bapi_options','bapi_solutiondata');
 	register_setting('bapi_options','bapi_baseurl');	
 	register_setting('bapi_options','bapi_custom_tmpl_loc');
 	register_setting('bapi_options','bapi_site_cdn_domain'); 
@@ -94,12 +94,9 @@ function bapi_settings_page() {
 		<div class="clear"></div>
 		<h3>Initial Configuration</h3>
 		<small>Note: Permalink Settings should be set to Post name for the menu structure to function correctly.</small>
-		<div id="bapi-import-update" style="margin-top:-20px;">
-			<p class="submit" style="float:left;">
-				<input class="button-primary setuppages" value="Create Default Pages"> 
-				<span id="loading-initial"><img src="<?= plugins_url('/img/ajax-loader.gif', __FILE__) ?>" style="display:none;" height="20" valign="middle"></span>
-			</p>
-		</div>			
+		<div id="bapi-import-update" style="margin-top:-20px;">			
+			<p class="submit" style="float:left;"><input class="button-primary setuppages" value="Create Default Pages"></p>
+		</div>					
 		</div>
 				
 		<div id="tabs-2">
@@ -175,7 +172,7 @@ function bapi_settings_page() {
 	
     <?php
 		$apiKey = get_option('api_key');
-		$language = getbapilangauge();
+		$language = getbapilanguage();
 	?>	
 </div>
 <link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/jquery.ui/jquery-ui-1.10.2.min.css', __FILE__) ?>" />
@@ -239,7 +236,6 @@ function bapi_settings_page() {
 			}
 		});
 	
-
 		var pagedefs = [
 			{ "title": "Home", "url": "", "intid": "bapi_home", "parent": "", "order": 1, "template": "page-templates/front-page.php", "content": '/default-content/home.php', "addtomenu": true },
 			{ "title": "Search", "url": "rentalsearch", "intid": "bapi_search", "parent": "", "order": 2, "template": "page-templates/search-page.php", "content": '/default-content/rentalsearch.php', "addtomenu": true },
@@ -268,12 +264,8 @@ function bapi_settings_page() {
 				txtresult.html('<h5>Setting up menu system</h5>');
 				$.each(pagedefs, function (i, pagedef) {
 					var url = '<?= plugins_url('/init.php', __FILE__) ?>?' + $.param(pagedef);
-					$.ajax(
-					{
-						type: 'GET',
-						async: false,
-						url: url,
-						success: function(data) { txtresult.append(data); }
+					$.get(url, function(data) {
+						txtresult.append(data);
 					});					
 				});							
 			}

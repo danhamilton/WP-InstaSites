@@ -15,7 +15,7 @@
 		return "https://" . $bapi_baseurl;
 	}
 
-	function getbapilangauge() {
+	function getbapilanguage() {
 		$language = get_option('bapi_language');	
 		if(empty($language)) {
 			$language = "en-US";
@@ -24,21 +24,36 @@
 	}
 
 	function getbapijsurl($apiKey) {
-		return getbapiurl() . "/js/bapi.js?apikey=" . $apiKey . "&uitmploc=" . urlencode(gettemplatelocation()) . "&language=" . getbapilangauge();
+		return getbapiurl() . "/js/bapi.js?apikey=" . $apiKey . "&uitmploc=" . urlencode(gettemplatelocation()) . "&language=" . getbapilanguage();
 	}
 
 	function getbapiapikey() {
 		return get_option('api_key');
 	}
+	
+	function getbapisolutiondata() {
+		$tst = get_option('bapi_solutiondata');
+		if (empty($tst)) {
+			$ctx = getbapicontext();	
+			$raw = getbapitextdata(); 
+			$td = $raw['result'];	
+			$wrapper = array();	
+			$wrapper['site'] = $ctx;
+			$wrapper['textdata'] = $td;
+			add_option('bapi_solutiondata', $wrapper);
+			$tst = $wrapper;
+		}
+		return $tst;	
+	}	
 
-	function getbapiconfig($bapiurl, $apikey) {
-		$c = file_get_contents($bapiurl . '/js/bapi.context?apikey= ' . $apikey);
+	function getbapicontext() {
+		$c = file_get_contents(getbapiurl() . '/js/bapi.context?apikey=' . getbapiapikey() . '&language=' . getbapilanguage());
 		$res = json_decode($c,TRUE);
 		return $res;
 	}
 
-	function getbapitextdata($bapiurl, $apikey) {
-		$c = file_get_contents($bapiurl . '/ws/?method=get&entity=textdata&apikey=' . $apikey);
+	function getbapitextdata() {
+		$c = file_get_contents(getbapiurl() . '/ws/?method=get&entity=textdata&apikey=' . getbapiapikey() . '&language=' . getbapilanguage());
 		$res = json_decode($c,TRUE);
 		return $res;
 	}
@@ -90,7 +105,7 @@
 	function getconfig(){
 		if(get_option('api_key')){
 			$apiKey = get_option('api_key');
-			$language = getbapilangauge();
+			$language = getbapilanguage();
 ?>
 <link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/slideshow.css', __FILE__) ?>" />
 <link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/jquery.ui/jquery-ui-1.10.2.min.css', __FILE__) ?>" />

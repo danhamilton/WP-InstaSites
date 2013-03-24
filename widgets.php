@@ -1,6 +1,53 @@
 <?php
 
 /**
+ * Adds BAPI_Footer widget.
+ */
+class BAPI_Footer extends WP_Widget {
+
+	public function __construct() {
+		parent::__construct(
+	 		'bapi_footer', // Base ID
+			'Bookt Footer', // Name
+			array( 'description' => __( 'Displays the Footer', 'text_domain' ), ) // Args
+		);
+	}
+
+	public function widget( $args, $instance ) {
+		extract( $args );
+		$title = apply_filters( 'widget_title', $instance['title'] );
+
+		echo $before_widget;
+		$apikey = getbapiapikey();
+		if (!empty($apikey)) {
+			$t = file_get_contents(plugins_url('/default-content/footer.php', __FILE__));
+			$m = new Mustache_Engine();
+			$wrapper = getbapisolutiondata();
+			//print_r($wrapper);
+			$string = $m->render($t, $wrapper);
+			echo $string;
+			//$ctx = getbapisolutiondata();
+			//echo '<div id="copyright">©' . $ctx['site']['SolutionCopyright'] . '</div>';
+			//echo
+			//echo '<div id="poweredby"><a rel="nofollow" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';
+		}
+		else {
+			echo '<div id="poweredby"><a rel="nofollow" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';
+		}
+		echo $after_widget;
+	}
+
+	public function update( $new_instance, $old_instance ) {
+		$instance = array();
+		$instance['title'] = strip_tags( $new_instance['title'] );
+
+		return $instance;
+	}	
+
+} // class BAPI_Footer
+
+
+/**
  * Adds BAPI_HP_Slideshow widget.
  */
 class BAPI_HP_Slideshow extends WP_Widget {
