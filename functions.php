@@ -31,9 +31,13 @@
 		return get_option('api_key');
 	}
 	
+	$solutiondata = null;
 	function getbapisolutiondata() {
 		$tst = get_option('bapi_solutiondata');
 		if (empty($tst)) {
+			if (!empty($solutiondata)) {
+				return $solutiondata;
+			}
 			$ctx = getbapicontext();	
 			$raw = getbapitextdata(); 
 			$td = $raw['result'];	
@@ -43,6 +47,7 @@
 			add_option('bapi_solutiondata', $wrapper);
 			$tst = $wrapper;
 		}
+		$solutiondata = $tst;
 		return $tst;	
 	}	
 

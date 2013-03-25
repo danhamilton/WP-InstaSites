@@ -258,8 +258,9 @@ context.createSummaryWidget = function (targetid, options, callback) {
 	options = initOptions(options, 10, 'tmpl-base-summary');
 	if (options.log) { BAPI.log("--options--"); BAPI.log(options); }
 	var ids=[], alldata=[];
-	context.loading.show();		
+	context.loading.show();
 	BAPI.search(options.entity, options.searchoptions, function (data) { 
+		if (options.log) { BAPI.log("--search result--"); BAPI.log(data); }
 		ids = data.result; 
 		doSearch(targetid, ids, options.entity, options, alldata, callback); 
 	});

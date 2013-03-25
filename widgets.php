@@ -3,12 +3,63 @@
 /**
  * Adds BAPI_Footer widget.
  */
+class BAPI_Header extends WP_Widget {
+
+	public function __construct() {
+		parent::__construct(
+	 		'bapi_header', // Base ID
+			'Insta Header', // Name
+			array( 'description' => __( 'Displays the Header', 'text_domain' ), ) // Args
+		);
+	}
+
+	public function widget( $args, $instance ) {
+		extract( $args );
+		$title = apply_filters( 'widget_title', $instance['title'] );
+
+		echo $before_widget;
+		$apikey = getbapiapikey();
+		if (!empty($apikey)) {
+			$fname = get_stylesheet_directory() . '/default-content/header.php';
+			if (!file_exists($fname)) {
+				$fname = plugin_dir_path( __FILE__ ) . 'default-content/header.php';				
+			}
+			if (file_exists($fname)) {
+				$t = file_get_contents($fname);					
+				$m = new Mustache_Engine();
+				$wrapper = getbapisolutiondata();
+				//print_r($wrapper);
+				$string = $m->render($t, $wrapper);
+				echo $string;			
+			}
+			else {
+				echo '<div id="poweredby"><a rel="nofollow" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';
+			}
+		}
+		else {
+			echo '<div id="poweredby"><a rel="nofollow" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';
+		}
+		echo $after_widget;
+	}
+
+	public function update( $new_instance, $old_instance ) {
+		$instance = array();
+		$instance['title'] = strip_tags( $new_instance['title'] );
+
+		return $instance;
+	}	
+
+} // class BAPI_Header
+
+/**
+ * Adds BAPI_Footer widget.
+ */
 class BAPI_Footer extends WP_Widget {
 
 	public function __construct() {
 		parent::__construct(
 	 		'bapi_footer', // Base ID
-			'Bookt Footer', // Name
+			'Insta Footer', // Name
 			array( 'description' => __( 'Displays the Footer', 'text_domain' ), ) // Args
 		);
 	}
@@ -20,12 +71,21 @@ class BAPI_Footer extends WP_Widget {
 		echo $before_widget;
 		$apikey = getbapiapikey();
 		if (!empty($apikey)) {
-			$t = file_get_contents(plugins_url('/default-content/footer.php', __FILE__));
-			$m = new Mustache_Engine();
-			$wrapper = getbapisolutiondata();
-			//print_r($wrapper);
-			$string = $m->render($t, $wrapper);
-			echo $string;			
+			$fname = get_stylesheet_directory() . '/default-content/footer.php';
+			if (!file_exists($fname)) {
+				$fname = plugin_dir_path( __FILE__ ) . 'default-content/footer.php';				
+			}
+			if (file_exists($fname)) {
+				$t = file_get_contents($fname);					
+				$m = new Mustache_Engine();
+				$wrapper = getbapisolutiondata();
+				//print_r($wrapper);
+				$string = $m->render($t, $wrapper);
+				echo $string;			
+			}
+			else {
+				echo '<div id="poweredby"><a rel="nofollow" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';
+			}
 		}
 		else {
 			echo '<div id="poweredby"><a rel="nofollow" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';
@@ -51,7 +111,7 @@ class BAPI_HP_Slideshow extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 	 		'bapi_hp_slideshow', // Base ID
-			'Bookt Homepage Slideshow', // Name
+			'Insta Homepage Slideshow', // Name
 			array( 'description' => __( 'Homepage Slideshow', 'text_domain' ), ) // Args
 		);
 	}
@@ -119,7 +179,7 @@ class BAPI_HP_LogoWithTagline extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 	 		'bapi_hp_logowithtagline', // Base ID
-			'Bookt Homepage Logo With Tagline', // Name
+			'Insta Homepage Logo With Tagline', // Name
 			array( 'description' => __( 'Homepage Logo With Tagline', 'text_domain' ), ) // Args
 		);
 	}
@@ -172,7 +232,7 @@ class BAPI_HP_Logo extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 	 		'bapi_hp_logo', // Base ID
-			'Bookt Homepage Logo', // Name
+			'Insta Homepage Logo', // Name
 			array( 'description' => __( 'Homepage Logo', 'text_domain' ), ) // Args
 		);
 	}
@@ -226,7 +286,7 @@ class BAPI_HP_Search extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 	 		'bapi_hp_search', // Base ID
-			'Bookt Homepage Search', // Name
+			'Insta Homepage Search', // Name
 			array( 'description' => __( 'Homepage Search', 'text_domain' ), ) // Args
 		);
 	}
@@ -283,7 +343,7 @@ class BAPI_Prop_Inquiry extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 	 		'bapi_prop_inquiry', // Base ID
-			'Bookt Property Inquiry Form', // Name
+			'Insta Property Inquiry Form', // Name
 			array( 'description' => __( 'Inquiry Form', 'text_domain' ), ) // Args
 		);
 	}
@@ -343,7 +403,7 @@ class BAPI_Inquiry_Form extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 	 		'bapi_inquiry_form', // Base ID
-			'Bookt Inquiry Form', // Name
+			'Insta Inquiry Form', // Name
 			array( 'description' => __( 'Inquiry Form', 'text_domain' ), ) // Args
 		);
 	}
@@ -400,7 +460,7 @@ class BAPI_Prop_Quote extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 	 		'bapi_prop_quote', // Base ID
-			'Bookt Property Rate Quote', // Name
+			'Insta Property Rate Quote', // Name
 			array( 'description' => __( 'Rate Quote', 'text_domain' ), ) // Args
 		);
 	}
@@ -465,8 +525,8 @@ class BAPI_Featured_Properties extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 	 		'bapi_featured_properties', // Base ID
-			'Bookt Featured Properties', // Name
-			array( 'description' => __( 'Bookt Featured Properties', 'text_domain' ), ) // Args
+			'Insta Featured Properties', // Name
+			array( 'description' => __( 'Insta Featured Properties', 'text_domain' ), ) // Args
 		);
 	}
 
@@ -541,8 +601,8 @@ class BAPI_Property_Finders extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 	 		'bapi_property_finders', // Base ID
-			'Bookt Predefined Searches', // Name
-			array( 'description' => __( 'Bookt Property Finders', 'text_domain' ), ) // Args
+			'Insta Predefined Searches', // Name
+			array( 'description' => __( 'Insta Property Finders', 'text_domain' ), ) // Args
 		);
 	}
 
@@ -616,8 +676,8 @@ class BAPI_Specials_Widget extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 	 		'bapi_specials_widget', // Base ID
-			'Bookt Specials', // Name
-			array( 'description' => __( 'Bookt Specials', 'text_domain' ), ) // Args
+			'Insta Specials', // Name
+			array( 'description' => __( 'Insta Specials', 'text_domain' ), ) // Args
 		);
 	}
 
@@ -690,8 +750,8 @@ class BAPI_Similar_Properties extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 	 		'bapi_similar_properties', // Base ID
-			'Bookt Similar Properties', // Name
-			array( 'description' => __( 'Bookt Similar Properties', 'text_domain' ), ) // Args
+			'Insta Similar Properties', // Name
+			array( 'description' => __( 'Insta Similar Properties', 'text_domain' ), ) // Args
 		);
 	}
 
@@ -746,8 +806,8 @@ class BAPI_Weather_Widget extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 	 		'bapi_weather_widget', // Base ID
-			'Bookt Weather', // Name
-			array( 'description' => __( 'Bookt Weather', 'text_domain' ), ) // Args
+			'Insta Weather', // Name
+			array( 'description' => __( 'Insta Weather', 'text_domain' ), ) // Args
 		);
 	}
 
