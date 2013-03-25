@@ -25,11 +25,7 @@ class BAPI_Footer extends WP_Widget {
 			$wrapper = getbapisolutiondata();
 			//print_r($wrapper);
 			$string = $m->render($t, $wrapper);
-			echo $string;
-			//$ctx = getbapisolutiondata();
-			//echo '<div id="copyright">©' . $ctx['site']['SolutionCopyright'] . '</div>';
-			//echo
-			//echo '<div id="poweredby"><a rel="nofollow" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';
+			echo $string;			
 		}
 		else {
 			echo '<div id="poweredby"><a rel="nofollow" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';

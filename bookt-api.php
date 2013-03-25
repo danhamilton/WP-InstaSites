@@ -30,9 +30,7 @@ include_once(dirname( __FILE__ ).'/admin.php');
 include_once(dirname( __FILE__ ).'/widgets.php');
 include_once(dirname( __FILE__ ).'/cdn-linker/wp-cdn-linker.php');
 
-add_filter('save_post','update_post_bapi');
-add_filter('the_content','property_detail_content');
-add_filter('the_content','property_summary_content');
+//add_filter('save_post','update_post_bapi');
 add_filter('home_url','home_url_cdn',10,2);
 add_action('template_redirect', 'do_ossdl_off_ob_start');
 add_action('wp_head','getconfig');

@@ -262,12 +262,17 @@ function bapi_settings_page() {
 				$('#dlg-result').dialog({width:700});
 				var txtresult = $('#dlg-txtresult');
 				txtresult.html('<h5>Setting up menu system</h5>');
+				var url = '<?= plugins_url('/init.php', __FILE__) ?>';
+				BAPI.utils.dopost(url, { "pagedefs": pagedefs }, function(res) {
+					txtresult.append(res);
+				});
+				/*
 				$.each(pagedefs, function (i, pagedef) {
 					var url = '<?= plugins_url('/init.php', __FILE__) ?>?' + $.param(pagedef);
 					$.get(url, function(data) {
 						txtresult.append(data);
 					});					
-				});							
+				});*/							
 			}
 		});
 	

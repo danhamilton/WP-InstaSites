@@ -5,85 +5,98 @@
 	$menuname = "Main Navigation Menu";
 	$menu_id = initmenu($menuname);
 	
-	// temp
-	$parent = $_REQUEST['parent'];	
-	$parentid = 0;
-	$test = get_page_by_path($parent);
-	if (!empty($test)) {
-		$parentid = $test->ID;
+	$pagedefs = $_POST['pagedefs'];
+	$navmap = array();
+	foreach ($pagedefs as $pagedef) {
+		addpage($pagedef, $navmap, $menu_id);
+		//print_r($pagedef);
+		//print_r("<br />");
 	}
+	return;
 	
-	// try to find if this page already exists
-	$pid = getPageID($parent, $_REQUEST['url'], $_REQUEST['title']);
 	
-	// create the post
-	$post = array();
-	$post['ID'] = $pid;
-	$post['menu_order'] = $_REQUEST['order'];
-	$post['post_name'] = $_REQUEST['url'];	
-	if (empty($post['post_name'])) {
-		$post['post_name'] = null;
-	}
-	$post['post_title'] = $_REQUEST['title'];
-	$post['post_status'] = 'publish';
-	$post['post_parent'] = $parentid;
-	$post['comment_status'] = 'closed';		
-	$content = $_REQUEST['content'];	
-	if($content!=''){				
-		$t = file_get_contents(plugins_url($content, __FILE__));
-		$m = new Mustache_Engine();
-		$wrapper = getbapisolutiondata();
-		//print_r($wrapper);
-		$string = $m->render($t, $wrapper);
-		$post['post_content'] = $string;		
-	}
-	$post['post_type'] = 'page';			
-			
-	remove_filter('save_post','update_post_bapi');		
-	if ($pid == 0) {
-		$pid = wp_insert_post($post);
-		add_post_meta($pid, 'bapi_page_id', $_REQUEST['intid'], true);
-		update_post_meta($pid, "_wp_page_template", $_REQUEST['template']);
-		print_r('<div>Added menu item <b>' . $post['post_title'] . '</b> post_id=' . $pid . '</div>');
-	}
-	else {
-		wp_update_post($post);
-		add_post_meta($pid, 'bapi_page_id', $_REQUEST['intid'], true);
-		update_post_meta($pid, "_wp_page_template", $_REQUEST['template']);
-		print_r('<div>Modfied menu item <b>' . $post['post_title'] . '</b> post_id=' . $pid . '</div>');
-	}
-	add_filter('save_post','update_post_bapi');
+	function addpage($pagedef, $navmap, $menu_id) {
+		$parent = $pagedef['parent'];	
+		$parentid = 0;
+		$test = get_page_by_path($parent);
+		if (!empty($test)) {
+			$parentid = $test->ID;
+		}
 		
-	$addtomenu = ($_REQUEST['addtomenu'] == 'true');
-	if($addtomenu && !doesNavMenuExist($pid)) {				
-		if (!empty($parent)) {
-			$navParentID = getNavMenuID($parent);			
+		// try to find if this page already exists
+		$pid = getPageID($parent, $pagedef['url'], $pagedef['title']);
+		
+		// create the post
+		$post = array();
+		$post['ID'] = $pid;
+		$post['menu_order'] = $pagedef['order'];
+		$post['post_name'] = $pagedef['url'];	
+		if (empty($post['post_name'])) {
+			$post['post_name'] = null;
+		}
+		$post['post_title'] = $pagedef['title'];
+		$post['post_status'] = 'publish';
+		$post['post_parent'] = $parentid;
+		$post['comment_status'] = 'closed';		
+		$content = $pagedef['content'];	
+		if($content!=''){				
+			$t = file_get_contents(plugins_url($content, __FILE__));
+			$m = new Mustache_Engine();
+			$wrapper = getbapisolutiondata();
+			//print_r($wrapper);
+			$string = $m->render($t, $wrapper);
+			$post['post_content'] = utf8_encode($string);				
+		}
+		$post['post_type'] = 'page';			
+				
+		//remove_filter('save_post','update_post_bapi');
+		$action = "Added";
+		if ($pid == 0) {			
+			$pid = wp_insert_post($post, $error);			
 		}
 		else {
-			$navParentID = $menu_id;
+			$action = "Edited";
+			wp_update_post($post);
 		}
-		if ($navParentID == 0) {
-			$navParentID = $menu_id;
+		add_post_meta($pid, 'bapi_page_id', $pagedef['intid'], true);
+		update_post_meta($pid, "_wp_page_template", $pagedef['template']);			
+		//add_filter('save_post','update_post_bapi');
+			
+		$miid = 0;
+		$addtomenu = ($pagedef['addtomenu'] == 'true');
+		if($addtomenu && !doesNavMenuExist($pid)) {				
+			$miid = addtonav($pid, $menu_id, $post, $parent, $navmap);
 		}
-		print_r("nav parentid=" . $navParentID . "<br />");		
+		
+		if($post['post_title']=='Home'){
+			update_option( 'page_on_front', $pid);
+			update_option( 'show_on_front', 'page');
+		}
+		if($post['post_title']=='Blog'){
+			update_option( 'page_for_posts', $pid);
+		}
+		print_r('<div>' . $action . ' menu item <b>' . $post['post_title'] . '</b> post_id=' . $pid . ',miid=' . $miid . '</div>');
+	}	
+
+	function addtonav($pid, $menu_id, $post, $parent, $navmap) {
+		$navParentID = $navmap[$parent];
+		if (empty($navParentID)) {
+			$navParentID = $menu_id; //getNavMenuID($parent); //$menu_id;
+		}
+		//print_r("navParentID=" . $navParentID . "<br/>");
 		$miid = wp_update_nav_menu_item($menu_id, 0, array(
 								'menu-item-title' => $post['post_title'],
 								'menu-item-object' => 'page',
 								'menu-item-object-id' => $pid,
 								'menu-item-type' => 'post_type',
 								'menu-item-status' => 'publish',
-								'menu-item-parent-id' => $parentid, //$navParentID,
-								'menu-item-position' => $_REQUEST['order']));				
+								'menu-item-parent-id' => $navParentID,
+								'menu-item-position' => $post['menu_order']));
+		$url = $post['post_title'];
+		$navmap[$url] = $miid;		
+		return $miid;
 	}
 	
-	if($post['post_title']=='Home'){
-		update_option( 'page_on_front', $pid);
-		update_option( 'show_on_front', 'page');
-	}
-	if($post['post_title']=='Blog'){
-		update_option( 'page_for_posts', $pid);
-	}
-
 	function initmenu($menuname) {		
 		$bpmenulocation = 'primary'; //Needs to be customized to InstaThemes when ready
 		// Does the menu exist already?
