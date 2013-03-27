@@ -1,10 +1,1 @@
-<div class="propertyfinders-results"></div>
-<script type="text/javascript">
-    $(document).ready(function () {
-        BAPI.UI.createSummaryWidget('.propertyfinders-results',
-            {
-                "entity": BAPI.entities.searches,
-                "template": BAPI.templates.get('tmpl-searches-summary')
-            });
-    });    
-</script>
+<div id="results" class="propertyfinders-results bapi-summary" data-log="0" data-templatename="tmpl-searches-summary" data-entity="searches"></div>

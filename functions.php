@@ -133,7 +133,10 @@
 <script src="<?= getbapiurl() ?>/js/bapi.textdata.js?apikey=<?= $apiKey ?>&language=<?= $language ?>" type="text/javascript"></script>
 <script type="text/javascript">		
 	BAPI.defaultOptions.baseURL = '<?= getbapiurl() ?>';
-	BAPI.init('<?= $apiKey ?>');			
+	BAPI.init('<?= $apiKey ?>');
+	$(document).ready(function () {
+		BAPI.UI.init();
+	});    
 </script>
 
 <?php			

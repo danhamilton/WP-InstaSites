@@ -538,17 +538,7 @@ class BAPI_Featured_Properties extends WP_Widget {
 		if(!empty($title))
 			echo $before_title.$title.$after_title;
 		?>
-        <div class="featuredproperties"></div>
-		<script>
-			$(document).ready(function () {
-				BAPI.UI.createSummaryWidget('.featuredproperties',
-				{
-		   			searchoptions: { "pagesize": <?= $pagesize ?>, "sort": "random" },
-					"entity": BAPI.entities.property,
-					"template": BAPI.templates.get('tmpl-featuredproperties-horiz')
-				});
-			});
-        </script>
+		<div id="featuredproperties" class="bapi-summary propertyfinders row-fluid" data-log="0" data-templatename="tmpl-featuredproperties-horiz"  data-entity="property" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }'></div>
         <?php
 		echo $after_widget;
 	}
@@ -612,19 +602,9 @@ class BAPI_Property_Finders extends WP_Widget {
 		$pagesize = esc_textarea($instance['text']);
 		echo $before_widget;
 		if(!empty($title))
-			echo $before_title.$title.$after_title;
-		?>
-        <div class="propertyfinders"></div>
-		<script>
-			$(document).ready(function () {
-				BAPI.UI.createSummaryWidget('.propertyfinders',
-				{
-		   			searchoptions: { "pagesize": <?= $pagesize ?>, "sort": "random" },
-					"entity": BAPI.entities.searches,
-					"template": BAPI.templates.get('tmpl-searches-horiz')
-				});
-			});
-        </script>
+			echo $before_title.$title.$after_title;		
+		?>		
+		<div id="propertyfinders" class="bapi-summary propertyfinders" data-log="0" data-templatename="tmpl-searches-horiz"  data-entity="searches" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }'></div>
         <?php
 		echo $after_widget;
 	}
@@ -689,17 +669,7 @@ class BAPI_Specials_Widget extends WP_Widget {
 		if(!empty($title))
 			echo $before_title.$title.$after_title;
 		?>
-        <div class="specials-widget"></div>
-		<script>
-			$(document).ready(function () {
-				BAPI.UI.createSummaryWidget('.specials-widget',
-				{
-		   			searchoptions: { "pagesize": <?= $pagesize ?>, "sort": "random" },
-					"entity": BAPI.entities.specials,
-					"template": BAPI.templates.get('tmpl-specials-vert')
-				});
-			});
-        </script>
+        <div id="specials-widget" class="bapi-summary specials-widget" data-log="0" data-templatename="tmpl-specials-vert"  data-entity="specials" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }'></div>		
         <?php
 		echo $after_widget;
 	}
@@ -764,6 +734,7 @@ class BAPI_Similar_Properties extends WP_Widget {
 			//echo $before_title.$title.$after_title;
 		?>
         <div id="similarprops"></div>
+		
 		<script>
 			var pkid = <?= get_post_meta(get_the_ID(),'property_id',true) ?>;
 			$(document).ready(function () {

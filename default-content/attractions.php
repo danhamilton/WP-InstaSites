@@ -1,10 +1,1 @@
-<div class="poi-results"></div>
-<script type="text/javascript">
-    $(document).ready(function () {
-        BAPI.UI.createSummaryWidget('.poi-results',
-        {
-            "entity": BAPI.entities.poi,
-            "template": BAPI.templates.get('tmpl-attractions-summary-list')
-        });
-    });    
-</script>
+<div id="results" class="poi-results bapi-summary" data-log="0" data-templatename="tmpl-attractions-summary-list" data-entity="poi"></div>

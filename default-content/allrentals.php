@@ -1,9 +1,1 @@
-<div id="results"></div>
-<script type="text/javascript">
-	$(document).ready(function () {		
-		BAPI.UI.createSummaryWidget('#results', {
-			"entity": BAPI.entities.property,
-			"template": BAPI.templates.get('tmpl-allproperties')
-		});
-	});	
-</script>
+<div id="results" class="bapi-summary" data-log="0" data-templatename="tmpl-allproperties" data-entity="property"></div>

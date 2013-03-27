@@ -212,6 +212,18 @@ function bapi_settings_page() {
 		if (entity == "property") {
 			return { "entity": entity, "template": "tmpl-properties-detail", "parent": "bapi_search" }
 		}
+		if (entity == 'development') {
+			return { "entity": entity, "template": "tmpl-developments-detail", "parent": "bapi_search" }
+		}
+		if (entity == 'specials') {
+			return { "entity": entity, "template": "tmpl-specials-detail", "parent": "bapi_search" }
+		}
+		if (entity == 'poi') {
+			return { "entity": entity, "template": "tmpl-attractions-detail", "parent": "bapi_search" }
+		}
+		if (entity == 'searches') {
+			return { "entity": entity, "template": "tmpl-searches-detail", "parent": "bapi_search" }
+		}
 	}
 	$(document).ready(function($){
 	
@@ -256,7 +268,7 @@ function bapi_settings_page() {
 			{ "title": "Home", "url": "", "intid": "bapi_home", "parent": "", "order": 1, "template": "page-templates/front-page.php", "content": '/default-content/home.php', "addtomenu": true },
 			{ "title": "Search", "url": "rentalsearch", "intid": "bapi_search", "parent": "", "order": 2, "template": "page-templates/search-page.php", "content": '/default-content/rentalsearch.php', "addtomenu": true },
 				{ "title": "All Rentals", "url": "allrentals", "intid": "bapi_property_grid", "parent": "rentalsearch", "order": 1, "template": "page-templates/full-width.php", "content": '/default-content/allrentals.php', "addtomenu": true },
-				{ "title": "Property Finders", "url": "propertyfinders", "intid": "bapi_property_finders", "parent": "rentalsearch", "order": 2, "template": "page-templates/full-width.php", "content": '/default-content/propertyfinders.php', "addtomenu": true },
+				{ "title": "Search Buckets", "url": "searchbuckets", "intid": "bapi_search_buckets", "parent": "rentalsearch", "order": 2, "template": "page-templates/full-width.php", "content": '/default-content/propertyfinders.php', "addtomenu": true },
 				{ "title": "Specials", "url": "specials", "intid": "bapi_specials", "parent": "rentalsearch", "order": 3, "template": "page-templates/full-width.php", "content": '/default-content/specials.php', "addtomenu": true },			
 				{ "title": "Developments", "url": "developments", "intid": "bapi_developments", "parent": "rentalsearch", "order": 4, "template": "page-templates/search-page.php", "content": '/default-content/developments.php', "addtomenu": true },
 			{ "title": "Attractions", "url": "attractions", "intid": "bapi_attractions", "parent": "", "order": 3, "template": "page-templates/full-width.php", "content": '/default-content/attractions.php', "addtomenu": true },

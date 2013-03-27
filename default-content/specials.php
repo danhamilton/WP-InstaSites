@@ -1,10 +1,1 @@
-<div class="specials-results"></div>
-<script type="text/javascript">
-    $(document).ready(function () {
-        BAPI.UI.createSummaryWidget('.specials-results',
-            {
-                "entity": BAPI.entities.specials,
-                "template": BAPI.templates.get('tmpl-specials-summary')
-            });
-    });    
-</script>
+<div id="results" class="specials-results bapi-summary" data-log="0" data-templatename="tmpl-specials-summary" data-entity="specials"></div>

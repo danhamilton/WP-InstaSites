@@ -33,6 +33,25 @@ BAPI.UI = BAPI.UI || {};
 
 context.maps = {};
 
+/*
+	Group: Initialization
+*/
+context.init = function() {
+	$.each($('.bapi-summary'), function (i, item) {
+		var ctl = $(item);		
+		var dologging = (ctl.attr('data-log') == '1');
+		var entity = ctl.attr('data-entity');
+		var templatename = ctl.attr('data-templatename');
+		var searchoptions = null;
+		try {
+			searchoptions = $.parseJSON(ctl.attr('data-searchoptions'));
+		}
+		catch(err) {}
+		var selector = '#' + ctl.attr('id');
+		BAPI.UI.createSummaryWidget(selector, { "searchoptions": searchoptions, "entity": entity, "template": BAPI.templates.get(templatename), "log": dologging });
+	});
+}
+
 /* 
 	Group: Search Widgets 
 */

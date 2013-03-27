@@ -62,13 +62,16 @@
 			return '/rentalsearch';
 		}
 		elseif($entity=='development') {
-			return '/developments';
+			return '/rentalsearch/developments';
 		}
 		elseif($entity=='specials') {
-			return '/specials';
+			return '/rentalsearch/specials';
 		}
 		elseif($entity=='poi') {
 			return '/attractions';
+		}
+		elseif($entity=='searches') {
+			return '/rentalsearch/searchbuckets';
 		}
 		return '/rentalsearch';
 	}

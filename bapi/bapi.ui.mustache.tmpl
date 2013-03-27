@@ -413,21 +413,21 @@
 /* Featured Properties (horizontal) */
 <script id="tmpl-featuredproperties-horiz" type="text/html">
 {{#result}}
-<div class="fp-featured">    
-	<div class="fp-image">
-		<a href="{{ContextData.SEO.DetailURL}}"><img width="155px" src="{{&PrimaryImage.ThumbnailURL}}" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" /></a>
-	</div>
-	<div class="fp-outer">	
-		<div class="fp-title"><a href='{{ContextData.SEO.DetailURL}}'>{{Headline}}</a></div>
-		{{#NumReviews}}<div class="fpstar{{AvgReview}}"></div>{{/NumReviews}}
-		<div class="fp-details">
-			<b class="smarthide">{{textdata.Beds}}: {{Bedrooms}}</b>		
-			<b class="smarthide">{{textdata.Baths}}: {{Bathrooms}}</b>		
-			<b class="smarthide">{{textdata.Sleeps}}: {{Sleeps}}</b>							
-		</div>
-		<div class="clear"></div>
-		<div class="fp-rates">{{ContextData.Quote.PublicNotes}}</div>		
-	</div>
+<div class="fp-featured span6">    
+ <div class="fp-image">
+  <a href="{{ContextData.SEO.DetailURL}}"><img width="155px" src="{{&PrimaryImage.ThumbnailURL}}" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" /></a>
+ </div>
+ <div class="fp-outer"> 
+  <div class="fp-title"><a href='{{ContextData.SEO.DetailURL}}'>{{Headline}}</a></div>
+  {{#NumReviews}}<div class="fpstar{{AvgReview}}"></div>{{/NumReviews}}
+  <div class="fp-details">
+   <b class="smarthide">{{textdata.Beds}}: {{Bedrooms}}</b>  
+   <b class="smarthide">{{textdata.Baths}}: {{Bathrooms}}</b>  
+   <b class="smarthide">{{textdata.Sleeps}}: {{Sleeps}}</b>       
+  </div>
+  <div class="clear"></div>
+  <div class="fp-rates">{{ContextData.Quote.PublicNotes}}</div>  
+ </div>
 </div>
 {{/result}}
 </script>
@@ -678,12 +678,16 @@
 </div>
 {{/result}}
 </div>
+<div id="propresults" class="bapi-summary" data-log="0" data-templatename="tmpl-allproperties"  data-entity="property" data-searchoptions='{ "searchid": {{ID}}, "seo": 1, "pagesize": 10 }'></div>
+{{^result}}
+<div class="nomore">{{textdata.There are no more results}}</div>
+{{/result}}
 </script>
 
 <script id="tmpl-specials-vert" type="text/html">
 {{#result}}
 <div class="special-holder">
-	<a href="{{DetailURL}}">
+	<a href="{{&ContextData.SEO.DetailURL}}">
 		{{#Images.Count}}<img width="185px" src="{{&PrimaryImage.ThumbnailURL}}" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />{{/Images.Count}}
 		<div class="clear"></div>
 		<div class="special-widget-content">
@@ -734,19 +738,23 @@
 	<div class="clear2"></div>	
 </div>
 {{/result}}
+<div id="propresults" class="bapi-summary" data-log="0" data-templatename="tmpl-allproperties"  data-entity="property" data-searchoptions='{ "searchid": {{ID}}, "seo": 1, "pagesize": 10 }'></div>
+{{^result}}
+<div class="nomore">{{textdata.There are no more results}}</div>
+{{/result}}
 </script>
 
 <script id="tmpl-searches-horiz" type="text/html">
 {{#result}}
 <div class="pf-featured">    
 <div class="pf-image">
-	<a href="{{DetailURL}}">
+	<a href="{{&ContextData.SEO.DetailURL}}}}">
 		<img width="185px" src="{{&PrimaryImage.ThumbnailURL}}" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />
 	</a>
 </div>
 <div class="pf-outer">
 	<div class="fp-inner">
-		<a href='{{DetailURL}}'>{{Name}}</a>		
+		<a href='{{&ContextData.SEO.DetailURL}}'>{{Name}}</a>		
 	</div>
 	<div class="pf-description">{{{Description}}}</div>
 </div>
