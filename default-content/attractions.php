@@ -1,7 +1,7 @@
-<div id="results"></div>
+<div class="poi-results"></div>
 <script type="text/javascript">
     $(document).ready(function () {
-        BAPI.UI.createSummaryWidget('#results',
+        BAPI.UI.createSummaryWidget('.poi-results',
         {
             "entity": BAPI.entities.poi,
             "template": BAPI.templates.get('tmpl-attractions-summary-list')

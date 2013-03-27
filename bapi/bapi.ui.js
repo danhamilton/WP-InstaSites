@@ -692,7 +692,7 @@ context.createCurrencySelectorWidget = function (id, options) {
 	var c = $(id);
 	var a = $('<a>', { "class": "currencyanchor", "href": "javascript:void(0)" });
 	c.append(a);
-	var ratetxt = 'Rates in ' + BAPI.session().currency + '▼';
+	var ratetxt = BAPI.session().currency + '▼';
 	a.text(ratetxt);
 	$(".currencyanchor").on("click", function () {
 		var template = BAPI.templates.get('tmpl-currencyselector');

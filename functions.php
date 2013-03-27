@@ -33,7 +33,8 @@
 	
 	$solutiondata = null;
 	function getbapisolutiondata() {
-		$tst = get_option('bapi_solutiondata');
+		// TODO: This was loading via get_option but the data can be stale.  Need to think of an efficient way of handling this.
+		$tst = null; //get_option('bapi_solutiondata'); 
 		if (empty($tst)) {
 			if (!empty($solutiondata)) {
 				return $solutiondata;
@@ -51,7 +52,7 @@
 		return $tst;	
 	}	
 
-	function getbapicontext() {
+	function getbapicontext() {		
 		$c = file_get_contents(getbapiurl() . '/js/bapi.context?apikey=' . getbapiapikey() . '&language=' . getbapilanguage());
 		$res = json_decode($c,TRUE);
 		return $res;

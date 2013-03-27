@@ -56,6 +56,7 @@ function bapi_settings_page() {
 		<li><a href="#tabs-1">BAPI Configuration</a></li>
 		<li><a href="#tabs-2">Slideshow</a></li>
 		<li><a href="#tabs-3">Data Synchronization</a></li>
+		<li><a href="#tabs-4">Solution Info (Debug)</a></li>
 </ul>
 	
     <form method="post" action="options.php" id="bapi-options-form" enctype="multipart/form-data">
@@ -148,6 +149,7 @@ function bapi_settings_page() {
         
         <?php submit_button(); ?>
 		</div>
+		<div class="clear"></div>
     </form>
 	
 	<div id="tabs-3">
@@ -165,9 +167,23 @@ function bapi_settings_page() {
 			</select>
 		</p>
     </div>
+	<div class="clear"></div>
+	</div>
     
 	<div id="dlg-result" style="display:none; width:600px">
 		<div id="dlg-txtresult" style="padding:10px; height:300px; overflow: auto"></div>
+	</div>
+	
+	
+	<div id="tabs-4">
+    <h3>Solution Data</h3>
+		<div style="padding:10px; height:300px; overflow: auto">
+		<?php			
+			echo "<pre>";
+            print_r(getbapisolutiondata()); 
+            echo "</pre>";
+		?>
+		</div>
 	</div>
 	
     <?php

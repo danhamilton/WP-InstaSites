@@ -1,7 +1,7 @@
-<div id="results"></div>
+<div class="propertyfinders-results"></div>
 <script type="text/javascript">
     $(document).ready(function () {
-        BAPI.UI.createSummaryWidget('#results',
+        BAPI.UI.createSummaryWidget('.propertyfinders-results',
             {
                 "entity": BAPI.entities.searches,
                 "template": BAPI.templates.get('tmpl-searches-summary')

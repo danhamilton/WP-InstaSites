@@ -20,9 +20,9 @@ class BAPI_Header extends WP_Widget {
 		echo $before_widget;
 		$apikey = getbapiapikey();
 		if (!empty($apikey)) {
-			$fname = get_stylesheet_directory() . '/default-content/header.php';
+			$fname = get_stylesheet_directory() . '/insta-default-content/insta-header.php';
 			if (!file_exists($fname)) {
-				$fname = plugin_dir_path( __FILE__ ) . 'default-content/header.php';				
+				$fname = plugin_dir_path( __FILE__ ) . 'insta-default-content/insta-header.php';				
 			}
 			if (file_exists($fname)) {
 				$t = file_get_contents($fname);					
@@ -71,9 +71,9 @@ class BAPI_Footer extends WP_Widget {
 		echo $before_widget;
 		$apikey = getbapiapikey();
 		if (!empty($apikey)) {
-			$fname = get_stylesheet_directory() . '/default-content/footer.php';
+			$fname = get_stylesheet_directory() . '/insta-default-content/insta-footer.php';
 			if (!file_exists($fname)) {
-				$fname = plugin_dir_path( __FILE__ ) . 'default-content/footer.php';				
+				$fname = plugin_dir_path( __FILE__ ) . 'insta-default-content/insta-footer.php';				
 			}
 			if (file_exists($fname)) {
 				$t = file_get_contents($fname);					

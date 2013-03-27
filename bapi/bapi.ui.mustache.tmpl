@@ -246,76 +246,126 @@
 
 <script id="tmpl-properties-detail" type="text/html">
 {{#result}}
-<input type="hidden" id="pkid" value="{{ID}}" />
-<h1 class="property-headline">{{Headline}}</h1>
+<section class="row-fluid">
+        <div class="span12 property-snapshot shadow-border">        
+            <div class="top-block">
+            <div class="row-fluid">
+                <div class="span7 left-side">
+                <h2 class="title">{{Headline}}</h2>
+                <p class="location"><span><b>{{textdata.City}}:</b> {{City}}</span> {{#Bedrooms}}<b>{{textdata.Beds}}</b>: {{Bedrooms}} | {{/Bedrooms}}{{#Bathrooms}}<b>{{textdata.Baths}}</b>: {{Bathrooms}} | {{/Bathrooms}}<b>{{textdata.Sleeps}}</b>: {{Sleeps}}</p>
+                
+                </div>
+                
+                <div class="span5 nav-links">
+                <a class="link" href="{{&ContextData.SEO.DetailURL}}"><span>&larr;</span>&nbsp;Back to Results</a>&nbsp;&nbsp;&nbsp;<a class="link" href="{{&ContextData.SEO.DetailURL}}">Next&nbsp;<span>&rarr;</span></a>
+                </div>
+              </div>  
+            </div>
+            
+            <div class="property-slideshow">
+                <!-- Place somewhere in the <body> of your page -->
+                <div id="slider" class="flexslider">
+                  <ul class="slides">
+				  {{#Images}}
+                    <li><img alt="{{Caption}}" src="{{&MediumURL}}" />
+					{{#Caption}}
+					<p class="flex-caption">{{Caption}}</p></li>
+					{{/Caption}}
+                  {{/Images}}                    
+                  </ul>
+                </div>
+                <div id="carousel" class="flexslider">
+                  <ul class="slides">
+                  {{#Images}}
+                    <li><img alt="" src="{{&ThumbnailURL}}" /></p></li>
+                  {{/Images}}                   
+                  </ul>
+                </div>
+                    
+            </div>
+        
+        </div>
+    </section>
+	
+	<section class="row-fluid property-info shadow-border">
+    	<div class="span12">
+            <div class="tabbable">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab1" data-toggle="tab">Overview</a></li>
+                    <li><a href="#tab2" data-toggle="tab">The Details</a></li>
+                    <li><a href="#tab3" data-toggle="tab">The Area</a></li>
+                    <li><a href="#tab4" data-toggle="tab">Reviews/ Specials/ Etc</a></li>
+                </ul>
+                
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab1">
 
-<div class="mainTabs alwaysvisible">
-    <a href="#tabs-1">{{textdata.General}}</a>&nbsp;&nbsp;
-	<a href="#tabs-2">{{textdata.Rates & Availability}}</a>&nbsp;&nbsp;
-	<a href="#tabs-3">{{textdata.Amenities}}</a>&nbsp;&nbsp;
-	{{#config.hasreviews}}<a href="#tabs-4">{{textdata.Reviews}}</a>&nbsp;&nbsp;{{/config.hasreviews}}
-	<a href="#tabs-5">{{textdata.Map & Attractions}}</a>&nbsp;&nbsp;
+<div class="row-fluid">
+<div class="span6 box-left">                
+<h2>Home Description</h2>
+{{&Description}}
 </div>
-
-<div id="tabs-1" class="shadow-box">	
-	<div id="ad-gallery" class="ad-gallery">
-		<div id="propertyimages" class="cycle-slideshow ad-image-wrapper pics">
-			<div class="cycle-pager"></div>
-			{{#Images}}
-			<img src="{{&MediumURL}}" alt="{{Caption}}" caption="{{Caption}}" />
-			{{/Images}}
-		</div>
-		<div class="cycle-caption"></div>
-	</div>
+<div class="span6 box-right">
+<h2>Points of Interest</h2>
+<div id="poi-map-prop"></div>
 </div>
-<div class="clear2"></div>	
-<div class="shadow-box general-lower">                              
-	<div class="description">
-		<div class="desc-text"><h1 class="desc-title">{{textdata.Description}}</h1></div>
-		<div class="clear"></div>
-		{{{Description}}}
-	</div>		
 </div>
+          
+            
+            
+                    </div>
+                    <div class="tab-pane" id="tab2">
+					
+<div class="row-fluid">
+<div class="span12 box-sides">
+                
+<h2>{{textdata.Amenities}}</h2>
+<ul>
+{{#Amenities}}
+<li>{{.}}</li>
+{{/Amenities}}
+</ul>
 
-<div id="tabs-2" class="shadow-box">
-	<h1>{{textdata.Rates}}</h1>
-	<div id="rates" class="rate-grid"></div>               	
-	<div class="clear2"></div>
-	<h1 class="availabilityprompt">{{textdata.Availability}}</h1>
-	<div id="availability" class="availability"></div>
-
-	<div class="clear2"></div>
-	<div class="clear2"></div>              	
 </div>
-
-<div id="tabs-3" class="shadow-box">	
-	<div class="amenities">
-		<h1 class="ameni-title">{{textdata.Amenities}}</h1>
-		<div class="ameni-list">
-			<ul>
-			{{#Amenities}}
-				<li>{{.}}</li>
-			{{/Amenities}}
-			</ul>		
-		</div>
-		<div class="clear"></div>    
-	</div>
-</div>                    
-
-{{#config.hasreviews}}
-<div id="tabs-4" class="shadow-box">
-	<p></p>		
-	<div class="clear"></div>
-	</div>
-	<div class="clear"></div>                            
-{{/config.hasreviews}}
-
-<div id="tabs-5" class="shadow-box">
-	<div id="poimap" style="width:100%; height:500px; border:1px solid black"></div>      
-	<div class="clear"></div>
-	<div id="poigrid"></div>
 </div>
+                    </div>
+                    <div class="tab-pane" id="tab3">
+					
+<div class="row-fluid">
+<div class="span12 box-sides">
+<ul class="unstyled">               
+<li><strong>{{textdata.Country}}:</strong> {{Country}}</li>
+<li><strong>{{textdata.State}}:</strong> {{State}}</li>
+<li><strong>{{textdata.County}}County:</strong> {{County}}</li>
+<li><strong>{{textdata.City}}:</strong> {{City}}</li>
+<li><strong>{{textdata.Metro}}Metro:</strong> {{Metro}}</li>
+<li><strong>{{textdata.Region}}:</strong> {{Region}}</li>
+<li><strong>{{textdata.Address}}:</strong> {{Address1}}</li>
+<li><strong>{{textdata.Stories}}Stories:</strong> {{Stories}}</li>
+<li><strong>{{textdata.Type}}Type:</strong> {{Type}}</li>
+<li><strong>{{textdata.YearBuilt}}Year Built:</strong> {{YearBuilt}}</li>
+</ul>
+
+
+</div>
+</div>
+                    </div>
+                    <div class="tab-pane" id="tab4">
+<div class="row-fluid">
+<div class="span12 box-sides">                
+<h2>Home Reviews</h2>
+
+
+</div>
+</div>
+                    	
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {{/result}}
+<span class="end"></span>
 </script>
 
 <script id="tmpl-propertyrates-grid" type="text/html">
@@ -453,8 +503,7 @@
                   <div class="type">{{Type}}</div>
                     <strong>{{Region}}, {{State}} </strong><br/>
                     <strong>{{textdata.Amenities}}:</strong> <span class="trunc{{curpage}}">{{Amenities}}</span>
-                  <div class="description">{{&Summary}}</div>
-                  
+                  <div class="description">{{&Summary}}</div>                  
               </div>
               
             </div>
@@ -464,7 +513,6 @@
 {{^islastpage}}<div><a href='javascript:void(0)' class='showmore'>{{textdata.Show More Results}} ({{totalcount}})</a></div>{{/islastpage}}
 {{#islastpage}}<div class="nomore">{{textdata.There are no more results}}</div>{{/islastpage}}
 </script>
-
 
 <script id="tmpl-developments-detail" type="text/html">
 <div class="developments-content">
@@ -503,22 +551,31 @@
 */
 <script id="tmpl-attractions-summary-list" type="text/html">
 {{#result}}
-<div class="portal-result">
-    <div class="portal-inner-left">
-        <div class="portal-thumbnail">
-            <div class="rownumber" data-id="{{ID}}">{{index}}</div>
-            <a href="{{ContextData.DetailURL}}">
-                <img class="portal-thumb-img" alt="thumbnail" caption="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" />
-            </a>
-        </div>
-        <div class="portal-info">
-            <h2><a href="{{&ContextData.DetailURL}}"><span>{{Name}}</span></a></h2>
-			<p>{{Summary}}</p>			
-        </div>
-    </div>
+<div class="span4">
+  <div class="item-result">
+	<div class="item-inner">
+	  <div class="item-images">
+	  <div class="number-tag">{{&ContextData.ItemIndex}}</div>
+	  <a href="{{&ContextData.SEO.DetailURL}}">
+	  {{^Images.0.MediumURL}}
+	  	<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" />
+	  {{/Images.0.MediumURL}}
+	  	
+      {{#Images.0.MediumURL}}
+	  	<img alt="{{Images.0.Caption}}" src="{{&Images.0.MediumURL}}" />
+	  {{/Images.0.MediumURL}}
+	  </a>
+	  </div>
+	  <div class="item-info shadow">		
+			<h2 class="title">{{Name}}</h2>
+			<div class="description">{{&Summary}}</div>
+			<a href="{{&ContextData.SEO.DetailURL}}" class="btn">{{textdata.See Details}}</a> </div>		
+	</div>
+  </div>
 </div>
-<div class="clear2"></div>
-{{/result}}
+{{/result}}  
+{{^islastpage}}<div><a href='javascript:void(0)' class='showmore'>{{textdata.Show More Results}} ({{totalcount}})</a></div>{{/islastpage}}
+{{#islastpage}}<div class="nomore">{{textdata.There are no more results}}</div>{{/islastpage}}
 </script>
 
 <script id="tmpl-attractions-detail" type="text/html">
@@ -591,7 +648,7 @@
 	  <div class="item-info shadow">		
 			<h2 class="title">{{Name}}</h2>
 			<div class="description">{{&Summary}}</div>
-			<a href="{{&ContextData.SEO.DetailURL}}" class="btn">{{textata.See Details}}</a> </div>		
+			<a href="{{&ContextData.SEO.DetailURL}}" class="btn">{{textdata.See Details}}</a> </div>		
 	</div>
   </div>
 </div>
