@@ -293,12 +293,12 @@ class BAPI_HP_Search extends WP_Widget {
 
 	public function widget( $args, $instance ) {
 		extract( $args );
-		//$title = apply_filters( 'widget_title', $instance['title'] );
+		$title = apply_filters( 'widget_title', $instance['title'] );
 
 		echo $before_widget;
-		//if ( ! empty( $title ) )
-			//echo $before_title . $title . $after_title;
-		//?>
+		if ( ! empty( $title ) )
+			echo $before_title . $title . $after_title;
+		?>
         <div id="bapi-hp-search"></div>
         <script type="text/javascript">
 			$(document).ready(function () {
@@ -538,7 +538,7 @@ class BAPI_Featured_Properties extends WP_Widget {
 		if(!empty($title))
 			echo $before_title.$title.$after_title;
 		?>
-		<div id="featuredproperties" class="bapi-summary propertyfinders row-fluid" data-log="0" data-templatename="tmpl-featuredproperties-horiz"  data-entity="property" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }'></div>
+		<div id="featuredproperties" class="bapi-summary featuredproperties row-fluid" data-log="0" data-templatename="tmpl-featuredproperties-horiz"  data-entity="property" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }'></div>
         <?php
 		echo $after_widget;
 	}
@@ -604,7 +604,7 @@ class BAPI_Property_Finders extends WP_Widget {
 		if(!empty($title))
 			echo $before_title.$title.$after_title;		
 		?>		
-		<div id="propertyfinders" class="bapi-summary propertyfinders" data-log="0" data-templatename="tmpl-searches-horiz"  data-entity="searches" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }'></div>
+		<div id="propertyfinders" class="bapi-summary propertyfinders row-fluid" data-log="0" data-templatename="tmpl-searches-horiz"  data-entity="searches" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }'></div>
         <?php
 		echo $after_widget;
 	}
@@ -669,7 +669,7 @@ class BAPI_Specials_Widget extends WP_Widget {
 		if(!empty($title))
 			echo $before_title.$title.$after_title;
 		?>
-        <div id="specials-widget" class="bapi-summary specials-widget" data-log="0" data-templatename="tmpl-specials-vert"  data-entity="specials" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }'></div>		
+        <div id="specials-widget" class="bapi-summary specials-widget row-fluid" data-log="0" data-templatename="tmpl-specials-vert"  data-entity="specials" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }'></div>		
         <?php
 		echo $after_widget;
 	}
