@@ -286,8 +286,8 @@ class BAPI_HP_Search extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 	 		'bapi_hp_search', // Base ID
-			'Insta Homepage Search', // Name
-			array( 'description' => __( 'Homepage Search', 'text_domain' ), ) // Args
+			'Insta Search - Home Page', // Name
+			array( 'description' => __( 'Availability Search Widget for Home Page', 'text_domain' ), ) // Args
 		);
 	}
 
@@ -299,12 +299,7 @@ class BAPI_HP_Search extends WP_Widget {
 		if ( ! empty( $title ) )
 			echo $before_title . $title . $after_title;
 		?>
-        <div id="bapi-hp-search"></div>
-        <script type="text/javascript">
-			$(document).ready(function () {
-				BAPI.UI.createSearchWidget('#bapi-hp-search', { "searchurl": "/rentalsearch", "template": BAPI.templates.get('tmpl-search-homepage') });
-			});
-        </script>
+        <div id="bapi-search" class="bapi-search" data-searchurl="/rentalsearch" data-templatename="tmpl-search-homepage" data-log="0"></div>
         <?php
 		echo $after_widget;
 	}
@@ -333,18 +328,16 @@ class BAPI_HP_Search extends WP_Widget {
 
 } // class BAPI_HP_Search
 
-
-
 /**
- * Adds BAPI_Prop_Inquiry widget.
+ * Adds BAPI_Search widget.
  */
-class BAPI_Prop_Inquiry extends WP_Widget {
+class BAPI_Search extends WP_Widget {
 
 	public function __construct() {
 		parent::__construct(
-	 		'bapi_prop_inquiry', // Base ID
-			'Insta Property Inquiry Form', // Name
-			array( 'description' => __( 'Inquiry Form', 'text_domain' ), ) // Args
+	 		'bapi__search', // Base ID
+			'Insta Search', // Name
+			array( 'description' => __( 'Availability Search Widget', 'text_domain' ), ) // Args
 		);
 	}
 
@@ -354,17 +347,9 @@ class BAPI_Prop_Inquiry extends WP_Widget {
 
 		echo $before_widget;
 		if ( ! empty( $title ) )
-			//echo $before_title . $title . $after_title;
+			echo $before_title . $title . $after_title;
 		?>
-        <div id="inquiryform"></div>
-        <script>
-		$(document).ready(function () {
-			var pkid = <?= get_post_meta(get_the_ID(),'property_id',true) ?>;
-			$(document).ready(function () {
-				BAPI.UI.createInquiryForm('#inquiryform', { "pikd": pkid, "hasdatesoninquiryform": true });
-			});
-		});
-		</script>
+        <div id="bapi-search" class="bapi-search" data-searchurl="/rentalsearch" data-templatename="tmpl-search-homepage" data-log="0"></div>
         <?php
 		echo $after_widget;
 	}
@@ -381,7 +366,7 @@ class BAPI_Prop_Inquiry extends WP_Widget {
 			$title = $instance[ 'title' ];
 		}
 		else {
-			$title = __( 'Property Inquiry', 'text_domain' );
+			$title = __( 'Revise Search', 'text_domain' );
 		}
 		?>
 		<p>
@@ -391,7 +376,57 @@ class BAPI_Prop_Inquiry extends WP_Widget {
 		<?php 
 	}
 
-} // class BAPI_Prop_Inquiry
+} // class BAPI_Search
+
+/**
+ * Adds BAPI_Inquiry widget.
+ */
+class BAPI_Inquiry extends WP_Widget {
+
+	public function __construct() {
+		parent::__construct(
+	 		'bapi_inquiry', // Base ID
+			'Insta Inquiry Form', // Name
+			array( 'description' => __( 'Inquiry Form', 'text_domain' ), ) // Args
+		);
+	}
+
+	public function widget( $args, $instance ) {
+		extract( $args );
+		$title = apply_filters( 'widget_title', $instance['title'] );
+
+		echo $before_widget;
+		if ( ! empty( $title ) )
+			echo $before_title . $title . $after_title;
+		?>
+		<div id="bapi-inquiryform" class="bapi-inquiryform" data-propid='<?= get_post_meta(get_the_ID(),'property_id',true) ?>' data-templatename="tmpl-search-homepage" data-log="0"></div>        
+        <?php
+		echo $after_widget;
+	}
+
+	public function update( $new_instance, $old_instance ) {
+		$instance = array();
+		$instance['title'] = strip_tags( $new_instance['title'] );
+
+		return $instance;
+	}
+
+	public function form( $instance ) {
+		if ( isset( $instance[ 'title' ] ) ) {
+			$title = $instance[ 'title' ];
+		}
+		else {
+			$title = __( 'Have a Question?', 'text_domain' );
+		}
+		?>
+		<p>
+		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
+		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+		</p>
+		<?php 
+	}
+
+} // class BAPI_Inquiry
 
 
 
@@ -731,17 +766,10 @@ class BAPI_Similar_Properties extends WP_Widget {
 		$pagesize = esc_textarea($instance['text']);
 		echo $before_widget;
 		if(!empty($title))
-			//echo $before_title.$title.$after_title;
+			echo $before_title.$title.$after_title;
 		?>
-        <div id="similarprops"></div>
-		
-		<script>
-			var pkid = <?= get_post_meta(get_the_ID(),'property_id',true) ?>;
-			$(document).ready(function () {
-				BAPI.UI.createSimilarPropertiesWidget('#similarprops', pkid, null);  
-			});
-        </script>
-        <?php
+        <div id="featuredproperties" class="bapi-summary" data-log="0" data-templatename="tmpl-featuredproperties-vert"  data-entity="property" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }'></div>
+		<?php
 		echo $after_widget;
 	}
 
@@ -756,7 +784,7 @@ class BAPI_Similar_Properties extends WP_Widget {
 			$title = $instance[ 'title' ];
 		}
 		else {
-			$title = __( 'Featured Properties', 'text_domain' );
+			$title = __( 'Similar Properties', 'text_domain' );
 		}
 		?>
 		<p>

@@ -188,7 +188,8 @@
                   </div>
                   <div class="rates clearfix">
                     <div class="portal-rates pull-left">{{ContextData.Quote.PublicNotes}}</div>
-                    <a class="property-link pull-right" href="{{&ContextData.SEO.DetailURL}}">Details <span>&rarr;</span></a> </div>
+                    {{#ContextData.SEO.Keyword}}<a class="property-link pull-right" href="{{&ContextData.SEO.DetailURL}}">{{textdata.Details}} <span>&rarr;</span></a>{{/ContextData.SEO.Keyword}}
+					</div>
                 </div>
               </div>
             </div>
@@ -220,7 +221,7 @@
     <td>
 		<input type='checkbox' />
  	</td>	
-    <td><a href="{{&ContextData.SEO.DetailURL}}">{{Headline}}</a></td>
+    <td><a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}">{{Headline}}</a></td>
     <td>{{Type}}</td>
     <td>{{Bedrooms}}</td> 
     <td>{{Bathrooms}}</td> 
@@ -229,10 +230,10 @@
     <td>{{ContextData.Quote.PublicNotes}}</td> 
     <td>
 		{{^IsBookable}}
-		<a class="btn btn-small btn-primary" href='{{ContextData.SEO.DetailURL}}'>Select</a>
+		<a class="btn btn-small btn-primary" href='{{ContextData.SEO.DetailURL}}'>{{textdata.Select}}</a>
 		{{/IsBookable}}
 		{{#IsBookable}}
-		<a class="btn btn-small btn-primary" href='{{ContextData.SEO.BookingURL}}'>Select</a>
+		<a class="btn btn-small btn-primary" href='{{ContextData.SEO.BookingURL}}'>{{textdata.Select}}</a>
 		{{/IsBookable}}
 	</td>   
 </tr>
@@ -246,7 +247,7 @@
 <script id="tmpl-properties-detail" type="text/html">
 {{#result}}
 <section class="row-fluid">
-        <div class="span12 property-snapshot shadow-border">        
+        <div class="span12 item-snapshot module shadow-border">        
             <div class="top-block">
             <div class="row-fluid">
                 <div class="span7 left-side">
@@ -256,14 +257,13 @@
                 </div>
                 
                 <div class="span5 nav-links">
-                <a class="link" href="{{&ContextData.SEO.DetailURL}}"><span>&larr;</span>&nbsp;Back to Results</a>&nbsp;&nbsp;&nbsp;<a class="link" href="{{&ContextData.SEO.DetailURL}}">Next&nbsp;<span>&rarr;</span></a>
+                <a class="link" href="/rentalsearch"><span>&larr;</span>&nbsp;Back to Results</a>&nbsp;&nbsp;&nbsp;<a class="link" href="#">Next&nbsp;<span>&rarr;</span></a>
                 </div>
               </div>  
             </div>
             
-            <div class="property-slideshow">
-                <!-- Place somewhere in the <body> of your page -->
-                <div id="slider" class="flexslider">
+            <div class="item-slideshow">
+                <div id="slider" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "sync": "#carousel" }'>
                   <ul class="slides">
 				  {{#Images}}
                     <li><img alt="{{Caption}}" src="{{&MediumURL}}" />
@@ -273,10 +273,10 @@
                   {{/Images}}                    
                   </ul>
                 </div>
-                <div id="carousel" class="flexslider">
+                <div id="carousel" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "itemWidth": 50, "itemMargin": 10, "asNavFor": "#slider" }'>
                   <ul class="slides">
                   {{#Images}}
-                    <li><img alt="" src="{{&ThumbnailURL}}" /></p></li>
+                    <li><img alt="" src="{{&ThumbnailURL}}" /></li>
                   {{/Images}}                   
                   </ul>
                 </div>
@@ -286,27 +286,23 @@
         </div>
     </section>
 	
-	<section class="row-fluid property-info shadow-border">
+	<section class="row-fluid item-info module shadow-border">
     	<div class="span12">
             <div class="tabbable">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#tab1" data-toggle="tab">Overview</a></li>
-                    <li><a href="#tab2" data-toggle="tab">The Details</a></li>
-                    <li><a href="#tab3" data-toggle="tab">The Area</a></li>
-                    <li><a href="#tab4" data-toggle="tab">Reviews/ Specials/ Etc</a></li>
+                    <li class="active"><a href="#tab1" data-toggle="tab">{{textdata.General}}</a></li>
+                    <li><a href="#tab2" data-toggle="tab">{{textdata.Details & Availability}}</a></li>
+                    <li><a href="#tab3" id="tabs3" data-toggle="tab">{{textdata.Attraction}}</a></li>
+                    <li><a href="#tab4" data-toggle="tab">{{textdata.Reviews}}</a></li>
                 </ul>
                 
                 <div class="tab-content">
                     <div class="tab-pane active" id="tab1">
 
 <div class="row-fluid">
-<div class="span6 box-left">                
-<h2>Home Description</h2>
+<div class="span12 box-sides">                
+
 {{&Description}}
-</div>
-<div class="span6 box-right">
-<h2>Points of Interest</h2>
-<div id="poi-map-prop"></div>
 </div>
 </div>
           
@@ -317,14 +313,54 @@
 					
 <div class="row-fluid">
 <div class="span12 box-sides">
-                
-<h2>{{textdata.Amenities}}</h2>
+
+<img src="//maps.googleapis.com/maps/api/staticmap?center={{Latitude}},{{Longitude}}&zoom=8&size=500x250&maptype=roadmap&markers=color:blue%7Clabel:%20%7C{{Latitude}},{{Longitude}}&sensor=false" />
+      
+<h3>{{textdata.Amenities}}</h3>
 <ul>
 {{#Amenities}}
 <li>{{.}}</li>
 {{/Amenities}}
 </ul>
 
+<div id="srctest">This is the source test</div>
+<div id="dsttest"></div>
+<div class="bapi-moveme" data-from="#srctest" data-to="#dsttest" data-method="append"></div>
+<h3>{{textdata.Rates & Availability}}</h3>
+<div id="avail" class="bapi-availcalendar" data-options='{ "availcalendarmonths":{{config.availcalendarmonths}}, "numinrow": 3 }' data-pkid="{{ID}}" />
+
+<table class="table table-bordered table-hover">
+<tr>
+{{#ContextData.Rates.Keys}}
+	<th>{{.}}</th>
+{{/ContextData.Rates.Keys}}
+</tr>
+{{#ContextData.Rates.Values}}
+<tr>
+	{{#0}}<td>{{0}}</td>{{/0}}
+	{{#1}}<td>{{1}}</td>{{/1}}
+	{{#2}}<td>{{2}}</td>{{/2}}	
+	{{#3}}<td>{{3}}</td>{{/3}}	
+	{{#4}}<td>{{4}}</td>{{/4}}	
+	{{#5}}<td>{{5}}</td>{{/5}}	
+	{{#6}}<td>{{6}}</td>{{/6}}	
+	{{#7}}<td>{{7}}</td>{{/7}}	
+	{{#8}}<td>{{8}}</td>{{/8}}	
+	{{#9}}<td>{{9}}</td>{{/9}}	
+	{{#10}}<td>{{10}}</td>{{/10}}	
+	{{#11}}<td>{{11}}</td>{{/11}}	
+	{{#12}}<td>{{12}}</td>{{/12}}	
+	{{#13}}<td>{{13}}</td>{{/13}}	
+	{{#14}}<td>{{14}}</td>{{/14}}	
+	{{#15}}<td>{{15}}</td>{{/15}}	
+	{{#16}}<td>{{16}}</td>{{/16}}	
+	{{#17}}<td>{{17}}</td>{{/17}}	
+	{{#18}}<td>{{18}}</td>{{/18}}	
+	{{#19}}<td>{{19}}</td>{{/19}}	
+	{{#20}}<td>{{20}}</td>{{/20}}		
+</tr>
+{{/ContextData.Rates.Values}}
+</table>
 </div>
 </div>
                     </div>
@@ -332,19 +368,60 @@
 					
 <div class="row-fluid">
 <div class="span12 box-sides">
-<ul class="unstyled">               
-<li><strong>{{textdata.Country}}:</strong> {{Country}}</li>
-<li><strong>{{textdata.State}}:</strong> {{State}}</li>
-<li><strong>{{textdata.County}}County:</strong> {{County}}</li>
-<li><strong>{{textdata.City}}:</strong> {{City}}</li>
-<li><strong>{{textdata.Metro}}Metro:</strong> {{Metro}}</li>
-<li><strong>{{textdata.Region}}:</strong> {{Region}}</li>
-<li><strong>{{textdata.Address}}:</strong> {{Address1}}</li>
-<li><strong>{{textdata.Stories}}Stories:</strong> {{Stories}}</li>
-<li><strong>{{textdata.Type}}Type:</strong> {{Type}}</li>
-<li><strong>{{textdata.YearBuilt}}Year Built:</strong> {{YearBuilt}}</li>
-</ul>
+<div id="poi-map-prop" class="bapi-map" 
+	data-loc-selector='.poi-map-location' 
+	data-refresh-selector='#tabs3' data-refresh-selector-event='shown' 
+	data-link-selector='.poi-map-item' 
+	data-category-icons='{ "starred": { "color": "#E8413A" }, "poi": { "color": "#465AE0" } }'
+	style="width:600px; height:300px; float:left;"></div>
+<br />
 
+<div id="map-side-bar">
+<table class="table table-bordered table-hover poi-map-locations">
+<tr>
+	<th></th>
+	<th>{{textdata.Attraction}}</th>
+	<th>{{textdata.Category}}</th>
+	<th>{{textdata.Distance}}</th>
+</tr>
+	<td class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}}}, "category": "starred"}'>
+		<a href="#" class="poi-map-item">X</a>
+		<div class="info-html">
+			<div style="float:left">
+				<img src='{{&PrimaryImage.ThumbnailURL}}' alt='{{PrimaryImage.Caption' title='{{PrimaryImage.Caption}}' />
+			</div>
+			<div>
+				<p><b>{{Headline}}</b></p>
+				<p>{{&Summary}}</p>
+			</div>
+		</div>
+	</td>
+	<td>{{Headline}}</td>
+	<td>{{Type}}</td>
+	<td>-</td>  
+<tr>
+</tr>
+{{#ContextData.Attractions}}
+<tr>
+	<td class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}}}, "category": "poi"}'>
+		<a href="#" class="poi-map-item">X</a>
+		<div class="info-html">
+			<div style="float:left">
+				<img src='{{&PrimaryImage.ThumbnailURL}}' alt='{{PrimaryImage.Caption' title='{{PrimaryImage.Caption}}' />
+			</div>
+			<div>
+				<p><b>{{Name}}</b></p>
+				<p>{{&Summary}}</p>
+			</div>
+		</div>
+	</td>
+	<td>{{Name}}</td>
+	<td>{{Type}}</td>
+	<td>{{ContextData.Distance}}</td>  
+</tr>
+{{/ContextData.Attractions}}
+</table>
+</div>
 
 </div>
 </div>
@@ -352,8 +429,24 @@
                     <div class="tab-pane" id="tab4">
 <div class="row-fluid">
 <div class="span12 box-sides">                
-<h2>Home Reviews</h2>
+{{#ContextData.Reviews}}
+<ul class="unstyled">
+<li><b>Title: </b>{{Title}}</li>
+<li><b>Added By: </b>{{AddedByPersonID}}</li>
+<li><b>Added On: </b>{{AddedOn}}</li>
+<li><b>Feedback: </b>{{FeedbackValue}}</li>
+<li><b>Comment: </b>{{&Comment}}</li>
+<li></li>
+<li><b>Modified By: </b>{{ModifiedByPersonID}}</li>
 
+<li><b>Modified On: </b>{{ModifiedOn}}</li>
+<li></li>
+<li><b>Reviewed By: </b>{{ReviewerDisplayName}}</li>
+
+<li><b>Reviewed By: </b>{{&Response}}</li>
+
+</ul>
+{{/ContextData.Reviews}}
 
 </div>
 </div>
@@ -568,13 +661,16 @@
 	  <div class="item-info shadow">		
 			<h2 class="title">{{Name}}</h2>
 			<div class="description">{{&Summary}}</div>
-			<a href="{{&ContextData.SEO.DetailURL}}" class="btn">{{textdata.See Details}}</a> </div>		
+			{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}" class="btn">{{textdata.See Details}}</a> </div>{{/ContextData.SEO.Keyword}}
 	</div>
   </div>
 </div>
 {{/result}}  
 {{^islastpage}}<div><a href='javascript:void(0)' class='showmore'>{{textdata.Show More Results}} ({{totalcount}})</a></div>{{/islastpage}}
 {{#islastpage}}<div class="nomore">{{textdata.There are no more results}}</div>{{/islastpage}}
+{{^result}}
+<div class="nomore">{{textdata.There are no more results}}</div>
+{{/result}}
 </script>
 
 <script id="tmpl-attractions-detail" type="text/html">
@@ -643,11 +739,12 @@
 <div class="span4">
   <div class="item-result">
 	<div class="item-inner">
-	  <div class="item-images"><a href="{{&ContextData.SEO.DetailURL}}"><img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" /></a></div>
+	  <div class="item-images"><a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}"><img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" /></a></div>
 	  <div class="item-info shadow">		
 			<h2 class="title">{{Name}}</h2>
 			<div class="description">{{&Summary}}</div>
-			<a href="{{&ContextData.SEO.DetailURL}}" class="btn">{{textdata.See Details}}</a> </div>		
+			{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}" class="btn">{{textdata.See Details}}</a>{{/ContextData.SEO.Keyword}}
+		</div>		
 	</div>
   </div>
 </div>
@@ -686,7 +783,7 @@
 <script id="tmpl-specials-vert" type="text/html">
 {{#result}}
 <div class="special-holder">
-	<a href="{{&ContextData.SEO.DetailURL}}">
+	<a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}">
 		{{#Images.Count}}<img width="185px" src="{{&PrimaryImage.ThumbnailURL}}" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />{{/Images.Count}}
 		<div class="clear"></div>
 		<div class="special-widget-content">
@@ -709,11 +806,12 @@
 <div class="span4">
   <div class="item-result">
 	<div class="item-inner">
-	  <div class="item-images"><a href="{{&ContextData.SEO.DetailURL}}"><img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" /></a></div>
+	  <div class="item-images"><a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}"><img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" /></a></div>
 	  <div class="item-info shadow">		
 			<h2 class="title">{{Name}}</h2>
 			<div class="description">{{&Summary}}</div>
-			<a href="{{&ContextData.SEO.DetailURL}}" class="btn">{{textdata.See Details}}</a> </div>		
+			{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}" class="btn">{{textdata.See Details}}</a>{{/ContextData.SEO.Keyword}}
+			</div>		
 	</div>
   </div>
 </div>
@@ -745,15 +843,15 @@
 
 <script id="tmpl-searches-horiz" type="text/html">
 {{#result}}
-<div class="pf-featured">    
+<div class="pf-featured span4">    
 <div class="pf-image">
-	<a href="{{&ContextData.SEO.DetailURL}}}}">
+	<a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}">
 		<img width="185px" src="{{&PrimaryImage.ThumbnailURL}}" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />
 	</a>
 </div>
 <div class="pf-outer">
 	<div class="fp-inner">
-		<a href='{{&ContextData.SEO.DetailURL}}'>{{Name}}</a>		
+		<a href='{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}'>{{Name}}</a>		
 	</div>
 	<div class="pf-description">{{{Description}}}</div>
 </div>

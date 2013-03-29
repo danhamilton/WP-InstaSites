@@ -242,7 +242,7 @@ function bapi_settings_page() {
 					txtresult.append('<div>BAPI returned ' + data.result.length + ' results.</div>');
 					$.each(data.result, function (i, pkid) {
 //if (i==0) {
-						BAPI.get(pkid, entity, { "avail": 1, "reviews": 1, "seo": 1, "descrip": 1, "rates": 1 }, function(pdata) {
+						BAPI.get(pkid, entity, { "avail": 1, "reviews": 1, "seo": 1, "descrip": 1, "rates": 1, "poi": 1 }, function(pdata) {
 							pdata.config = BAPI.config();
 							pdata.textdata = BAPI.textdata;
 							var url = '<?= plugins_url('/import.php', __FILE__) ?>';

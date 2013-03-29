@@ -129,6 +129,7 @@
 <script type="text/javascript" src="<?= plugins_url('/js/mustache.min.js', __FILE__) ?>" ></script>
 
 <script type="text/javascript" src="<?= getbapijsurl($apiKey) ?>"></script>
+<script type="text/javascript" src="//maps.google.com/maps/api/js?v=3.5&amp;sensor=false"></script>
 <script type="text/javascript" src="<?= plugins_url('/bapi/bapi.ui.js', __FILE__) ?>" ></script>		
 <script src="<?= getbapiurl() ?>/js/bapi.textdata.js?apikey=<?= $apiKey ?>&language=<?= $language ?>" type="text/javascript"></script>
 <script type="text/javascript">		

@@ -71,13 +71,17 @@ context.init = function (apikey, options) {
 	context.loadsession();	
 }
 
+var hasloggedpageview = false;
 $(window).load(function() {
 	context.session().lasteventtime = new Date();		
 	context.savesession();
 	// do logging
 	context.etime = new Date();
 	var t = (context.etime - context.stime);
-	context.logging.logpageview(t);	
+	if (!hasloggedpageview) {
+		hasloggedpageview = true;
+		context.logging.logpageview(t);	
+	}
 });
 
 /* Session */
@@ -349,15 +353,12 @@ context.templates = {
 var _pt = null;
 context.logging = {	
 	init: function() {
-{{#InConnect}}
 		if (context.defaultOptions.baseURL == "/misc") { return; }  // not logging for legacy
 		var url = context.defaultOptions.baseURL + '/ws/' + '?method=log&apikey=' + context.defaultOptions.apikey;		
 		_pt = Piwik.getTracker(url, 1);
 		_pt.setSiteId(context.site.siteid);
-{{/InConnect}}
 	},
 	logpageview: function(t) {
-{{#InConnect}}
 		try {
 		if (context.defaultOptions.baseURL == "/misc") { return; } // not logging for legacy
 		if (_pt == null) { context.logging.init(); }
@@ -365,7 +366,6 @@ context.logging = {
 		_pt.setCustomVariable(1, "msloadtime", t);
 		_pt.trackPageView();				
 		} catch(err) { context.log(err); }
-{{/InConnect}}
 	},
 	pt: function() {
 		return _pt;

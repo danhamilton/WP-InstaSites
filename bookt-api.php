@@ -47,7 +47,7 @@ add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_HP_Slid
 add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_HP_Logo" );' ) );
 add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_HP_LogoWithTagline" );' ) );
 add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_HP_Search" );' ) );
-add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Prop_Inquiry" );' ) );
+add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Search" );' ) );
 add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Prop_Quote" );' ) );
 add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Featured_Properties" );' ) );
 add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Inquiry_Form" );' ) );
