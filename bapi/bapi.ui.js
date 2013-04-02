@@ -256,7 +256,7 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 		reqdata["pid"] = p.ID;
 		reqdata["quoteonly"] = 1;
 		if (typeof(p)!= "undefined" && p!=null) {
-			$(targetid).block({ message: "<img src='//booktplatform.s3.amazonaws.com/App_SharedStyles/CCImages/loading.gif' />" });
+			$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
 			BAPI.get(p.ID, BAPI.entities.property, reqdata, function (quotedata) {			
 				BAPI.log(quotedata);
 				$('.rate-value').text(quotedata.result[0].ContextData.Quote.PublicNotes);
@@ -268,7 +268,7 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 	
 	// handle user clicking Search
 	$(".quicksearch-dosearch").on("click", function() {
-		$(targetid).block({ message: "<img src='//booktplatform.s3.amazonaws.com/App_SharedStyles/CCImages/loading.gif' />" });
+		$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
 		var reqdata = saveFormToSession(this, options);
 		if (doSearchCallback) { doSearchCallback(); }
 		if (typeof(options.searchurl)!= "undefined" && options.searchurl!='') {
@@ -287,7 +287,7 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 	});
 	
 	$(".quicksearch-doadvanced").on("click", function() {
-		$(targetid).block({ message: "<img src='//booktplatform.s3.amazonaws.com/App_SharedStyles/CCImages/loading.gif' />" });
+		$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
 		var reqdata = saveFormToSession(this, options);
 		$(targetid).unblock();
 	});	
@@ -517,7 +517,7 @@ context.createInquiryForm = function (targetid, options) {
 			processing = false; alert('Please fill out all required fields.'); return;
 		}
 		
-		$(targetid).block({ message: "<img src='//booktplatform.s3.amazonaws.com/App_SharedStyles/CCImages/loading.gif' />" });
+		$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
 		processing = true; // make sure we do not reenter				
 		
 		var selname = $(this).attr('data-field-selector');
@@ -685,7 +685,7 @@ context.createMakeBookingWidget = function (targetid, options) {
 			reqdata.checkin = BAPI.session().searchparams.checkin;
 			reqdata.checkout = BAPI.session().searchparams.checkout;
 			
-			$(options.targetids.stayinfo).block({ message: "<img src='//booktplatform.s3.amazonaws.com/App_SharedStyles/CCImages/loading.gif' />" });
+			$(options.targetids.stayinfo).block({ message: "<img src='" + loadingImgUrl + "' />" });
 			BAPI.get(propid, BAPI.entities.property, reqdata, function (sdata) {			
 				sdata.site = BAPI.site;
 				sdata.config = BAPI.config();
@@ -714,7 +714,7 @@ context.createMakeBookingWidget = function (targetid, options) {
 				//processing = false; alert('Please fill out all required fields.'); return;
 			}
 			
-			$(targetid).block({ message: "<img src='//booktplatform.s3.amazonaws.com/App_SharedStyles/CCImages/loading.gif' />" });
+			$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
 			processing = true; // make sure we do not reenter				
 			
 			var reqdata = getFormData(options.dataselector);			
@@ -786,9 +786,12 @@ context.createCurrencySelectorWidget = function (id, options) {
 }
 
 /* Loading indicator */
+var loadingImgUrl = '//booktplatform.s3.amazonaws.com/App_SharedStyles/CCImages/loading.gif';
 context.loading = {
+	getLoadingImgUrl: function() { return loadingImgUrl; },
+	setLoadingImgUrl: function(s) { loadingImgUrl = s; },
 	ctlshow: function(id) {
-		$(id).html("<img src='//booktplatform.s3.amazonaws.com/App_SharedStyles/CCImages/loading.gif' alt='loading' />");
+		$(id).html("<img src='" + loadingImgUrl + "' alt='loading' />");
 	},
 	show: function(s, options) {
 		if (typeof (s) === "undefined" || s == null) {
@@ -853,7 +856,7 @@ function doSearch(targetid, ids, entity, options, alldata, callback) {
 		if (callback) { callback(data); }
 		$(".showmore").on("click", function () { 				
 			options.searchoptions.page++; 
-			$(this).block({ message: "<img src='//booktplatform.s3.amazonaws.com/App_SharedStyles/CCImages/loading.gif' />" });
+			$(this).block({ message: "<img src='" + loadingImgUrl + "' />" });
 			doSearch(targetid, ids, entity, options, alldata, callback); 
 		});
 	});

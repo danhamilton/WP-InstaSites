@@ -139,6 +139,7 @@
 <script type="text/javascript" src="<?= plugins_url('/bapi.templates.php', __FILE__) ?>" ></script>		
 <script type="text/javascript">		
 	BAPI.defaultOptions.baseURL = '<?= getbapiurl() ?>';
+	BAPI.UI.loading.setLoadingImgUrl('<?= plugins_url("/img/loading.gif", __FILE__) ?>');
 	BAPI.init('<?= $apiKey ?>');
 	$(document).ready(function () {
 		BAPI.UI.init();

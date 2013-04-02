@@ -79,21 +79,21 @@
 	
 	function getpagetemplate($entity) {
 		if($entity=='property') {
-			return '/page-template/property-detail.php';
+			return 'page-templates/property-detail.php';
 		}
 		elseif($entity=='development') {
-			return '/page-template/other-detail-page.php';
+			return 'page-templates/other-detail-page.php';
 		}
 		elseif($entity=='specials') {
-			return '/page-template/other-detail-page.php';
+			return 'page-templates/other-detail-page.php';
 		}
 		elseif($entity=='poi') {
-			return '/page-template/other-detail-page.php';
+			return 'page-templates/other-detail-page.php';
 		}
 		elseif($entity=='searches') {
-			return '/page-template/other-detail-page.php';
+			return 'page-templates/other-detail-page.php';
 		}
-		return '/page-template/full-width.php';
+		return 'page-templates/full-width.php';
 	}
 	
 ?>

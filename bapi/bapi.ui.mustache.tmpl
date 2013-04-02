@@ -603,35 +603,81 @@
 </script>
 
 <script id="tmpl-developments-detail" type="text/html">
-<div class="developments-content">
 {{#result}}
-<input type="hidden" id="pkid" value="{{ID}}" />
-<div id="general">
-	<div style="float:left">
-		<img src="{{&PrimaryImage.MediumURL}}" caption="{{PrimaryImage.Caption}}" alt={{PrimaryImage.Caption}} />
-	</div>
-	<div class="general-info">
-		<h2>{{Name}}</h2>
-		<div class="clear"></div>
-		<dl>
-			<dt>Category:</dt>
-			<dd>{{Type}}</dd>
-		</dl>
-		<dl>
-			<dt>Address:</dt>
-			<dd>{{Address1}}<br/>{{City}}, {{State}} {{PostalCode}}</dd>
-		</dl>
-		<div class="clear2"></div>
-		<div class="clear2"></div>
-		<div class="clear2"></div>
-		<div class="general-info-desc">
-			<h1>Description</h1>
-			{{{Description}}}
-		</div>
-	</div>
+<section class="row-fluid">
+        <div class="span12 item-snapshot module shadow-border">        
+            <div class="top-block">
+            <div class="row-fluid">
+                <div class="span12 box-sides">
+                <h2 class="title">{{Name}}</h2>                
+                </div>
+              </div>  
+            </div>
+            
+            <div class="item-slideshow">
+                <div id="slider" class="flexslider bapi-flexslider" data-options='{	"animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "sync": "#carousel" }'>
+                  <ul class="slides">
+				  {{^Images}}
+				  	<li><img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" />
+					{{#PrimaryImage.Caption}}
+					<p class="flex-caption">{{PrimaryImage.Caption}}</p></li>
+					{{/PrimaryImage.Caption}}
+				  {{/Images}}
+				  {{#Images}}
+                    <li><img alt="{{Caption}}" src="{{&MediumURL}}" />
+					{{#Caption}}
+					<p class="flex-caption">{{Caption}}</p></li>
+					{{/Caption}}
+                  {{/Images}}                    
+                  </ul>
+                </div>
+                <div id="carousel" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "itemWidth": 50, "itemMargin": 10, "asNavFor": "#slider" }'>
+                  <ul class="slides">
+				  {{^Images}}
+				  	<li><img alt="" src="{{&PrimaryImage.ThumbnailURL}}" /></li>	
+				  {{/Images}}
+                  {{#Images}}
+                    <li><img alt="" src="{{&ThumbnailURL}}" /></li>
+                  {{/Images}}                   
+                  </ul>
+                </div>                   
+            </div>        
+        </div>
+</section>
+
+{{#Description}}
+<div class="row-fluid">
+<div class="span12">
+{{&Description}}
 </div>
+</div>
+{{/Description}}
+
+<h3>{{textdata.Applies To}}</h3>
+<div id="propresults" class="bapi-summary" data-log="0" data-templatename="tmpl-allproperties"  data-entity="property" data-searchoptions='{ "devid": {{ID}}, "seo": 1, "pagesize": 10 }'></div>
+
+<div class="bapi-moveme" data-from=".development-details" data-to=".detail-overview-target" data-method="append">
+<div class="development-details module shadow">
+<div class="pd">
+<h3>Details</h3>
+<hr/>
+<dl>
+	{{#Type}}
+    <dt>{{textdata.Category}}:</dt><dd>{{Type}}</dd>
+	{{/Type}}
+	{{#Address1}}
+	<dt>{{textdata.Address}}:</dt><dd>{{&Location}}</dd>
+	{{/Address1}}
+	{{#Amenities.0}}
+	<dt>{{textdata.Amenities}}:</dt><dd>{{Amenities}}</dd>
+	{{/Amenities.0}}	
+</dl>
+</div>
+</div>
+</div>
+
 {{/result}}
-</div>
+<span class="end"></span>
 </script>
 
 /*
@@ -874,7 +920,8 @@
 </div>
 <div class="bapi-moveme" data-from=".specials-contact-details" data-to=".detail-overview-target" data-method="append"></div>
 
-<div id="propresults" class="bapi-summary" data-log="0" data-templatename="tmpl-allproperties"  data-entity="property" data-searchoptions='{ "searchid": {{ID}}, "seo": 1, "pagesize": 10 }'></div>
+<h3>{{textdata.Applies To}}</h3>
+<div id="propresults" class="bapi-summary" data-log="0" data-templatename="tmpl-allproperties"  data-entity="property" data-searchoptions='{ "specialid": {{ID}}, "seo": 1, "pagesize": 10 }'></div>
 {{/result}}
 <span class="end"></span>
 {{^result}}
