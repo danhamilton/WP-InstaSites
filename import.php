@@ -6,6 +6,7 @@
 	$pkid = $_POST['pkid'];
 	$primaryimage = $_POST['PrimaryImage'];
 	$content = $_POST['content'];
+	$content = utf8_encode($content);	
 	$bookingurl = $_POST['BookingURL'];
 	$detailurl =  $_POST['DetailURL'];
 	$keyword = $_POST['Keyword'];
@@ -77,16 +78,22 @@
 	}
 	
 	function getpagetemplate($entity) {
-		$filename = $entity . '-detail.php';
-		// see if the file exists in the template folder
-		$templatefile = 'page-templates/' . $filename;
-		return $templatefile;		   
-		/*if(is_file($templatefile)){
-			return $templatefile;		   
-		}		
-		$templatefile = plugins_url('/page-templates/' . $filename);
-		return $templatefile;
-		*/
+		if($entity=='property') {
+			return '/page-template/property-detail.php';
+		}
+		elseif($entity=='development') {
+			return '/page-template/other-detail-page.php';
+		}
+		elseif($entity=='specials') {
+			return '/page-template/other-detail-page.php';
+		}
+		elseif($entity=='poi') {
+			return '/page-template/other-detail-page.php';
+		}
+		elseif($entity=='searches') {
+			return '/page-template/other-detail-page.php';
+		}
+		return '/page-template/full-width.php';
 	}
 	
 ?>

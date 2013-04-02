@@ -55,7 +55,7 @@ add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Similar
 add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Property_Finders" );' ) );
 add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Specials_Widget" );' ) );
 add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Weather_Widget" );' ) );
-
+add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_DetailOverview_Widget" );' ) );
 
 require_once('mustache.php-2.1.0/src/Mustache/Autoloader.php');
 Mustache_Autoloader::register();

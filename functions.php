@@ -24,7 +24,7 @@
 	}
 
 	function getbapijsurl($apiKey) {
-		return getbapiurl() . "/js/bapi.js?apikey=" . $apiKey . "&uitmploc=" . urlencode(gettemplatelocation()) . "&language=" . getbapilanguage();
+		return getbapiurl() . "/js/bapi.js?apikey=" . $apiKey . "&language=" . getbapilanguage();
 	}
 
 	function getbapiapikey() {
@@ -64,6 +64,7 @@
 		return $res;
 	}
 
+	/*
 	function bapi_get_template($tmpl,$url='http://bapi.s3.amazonaws.com/dev/bapi.ui.mustache.tmpl'){
 		$templates= file_get_contents($url);
 		$tmpl = preg_quote($tmpl);
@@ -95,6 +96,7 @@
 		}
 		return $data;
 	}
+	*/
 	
 	/* Page Helpers */
 	function getPageKeyForEntity($entity, $pkid) {
@@ -106,32 +108,35 @@
 		$args = array('meta_key' => 'bapikey', 'meta_value' => $pagekey, 'child_of' => $parentid);
 		return get_pages($args);		
 	}
+	
+	function getGoogleMapKey() {
+		return "AIzaSyAY7wxlnkMG6czYy9K-wM4OWXs0YFpFzEE";
+	}
 
 	/* Common include files needed for BAPI */
 	function getconfig(){
 		if(get_option('api_key')){
 			$apiKey = get_option('api_key');
 			$language = getbapilanguage();
+			$gmapkey = getGoogleMapKey();
 ?>
-<link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/slideshow.css', __FILE__) ?>" />
 <link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/jquery.ui/jquery-ui-1.10.2.min.css', __FILE__) ?>" />
-<link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/jquery.ad-gallery.min.css', __FILE__) ?>" />		
 
 <script type="text/javascript" src="<?= plugins_url('/js/jquery.1.9.1.min.js', __FILE__) ?>" ></script>
 <script type="text/javascript" src="<?= plugins_url('/js/jquery-migrate-1.0.0.min.js', __FILE__) ?>" ></script>		
 <script type="text/javascript" src="<?= plugins_url('/js/jquery-ui-1.10.2.min.js', __FILE__) ?>" ></script>
 <script type="text/javascript" src="<?= plugins_url('/js/jquery-ui-i18n.min.js', __FILE__) ?>" ></script>			
 
-<script type="text/javascript" src="<?= plugins_url('/js/jquery.cycle2.min.js', __FILE__) ?>" ></script>
-<script type="text/javascript" src="<?= plugins_url('/js/slides.min.jquery.js', __FILE__) ?>" ></script>
-<script type="text/javascript" src="<?= plugins_url('/js/jquery.ad-gallery.min.js', __FILE__) ?>" ></script>
+<script type="text/javascript" src="<?php echo includes_url(); ?>insta-common/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="<?php echo includes_url(); ?>insta-common/js/jquery.flexslider-min.js"></script>
 <script type="text/javascript" src="<?= plugins_url('/js/validity.js', __FILE__) ?>" ></script>
 <script type="text/javascript" src="<?= plugins_url('/js/mustache.min.js', __FILE__) ?>" ></script>
 
 <script type="text/javascript" src="<?= getbapijsurl($apiKey) ?>"></script>
-<script type="text/javascript" src="//maps.google.com/maps/api/js?v=3.5&amp;sensor=false"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= $gmapkey ?>&sensor=false"></script>
 <script type="text/javascript" src="<?= plugins_url('/bapi/bapi.ui.js', __FILE__) ?>" ></script>		
 <script src="<?= getbapiurl() ?>/js/bapi.textdata.js?apikey=<?= $apiKey ?>&language=<?= $language ?>" type="text/javascript"></script>
+<script type="text/javascript" src="<?= plugins_url('/bapi.templates.php', __FILE__) ?>" ></script>		
 <script type="text/javascript">		
 	BAPI.defaultOptions.baseURL = '<?= getbapiurl() ?>';
 	BAPI.init('<?= $apiKey ?>');

@@ -189,6 +189,7 @@ function bapi_settings_page() {
     <?php
 		$apiKey = get_option('api_key');
 		$language = getbapilanguage();
+		$gmapkey = getGoogleMapKey();
 	?>	
 </div>
 <link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/jquery.ui/jquery-ui-1.10.2.min.css', __FILE__) ?>" />
@@ -199,9 +200,11 @@ function bapi_settings_page() {
 <script type="text/javascript" src="<?= plugins_url('/js/jquery-ui-1.10.2.min.js', __FILE__) ?>" ></script>
 <script type="text/javascript" src="<?= plugins_url('/js/jquery-ui-i18n.min.js', __FILE__) ?>" ></script>			
 <script type="text/javascript" src="<?= plugins_url('/js/mustache.min.js', __FILE__) ?>" ></script>			
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= $gmapkey ?>&sensor=false"></script>
 <script type="text/javascript" src="<?= getbapijsurl($apiKey) ?>"></script>
 <script type="text/javascript" src="<?= plugins_url('/bapi/bapi.ui.js', __FILE__) ?>" ></script>		
 <script src="<?= getbapiurl() ?>/js/bapi.textdata.js?apikey=<?= $apiKey ?>&language=<?= $language ?>" type="text/javascript"></script>
+<script type="text/javascript" src="<?= plugins_url('/bapi.templates.php', __FILE__) ?>" ></script>	
 <script type="text/javascript">		
 	BAPI.defaultOptions.baseURL = '<?= getbapiurl() ?>';
 	BAPI.init('<?= $apiKey ?>');			
@@ -233,6 +236,10 @@ function bapi_settings_page() {
 			var entity = $('#importtype').val();
 			var params = getImportParams(entity);
 			var template = BAPI.templates.get(params.template);			
+			if (typeof(template)==="undefined") {
+				return alert('Unable to find the template: ' + params.template);
+			}
+			
 			if (confirm("Are you sure you want to import this data?")) {				
 				$('#dlg-result').dialog({width:700});
 				var txtresult = $('#dlg-txtresult');
@@ -242,7 +249,7 @@ function bapi_settings_page() {
 					txtresult.append('<div>BAPI returned ' + data.result.length + ' results.</div>');
 					$.each(data.result, function (i, pkid) {
 //if (i==0) {
-						BAPI.get(pkid, entity, { "avail": 1, "reviews": 1, "seo": 1, "descrip": 1, "rates": 1, "poi": 1 }, function(pdata) {
+						BAPI.get(pkid, entity, { "nearbyprops": 1, "avail": 1, "reviews": 1, "seo": 1, "descrip": 1, "rates": 1, "poi": 1 }, function(pdata) {
 							pdata.config = BAPI.config();
 							pdata.textdata = BAPI.textdata;
 							var url = '<?= plugins_url('/import.php', __FILE__) ?>';
@@ -253,7 +260,7 @@ function bapi_settings_page() {
 							params.Keyword = pdata.result[0].ContextData.SEO.Keyword;
 							params.MetaDescrip = pdata.result[0].ContextData.SEO.MetaDescrip;
 							params.PageTitle = pdata.result[0].ContextData.SEO.PageTitle;
-							params.content = Mustache.to_html(template, pdata);
+							params.content = Mustache.to_html(template, pdata);							
 							BAPI.utils.dopost(url, params, function(res) {
 								txtresult.append(res);
 							});

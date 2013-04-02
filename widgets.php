@@ -573,7 +573,7 @@ class BAPI_Featured_Properties extends WP_Widget {
 		if(!empty($title))
 			echo $before_title.$title.$after_title;
 		?>
-		<div id="featuredproperties" class="bapi-summary featuredproperties row-fluid" data-log="0" data-templatename="tmpl-featuredproperties-horiz"  data-entity="property" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }'></div>
+		<div id="featuredproperties" class="bapi-summary featuredproperties row-fluid" data-log="0" data-templatename="tmpl-featuredproperties-horiz"  data-entity="property" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }' data-rowfixselector=".featuredproperties%3E.span6" data-rowfixcount="2"></div>
         <?php
 		echo $after_widget;
 	}
@@ -626,8 +626,8 @@ class BAPI_Property_Finders extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 	 		'bapi_property_finders', // Base ID
-			'Insta Predefined Searches', // Name
-			array( 'description' => __( 'Insta Property Finders', 'text_domain' ), ) // Args
+			'Insta Search Buckets', // Name
+			array( 'description' => __( 'Insta Search Buckets', 'text_domain' ), ) // Args
 		);
 	}
 
@@ -639,7 +639,7 @@ class BAPI_Property_Finders extends WP_Widget {
 		if(!empty($title))
 			echo $before_title.$title.$after_title;		
 		?>		
-		<div id="propertyfinders" class="bapi-summary propertyfinders row-fluid" data-log="0" data-templatename="tmpl-searches-horiz"  data-entity="searches" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }'></div>
+		<div id="propertyfinders" class="bapi-summary propertyfinders row-fluid" data-log="0" data-templatename="tmpl-searches-horiz"  data-entity="searches" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }' data-rowfixselector=".propertyfinders-results%20%3E%20.span4" data-rowfixcount="3"></div>
         <?php
 		echo $after_widget;
 	}
@@ -704,7 +704,7 @@ class BAPI_Specials_Widget extends WP_Widget {
 		if(!empty($title))
 			echo $before_title.$title.$after_title;
 		?>
-        <div id="specials-widget" class="bapi-summary specials-widget row-fluid" data-log="0" data-templatename="tmpl-specials-vert"  data-entity="specials" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }'></div>		
+        <div id="specials-widget" class="bapi-summary specials-widget row-fluid" data-log="0" data-templatename="tmpl-specials-vert" data-entity="specials" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }' data-rowfixselector=".specials-results%20%3E%20.span4" data-rowfixcount="3"></div>		
         <?php
 		echo $after_widget;
 	}
@@ -768,7 +768,7 @@ class BAPI_Similar_Properties extends WP_Widget {
 		if(!empty($title))
 			echo $before_title.$title.$after_title;
 		?>
-        <div id="featuredproperties" class="bapi-summary" data-log="0" data-templatename="tmpl-featuredproperties-vert"  data-entity="property" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }'></div>
+        <div id="featuredproperties" class="bapi-summary" data-log="0" data-templatename="tmpl-featuredproperties-vert"  data-entity="property" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }' data-rowfixselector="" data-rowfixcount=""></div>
 		<?php
 		echo $after_widget;
 	}
@@ -868,5 +868,38 @@ class BAPI_Weather_Widget extends WP_Widget {
 	}
 
 } // class BAPI_Weather_Widget
+
+class BAPI_DetailOverview_Widget extends WP_Widget {
+
+	public function __construct() {
+		parent::__construct(
+	 		'bapi_detailoverview', // Base ID
+			'Insta Detail Overview', // Name
+			array( 'description' => __( 'Displays the overview section of a detail screen', 'text_domain' ), ) // Args
+		);
+	}
+
+	public function widget( $args, $instance ) {
+		extract($args);
+		$title = apply_filters('widget_title',$instance['title']);
+		$woid = esc_textarea($instance['text']);
+		echo $before_widget;
+		if(!empty($title))
+			echo $before_title.$title.$after_title;
+		?>
+        <div class="detail-overview-target"></div>
+		<?php
+		echo $after_widget;
+	}
+
+	public function update( $new_instance, $old_instance ) {
+		$instance = array();
+		$instance['title'] = strip_tags( $new_instance['title'] );
+
+		return $instance;
+	}	
+
+} // class BAPI_DetailOverview_Widget
+
 
 ?>

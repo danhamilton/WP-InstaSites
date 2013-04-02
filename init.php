@@ -41,10 +41,16 @@
 		$content = $pagedef['content'];	
 		if($content!=''){				
 			$t = file_get_contents(plugins_url($content, __FILE__));
+			if ($post['post_title'] == "Attractions") {
+				print_r($content);
+				print_r($t);
+				print_r("<br/>");
+			}
 			$m = new Mustache_Engine();
-			$wrapper = getbapisolutiondata();
-			//print_r($wrapper);
+		
+			$wrapper = getbapisolutiondata();			
 			$string = $m->render($t, $wrapper);
+			//print_r($string);
 			$post['post_content'] = utf8_encode($string);				
 		}
 		$post['post_type'] = 'page';			

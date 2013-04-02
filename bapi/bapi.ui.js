@@ -171,8 +171,53 @@ context.init = function() {
 		if (method==="prepend") { $(fromsel).prepend($(tosel)); }
 		else { $(fromsel).appendTo($(tosel)); }		
 	});
+	
+	/*
+	// perform bapi row fixes
+	$.each($('.bapi-rowfix'), function (i, item) {
+		var ctl = $(item);		
+		var trigselector = ctl.attr('data-trigselector');
+		var selector = ctl.attr('data-selector');
+		var wraprows = parseInt(ctl.attr('data-wraprowcount'));
+		var timerint = parseInt(ctl.attr('data-timer'));
+		if (wraprows > 0 && !(timerint > 0)) {
+			$(trigselector).bind("DOMSubtreeModified", function() {
+				var divs = $(selector);
+				if (divs!==null && divs.length > 0) {
+					//BAPI.log("Applying rowfix to " + selector);
+					for(var i = 0; i < divs.length; i+=wraprows) { divs.slice(i, i+wraprows).wrapAll("<div class='row-fluid'></div>"); }
+				}
+			});			
+		}
+		else if (wraprows > 0) {			
+			$(trigselector).bind("DOMSubtreeModified", function() {
+				if ($(".showmore").length > 0) {
+					var divs = $(selector);
+					if (divs!==null && divs.length > 0) {
+						//BAPI.log("Applying rowfix to " + selector + ", triggered by showmore");
+						for(var i = 0; i < divs.length; i+=wraprows) { divs.slice(i, i+wraprows).wrapAll("<div class='row-fluid'></div>"); }					
+					}
+				}
+				if ($(".nomore").length > 0) {
+					var divs = $(selector);
+					if (divs!==null && divs.length > 0) {
+						//BAPI.log("Applying rowfix to " + selector + ", triggered by nomore");
+						for(var i = 0; i < divs.length; i+=wraprows) { divs.slice(i, i+wraprows).wrapAll("<div class='row-fluid'></div>"); }
+					}
+				}
+			});			
+		}
+	});
+	
+	*/
 }
 
+context.rowfix = function(selector, wraprows) {
+	var divs = $(selector);
+	if (divs!==null && divs.length > 0) {
+		for(var i = 0; i < divs.length; i+=wraprows) { divs.slice(i, i+wraprows).wrapAll("<div class='row-fluid'></div>"); }					
+	}
+}
 /* 
 	Group: Search Widgets 
 */
@@ -795,6 +840,16 @@ function doSearch(targetid, ids, entity, options, alldata, callback) {
 		var html = Mustache.render(options.template, data); // do the mustache call
 		$(targetid).html(html); // update the target		
 		applyTruncate('.trunc' + data.curpage, 75);
+		
+		// apply rowfix
+		var rowfixselector = $(targetid).attr('data-rowfixselector');
+		var rowfixcount = parseInt($(targetid).attr('data-rowfixcount'));
+		if (typeof(rowfixselector)!=="undefined" && rowfixselector!='' && rowfixcount>0) {
+			rowfixselector = decodeURIComponent(rowfixselector)
+			BAPI.log("Applying row fix to " + rowfixselector + " on every " + rowfixcount + " row.");
+			context.rowfix(rowfixselector, rowfixcount);
+		}
+		
 		if (callback) { callback(data); }
 		$(".showmore").on("click", function () { 				
 			options.searchoptions.page++; 
@@ -866,6 +921,47 @@ function saveFormToSession(ctl, options) {
 	$.watermark.showAll();
 	return reqdata;
 }
+
+function setRows(findThis,wrapthis,howManyWrap){
+	var flag=false;
+	if($(findThis).length > 0){	
+	  var timer = setInterval(function(){
+		  var found = $(wrapthis).length;
+		  if(found>0){flag=true;}		  
+		  initRows(wrapthis,howManyWrap);		  	  	 
+			  if(found==0 && flag){
+			  	clearInterval(timer);
+			  }
+		  		  
+	  }, 200);
+	}
+}	
+
+function initRows(wrapthis,howManyWrap) {	
+	var divs = $(wrapthis);
+	for(var i = 0; i < divs.length; i+=howManyWrap) {
+		divs.slice(i, i+howManyWrap).wrapAll("<div class='row-fluid'></div>");
+	}			
+}
+
+/* 
+	this function sets a timer that calls another function until it sets the rows if it is needed or the flexslider if there is one, pages that use this are:
+	Attractions, Property Finders, Specials, Gallery View, List View 
+*/
+function setRows(findThis,wrapthis,needFlex,needWrapRows,howManyWrap){
+	if($(findThis).length > 0){	
+		var timer = setInterval(function(){		  
+			if ($(".showmore").length > 0) {
+				initRows(wrapthis,needFlex,needWrapRows,howManyWrap);
+			}
+			if ($(".nomore").length > 0) {
+				initRows(wrapthis,needFlex,needWrapRows,howManyWrap);
+				clearInterval(timer);
+			}
+		}, 200);
+	}
+}	
+	
 
 })(BAPI.UI); 
 
