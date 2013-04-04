@@ -40,17 +40,15 @@
 		$post['comment_status'] = 'closed';		
 		$content = $pagedef['content'];	
 		if($content!=''){				
-			$t = file_get_contents(plugins_url($content, __FILE__));
-			if ($post['post_title'] == "Attractions") {
-				print_r($content);
-				print_r($t);
-				print_r("<br/>");
-			}
+			$t = file_get_contents(plugins_url($content, __FILE__));			
 			$m = new Mustache_Engine();
 		
 			$wrapper = getbapisolutiondata();			
 			$string = $m->render($t, $wrapper);
 			//print_r($string);
+			//if ($post['post_title'] == "Contact Us") {
+				//print_r($wrapper);
+			//}
 			$post['post_content'] = utf8_encode($string);				
 		}
 		$post['post_type'] = 'page';			

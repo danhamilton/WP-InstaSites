@@ -1,77 +1,43 @@
-{{#Office}}
-<h1>Contact Us</h1>
-    
-    <p>We want to hear from you and when we do we will pay attention. Expect a fast follow up:</p>
-    
-    <div class="contact-info vcard">
-      <div class="contact-icon"><img src="//booktplatform.s3.amazonaws.com/App_SharedStyles/images/ico_mail_contact.png" /></div>
-      <div class="contact-type">
-         <b>Our Address</b> 
-        <br />
-        <span class="fn org">
-        {{Name}}
-
-        </span> <br />
-        <span class='adr'>{{Address1}}<br/>{{Address2}}<br/>{{City}}, {{State}} {{PostalCode}}</span>
-
-        <!-- Blank region under the address -->
-        
-        <!--End Blank region --> 
-      </div>
-      <div class="clear2"></div>
-      <div class="contact-icon"><img src="//booktplatform.s3.amazonaws.com/App_SharedStyles/images/ico_phone_contact.png" /></div>
-      <div class="contact-type tel">
-        <div class="value">
-          <span class='phonenumber-caption'><b>Tel : </b></span>{{PrimaryPhone}}
-
-        </div>
-        <div class="value">
-          <span class='phonenumber-caption'><b>Toll-free : </b></span>{{TollfreeNumber}}
-
-        </div>
-        <div class="value">
-          
-        </div>
-        <div class="value">
-          
-        </div>
-        <div class="value">
-          <span class='phonenumber-caption'><b>Fax : </b></span>{{FaxNumber}}
-
-        </div>
-        
-        <!-- Blank region under the phone -->
-        <div class="value">
-          
-        </div>
-        <!--End Blank region --> 
-        
-      </div>
-      <div class="clear2"></div>
-      <div class="contact-icon"><img src="//booktplatform.s3.amazonaws.com/App_SharedStyles/images/ico_web_contact.png" /></div>
-      <div class="contact-type">
-        <div class="email">
-          <span class='phonenumber-caption'><b>Email : </b></span><a href="mailto:{{PrimaryEmail}}">{{Email}}</a>
-
-        </div>
-        <div class="email"> 
-          <!-- Blank region under the email -->
-          
-          <!--End Blank region --> 
-          
-        </div>
-      </div>
-      <div class="clear2"></div>
-      <div> 
-        <!-- Blank region open area on the bottom -->
-        
-        <!--End Blank region --> 
-      </div>
-    </div>
-  </div>
-  <div class="have-any-question">
-    <div class="contact-img">
-      <img src="//booktplatform.s3.amazonaws.com/App_SharedStyles/images/contact-default.jpg" alt="Contact Us"/>
-    </div>
-  </div>
-{{/Office}}
+<h1>{{textdata.Contact Us}}</h1>
+<p>We want to hear from you and when we do we will pay attention. Expect a fast follow up.</p>
+{{#site}}
+<div class="contact-info vcard">
+	<div class="contact-icon"></div>
+	<div class="contact-type">
+		<b>Our Address</b><br />
+		<span class="fn org">{{SolutionName}}</span><br />
+		<span class='adr'>
+			<span class="street-address">
+			{{#Office.Address1}}{{Office.Address1}}<br/>{{/Office.Address1}}
+			{{#Office.Address2}}{{Office.Address2}}<br/>{{/Office.Address2}}
+			</span>
+			<span class="locality">{{Office.City}}</span>, <span class="region">{{Office.State}}</span> <span class="postal-code">{{Office.PostalCode}}</span><br/>
+			<span class="country">{{Office.Country}}</span>
+		</span>	
+	</div>
+	<div class="clear2"></div>
+	<div class="contact-icon"></div>
+	<div class="contact-type tel">
+		{{#Office.PrimaryPhone}}
+		<div class="value"><span class='phonenumber-caption'><b>{{textdata.Phone}}: </b></span>{{Office.PrimaryPhone}}</div>
+		{{/Office.PrimaryPhone}}
+		{{#Office.TollfreeNumber}}
+		<div class="value"><span class='phonenumber-caption'><b>{{textdata.Toll Free}}:&nbsp;</b></span>{{TollfreeNumber}}</div>
+		{{/Office.TollfreeNumber}}
+		{{#Office.FaxNumber}}
+		<div class="value"><span class='phonenumber-caption'><b>{{textdata.Fax}}: </b></span>{{Office.FaxNumber}}</div>
+		{{/Office.FaxNumber}}		
+	</div>
+	<div class="clear2"></div>
+	{{#Office.Email}}
+	<div class="contact-icon"></div>
+	<div class="contact-type">
+		<div class="email"><span class='phonenumber-caption'><b>{{textdata.Email}}: </b></span><a href="mailto:{{PrimaryEmail}}">{{Office.Email}}</a></div>	
+	</div>
+	<div class="clear2"></div>
+	{{/Office.Email}}  
+</div>
+<div class="officemap">
+<img src="//maps.googleapis.com/maps/api/staticmap?center={{Office.Latitude}},{{Office.Longitude}}&zoom=8&size=500x250&maptype=roadmap&markers=color:blue%7Clabel:%20%7C{{Office.Latitude}},{{Office.Longitude}}&sensor=false" />
+</div>
+{{/site}}

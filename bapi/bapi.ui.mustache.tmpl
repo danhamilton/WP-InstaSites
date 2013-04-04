@@ -5,17 +5,17 @@
 <div class="property-search-block">
 {{#config.checkin.enabled}}
 <div class="category-block">
-	<input type="text" class="txtb quicksearch sessioncheckin datepickercheckin" data-field="checkin" />
+	<input type="text" class="span12 txtb quicksearch sessioncheckin datepickercheckin" data-field="checkin" />
 </div>
 {{/config.checkin.enabled}}
 {{#config.checkout.enabled}}
 <div class="category-block">
-	<input type="text" class="txtb quicksearch sessioncheckout datepickercheckout" data-field="checkout" />
+	<input type="text" class="span12 txtb quicksearch sessioncheckout datepickercheckout" data-field="checkout" />
 </div>
 {{/config.checkout.enabled}}
 {{#config.los.enabled}}
 <div class="category-block">
-	<select class="property-search-input quicksearch sessionlos" data-field="los">
+	<select class="span12 property-search-input quicksearch sessionlos" data-field="los">
 		<option value="">-{{config.los.prompt}}-</option>		
 		{{#config.los.values}}<option value="{{Data}}">{{Label}}</option>{{/config.los.values}}
 	</select>
@@ -23,7 +23,7 @@
 {{/config.los.enabled}}
 {{#config.adults.enabled}}
 <div class="category-block">
-	<select class="property-search-input quicksearch sessionadultsmin" data-field="adults[min]">
+	<select class="span12 property-search-input quicksearch sessionadultsmin" data-field="adults[min]">
 		<option value="">-{{config.adults.prompt}}-</option>		
 		{{#config.adults.values}}<option value="{{Data}}">{{Label}}</option>{{/config.adults.values}}
 	</select>
@@ -31,7 +31,7 @@
 {{/config.adults.enabled}}
 {{#config.children.enabled}}
 <div class="category-block">
-	<select class="property-search-input quicksearch sessionchildrenmin" data-field="children[min]">
+	<select class="span12 property-search-input quicksearch sessionchildrenmin" data-field="children[min]">
 		<option value="">-{{config.children.prompt}}-</option>		
 		{{#config.children.values}}<option value="{{Data}}">{{Label}}</option>{{/config.children.values}}
 	</select>
@@ -39,7 +39,7 @@
 {{/config.children.enabled}}
 {{#config.category.enabled}}
 <div class="category-block">
-	<select class="property-search-input quicksearch sessioncategory" data-field="category">
+	<select class="span12 property-search-input quicksearch sessioncategory" data-field="category">
 		<option value="">-{{config.category.prompt}}-</option>		
 		{{#config.category.values}}<option value="{{Data}}">{{Label}}</option>{{/config.category.values}}
 	</select>
@@ -47,7 +47,7 @@
 {{/config.category.enabled}}
 {{#config.dev.enabled}}
 <div class="category-block">
-	<select class="property-search-input quicksearch sessiondevid" data-field="devid">
+	<select class="span12 property-search-input quicksearch sessiondevid" data-field="devid">
 		<option value="">-{{config.dev.prompt}}-</option>		
 		{{#config.dev.values}}<option value="{{Data}}">{{Label}}</option>{{/config.dev.values}}
 	</select>
@@ -55,7 +55,7 @@
 {{/config.dev.enabled}}
 {{#config.sleeps.enabled}}
 <div class="category-block">
-	<select class="property-search-input quicksearch sessionsleepsmin" data-field="sleeps[min]">
+	<select class="span12 property-search-input quicksearch sessionsleepsmin" data-field="sleeps[min]">
 		<option value="">-{{config.sleeps.prompt}}-</option>
 		{{#config.sleeps.values}}<option value="{{Data}}">{{Label}}</option>{{/config.sleeps.values}}
 	</select>
@@ -63,7 +63,7 @@
 {{/config.sleeps.enabled}}
 {{#config.beds.enabled}}
 <div class="category-block">
-	<select class="property-search-input quicksearch sessionbedsmin" data-field="beds[min]">
+	<select class="span12 property-search-input quicksearch sessionbedsmin" data-field="beds[min]">
 		<option value="">-{{config.beds.prompt}}-</option>
 		{{#config.beds.values}}<option value="{{Data}}">{{Label}}</option>{{/config.beds.values}}
 	</select>
@@ -71,7 +71,7 @@
 {{/config.beds.enabled}}
 {{#config.baths.enabled}}
 <div class="category-block">
-	<select class="property-search-input quicksearch sessionbathsmin" data-field="baths[min]">
+	<select class="span12 property-search-input quicksearch sessionbathsmin" data-field="baths[min]">
 		<option value="">-{{config.baths.prompt}}-</option>
 		{{#config.baths.values}}<option value="{{Data}}">{{Label}}</option>{{/config.baths.values}}
 	</select>
@@ -79,12 +79,12 @@
 {{/config.baths.enabled}}
 {{#config.location.enabled}}
 <div class="category-block">
-	<input type="text" class="property-search-input quicksearch sessionlocation" data-field="location" />
+	<input type="text" class="span12 property-search-input quicksearch sessionlocation" data-field="location" />
 </div>
 {{/config.location.enabled}}
 {{#config.rate.enabled}}
 <div class="category-block">
-	<select class="property-search-input quicksearch sessionratemin" data-field="rate[min]">
+	<select class="span12 property-search-input quicksearch sessionratemin" data-field="rate[min]">
 		<option value="">-{{config.rate.prompt}}-</option>
 		{{#config.rate.values}}<option value="{{Data}}">{{Label}}</option>{{/config.rate.values}}
 	</select>
@@ -92,7 +92,7 @@
 {{/config.rate.enabled}}
 {{#config.rooms.enabled}}
 <div class="category-block">
-	<select class="property-search-input quicksearch sessionroomsmin" data-field="rooms[min]">
+	<select class="span12 property-search-input quicksearch sessionroomsmin" data-field="rooms[min]">
 		<option value="">-{{config.rooms.prompt}}-</option>
 		{{#config.rooms.values}}<option value="{{Data}}">{{Label}}</option>{{/config.rooms.values}}
 	</select>
@@ -100,20 +100,20 @@
 {{/config.rooms.enabled}}
 {{#config.headline.enabled}}
 <div class="category-block">
-	<input type="text" class="property-search-input quicksearch sessionheadline" data-field="headline" />
+	<input type="text" class="span12 property-search-input quicksearch sessionheadline" data-field="headline" />
 </div>
 {{/config.headline.enabled}}
 {{#config.altid.enabled}}
 <div class="category-block">
-	<input type="text" class="txtb quicksearch sessinoaltid" data-field="altid" />
+	<input type="text" class="span12 txtb quicksearch sessinoaltid" data-field="altid" />
 </div>
 {{/config.altid.enabled}}
 <div class="property-search-button-block search-button-block">
-	<a class="quicksearch-dosearch" data-field-selector="quicksearch" href="javascript:void(0)">{{textdata.Search}}</a>&nbsp;
+	<a class="quicksearch-dosearch btn" data-field-selector="quicksearch" href="javascript:void(0)">{{textdata.Search}}</a>&nbsp;
 	<a class="quicksearch-doclear"  data-field-selector="quicksearch" href="javascript:void(0)">{{textdata.Clear}}</a>&nbsp;
 	<a class="quicksearch-doadvanced" data-field-selector="quicksearch" href="javascript:void(0)">{{textdata.Advanced}}</a>&nbsp;
 </div>
-</script>
+</script> 
 
 <script id="tmpl-search-rateblock" type="text/html">
 <div class="nrate-block">
@@ -130,32 +130,41 @@
 	Group: Properties
 */
 <script id="tmpl-propertysearch-galleryview" type="text/html">
+<header class="row-fluid search-result-controls">
+<div class="span7 form-horizontal">&nbsp;</div>
+<div class="span5 form-horizontal">
+<div class="control-group pull-right">
+	<label class="control-label">View as</label>
+	<div class="controls">
+		<div class="btn-group" data-toggle="buttons-radio">
+		<button class="btn changeview" data-template="tmpl-propertysearch-listview">{{textdata.List}}</button>
+		<button class="btn changeview active" data-template="tmpl-propertysearch-galleryview">{{textdata.Photo}}</button>
+		<button class="btn changeview" data-template="tmpl-propertysearch-galleryview" style="display:none">{{textdata.Map}}</button>
+		</div>
+	</div>
+</div>
+</div>	
+</header>
 <div class="gallery-view-page">
 {{#result}}
 <div class="span6">
 <div class="portal-result">
-    <div class="portal-inner">
-    
+    <div class="portal-inner">    
         <div class="portal-images">
-
-	  <div id="slider" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "sync": "#carousel" }'>
-		  <ul class="slides">
-			  {{#Images}}
-			  <li><a class="property-link" href="{{&ContextData.SEO.DetailURL}}"><img alt="{{Caption}}" src="{{&MediumURL}}" /></a></li>
-			  {{/Images}} 
-		  </ul>
-	  </div>
-            
-        </div>
-        
-        <div class="portal-info">
+			<div id="slider" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "sync": "#carousel" }'>
+			  <ul class="slides">
+				  {{#Images}}
+				  <li><a class="property-link" href="{{&ContextData.SEO.DetailURL}}"><img alt="{{Caption}}" src="{{&MediumURL}}" /></a></li>
+				  {{/Images}} 
+			  </ul>
+			</div>           
+		</div>       
+		<div class="portal-info">
 			<h2 class="property-title"><a href="{{&ContextData.SEO.DetailURL}}">{{Headline}}</a></h2>
-			<div class="location"><span><b>{{textdata.City}}:</b> {{City}}</span> {{#Bedrooms}}<b>{{textdata.Beds}}</b>: {{Bedrooms}} | {{/Bedrooms}}{{#Bathrooms}}<b>{{textdata.Baths}}</b>: {{Bathrooms}} | {{/Bathrooms}}<b>{{textdata.Sleeps}}</b>: {{Sleeps}}</div>
-			
-            <div class="portal-rates">{{ContextData.Quote.PublicNotes}}</div>			
-        </div>
-        
-    </div>
+			<div class="location"><span><b>{{textdata.City}}:</b> {{City}}</span> {{#Bedrooms}}<b>{{textdata.Beds}}</b>: {{Bedrooms}} | {{/Bedrooms}}{{#Bathrooms}}<b>{{textdata.Baths}}</b>: {{Bathrooms}} | {{/Bathrooms}}<b>{{textdata.Sleeps}}</b>: {{Sleeps}}</div>			
+			<div class="portal-rates">{{ContextData.Quote.PublicNotes}}</div>			
+		</div>
+	</div>
 </div>
 </div>
 {{/result}}
@@ -165,34 +174,49 @@
 </script>
 
 <script id="tmpl-propertysearch-listview" type="text/html">
+<header class="row-fluid search-result-controls">
+<div class="span7 form-horizontal">&nbsp;</div>
+<div class="span5 form-horizontal">
+<div class="control-group pull-right">
+	<label class="control-label">View as</label>
+	<div class="controls">
+		<div class="btn-group" data-toggle="buttons-radio">
+		<button class="btn changeview active" data-template="tmpl-propertysearch-listview">{{textdata.List}}</button>
+		<button class="btn changeview" data-template="tmpl-propertysearch-galleryview">{{textdata.Photo}}</button>
+		<button class="btn changeview" data-template="tmpl-propertysearch-galleryview" style="display:none">{{textdata.Map}}</button>
+		</div>
+	</div>
+</div>
+</div>	
+</header>
 <div class="list-view-page">
 {{#result}}
 <div class="portal-result">
-            <div class="portal-inner row-fluid shadow">
-              <div class="portal-images span4">
-                <div id="slider" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "sync": "#carousel" }'>
-                  <ul class="slides">
-				  {{#Images}}
-                    <li><img alt="{{Caption}}" src="{{&MediumURL}}" /> </li>
-                  {{/Images}}  
-                  </ul>
-                </div>
-              </div>
-              <div class="portal-info span8">
-                <div class="property-info">
-                  <h2 class="property-title">{{Headline}}</h2>
-                  <div class="location"><span><b>City:</b> {{City}}</span> {{#Bedrooms}}<b>{{textdata.Beds}}</b>: {{Bedrooms}} | {{/Bedrooms}}{{#Bathrooms}}<b>{{textdata.Baths}}</b>: {{Bathrooms}} | {{/Bathrooms}}<b>{{textdata.Sleeps}}</b>: {{Sleeps}}</div>
-                  <div class="brick-wrap">
-                    <div class="description">{{&Summary}}</div>
-                  </div>
-                  <div class="rates clearfix">
-                    <div class="portal-rates pull-left">{{ContextData.Quote.PublicNotes}}</div>
-                    {{#ContextData.SEO.Keyword}}<a class="property-link pull-right" href="{{&ContextData.SEO.DetailURL}}">{{textdata.Details}} <span>&rarr;</span></a>{{/ContextData.SEO.Keyword}}
-					</div>
-                </div>
-              </div>
-            </div>
-          </div>
+<div class="portal-inner row-fluid shadow">
+	<div class="portal-images span4">
+		<div id="slider" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "sync": "#carousel" }'>
+		<ul class="slides">
+		{{#Images}}
+			<li><img alt="{{Caption}}" src="{{&MediumURL}}" /> </li>
+		{{/Images}}  
+		</ul>
+		</div>
+	</div>
+	<div class="portal-info span8">
+	<div class="property-info">
+		<h2 class="property-title">{{Headline}}</h2>
+		<div class="location"><span><b>City:</b> {{City}}</span> {{#Bedrooms}}<b>{{textdata.Beds}}</b>: {{Bedrooms}} | {{/Bedrooms}}{{#Bathrooms}}<b>{{textdata.Baths}}</b>: {{Bathrooms}} | {{/Bathrooms}}<b>{{textdata.Sleeps}}</b>: {{Sleeps}}</div>
+		<div class="brick-wrap">
+			<div class="description bapi-truncate" data-trunclen="100">{{&Summary}}</div>
+		</div>
+		<div class="rates clearfix">
+		<div class="portal-rates pull-left">{{ContextData.Quote.PublicNotes}}</div>
+		{{#ContextData.SEO.Keyword}}<a class="property-link pull-right" href="{{&ContextData.SEO.DetailURL}}">{{textdata.Details}} <span>&rarr;</span></a>{{/ContextData.SEO.Keyword}}
+		</div>
+	</div>
+	</div>
+</div>
+</div>
 {{/result}}
 </div>
 {{^islastpage}}<div><a href='javascript:void(0)' class='showmore'>{{textdata.Show More Results}} ({{totalcount}})</a></div>{{/islastpage}}
@@ -217,15 +241,13 @@
 <tbody>
 {{#result}}
 <tr>
-    <td>
-		<input type='checkbox' />
- 	</td>	
+    <td><input type='checkbox' /></td>	
     <td><a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}">{{Headline}}</a></td>
     <td>{{Type}}</td>
     <td>{{Bedrooms}}</td> 
     <td>{{Bathrooms}}</td> 
     <td>{{Sleeps}}</td> 
-    <td><span class="trunc{{curpage}}">{{Amenities}}</span></td>   
+    <td><span>{{TopAmenities}}</span></td>   
     <td>{{ContextData.Quote.PublicNotes}}</td> 
     <td>
 		{{^IsBookable}}
@@ -246,212 +268,186 @@
 <script id="tmpl-properties-detail" type="text/html">
 {{#result}}
 <section class="row-fluid">
-        <div class="span12 item-snapshot module shadow-border">        
-            <div class="top-block">
-            <div class="row-fluid">
-                <div class="span7 left-side">
-                <h2 class="title">{{Headline}}</h2>
-                <p class="location"><span><b>{{textdata.City}}:</b> {{City}}</span> {{#Bedrooms}}<b>{{textdata.Beds}}</b>: {{Bedrooms}} | {{/Bedrooms}}{{#Bathrooms}}<b>{{textdata.Baths}}</b>: {{Bathrooms}} | {{/Bathrooms}}<b>{{textdata.Sleeps}}</b>: {{Sleeps}}</p>
-                
-                </div>
-                
-                <div class="span5 nav-links">
-                <a class="link" href="/rentalsearch"><span>&larr;</span>&nbsp;Back to Results</a>&nbsp;&nbsp;&nbsp;<a class="link" href="#">Next&nbsp;<span>&rarr;</span></a>
-                </div>
-              </div>  
-            </div>
-            
-            <div class="item-slideshow">
-                <div id="slider" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "sync": "#carousel" }'>
-                  <ul class="slides">
-				  {{#Images}}
-                    <li><img alt="{{Caption}}" src="{{&MediumURL}}" />
-					{{#Caption}}
-					<p class="flex-caption">{{Caption}}</p></li>
-					{{/Caption}}
-                  {{/Images}}                    
-                  </ul>
-                </div>
-                <div id="carousel" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "itemWidth": 50, "itemMargin": 10, "asNavFor": "#slider" }'>
-                  <ul class="slides">
-                  {{#Images}}
-                    <li><img alt="" src="{{&ThumbnailURL}}" /></li>
-                  {{/Images}}                   
-                  </ul>
-                </div>
-                    
-            </div>
-        
-        </div>
-    </section>
-	
-	<section class="row-fluid item-info module shadow-border">
-    	<div class="span12">
-            <div class="tabbable">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a href="#tab1" data-toggle="tab">{{textdata.General}}</a></li>
-                    <li><a href="#tab2" data-toggle="tab">{{textdata.Details & Availability}}</a></li>
-                    <li><a href="#tab3" id="tabs3" data-toggle="tab">{{textdata.Attraction}}</a></li>
-                    <li><a href="#tab4" data-toggle="tab">{{textdata.Reviews}}</a></li>
-                </ul>
-                
-                <div class="tab-content">
-                    <div class="tab-pane active" id="tab1">
-
-<div class="row-fluid">
-<div class="span12 box-sides">                
-
-{{&Description}}
+<div class="span12 item-snapshot module shadow-border">        
+	<div class="top-block">
+	<div class="row-fluid">
+		<div class="span7 left-side">
+		<h2 class="title">{{Headline}}</h2>
+		<p class="location"><span><b>{{textdata.City}}:</b> {{City}}</span> {{#Bedrooms}}<b>{{textdata.Beds}}</b>: {{Bedrooms}} | {{/Bedrooms}}{{#Bathrooms}}<b>{{textdata.Baths}}</b>: {{Bathrooms}} | {{/Bathrooms}}<b>{{textdata.Sleeps}}</b>: {{Sleeps}}</p>                
+		</div>			
+		<div class="span5 nav-links">
+			<a class="link" href="/rentalsearch"><span>&larr;</span>&nbsp;Back to Results</a>&nbsp;&nbsp;&nbsp;<a class="link" href="#">Next&nbsp;<span>&rarr;</span></a>
+		</div>
+		</div>  
+	</div>		
+	<div class="item-slideshow">
+		<div id="slider" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "sync": "#carousel" }'>
+		<ul class="slides">
+		{{#Images}}
+			<li><img alt="{{Caption}}" src="{{&MediumURL}}" />
+			{{#Caption}}
+			<p class="flex-caption">{{Caption}}</p></li>
+			{{/Caption}}
+		{{/Images}}                    
+		</ul>
+		</div>
+		<div id="carousel" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "itemWidth": 50, "itemMargin": 10, "asNavFor": "#slider" }'>
+		<ul class="slides">
+		{{#Images}}
+			<li><img alt="" src="{{&ThumbnailURL}}" /></li>
+		{{/Images}}                   
+		</ul>
+		</div>                   
+	</div>        
 </div>
-</div>
-          
-            
-            
-                    </div>
-                    <div class="tab-pane" id="tab2">
-					
-<div class="row-fluid">
-<div class="span12 box-sides">
-
-<img src="//maps.googleapis.com/maps/api/staticmap?center={{Latitude}},{{Longitude}}&zoom=8&size=500x250&maptype=roadmap&markers=color:blue%7Clabel:%20%7C{{Latitude}},{{Longitude}}&sensor=false" />
-      
-<h3>{{textdata.Amenities}}</h3>
-<ul>
-{{#Amenities}}
-<li>{{.}}</li>
-{{/Amenities}}
-</ul>
-
-<h3>{{textdata.Rates & Availability}}</h3>
-<div id="avail" class="bapi-availcalendar" data-options='{ "availcalendarmonths":{{config.availcalendarmonths}}, "numinrow": 3 }' data-pkid="{{ID}}" />
-
-<table class="table table-bordered table-hover">
-<tr>
-{{#ContextData.Rates.Keys}}
-	<th>{{.}}</th>
-{{/ContextData.Rates.Keys}}
-</tr>
-{{#ContextData.Rates.Values}}
-<tr>
-	{{#0}}<td>{{0}}</td>{{/0}}
-	{{#1}}<td>{{1}}</td>{{/1}}
-	{{#2}}<td>{{2}}</td>{{/2}}	
-	{{#3}}<td>{{3}}</td>{{/3}}	
-	{{#4}}<td>{{4}}</td>{{/4}}	
-	{{#5}}<td>{{5}}</td>{{/5}}	
-	{{#6}}<td>{{6}}</td>{{/6}}	
-	{{#7}}<td>{{7}}</td>{{/7}}	
-	{{#8}}<td>{{8}}</td>{{/8}}	
-	{{#9}}<td>{{9}}</td>{{/9}}	
-	{{#10}}<td>{{10}}</td>{{/10}}	
-	{{#11}}<td>{{11}}</td>{{/11}}	
-	{{#12}}<td>{{12}}</td>{{/12}}	
-	{{#13}}<td>{{13}}</td>{{/13}}	
-	{{#14}}<td>{{14}}</td>{{/14}}	
-	{{#15}}<td>{{15}}</td>{{/15}}	
-	{{#16}}<td>{{16}}</td>{{/16}}	
-	{{#17}}<td>{{17}}</td>{{/17}}	
-	{{#18}}<td>{{18}}</td>{{/18}}	
-	{{#19}}<td>{{19}}</td>{{/19}}	
-	{{#20}}<td>{{20}}</td>{{/20}}		
-</tr>
-{{/ContextData.Rates.Values}}
-</table>
-</div>
-</div>
-                    </div>
-                    <div class="tab-pane" id="tab3">
-					
-<div class="row-fluid">
-<div class="span12 box-sides">
-<div id="poi-map-prop" class="bapi-map" 
-	data-loc-selector='.poi-map-location' 
-	data-refresh-selector='#tabs3' data-refresh-selector-event='shown' 
-	data-link-selector='.poi-map-item' 
-	data-category-icons='{ "starred": { "color": "#E8413A" }, "poi": { "color": "#465AE0" } }'
-	style="width:600px; height:300px; float:left;"></div>
-<br />
-
-<div id="map-side-bar">
-<table class="table table-bordered table-hover poi-map-locations">
-<tr>
-	<th></th>
-	<th>{{textdata.Attraction}}</th>
-	<th>{{textdata.Category}}</th>
-	<th>{{textdata.Distance}}</th>
-</tr>
-	<td class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}}}, "category": "starred"}'>
-		<a href="#" class="poi-map-item">X</a>
-		<div class="info-html">
-			<div style="float:left">
-				<img src='{{&PrimaryImage.ThumbnailURL}}' alt='{{PrimaryImage.Caption' title='{{PrimaryImage.Caption}}' />
-			</div>
-			<div>
-				<p><b>{{Headline}}</b></p>
-				<p>{{&Summary}}</p>
+</section>
+<section class="row-fluid item-info module shadow-border">
+<div class="span12">
+	<div class="tabbable">
+	<ul class="nav nav-tabs">
+		<li class="active"><a href="#tab1" data-toggle="tab">{{textdata.General}}</a></li>
+		<li><a href="#tab2" data-toggle="tab">{{textdata.Details & Availability}}</a></li>
+		<li><a href="#tab3" id="tabs3" data-toggle="tab">{{textdata.Attractions}}</a></li>
+		<li><a href="#tab4" data-toggle="tab">{{textdata.Reviews}}</a></li>
+	</ul>			
+	<div class="tab-content">
+		<div class="tab-pane active" id="tab1">
+		<div class="row-fluid">
+		<div class="span12 box-sides">                
+		{{&Description}}
+		</div>
+		</div>
+		</div>
+		<div class="tab-pane" id="tab2">					
+		<div class="row-fluid">
+		<div class="span12 box-sides">
+		<img src="//maps.googleapis.com/maps/api/staticmap?center={{Latitude}},{{Longitude}}&zoom=8&size=500x250&maptype=roadmap&markers=color:blue%7Clabel:%20%7C{{Latitude}},{{Longitude}}&sensor=false" />  
+		<h3>{{textdata.Amenities}}</h3>
+		{{#Amenities2}}
+		<b>{{Key}}</b>
+		<ul>
+		{{#Values}}
+			<li>{{Label}}</li>
+		{{/Values}}
+		</ul>
+		{{/Amenities2}}
+		<h3>{{textdata.Rates & Availability}}</h3>
+		<div id="avail" class="bapi-availcalendar" data-options='{ "availcalendarmonths":{{config.availcalendarmonths}}, "numinrow": 3 }' data-pkid="{{ID}}" />
+		<table class="table table-bordered table-hover">
+		<tr>
+		{{#ContextData.Rates.Keys}}
+			<th>{{.}}</th>
+		{{/ContextData.Rates.Keys}}
+		</tr>
+		{{#ContextData.Rates.Values}}
+		<tr>
+			{{#0}}<td>{{0}}</td>{{/0}}
+			{{#1}}<td>{{1}}</td>{{/1}}
+			{{#2}}<td>{{2}}</td>{{/2}}	
+			{{#3}}<td>{{3}}</td>{{/3}}	
+			{{#4}}<td>{{4}}</td>{{/4}}	
+			{{#5}}<td>{{5}}</td>{{/5}}	
+			{{#6}}<td>{{6}}</td>{{/6}}	
+			{{#7}}<td>{{7}}</td>{{/7}}	
+			{{#8}}<td>{{8}}</td>{{/8}}	
+			{{#9}}<td>{{9}}</td>{{/9}}	
+			{{#10}}<td>{{10}}</td>{{/10}}	
+			{{#11}}<td>{{11}}</td>{{/11}}	
+			{{#12}}<td>{{12}}</td>{{/12}}	
+			{{#13}}<td>{{13}}</td>{{/13}}	
+			{{#14}}<td>{{14}}</td>{{/14}}	
+			{{#15}}<td>{{15}}</td>{{/15}}	
+			{{#16}}<td>{{16}}</td>{{/16}}	
+			{{#17}}<td>{{17}}</td>{{/17}}	
+			{{#18}}<td>{{18}}</td>{{/18}}	
+			{{#19}}<td>{{19}}</td>{{/19}}	
+			{{#20}}<td>{{20}}</td>{{/20}}		
+		</tr>
+		{{/ContextData.Rates.Values}}
+		</table>
+		</div>
+		</div>
+		</div>
+		<div class="tab-pane" id="tab3">			
+		<div class="row-fluid">
+		<div class="span12 box-sides">
+			<div id="poi-map-prop" class="bapi-map" data-loc-selector='.poi-map-location' data-refresh-selector='#tabs3' data-refresh-selector-event='shown' data-link-selector='.poi-map-item' data-category-icons='{ "starred": { "color": "#E8413A" }, "poi": { "color": "#465AE0" } }'style="width:600px; height:300px; float:left;"></div>
+			<br />
+			<div id="map-side-bar">
+			<table class="table table-bordered table-hover poi-map-locations">
+			<tr>
+				<th></th>
+				<th>{{textdata.Attraction}}</th>
+				<th>{{textdata.Category}}</th>
+				<th>{{textdata.Distance}}</th>
+			</tr>
+			<tr>
+				<td class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}}}, "category": "starred"}'>
+					<a href="#" class="poi-map-item">X</a>
+					<div class="info-html">
+						<div style="float:left">
+							<img src='{{&PrimaryImage.ThumbnailURL}}' alt='{{PrimaryImage.Caption' title='{{PrimaryImage.Caption}}' />
+						</div>
+						<div>
+							<p><b>{{Headline}}</b></p>
+							<p>{{&Summary}}</p>
+						</div>
+					</div>
+				</td>
+				<td>{{Headline}}</td>
+				<td>{{Type}}</td>
+				<td>-</td>  
+			<tr>
+			</tr>
+			{{#ContextData.Attractions}}
+			<tr>
+				<td class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}}}, "category": "poi"}'>
+					<a href="#" class="poi-map-item">X</a>
+					<div class="info-html">
+						<div style="float:left">
+							<img src='{{&PrimaryImage.ThumbnailURL}}' alt='{{PrimaryImage.Caption' title='{{PrimaryImage.Caption}}' />
+						</div>
+						<div>
+							<p><b>{{Name}}</b></p>
+							<p>{{&Summary}}</p>
+						</div>
+					</div>
+				</td>
+				<td>{{Name}}</td>
+				<td>{{Type}}</td>
+				<td>{{ContextData.Distance}}</td>  
+			</tr>
+			{{/ContextData.Attractions}}
+			</table>
 			</div>
 		</div>
-	</td>
-	<td>{{Headline}}</td>
-	<td>{{Type}}</td>
-	<td>-</td>  
-<tr>
-</tr>
-{{#ContextData.Attractions}}
-<tr>
-	<td class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}}}, "category": "poi"}'>
-		<a href="#" class="poi-map-item">X</a>
-		<div class="info-html">
-			<div style="float:left">
-				<img src='{{&PrimaryImage.ThumbnailURL}}' alt='{{PrimaryImage.Caption' title='{{PrimaryImage.Caption}}' />
-			</div>
-			<div>
-				<p><b>{{Name}}</b></p>
-				<p>{{&Summary}}</p>
-			</div>
 		</div>
-	</td>
-	<td>{{Name}}</td>
-	<td>{{Type}}</td>
-	<td>{{ContextData.Distance}}</td>  
-</tr>
-{{/ContextData.Attractions}}
-</table>
+		</div>
+		<div class="tab-pane" id="tab4">
+		<div class="row-fluid">
+		<div class="span12 box-sides">                
+		{{#ContextData.Reviews}}
+		<ul class="unstyled">
+			<li><b>Title: </b>{{Title}}</li>
+			<li><b>Added By: </b>{{AddedByPersonID}}</li>
+			<li><b>Added On: </b>{{AddedOn}}</li>
+			<li><b>Feedback: </b>{{FeedbackValue}}</li>
+			<li><b>Comment: </b>{{&Comment}}</li>
+			<li></li>
+			<li><b>Modified By: </b>{{ModifiedByPersonID}}</li>
+			<li><b>Modified On: </b>{{ModifiedOn}}</li>
+			<li></li>
+			<li><b>Reviewed By: </b>{{ReviewerDisplayName}}</li>
+			<li><b>Reviewed By: </b>{{&Response}}</li>
+		</ul>
+		{{/ContextData.Reviews}}
+		</div>
+		</div>					
+		</div>
+	</div>
+	</div>
 </div>
-
-</div>
-</div>
-                    </div>
-                    <div class="tab-pane" id="tab4">
-<div class="row-fluid">
-<div class="span12 box-sides">                
-{{#ContextData.Reviews}}
-<ul class="unstyled">
-<li><b>Title: </b>{{Title}}</li>
-<li><b>Added By: </b>{{AddedByPersonID}}</li>
-<li><b>Added On: </b>{{AddedOn}}</li>
-<li><b>Feedback: </b>{{FeedbackValue}}</li>
-<li><b>Comment: </b>{{&Comment}}</li>
-<li></li>
-<li><b>Modified By: </b>{{ModifiedByPersonID}}</li>
-
-<li><b>Modified On: </b>{{ModifiedOn}}</li>
-<li></li>
-<li><b>Reviewed By: </b>{{ReviewerDisplayName}}</li>
-
-<li><b>Reviewed By: </b>{{&Response}}</li>
-
-</ul>
-{{/ContextData.Reviews}}
-
-</div>
-</div>
-                    	
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+</section>
 {{/result}}
 <span class="end"></span>
 </script>
@@ -502,20 +498,21 @@
 <script id="tmpl-featuredproperties-horiz" type="text/html">
 {{#result}}
 <div class="fp-featured span6">    
- <div class="fp-image">
-  <a href="{{ContextData.SEO.DetailURL}}"><img width="155px" src="{{&PrimaryImage.ThumbnailURL}}" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" /></a>
- </div>
- <div class="fp-outer"> 
-  <div class="fp-title"><a href='{{ContextData.SEO.DetailURL}}'>{{Headline}}</a></div>
-  {{#NumReviews}}<div class="fpstar{{AvgReview}}"></div>{{/NumReviews}}
-  <div class="fp-details">
-   <b class="smarthide">{{textdata.Beds}}: {{Bedrooms}}</b>  
-   <b class="smarthide">{{textdata.Baths}}: {{Bathrooms}}</b>  
-   <b class="smarthide">{{textdata.Sleeps}}: {{Sleeps}}</b>       
-  </div>
-  <div class="clear"></div>
-  <div class="fp-rates">{{ContextData.Quote.PublicNotes}}</div>  
- </div>
+	<div class="fp-image">
+		<a href="{{ContextData.SEO.DetailURL}}"><img src="{{&PrimaryImage.ThumbnailURL}}" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" /></a>
+	</div>
+	<div class="fp-outer"> 
+	<div class="fp-title"><a href='{{ContextData.SEO.DetailURL}}'>{{Headline}}</a></div>
+	{{#NumReviews}}<div class="fpstar{{AvgReview}}"></div>{{/NumReviews}}
+	<div class="fp-details">
+		<b class="smarthide">{{Type}}&nbsp;-&nbsp;</b>
+		<b class="smarthide">{{textdata.Sleeps}}: {{Sleeps}}</b>       
+	</div>
+	<div class="clear"></div>
+	<hr/>
+	<div class="fp-rates">{{ContextData.Quote.PublicNotes}}</div>
+	{{#ContextData.SEO.Keyword}}<a class="property-link" href="{{ContextData.SEO.DetailURL}}">{{textdata.Details}}&nbsp;<span>&rarr;</span></a>{{/ContextData.SEO.Keyword}}
+	</div>
 </div>
 {{/result}}
 </script>
@@ -590,16 +587,18 @@
                   <h2 class="title"><a href="{{&ContextData.SEO.DetailURL}}">{{Name}}</a></h2>
                   <div class="type">{{Type}}</div>
                     <strong>{{Region}}, {{State}} </strong><br/>
-                    <strong>{{textdata.Amenities}}:</strong> <span class="trunc{{curpage}}">{{Amenities}}</span>
+                    <strong>{{textdata.Amenities}}:</strong> <span>{{TopAmenities}}</span>
                   <div class="description">{{&Summary}}</div>                  
-              </div>
-              
+              </div>             
             </div>
           </div>
 {{/result}}
 </div>
 {{^islastpage}}<div><a href='javascript:void(0)' class='showmore'>{{textdata.Show More Results}} ({{totalcount}})</a></div>{{/islastpage}}
 {{#islastpage}}<div class="nomore">{{textdata.There are no more results}}</div>{{/islastpage}}
+{{^result}}
+<div class="nomore">{{textdata.There are no more results}}</div>
+{{/result}}
 </script>
 
 <script id="tmpl-developments-detail" type="text/html">
@@ -659,7 +658,7 @@
 <div class="bapi-moveme" data-from=".development-details" data-to=".detail-overview-target" data-method="append">
 <div class="development-details module shadow">
 <div class="pd">
-<h3>Details</h3>
+<h3>{{textdata.Details}}</h3>
 <hr/>
 <dl>
 	{{#Type}}
@@ -668,9 +667,14 @@
 	{{#Address1}}
 	<dt>{{textdata.Address}}:</dt><dd>{{&Location}}</dd>
 	{{/Address1}}
-	{{#Amenities.0}}
-	<dt>{{textdata.Amenities}}:</dt><dd>{{Amenities}}</dd>
-	{{/Amenities.0}}	
+	<dt>{{textdata.Amenities}}:</dt>
+	<dd>
+		<ul>
+		{{#TopAmenities}}
+			<li>{{.}}</li>
+		{{/TopAmenities}}
+		</ul>
+	</dd>	
 </dl>
 </div>
 </div>
@@ -994,14 +998,16 @@
 <div class="pf-featured span4">    
 <div class="pf-image">
 	<a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}">
-		<img width="185px" src="{{&PrimaryImage.ThumbnailURL}}" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />
+		<img src="{{&PrimaryImage.ThumbnailURL}}" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />
 	</a>
 </div>
-<div class="pf-outer">
-	<div class="fp-inner">
-		<a href='{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}'>{{Name}}</a>		
-	</div>
-	<div class="pf-description">{{{Description}}}</div>
+<div class="pf-outer">	
+	<a class="pf-title" href='{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}'>{{Name}}</a>	
+	<hr/>	
+	{{#Description}}
+	<div class="pf-description bapi-truncate" data-trunclen="100">{{&Description}}</div>
+	{{/Description}}
+	{{#ContextData.SEO.Keyword}}<a class="details-link" href="{{&ContextData.SEO.DetailURL}}">{{textdata.Details}}&nbsp;<span>&rarr;</span></a>{{/ContextData.SEO.Keyword}}
 </div>
 </div>
 {{/result}}
@@ -1011,50 +1017,36 @@
 	Group: Lead Request Forms
 */
 <script id="tmpl-leadrequestform-propertyinquiry" type="text/html">
-<div id="questions-block">	
-	<div id="questions-block-inner">		
-		<h1>{{textdata.Have a Question?}}</h1>
-		<fieldset id="have-question" class="leadrequest">			
-			<dl id="phoneform">
-				<dt for="txtName">{{textdata.Name}}:<b class="val">*</b></dt>
-				<dd><input type="text" id="txtName" class="leadrequestfield required input-text" minlength="2" data-field="fullname" /></dd>
-			</dl>
-			<dl id="emailform">
-				<dt for="txtEmail">{{textdata.Email}}:<b class="val">*</b></dt>
-				<dd><input type="text" id="txtEmail" class="leadrequestfield required input-text" size="25" data-field="email" /></dd>
-			</dl>
-			<dl id="phoneform">
-				<dt for="txtPhone">{{textdata.Phone}}:<b class="val">*</b></dt>
-				<dd><input type="text" id="txtPhone" class="leadrequestfield required email input-text" data-field="phone" /></dd>				
-			</dl>
-			{{#config.hasdatesoninquiryform}}
-			<dl id="checkinform">
-				<dt for="txtCheckIn">{{textdata.Check-In}}</dt>
-				<dd><input type="text" id="txtCheckIn" class="leadrequestfield input-text datepickercheckin" data-field="checkin" /></dd>
-			</dl>
-			<dl id="checkoutform">
-				<dt for="txtCheckOut">{{textdata.Check-Out}}</dt>
-				<dd><input type="text" id="txtCheckOut" class="leadrequestfield input-text datepickercheckout" data-field="checkout" /></dd>
-			</dl>
-			{{/config.hasdatesoninquiryform}}
-			<dl id="lsform">
-				<dt for="ddlLS">{{textdata.How Did You Hear About Us?}}</dt>
-				<dd><input type="text" id="ddlLS" class="leadrequestfield input-text" data-field="ls" /></dd>
-			</dl>
-			<dl id="commentsform">
-				<dt for="txtComments">{{textdata.Comments}}</dt>
-				<dd><textarea id="txtComments" rows="2" cols="20" class="leadrequestfield" data-field="publicnotes" /></dd>
-			</dl>
-			<dl id="specialform" class="specialform">
-				<dt for="txtSpecial">Special</dt>
-				<dd><input type="text" autocomplete="off" id="txtSpecial" class="leadrequestfield input-text" data-field="special" /></dd>
-			</dl>
-			<div class="clear2"></div>
-			<input type="button" id="btn-leadrequest" class="doleadrequest" value='{{textdata.Submit}}' data-field-selector="leadrequestfield" />			
+<div id="questions-block" class="module shadow">	
+	<div id="questions-block-inner" class="pd">		
+		<h3>{{textdata.Have a Question?}}</h3>
+		<fieldset id="have-question" class="leadrequest">
+		<ul class="unstyled">
+		<li id="phoneform">
+			<input type="text" id="txtName" class="span12 leadrequestfield required input-text" minlength="2" data-field="fullname" placeholder="{{textdata.Name}}" required />
+		</li>			
+		<li id="emailform">
+			<input type="text" id="txtEmail" class="span12 leadrequestfield required input-text" size="25" data-field="email" type="email" placeholder="{{textdata.Email}}" required />
+		</li>
+		<li id="phoneform">
+			<input type="text" id="txtPhone" class="span12 leadrequestfield required email input-text" data-field="phone" placeholder="{{textdata.Phone}}" required />				
+		</li>
+		<li id="lsform">
+			<input type="text" id="ddlLS" class="span12 leadrequestfield input-text" data-field="ls" placeholder="{{textdata.How Did You Hear About Us?}}" />
+		</li>
+		<li id="commentsform">				
+			<textarea id="txtComments" rows="2" cols="20" class="span12 leadrequestfield" data-field="publicnotes" placeholder="{{textdata.Comments}}" ></textarea>
+		</li>
+		<li id="specialform" class="specialform">
+			<input type="text" autocomplete="off" id="txtSpecial" class="span12 leadrequestfield input-text" data-field="special" placeholder="Special" />
+		</li>
+		</ul>
+		<div class="clearfix"></div>			
+		<input type="button" id="btn-leadrequest" class="btn btn-primary pull-right doleadrequest" value='{{textdata.Submit}} ?' data-field-selector="leadrequestfield" />			
 		</fieldset>
 	</div>
 </div>
-</script>
+</script> 
 
 /*
 	Group: Booking

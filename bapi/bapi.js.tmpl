@@ -272,7 +272,7 @@ context.search = function (entity, options, callback) {
 }
 
 context.get = function (ids, entity, options, callback) {
-	if (typeof (ids) === "undefined" || ids === null || ids.length === 0) { callback("ids not specified."); return; }
+	if (typeof (ids) === "undefined" || ids === null || ids.length === 0) { callback({ "status": 0, "result": [] }); return; }
     if (typeof(options) === "undefined" || options === null) { options = new Object(); }
 	if (typeof (options.page) === "undefined" || options.page === null || options.page <= 0) { options.page = 1; }
 	if (typeof (options.pagesize) === "undefined" || options.pagesize === null || options.pagesize <= 0) { options.pagesize = 5; }	

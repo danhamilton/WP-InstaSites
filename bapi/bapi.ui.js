@@ -48,168 +48,142 @@ context.maps = {};
 /*
 	Group: Initialization
 */
-var initialized = false;
-context.init = function() {
-	initialized = true;
+context.init = function(options) {
 	BAPI.log("BAPI.UI initializing.");
-	
-	// setup summary pages
-	$.each($('.bapi-summary'), function (i, item) {
-		var ctl = $(item);		
-		var dologging = (ctl.attr('data-log') == '1');
-		var entity = ctl.attr('data-entity');
-		var templatename = ctl.attr('data-templatename');
-		var searchoptions = null;
-		try { searchoptions = $.parseJSON(ctl.attr('data-searchoptions')); } catch(err) {}
-		var selector = '#' + ctl.attr('id');
-		BAPI.log("Creating summary widget for " + selector);
-		context.createSummaryWidget(selector, { "searchoptions": searchoptions, "entity": entity, "template": BAPI.templates.get(templatename), "log": dologging });
-	});
-	
-	// setup search forms
-	$.each($('.bapi-search'), function (i, item) {
-		var ctl = $(item);		
-		var dologging = (ctl.attr('data-log') == '1');
-		var templatename = ctl.attr('data-templatename');
-		var searchurl = ctl.attr('data-searchurl');
-		var selector = '#' + ctl.attr('id');
-		BAPI.log("Creating search widget for " + selector);
-		context.createSearchWidget(selector, { "searchurl": searchurl, "template": BAPI.templates.get(templatename), "log": dologging });		
-	});
-	
-	// setup inquiryforms forms
-	$.each($('.bapi-inquiryform'), function (i, item) {
-		var ctl = $(item);		
-		var dologging = (ctl.attr('data-log') == '1');
-		var templatename = ctl.attr('data-templatename');
-		var pkid = ctl.attr('data-propid');
-		var selector = '#' + ctl.attr('id');
-		var hasdates = false;
-		BAPI.log("Creating inquiry form for " + selector);
-		context.createInquiryForm(selector, { "pkid": pkid, "template": BAPI.templates.get(templatename), "hasdatesoninquiryform": hasdates, "log": dologging });		
-	});	
-	
-	// setup flexsliders forms
-	$.each($('.bapi-availcalendar'), function (i, item) {
-		var ctl = $(item);	
-		var pkid = ctl.attr("data-pkid");
-		if (pkid!==null && pkid!='') {
-			BAPI.get(pkid, BAPI.entities.property, { "avail": 1 }, function(data) {
-				var selector = '#' + ctl.attr('id');
-				var options = {};
-				try { options = $.parseJSON(ctl.attr('data-options')); } catch(err) {}
-				BAPI.log("Creating availability calendar for " + selector);	
-				context.createAvailabilityWidget(selector, data, options);
-			});		
-		}
-	});	
-	
-	// setup flexsliders forms
-	$.each($('.bapi-flexslider'), function (i, item) {
-		var ctl = $(item);		
-		var options = null;
-		try {
-			options = $.parseJSON(ctl.attr('data-options'));
-		}
-		catch(err) {}
-		var selector = '#' + ctl.attr('id');
-		BAPI.log("Creating flexslider for " + selector);
-		if (selector === null) {
-			BAPI.log("--> Error, options for flexslider could not be parsed correctly.  Check JSON format.");
-		}
-		else {
-			ctl.flexslider(options);
-		}
-	});	
-	
-	// setup maps
-	$.each($('.bapi-map'), function (i, item) {
-		var ctl = $(item);		
-		var selector = '#' + ctl.attr('id');
-		var lsel = ctl.attr('data-refresh-selector');
-		var lselevent = ctl.attr('data-refresh-selector-event');
-		var locsel = ctl.attr('data-loc-selector');
-		if (locsel===null || locsel=='') { locsel = '.map-location'; }
-		var linksel = ctl.attr('data-link-selector');
-		if (linksel===null || linksel=='') { linksel = '.map-item'; }
-		var caticons = null;
-		try { caticons = $.parseJSON(ctl.attr('data-category-icons'));}
-		catch(err) {}
-		BAPI.log("Creating map widget for " + selector + ', location selector=' + locsel + ', link selector=' + linksel);
-		ctl.jMapping({
-			//side_bar_selector: '#map-locations:first',
-			location_selector: locsel,
-			link_selector: linksel,
-			info_window_selector: '.info-html',
-			category_icon_options: caticons,
-			map_config: {
-				navigationControlOptions: {
-				style: google.maps.NavigationControlStyle.DEFAULT,
-				streetViewControl: false
-			  },
-			  mapTypeId: google.maps.MapTypeId.HYBRID,
-			  zoom: 7
-			}
+	if (typeof(options)==="undefined" || options===null) { options = {} };	
+	context.inithelpers.setupsummarywidgets(options);
+	context.inithelpers.setupsearchformwidgets(options);
+	context.inithelpers.setupinquiryformwidgets(options);
+	context.inithelpers.setupavailcalendarwidgets(options);
+	context.inithelpers.applyflexsliders(options);
+	context.inithelpers.applytruncate(options);	
+	context.inithelpers.setupmapwidgets(options);	
+	context.inithelpers.applymovemes(options);	
+}
+
+context.inithelpers = {
+	setupsummarywidgets: function(options) {
+		$.each($('.bapi-summary'), function (i, item) {
+			var ctl = $(item);		
+			var dologging = (ctl.attr('data-log') == '1');
+			var entity = ctl.attr('data-entity');
+			var templatename = ctl.attr('data-templatename');
+			var applyfixers = parseInt(ctl.attr('data-applyfixers'));
+			var searchoptions = null;
+			try { searchoptions = $.parseJSON(ctl.attr('data-searchoptions')); } catch(err) {}
+			var selector = '#' + ctl.attr('id');
+			BAPI.log("Creating summary widget for " + selector);
+			context.createSummaryWidget(selector, { "searchoptions": searchoptions, "entity": entity, "template": BAPI.templates.get(templatename), "log": dologging, "applyfixers": applyfixers });
 		});
-		
-		if (typeof(lsel)!=="undefined" && lsel!==null && lsel!='') {
-			$(lsel).on(lselevent, function() {
-				BAPI.log("Refresh selector clicked");
-				ctl.jMapping('update');
+	},
+	setupsearchformwidgets: function(options) {
+		$.each($('.bapi-search'), function (i, item) {
+			var ctl = $(item);		
+			var dologging = (ctl.attr('data-log') == '1');
+			var templatename = ctl.attr('data-templatename');
+			var searchurl = ctl.attr('data-searchurl');
+			var selector = '#' + ctl.attr('id');
+			BAPI.log("Creating search widget for " + selector);
+			context.createSearchWidget(selector, { "searchurl": searchurl, "template": BAPI.templates.get(templatename), "log": dologging });		
+		});	
+	},
+	setupinquiryformwidgets: function(options) {
+		$.each($('.bapi-inquiryform'), function (i, item) {
+			var ctl = $(item);		
+			var dologging = (ctl.attr('data-log') == '1');
+			var templatename = ctl.attr('data-templatename');
+			var pkid = ctl.attr('data-propid');
+			var selector = '#' + ctl.attr('id');
+			var hasdates = false;
+			BAPI.log("Creating inquiry form for " + selector);
+			context.createInquiryForm(selector, { "pkid": pkid, "template": BAPI.templates.get(templatename), "hasdatesoninquiryform": hasdates, "log": dologging });		
+		});	
+	},
+	setupavailcalendarwidgets: function(options) {
+		$.each($('.bapi-availcalendar'), function (i, item) {
+			var ctl = $(item);	
+			var pkid = ctl.attr("data-pkid");
+			if (pkid!==null && pkid!='') {
+				BAPI.get(pkid, BAPI.entities.property, { "avail": 1 }, function(data) {
+					var selector = '#' + ctl.attr('id');
+					var options = {};
+					try { options = $.parseJSON(ctl.attr('data-options')); } catch(err) {}
+					BAPI.log("Creating availability calendar for " + selector);	
+					context.createAvailabilityWidget(selector, data, options);
+				});		
+			}
+		});	
+	},
+	applyflexsliders: function(options) {
+		$.each($('.bapi-flexslider'), function (i, item) {
+			var ctl = $(item);		
+			var options = null;
+			try { options = $.parseJSON(ctl.attr('data-options')); } catch(err) {}
+			var selector = '#' + ctl.attr('id');
+			//BAPI.log("Applying flexslider to " + selector);
+			if (selector === null) { BAPI.log("--> Error, options for flexslider could not be parsed correctly.  Check JSON format."); }
+			else { ctl.flexslider(options); }
+		});			
+	}, 
+	applytruncate: function(options) {
+		$.each($('.bapi-truncate'), function (i, item) {
+			var ctl = $(item);		
+			var selector = '#' + ctl.attr('id');
+			var len = parseInt(ctl.attr('data-trunclen'));
+			//BAPI.log("Applying jTruncate to " + selector + ", len=" + len);
+			ctl.jTruncate({ length: len, moreText: BAPI.textdata.more, lessText: BAPI.textdata.less });		
+		});	
+	},
+	setupmapwidgets: function(options) {
+		$.each($('.bapi-map'), function (i, item) {
+			var ctl = $(item);		
+			var selector = '#' + ctl.attr('id');
+			var lsel = ctl.attr('data-refresh-selector');
+			var lselevent = ctl.attr('data-refresh-selector-event');
+			var locsel = ctl.attr('data-loc-selector');
+			if (locsel===null || locsel=='') { locsel = '.map-location'; }
+			var linksel = ctl.attr('data-link-selector');
+			if (linksel===null || linksel=='') { linksel = '.map-item'; }
+			var caticons = null;
+			try { caticons = $.parseJSON(ctl.attr('data-category-icons'));}
+			catch(err) {}
+			BAPI.log("Creating map widget for " + selector + ', location selector=' + locsel + ', link selector=' + linksel);
+			ctl.jMapping({
+				//side_bar_selector: '#map-locations:first',
+				location_selector: locsel,
+				link_selector: linksel,
+				info_window_selector: '.info-html',
+				category_icon_options: caticons,
+				map_config: {
+					navigationControlOptions: {
+					style: google.maps.NavigationControlStyle.DEFAULT,
+					streetViewControl: false
+				  },
+				  mapTypeId: google.maps.MapTypeId.HYBRID,
+				  zoom: 7
+				}
 			});
-		}
-	});	
-	
-	// perform bapi moves
-	$.each($('.bapi-moveme'), function (i, item) {
-		var ctl = $(item);		
-		var fromsel = ctl.attr('data-from');
-		var tosel = ctl.attr('data-to');
-		var method = ctl.attr('data-method');
-		if (method===null || method=='') { method = 'prepend' }
-		BAPI.log("Moving DOM object from " + fromsel + " to " + tosel + ", method=" + method);
-		if (method==="prepend") { $(fromsel).prepend($(tosel)); }
-		else { $(fromsel).appendTo($(tosel)); }		
-	});
-	
-	/*
-	// perform bapi row fixes
-	$.each($('.bapi-rowfix'), function (i, item) {
-		var ctl = $(item);		
-		var trigselector = ctl.attr('data-trigselector');
-		var selector = ctl.attr('data-selector');
-		var wraprows = parseInt(ctl.attr('data-wraprowcount'));
-		var timerint = parseInt(ctl.attr('data-timer'));
-		if (wraprows > 0 && !(timerint > 0)) {
-			$(trigselector).bind("DOMSubtreeModified", function() {
-				var divs = $(selector);
-				if (divs!==null && divs.length > 0) {
-					//BAPI.log("Applying rowfix to " + selector);
-					for(var i = 0; i < divs.length; i+=wraprows) { divs.slice(i, i+wraprows).wrapAll("<div class='row-fluid'></div>"); }
-				}
-			});			
-		}
-		else if (wraprows > 0) {			
-			$(trigselector).bind("DOMSubtreeModified", function() {
-				if ($(".showmore").length > 0) {
-					var divs = $(selector);
-					if (divs!==null && divs.length > 0) {
-						//BAPI.log("Applying rowfix to " + selector + ", triggered by showmore");
-						for(var i = 0; i < divs.length; i+=wraprows) { divs.slice(i, i+wraprows).wrapAll("<div class='row-fluid'></div>"); }					
-					}
-				}
-				if ($(".nomore").length > 0) {
-					var divs = $(selector);
-					if (divs!==null && divs.length > 0) {
-						//BAPI.log("Applying rowfix to " + selector + ", triggered by nomore");
-						for(var i = 0; i < divs.length; i+=wraprows) { divs.slice(i, i+wraprows).wrapAll("<div class='row-fluid'></div>"); }
-					}
-				}
-			});			
-		}
-	});
-	
-	*/
+			
+			if (typeof(lsel)!=="undefined" && lsel!==null && lsel!='') {
+				$(lsel).on(lselevent, function() {
+					BAPI.log("Refresh selector clicked");
+					ctl.jMapping('update');
+				});
+			}
+		});	
+	},
+	applymovemes: function(options) {
+		$.each($('.bapi-moveme'), function (i, item) {
+			var ctl = $(item);		
+			var fromsel = ctl.attr('data-from');
+			var tosel = ctl.attr('data-to');
+			var method = ctl.attr('data-method');
+			if (method===null || method=='') { method = 'prepend' }
+			BAPI.log("Moving DOM object from " + fromsel + " to " + tosel + ", method=" + method);
+			if (method==="prepend") { $(fromsel).prepend($(tosel)); }
+			else { $(fromsel).appendTo($(tosel)); }		
+		});	
+	}
 }
 
 context.rowfix = function(selector, wraprows) {
@@ -325,7 +299,7 @@ context.createSummaryWidget = function (targetid, options, callback) {
 		if (options.log) { BAPI.log("--search result--"); BAPI.log(data); }
 		ids = data.result; 
 		doSearch(targetid, ids, options.entity, options, alldata, callback); 
-	});
+	});	
 }
 
 /* 
@@ -555,8 +529,8 @@ context.createDatePicker = function (targetid, options) {
 	if (typeof (options) === "undefined" || options == null) { options = new Object(); }
 	if (typeof (options.datepicker) === "undefined") { options.datepicker = {}; }
 	if (typeof (options.datepicker.showOn) === "undefined") { options.datepicker.showOn = 'both'; }
-	if (typeof (options.datepicker.buttonImage) === "undefined") { options.datepicker.buttonImage = '//booktplatform.s3.amazonaws.com/App_SharedStyles/images/checkInBtn.png'; }
-	if (typeof (options.datepicker.buttonImageOnly) === "undefined") { options.datepicker.buttonImageOnly = true; }
+	//if (typeof (options.datepicker.buttonImage) === "undefined") { options.datepicker.buttonImage = '//booktplatform.s3.amazonaws.com/App_SharedStyles/images/checkInBtn.png'; }
+	//if (typeof (options.datepicker.buttonImageOnly) === "undefined") { options.datepicker.buttonImageOnly = true; }
 	if (typeof (options.datepicker.numberOfMonths) === "undefined") { options.datepicker.numberOfMonths = 2; }
 	if (typeof (options.datepicker.minDate) === "undefined") { options.datepicker.minDate = BAPI.config().minbookingdays; }
 	if (typeof (options.datepicker.maxDate) === "undefined") { options.datepicker.maxDate = "+" + BAPI.config().maxbookingdays + "D"; }            
@@ -584,12 +558,8 @@ context.createDatePicker = function (targetid, options) {
 				bavail = false;				
 			}
 		});				
-		if (bavail) {
-			return [true, "avail", "Available"];
-		}
-		else {
-			return [false, "unavail", "Unavailable"];
-		}		
+		if (bavail) { return [true, "avail", "Available"]; }
+		else { return [false, "unavail", "Unavailable"]; }		
 	}
 		
 	if (!(typeof (options.checkoutID) === "undefined")) {
@@ -614,7 +584,20 @@ context.createDatePicker = function (targetid, options) {
 			}			
 		}
 	}
-	$(targetid).datepicker(options.datepicker);		
+	
+	var trigger = $('<span>', { "class": "halflings calendar cal-icon-trigger" });
+	trigger.append("<i>");	
+	$(targetid).after(trigger);	
+	
+	options.datepicker.buttonImage = null;
+	options.datepicker.buttonImageOnly = false;	
+	options.datepicker.showOn = 'focus';
+	$(targetid).datepicker(options.datepicker);
+	
+	trigger.click(function() {
+		BAPI.log("datepicker trigger");
+		$(targetid).datepicker("show");
+	});
 }
 
 /*
@@ -827,7 +810,7 @@ function initOptions(options, initpagesize, inittemplatename) {
 }
 
 function doSearch(targetid, ids, entity, options, alldata, callback) {
-	BAPI.log("Showing page: " + options.searchoptions.page);
+	//BAPI.log("Showing page: " + options.searchoptions.page);
 	BAPI.get(ids, entity, options.searchoptions, function (data) {
 		context.loading.hide(); // hide any loading indicator
 		$.each(data.result, function (index, item) { alldata.push(item); }); // update the alldata array
@@ -841,9 +824,8 @@ function doSearch(targetid, ids, entity, options, alldata, callback) {
 		data.config = BAPI.config(); 						
 		data.textdata = options.textdata;
 		var html = Mustache.render(options.template, data); // do the mustache call
-		$(targetid).html(html); // update the target		
-		applyTruncate('.trunc' + data.curpage, 75);
-		
+		$(targetid).html(html); // update the target				
+				
 		// apply rowfix
 		var rowfixselector = $(targetid).attr('data-rowfixselector');
 		var rowfixcount = parseInt($(targetid).attr('data-rowfixcount'));
@@ -853,17 +835,27 @@ function doSearch(targetid, ids, entity, options, alldata, callback) {
 			context.rowfix(rowfixselector, rowfixcount);
 		}
 		
+		if (options.applyfixers==1) {
+			BAPI.log("Applying fixers.");
+			context.inithelpers.applytruncate();	
+			context.inithelpers.applyflexsliders(options);
+		}
+		
 		if (callback) { callback(data); }
 		$(".showmore").on("click", function () { 				
 			options.searchoptions.page++; 
 			$(this).block({ message: "<img src='" + loadingImgUrl + "' />" });
 			doSearch(targetid, ids, entity, options, alldata, callback); 
 		});
+		
+		$('.changeview').on('click', function() {
+			context.loading.show();
+			var newtemplatename = $(this).attr('data-template');
+			options.template = BAPI.templates.get(newtemplatename);
+			BAPI.log("Changing view to use " + newtemplatename);
+			doSearch(targetid, ids, entity, options, alldata, callback);
+		});
 	});
-}
-
-function applyTruncate(sel, len) {
-	$(sel).jTruncate({ length: len, moreText: BAPI.textdata.more, lessText: BAPI.textdata.less });
 }
 
 function getFormData(selname) {
