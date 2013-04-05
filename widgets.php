@@ -297,7 +297,7 @@ class BAPI_HP_Search extends WP_Widget {
 
 		echo $before_widget;
 		if ( ! empty( $title ) )
-			echo $before_title . $title . $after_title;
+			echo $before_title . "<span class='glyphicons search'><i></i>" . $title . "</span>" . $after_title;
 		?>
         <div id="bapi-search" class="bapi-search" data-searchurl="/rentalsearch" data-templatename="tmpl-search-homepage" data-log="0"></div>
         <?php
@@ -320,8 +320,8 @@ class BAPI_HP_Search extends WP_Widget {
 		}
 		?>
 		<p>
-		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
-		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
+			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
 		</p>
 		<?php 
 	}
@@ -347,7 +347,7 @@ class BAPI_Search extends WP_Widget {
 
 		echo $before_widget;
 		if ( ! empty( $title ) )
-			echo $before_title . $title . $after_title;
+			echo $before_title . "<span class='glyphicons search'><i></i>" . $title . "</span>" . $after_title;
 		?>
         <div id="bapi-search" class="bapi-search" data-searchurl="/rentalsearch" data-templatename="tmpl-search-homepage" data-log="0"></div>
         <?php
@@ -379,58 +379,6 @@ class BAPI_Search extends WP_Widget {
 } // class BAPI_Search
 
 /**
- * Adds BAPI_Inquiry widget.
- */
-class BAPI_Inquiry extends WP_Widget {
-
-	public function __construct() {
-		parent::__construct(
-	 		'bapi_inquiry', // Base ID
-			'Insta Inquiry Form', // Name
-			array( 'description' => __( 'Inquiry Form', 'text_domain' ), ) // Args
-		);
-	}
-
-	public function widget( $args, $instance ) {
-		extract( $args );
-		$title = apply_filters( 'widget_title', $instance['title'] );
-
-		echo $before_widget;
-		if ( ! empty( $title ) )
-			echo $before_title . $title . $after_title;
-		?>
-		<div id="bapi-inquiryform" class="bapi-inquiryform" data-propid='<?= get_post_meta(get_the_ID(),'property_id',true) ?>' data-templatename="tmpl-search-homepage" data-log="0"></div>        
-        <?php
-		echo $after_widget;
-	}
-
-	public function update( $new_instance, $old_instance ) {
-		$instance = array();
-		$instance['title'] = strip_tags( $new_instance['title'] );
-
-		return $instance;
-	}
-
-	public function form( $instance ) {
-		if ( isset( $instance[ 'title' ] ) ) {
-			$title = $instance[ 'title' ];
-		}
-		else {
-			$title = __( 'Have a Question?', 'text_domain' );
-		}
-		?>
-		<p>
-		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
-		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
-		</p>
-		<?php 
-	}
-
-} // class BAPI_Inquiry
-
-
-
-/**
  * Adds BAPI_Inquiry_Form widget.
  */
 class BAPI_Inquiry_Form extends WP_Widget {
@@ -451,12 +399,7 @@ class BAPI_Inquiry_Form extends WP_Widget {
 		if ( ! empty( $title ) )
 			//echo $before_title . $title . $after_title;
 		?>
-        <div id="inquiryform"></div>
-        <script>
-		$(document).ready(function () {
-			BAPI.UI.createInquiryForm('#inquiryform', { "hasdatesoninquiryform": false });
-		});
-		</script>
+		<div id="bapi-inquiryform" class="bapi-inquiryform" data-templatename="tmpl-leadrequestform-propertyinquiry" data-log="0"></div>        
         <?php
 		echo $after_widget;
 	}
@@ -508,18 +451,7 @@ class BAPI_Prop_Quote extends WP_Widget {
 		/*if ( ! empty( $title ) )
 			echo $before_title . $title . $after_title;*/
 		?>
-        <style type="text/css">
-			#prop-quote h2{font-size:1.5em;}
-		</style>
-        <div id="prop-quote">
-        	<h2></h2>
-            <h5></h5>
-        </div>
-        <script type="text/javascript">
-			$(document).ready(function () {
-				//Not sure when  BAPI object is present, so for now the step of loading data in to this widget is handled by the property detail page code.
-			});
-        </script>
+        <div id="bapi-rateblock" class="bapi-rateblock" data-templatename="tmpl-search-rateblock" data-log="1"></div>
         <?php
 		echo $after_widget;
 	}
@@ -702,7 +634,7 @@ class BAPI_Specials_Widget extends WP_Widget {
 		$pagesize = esc_textarea($instance['text']);
 		echo $before_widget;
 		if(!empty($title))
-			echo $before_title.$title.$after_title;
+			echo $before_title . "<span class='glyphicons tags'><i></i>" . $title . "</span>" . $after_title;
 		?>
         <div id="specials-widget" class="bapi-summary specials-widget row-fluid" data-log="0" data-templatename="tmpl-specials-vert" data-entity="specials" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }' data-rowfixselector=".specials-results%20%3E%20.span4" data-rowfixcount="3"></div>		
         <?php
@@ -816,7 +748,7 @@ class BAPI_Weather_Widget extends WP_Widget {
 		$woid = esc_textarea($instance['text']);
 		echo $before_widget;
 		if(!empty($title))
-			echo $before_title.$title.$after_title;
+			echo $before_title . "<span class='glyphicons brightness_increase'><i></i>" . $title . "</span>" . $after_title;
 		?>
         <div id="weather-widget"></div>
 		<script>

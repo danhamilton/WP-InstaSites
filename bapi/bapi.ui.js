@@ -51,17 +51,19 @@ context.maps = {};
 context.init = function(options) {
 	BAPI.log("BAPI.UI initializing.");
 	if (typeof(options)==="undefined" || options===null) { options = {} };	
+	context.inithelpers.applyentityadvisor(options);
 	context.inithelpers.setupsummarywidgets(options);
 	context.inithelpers.setupsearchformwidgets(options);
 	context.inithelpers.setupinquiryformwidgets(options);
 	context.inithelpers.setupavailcalendarwidgets(options);
+	context.inithelpers.setuprateblockwidgets(options);
 	context.inithelpers.applyflexsliders(options);
 	context.inithelpers.applytruncate(options);	
 	context.inithelpers.setupmapwidgets(options);	
-	context.inithelpers.applymovemes(options);	
+	context.inithelpers.applymovemes(options);		
 }
 
-context.inithelpers = {
+context.inithelpers = {	
 	setupsummarywidgets: function(options) {
 		$.each($('.bapi-summary'), function (i, item) {
 			var ctl = $(item);		
@@ -85,6 +87,16 @@ context.inithelpers = {
 			var selector = '#' + ctl.attr('id');
 			BAPI.log("Creating search widget for " + selector);
 			context.createSearchWidget(selector, { "searchurl": searchurl, "template": BAPI.templates.get(templatename), "log": dologging });		
+		});	
+	},
+	setuprateblockwidgets: function(options) {
+		$.each($('.bapi-rateblock'), function (i, item) {
+			var ctl = $(item);		
+			var dologging = (ctl.attr('data-log') == '1');
+			var templatename = ctl.attr('data-templatename');
+			var selector = '#' + ctl.attr('id');
+			BAPI.log("Creating rate block widget for " + selector);
+			context.createRateBlockWidget(selector, { "template": BAPI.templates.get(templatename), "log": dologging });		
 		});	
 	},
 	setupinquiryformwidgets: function(options) {
@@ -183,6 +195,18 @@ context.inithelpers = {
 			if (method==="prepend") { $(fromsel).prepend($(tosel)); }
 			else { $(fromsel).appendTo($(tosel)); }		
 		});	
+	},
+	applyentityadvisor: function(options) {
+		// start by clearing
+		
+		$.each($('.bapi-entityadvisor'), function (i, item) {
+			var ctl = $(item);		
+			var pkid = ctl.attr('data-pkid');
+			var entity = ctl.attr('data-entity');
+			BAPI.log("Setting entity advisor to entity=" + entity + ", pkid=" + pkid);
+			BAPI.session().mylisttracker.add(pkid, entity);
+			BAPI.savesession();
+		});
 	}
 }
 
@@ -195,6 +219,41 @@ context.rowfix = function(selector, wraprows) {
 /* 
 	Group: Search Widgets 
 */
+context.createRateBlockWidget = function (targetid, options) {
+	var cur = BAPI.session().mylisttracker.current();
+	if (typeof(cur)==="undefined" || cur===null || !(cur.ID>0) || cur.entity!=BAPI.entities.property) {
+		return;
+	}
+	var searchoptions = { avail: 1 };
+	searchoptions = $.extend({}, searchoptions, BAPI.session().searchparams);
+	
+	BAPI.get(cur.ID, BAPI.entities.property, searchoptions, function (data) {
+		data.site = BAPI.site;
+		data.config = BAPI.config();
+		data.textdata = BAPI.textdata;
+		data.session = BAPI.session();			
+		//if (options.log) { BAPI.log("--createSearchWidget.res--"); BAPI.log(res); }
+		$(targetid).html(Mustache.render(options.template, data));
+		BAPI.log(data);
+		// handle simple get quote
+		$(".bapi-getquote").on("click", function () {
+			var reqdata = saveFormToSession(this, options);
+			context.createRateBlockWidget(targetid, options);			
+		});
+		
+		$(".bapi-booknow").on("click", function() {
+			var reqdata = saveFormToSession(this, options);
+			BAPI.log(BAPI.session().searchparams);
+			var url = "/makebooking?redir=1&keyid=" + cur.ID + 
+						"&checkin=" + 
+						"&checkout=" + 
+						"&adults=" + 
+						"&children=";
+			BAPI.log(url);
+		});
+	});	
+}
+
 context.createSearchWidget = function (targetid, options, doSearchCallback) {
 	options = initOptions(options, 3, 'tmpl-search-rateblock');
 	if (typeof (options.dataselector) === "undefined") { options.dataselector = "quicksearch"; }		
@@ -211,8 +270,6 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 	
 	// see if there is some quote info to display
 	var p = options.property;
-	if (typeof(p) != "undefined" && p != null && p.ContextData != null && p.ContextData.Quote != null)
-		$('.rate-value').text(p.ContextData.Quote.PublicNotes);
 	
 	// load the session to the form
 	var s = BAPI.session().searchparams;
@@ -220,25 +277,7 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 	
 	// setup date pickers
 	context.createDatePicker('.datepickercheckin', { "property": p, "checkoutID": '.datepickercheckout' });
-	context.createDatePicker('.datepickercheckout', { "property": p });	
-	$('.datepickercheckin').watermark(BAPI.textdata["Check-In"]);	
-	$('.datepickercheckout').watermark(BAPI.textdata["Check-Out"]);	
-	
-	// handle simple get quote
-	$(".quicksearch-getquote").on("click", function () {
-		var reqdata = saveFormToSession(this, options);
-		reqdata["pid"] = p.ID;
-		reqdata["quoteonly"] = 1;
-		if (typeof(p)!= "undefined" && p!=null) {
-			$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
-			BAPI.get(p.ID, BAPI.entities.property, reqdata, function (quotedata) {			
-				BAPI.log(quotedata);
-				$('.rate-value').text(quotedata.result[0].ContextData.Quote.PublicNotes);
-				$(targetid).unblock();		
-			});
-		}
-		if (doSearchCallback) { doSearchCallback(); }
-	});
+	context.createDatePicker('.datepickercheckout', { "property": p });		
 	
 	// handle user clicking Search
 	$(".quicksearch-dosearch").on("click", function() {
@@ -267,26 +306,6 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 	});	
 }
 
-/* 
-	Group: Mapping 
-*/
-function staticMapOptions() {
-	this.zoom = 14;
-	this.width = 300;
-	this.height = 450;
-}
-context.createStaticPropertyMap = function (id, prop, options) {
-	if (options == null) {
-		options = new staticMapOptions();
-	}
-	var url = 'https://maps.googleapis.com/maps/api/staticmap?center=' + prop.Latitude + ',' + prop.Longitude + 
-				'&zoom=' + options.zoom + 
-				'&size=' + options.width + 
-				'x' + options.height + 
-				'&maptype=roadmap&markers=color:blue%7Clabel:%20%7C' + prop.Latitude + ',' + prop.Longitude + '&sensor=false';
-	$(id).append($("<img>", { src: url }));
-}
-
 /*
 	Group: Summary
 */
@@ -295,6 +314,11 @@ context.createSummaryWidget = function (targetid, options, callback) {
 	if (options.log) { BAPI.log("--options--"); BAPI.log(options); }
 	var ids=[], alldata=[];
 	context.loading.show();
+	
+	if (options.entity == BAPI.entities.property) {
+		options.searchoptions = $.extend({}, options.searchoptions, BAPI.session().searchparams);
+	}
+	
 	BAPI.search(options.entity, options.searchoptions, function (data) { 
 		if (options.log) { BAPI.log("--search result--"); BAPI.log(data); }
 		ids = data.result; 
@@ -342,13 +366,6 @@ context.createAvailabilityWidget = function (targetid, data, options) {
 	})
 }
 
-context.createRatesWidget = function (targetid, data, options) {
-	options = initOptions(options, 3, 'tmpl-propertyrates-grid');	
-	context.loading.ctlshow(targetid);
-	data.textdata = options.textdata;
-	$(targetid).html(Mustache.render(options.template, data));	
-}
-
 context.createSimilarPropertiesWidget = function (targetid, pid, options) {
 	options = initOptions(options, 3, 'tmpl-featuredproperties');
 	context.loading.ctlshow(targetid);
@@ -383,97 +400,13 @@ context.createFeaturedPropertiesWidget = function (targetid, options) {
 	});
 }
 
-context.createPropertyMap = function (targetid, data, options, infowindowCallback) {
-	//options = initOptions(options, 1, '');
-	var prop = data.result[0];
-	var targetctl = $(targetid);	
-	var map = new google.maps.Map(targetctl[0], { mapTypeId: google.maps.MapTypeId.ROADMAP, streetViewControl: false });
-	context.maps[targetctl.attr('id')] = map;	
-	
-	var infoFunc;
-	if (typeof(infowindowCallback) === "undefined" || infowindowCallback == null)
-		infoFunc = openInfoWindow;
-	else
-		infoFunc = infowindowCallback;
-		
-	var content = document.createElement("DIV");
-	var title = document.createElement("DIV");
-	content.appendChild(title);
-	var streetview = document.createElement("DIV");
-	streetview.style.width = options.width;
-	streetview.style.height = options.height;
-	content.appendChild(streetview);
-	infowindow = new google.maps.InfoWindow({ content: content });
-	var bounds = new google.maps.LatLngBounds();
-	var marker = new google.maps.Marker({
-		position: new google.maps.LatLng(prop.Latitude, prop.Longitude),
-		map: map,
-		title: prop.Headline
-	});			
-	google.maps.event.addListener(marker, "click", function () { 
-		infoFunc(title, marker, prop, 'property') 
-		infowindow.open(map, marker); 
-	});	
-	var bounds = new google.maps.LatLngBounds();
-	bounds.extend(new google.maps.LatLng(prop.Latitude, prop.Longitude));            
-	map.fitBounds(bounds);	
-	
-	// add a marker for all the poi
-	if (options.showpoi && prop.ContextData.Attractions != null) {
-		$.each(prop.ContextData.Attractions, function (index, poi) {
-			var mpoi = new google.maps.Marker({
-				position: new google.maps.LatLng(poi.Latitude, poi.Longitude),
-				map: map,
-				title: poi.Name
-			});
-
-			google.maps.event.addListener(mpoi, "click", function () { 
-				infoFunc(title, mpoi, poi, 'poi'); 
-				infowindow.open(map, marker); 
-			});
-			bounds.extend(new google.maps.LatLng(poi.Latitude, poi.Longitude));
-			map.fitBounds(bounds);
-		});
-	}
-	
-	function openInfoWindow(title, marker, data, type) {
-		title.innerHTML = marker.getTitle();			
-	}
-	return map;
-}
-
-context.createAttractionsGridForProperty = function (targetid, data, options) {
-	options = initOptions(options, 3, 'tmpl-attractionsforproperty-grid');
-	context.loading.ctlshow(targetid);
-	data.textdata = options.textdata;
-	$(targetid).html(Mustache.render(options.template, data));	
-}
-
-/* 
-	Group: Developments 
-*/
-
-/* 
-	Group: Predefined Searches 
-*/
-
-/* 
-	Group: Specials 
-*/
-
-/* 
-	Group: Attractions 
-*/
-
-/*
-	Group: Lead Requests
-*/
 /* Lead Request */
 context.createInquiryForm = function (targetid, options) {	
 	options = initOptions(options, 1, 'tmpl-leadrequestform-propertyinquiry');
 	if (typeof (options.submitbuttonselector) === "undefined" || options.submitbuttonselector == null) { options.submitbuttonselector = 'doleadrequest'; }	
-	if (typeof (options.responseurl) === "undefined" || options.responseurl == null) { options.responseurl = '/bapi/responses/leadrequest' }
+	if (typeof (options.responseurl) === "undefined" || options.responseurl == null) { options.responseurl = '' }
 	
+	if (options.dologging==1) { BAPI.log("--- Inquiry Form---"); BAPI.log("-> Options"); BAPI.log(options); }
 	context.loading.ctlshow(targetid);
 	var data = { "config": options.config, "site": options.site, "textdata": options.textdata }	
 	$(targetid).html(Mustache.render(options.template, data));
@@ -487,15 +420,16 @@ context.createInquiryForm = function (targetid, options) {
 		$.validity.start();
 		$('.required').require();
 		var result = $.validity.end();
-		if (!result.valid) {
-			processing = false; alert('Please fill out all required fields.'); return;
-		}
+		if (!result.valid) { processing = false; alert('Please fill out all required fields.'); return; }
 		
 		$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
 		processing = true; // make sure we do not reenter				
 		
+		var cur = BAPI.session().mylisttracker.current();
+		var pkid = (cur===null) ? null : cur.ID;
 		var selname = $(this).attr('data-field-selector');
 		var reqdata = { "pid": pkid, "checkin": options.checkin, "checkout": options.checkout };
+		reqdata = $.extend({}, reqdata, BAPI.session().searchparams);
 		$('.' + selname).each(function() {
 			var k = $(this).attr('data-field');
 			var v = $(this).val();
@@ -509,15 +443,15 @@ context.createInquiryForm = function (targetid, options) {
 				reqdata[k] = v;
 			}
 		});
+		if (options.dologging==1) { BAPI.log("-> Request Data"); BAPI.log(reqdata); }
 		BAPI.createevent(reqdata, function(edata) {				
-			if (options.responseurl == '') {
+			if (options.dologging==1) { BAPI.log("-> Response Data"); BAPI.log(edata); }
+			if (options.responseurl == '') {				
 				$(targetid).unblock();
 				alert('Your request has been submitted.');
 				$('.' + selname).val('');
 			}
-			else {
-				window.location.href = options.responseurl + '?personid=' + edata.result.Lead.ID;
-			}			
+			else { window.location.href = options.responseurl + '?personid=' + edata.result.Lead.ID; }			
 		});
 	});
 }
@@ -750,22 +684,19 @@ context.createSiteSearchWidget = function (id, options) {
 /* Currency Selector Widget */
 context.createCurrencySelectorWidget = function (id, options) {
 	var c = $(id);
-	var a = $('<a>', { "class": "currencyanchor", "href": "javascript:void(0)" });
-	c.append(a);
-	var ratetxt = BAPI.session().currency + '▼';
-	a.text(ratetxt);
-	$(".currencyanchor").on("click", function () {
-		var template = BAPI.templates.get('tmpl-currencyselector');
-		var html = Mustache.render(template, BAPI.config());
-		$('<div>', {"id": "currencypopup"}).html(html).dialog();
-		$(".changecurrency").on("click", function () {                
-			var newcurrency = $(this).attr('data-currency');
-			$('#currencypopup').dialog("close");
-			BAPI.session().currency = newcurrency;
-			BAPI.savesession();
-			document.location.reload(true);
-		});
-	});        
+	
+	var wrapper = { "session": BAPI.session(), "config": BAPI.config() }
+	var template = BAPI.templates.get('tmpl-currencyselector');
+	var html = Mustache.render(template, wrapper);
+	c.html(html);
+	$('.dropdown-toggle').dropdown();
+	$(".changecurrency").on("click", function () {                
+		var newcurrency = $(this).attr('data-currency');
+		$('#currencypopup').dialog("close");
+		BAPI.session().currency = newcurrency;
+		BAPI.savesession();
+		document.location.reload(true);
+	});
 }
 
 /* Loading indicator */
