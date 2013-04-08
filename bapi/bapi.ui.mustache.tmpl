@@ -355,8 +355,9 @@
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="#tab1" data-toggle="tab">{{textdata.General}}</a></li>
 		<li><a href="#tab2" data-toggle="tab">{{textdata.Details & Availability}}</a></li>
-		<li><a href="#tab3" id="tabs3" data-toggle="tab">{{textdata.Attractions}}</a></li>
-		<li><a href="#tab4" data-toggle="tab">{{textdata.Reviews}}</a></li>
+		<li><a href="#tab3" data-toggle="tab">{{textdata.Amenities}}</a></li>
+		<li><a href="#tab4" id="tabs4" data-toggle="tab">{{textdata.Attractions}}</a></li>
+		<li><a href="#tab5" data-toggle="tab">{{textdata.Reviews}}</a></li>
 	</ul>			
 	<div class="tab-content">
 		<div class="tab-pane active" id="tab1">
@@ -368,25 +369,22 @@
 		</div>
 		<div class="tab-pane" id="tab2">					
 		<div class="row-fluid">
-		<div class="span12 box-sides">
-		<img src="//maps.googleapis.com/maps/api/staticmap?center={{Latitude}},{{Longitude}}&zoom=8&size=500x250&maptype=roadmap&markers=color:blue%7Clabel:%20%7C{{Latitude}},{{Longitude}}&sensor=false" />  
-		<h3>{{textdata.Amenities}}</h3>
-		{{#Amenities2}}
-		<b>{{Key}}</b>
-		<ul>
-		{{#Values}}
-			<li>{{Label}}</li>
-		{{/Values}}
-		</ul>
-		{{/Amenities2}}
+		<div class="span12 box-sides">		
+		<h3>Property Location</h3>
+		<img src="//maps.googleapis.com/maps/api/staticmap?center={{Latitude}},{{Longitude}}&zoom=8&size=750x250&maptype=roadmap&markers=color:blue%7Clabel:%20%7C{{Latitude}},{{Longitude}}&sensor=false" />  
+		<hr/>
 		<h3>{{textdata.Rates & Availability}}</h3>
 		<div id="avail" class="bapi-availcalendar" data-options='{ "availcalendarmonths":{{config.availcalendarmonths}}, "numinrow": 3 }' data-pkid="{{ID}}" />
-		<table class="table table-bordered table-hover">
+		<hr/>
+		<table class="table table-bordered table-striped">
+		<thead>
 		<tr>
 		{{#ContextData.Rates.Keys}}
 			<th>{{.}}</th>
 		{{/ContextData.Rates.Keys}}
 		</tr>
+		</thead>
+		<tbody>
 		{{#ContextData.Rates.Values}}
 		<tr>
 			{{#0}}<td>{{0}}</td>{{/0}}
@@ -412,38 +410,59 @@
 			{{#20}}<td>{{20}}</td>{{/20}}		
 		</tr>
 		{{/ContextData.Rates.Values}}
+		</tbody>
 		</table>
 		</div>
 		</div>
 		</div>
+		
 		<div class="tab-pane" id="tab3">			
 		<div class="row-fluid">
 		<div class="span12 box-sides">
-			<div id="poi-map-prop" class="bapi-map" data-loc-selector='.poi-map-location' data-refresh-selector='#tabs3' data-refresh-selector-event='shown' data-link-selector='.poi-map-item' data-category-icons='{ "starred": { "color": "#E8413A" }, "poi": { "color": "#465AE0" } }'style="width:600px; height:300px; float:left;"></div>
-			<br />
+		<h3>{{textdata.Amenities}}</h3>
+		<ul class="amenities-list clearfix">
+		{{#Amenities2}}
+		{{#Values}}
+			<li>{{Label}}</li>
+		{{/Values}}
+		{{/Amenities2}}
+		</ul>
+		<div class="clearfix"></div>
+		</div>
+		</div>
+		</div>
+		
+		<div class="tab-pane" id="tab4">			
+		<div class="row-fluid">
+		<div class="span12 box-sides">
+			<div id="poi-map-prop" class="bapi-map" data-loc-selector='.poi-map-location' data-refresh-selector='#tabs3' data-refresh-selector-event='shown' data-link-selector='.poi-map-item' data-category-icons='{ "starred": { "color": "#E8413A" }, "poi": { "color": "#465AE0" } }'style="width:100%; height:400px;"></div>
+			
 			<div id="map-side-bar">
-			<table class="table table-bordered table-hover poi-map-locations">
+			<table class="table table-bordered table-striped poi-map-locations">
+			<thead>
 			<tr>
 				<th></th>
-				<th>{{textdata.Attraction}}</th>
+				<th>{{textdata.Attractions}}</th>
 				<th>{{textdata.Category}}</th>
 				<th>{{textdata.Distance}}</th>
 			</tr>
+			</thead>
+			<tbody>
 			<tr>
-				<td class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}}}, "category": "starred"}'>
-					<a href="#" class="poi-map-item">X</a>
+				<td class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}}}, "category": "starred"}'>					
+					<a class="poi-map-item halflings map-marker" href="#"><i></i></a>
 					<div class="info-html">
 						<div class="marker-infowindow"> 
 							<a target="_blank" href="/rentalsearch/house-breckenridge-busroute-580">
 								<div class="prop-image"> <img src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"> </div>
-								<h3 class="prop-title">{{Name}}</h3>
+								<h3 class="prop-title">{{Headline}}</h3>
 							</a>
 							<div class="prop-location">
 								<span>
-								<b>{{textdata.City}}:</b>{{City}} 
-								<b>{{textdata.Beds}}: </b>{{Beds}} 
-								<b>{{textdata.Baths}}: </b>{{Baths}} 
-								<b>{{textdata.Sleeps}}: </b>{{Sleeps}}
+								<b>{{textdata.City}}: </b>{{City}} 
+								{{#Beds}}<b>{{textdata.Beds}}: </b>{{Beds}}&nbsp;{{/Beds}}
+								{{#Baths}}<b>{{textdata.Baths}}: </b>{{Baths}}&nbsp;{{/Baths}}
+								{{#Sleeps}}<b>{{textdata.Sleeps}}: </b>{{Sleeps}}&nbsp;{{/Sleeps}}
 								</span>
 							</div>
 							<div class="portal-rates">
@@ -460,21 +479,21 @@
 				<td>{{Headline}}</td>
 				<td>{{Type}}</td>
 				<td>-</td>  
-			<tr>
+			
 			</tr>
 			{{#ContextData.Attractions}}
 			<tr>
 				<td class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}}}, "category": "poi"}'>
-					<a href="#" class="poi-map-item">X</a>
+					<a class="poi-map-item halflings map-marker" href="#"><i></i></a>
 					<div class="info-html">
 						<div class="marker-infowindow"> 
 							<a target="_blank" href="/rentalsearch/house-breckenridge-busroute-580">
-								<div class="prop-image"> <img src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></div>
+								<div class="prop-image"> <img src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"> </div>
 								<h3 class="prop-title">{{Name}}</h3>
 							</a>
 							<div class="prop-location">
 								<span>
-								<b>{{textdata.Category}}:</b>{{Type}} 
+								<b>{{textdata.Category}}:</b>{{Type}}<br/> 
 								<b>{{textdata.Address}}: </b>{{&Location}} 								
 								</span>
 							</div>
@@ -488,12 +507,13 @@
 				<td>{{ContextData.Distance}}</td>  
 			</tr>
 			{{/ContextData.Attractions}}
+			</tbody>
 			</table>
 			</div>
 		</div>
 		</div>
 		</div>
-		<div class="tab-pane" id="tab4">
+		<div class="tab-pane" id="tab5">
 		<div class="row-fluid">
 		<div class="span12 box-sides">                
 		{{#ContextData.Reviews}}
@@ -508,7 +528,7 @@
 			<li><b>Modified On: </b>{{ModifiedOn}}</li>
 			<li></li>
 			<li><b>Reviewed By: </b>{{ReviewerDisplayName}}</li>
-			<li><b>Reviewed By: </b>{{&Response}}</li>
+			<li><b>Response: </b>{{&Response}}</li>
 		</ul>
 		{{/ContextData.Reviews}}
 		</div>
@@ -1169,32 +1189,46 @@
 {{#result}}
 <div class="module shadow-border">
 <div class="row-fluid">
-<header class="pagination-centered pd">
-	<h1>{{Headline}}</h1>
-	<p>
-		{{Type}}
-		{{#Bedrooms}}&nbsp;/&nbsp;{{textdata.Beds}}&nbsp;{{Bedrooms}}{{/Bedrooms}}
-		{{#Bathrooms}}&nbsp;/&nbsp;{{textdata.Baths}}&nbsp;{{Bathrooms}}{{/Bathrooms}}
-		{{#Sleeps}}&nbsp;/&nbsp;{{textdata.Sleeps}}&nbsp;{{Sleeps}}{{/Sleeps}}
-	</p>
-	<div class="booking-prop-img">
-		<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" caption="{{PrimaryImage.Captions}} />		
-	</div>
-</header>
-<div class="booking-page bordersolid">
-	<article class="span8 booking-form">
-	<div class="form-horizontal pd">
-	<div id="renter"></div>
-	<hr />
-	<div id="creditcard"></div>
-	<article>
-	<aside class="property-info span4 pd">
-	<hr />
-	<div id="stayinfo"></div>
-	</div>	
-	<div id="statement"></div>	
-	</aside>
-	<div class="clearfix"></div>
+	<header class="pagination-centered pd">
+		<h1>{{Headline}}</h1>
+		<p>
+			{{Type}}
+			{{#Bedrooms}}&nbsp;/&nbsp;{{textdata.Beds}}&nbsp;{{Bedrooms}}{{/Bedrooms}}
+			{{#Bathrooms}}&nbsp;/&nbsp;{{textdata.Baths}}&nbsp;{{Bathrooms}}{{/Bathrooms}}
+			{{#Sleeps}}&nbsp;/&nbsp;{{textdata.Sleeps}}&nbsp;{{Sleeps}}{{/Sleeps}}
+		</p>
+		<div class="booking-prop-img">
+			<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" caption="{{PrimaryImage.Captions}}" />		
+		</div>
+	</header>
+	{{^ContextData.Quote.IsValid}}
+	<div class="alert alert-error">{{ContextData.Quote.ValidationMessage}}</div>
+	{{/ContextData.Quote.IsValid}}
+	
+	<div class="booking-page bordersolid">
+		<article class="span8 booking-form">
+		<div class="form-horizontal pd">
+			<div id="renter"></div>
+			<hr />
+			<div id="creditcard"></div>
+		</div>
+		</article>
+		
+		<aside class="property-info span4 pd">
+		<div class="row-fluid">
+			<div class="span12 pd">
+				<div id="stayinfo"></div>		
+				<div id="statement"></div>	
+				<div id="question-support" class="item row-fluid">
+					<span class="glyphicons module headset"><i></i>{{textdata.Have a Question?}}</span>
+					<p>{{textdata.Phone}}: <span class="pull-right">{{site.phone}}</span></p>
+					<p>{{textdata.Email}}: <span class="pull-right">{{site.email}}</span></p>					
+				</div>				
+			</div>
+		</div>
+		</aside>
+		<div class="clearfix"></div>
+	</div>				
 </div>
 </div>
 </div>
@@ -1202,151 +1236,102 @@
 </script>
 
 <script id="tmpl-booking-makebooking-stayinfo" type="text/html">
-<div class="booking-questions">
-	<h4>{{textdata.Have a Question?}}</h4>
-	<p>{{textdata.Call for assistance}}
-	<span class="phonumber-caption">{{textdata.Phone}}:</span>
-	{{site.phone}}
-	</p>
-</div>
-<div class="clear2"></div>
-
-<h3>{{textdata.Booking Details}}</h3>
-<h2>{{#result}}{{Headline}}<small style="font-wieight:normal">{{ManagedBy}}</small>{{/result}}</h2>
-<div class="clear2"></div>
 {{#result}}
-{{^ContextData.Quote.IsValid}}
-<div class="system-msg-error">{{ContextData.Quote.ValidationMessage}}</div>
-{{/ContextData.Quote.IsValid}}
+<span class="glyphicons module notes_2"><i></i>{{textdata.Booking Details}}</span>
+<div id="details" class="item row-fluid">                  
+	<p><span class="glyphicons calendar"><i></i>{{textdata.Check-In}}</span> <span class="pull-right">{{session.searchparams.scheckin}}</span></p>
+	<p><span class="glyphicons calendar"><i></i>{{textdata.Check-Out}}</span> <span class="pull-right">{{session.searchparams.scheckout}}</span></p>
+	<p><span class="glyphicons group"><i></i>{{textdata.Adults}}</span><span class="pull-right">{{session.searchparams.adults.min}}</span></p>
+	<p><span class="glyphicons group"><i></i>{{textdata.Children}}</span><span class="pull-right">{{session.searchparams.children.min}}</span></p>
+	<p><span class="pull-right"><a href="#">Change Info</a></span></p>
+</div>
 {{/result}}
-<dl>
-	<dt>{{textdata.Check-In}}:<b class="val">*</b></dt>
-	<dd><input id="checkin" type="text" class="quicksearch bookingfield required datepickercheckin" data-field="scheckin" value="{{session.searchparams.scheckin}}" /></dd>
-</dl>
-<dl>
-	<dt>{{textdata.Check-Out}}:<b class="val">*</b></dt>
-	<dd><input id="checkout" type="text" class="quicksearch bookingfield required datepickercheckout" data-field="scheckout" value="{{session.searchparams.scheckout}}" /></dd>
-</dl>
-<dl>
-	<dt>{{textdata.Adults}}:<b class="val">*</b></dt>
-	<dd><input type="text" class="quicksearch bookingfield required" data-field="numadults" value="{{#session.searchparams.adults.min}}{{session.searchparams.adults.min}}{{/session.searchparams.adults.min}}{{^session.searchparams.adults.min}}2{{/session.searchparams.adults.min}}" /><dd>
-</dl>
-<dl>
-	<dt>{{textdata.Children}}:</dt>
-	<dd><input type="text" class="quicksearch bookingfield" data-field="numchildren" value="{{session.searchparams.chilren.min}}" /><dd>
-</dl>
-<dl>
-	<dt>{{textdata.Coupon Code}}:</dt>
-	<dd><input type="text" class="quicksearch bookingfield sessionncoupon" data-field="coupon" /><dd>
-</dl>
-<div class="right">		
-	<input type="button" class="quicksearch-getquote" data-field-selector="quicksearch" value="{{textdata.Update}}" />
-</div>
-<div class="clear"></div>
-<div class="right">
-	<small><a href='/' target="_blank">{{textdata.Rental Policy}}</a></small>
-</div>
-<div class="clear"></div>
 </script>
 
 <script id="tmpl-booking-makebooking-statement" type="text/html">
+<hr />
 {{#result}}
 {{#ContextData.Quote.IsValid}}
-{{#ContextData.Quote.Statement.Services.length}}
+{{#ContextData.Quote.Statement}}
+
+{{#Services.length}}
+<div id="charges" class="item row-fluid">
 <h5>{{textdata.Rent}}</h5>
-<table style="width:100%">
-{{/ContextData.Quote.Statement.Services.length}}
-{{#ContextData.Quote.Statement.Services}}
-</tr>
-	<td>{{{Notes}}}</td><td style="text-align:right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</td>
-</tr>
-{{/ContextData.Quote.Statement.Services}}
-{{#ContextData.Quote.Statement.Services.length}}
-<tr>
-	<td>{{textdata.Sub Total}}</td><td style="text-align:right">{{ContextData.Quote.Statement.CurrencySymbol}}{{ContextData.Quote.Statement.ServicesTotal.SValue2}}</td>
-</tr>
-</table>
-<div class="clear2"></div>
-{{/ContextData.Quote.Statement.Services.length}}
+{{/Services.length}}
+{{#Services}}
+<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
+{{/Services}}
+{{#Services.length}}
+</div>
+{{/Services.length}}
+<hr />
 
-{{#ContextData.Quote.Statement.Fees.length}}
+{{#Fees.length}}
+<div id="fees" class="item row-fluid">
 <h5>{{textdata.Fees}}</h5>
-<table style="width:100%">
-{{/ContextData.Quote.Statement.Fees.length}}
-{{#ContextData.Quote.Statement.Fees}}
-</tr>
-	<td>{{{Notes}}}</td><td style="text-align:right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</td>
-</tr>
-{{/ContextData.Quote.Statement.Fees}}
-{{#ContextData.Quote.Statement.Fees.length}}
-</table>
-<div class="clear2"></div>
-{{/ContextData.Quote.Statement.Fees.length}}
+{{/Fees.length}}
+{{#Fees}}
+<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
+{{/Fees}}
+{{#Fees.length}}
+</div>
+{{/Fees.length}}
+<hr />
 
-{{#ContextData.Quote.Statement.OptionalFees.length}}
-<h5>{{textdata.Optional Fees & Services}}</h5>
-<table style="width:100%">
-{{/ContextData.Quote.Statement.OptionalFees.length}}
-{{#ContextData.Quote.Statement.OptionalFees}}
-</tr>	
-	<td>{{{Notes}}}</td>	
-	<td>
-		{{#BoolField}}<input type="checkbox" />{{/BoolField}}
-		{{^BoolField}}<input type="text" value="{{Quantity}}" />{{/BoolField}} 
-		&nbsp;@&nbsp;{{CurrencySymbol}}{{Amount}}&nbsp;
-	</td>
-	<td style="text-align:right">	
-	{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}
-	</td>
-</tr>
-{{/ContextData.Quote.Statement.OptionalFees}}
-{{#ContextData.Quote.Statement.OptionalFees.length}}
-</table>
-<div class="clear2"></div>
-{{/ContextData.Quote.Statement.OptionalFees.length}}
-
-{{#ContextData.Quote.Statement.Taxes.length}}
+{{#Taxes.length}}
+<div id="taxes" class="item row-fluid">
 <h5>{{textdata.Taxes}}</h5>
-<table style="width:100%">
-{{/ContextData.Quote.Statement.Taxes.length}}
-{{#ContextData.Quote.Statement.Taxes}}
-</tr>
-	<td>{{{Notes}}}</td><td style="text-align:right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</td>
-</tr>
-{{/ContextData.Quote.Statement.Taxes}}
-{{#ContextData.Quote.Statement.Taxes.length}}
-</table>
-<div class="clear2"></div>
-{{/ContextData.Quote.Statement.Taxes.length}}
+{{/Taxes.length}}
+{{#Taxes}}
+<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
+{{/Taxes}}
+{{#Taxes.length}}
+</div>
+{{/Taxes.length}}
+<hr />
 
-{{#ContextData.Quote.Statement.Deposits.length}}
-<h5>{{textdata.Deposits}}</h5>
-<table style="width:100%">
-{{/ContextData.Quote.Statement.Deposits.length}}
-{{#ContextData.Quote.Statement.Deposits}}
-</tr>
-	<td>{{{Notes}}}</td><td style="text-align:right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</td>
-</tr>
-{{/ContextData.Quote.Statement.Deposits}}
-{{#ContextData.Quote.Statement.Deposits.length}}
-</table>
-<div class="clear2"></div>
-{{/ContextData.Quote.Statement.Deposits.length}}
+{{#OptionalFees.length}}
+<div id="ofees" class="item row-fluid">
+<h5>{{textdata.Optional Fees & Services}}</h5>
+{{/OptionalFees.length}}
+{{#OptionalFees}}
+	<p>
+	{{#BoolField}}<input type="checkbox" />{{/BoolField}}
+	{{^BoolField}}<input type="text" value="{{Quantity}}" />{{/BoolField}} 
+	{{{Notes}}}
+	<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span>
+	</p>
+{{/OptionalFees}}
+{{#OptionalFees.length}}
+</div>
+{{/OptionalFees.length}}
+<hr />
 
-{{#ContextData.Quote.Statement.Discounts.length}}
-<h5>{{textdata.Discounts}}</h5>
-<table style="width:100%">
-{{/ContextData.Quote.Statement.Discounts.length}}
-{{#ContextData.Quote.Statement.Discounts}}
-</tr>
-	<td>{{{Notes}}}</td><td style="text-align:right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</td>
-</tr>
-{{/ContextData.Quote.Statement.Discounts}}
-{{#ContextData.Quote.Statement.Discounts.length}}
-</table>
-<div class="clear2"></div>
-{{/ContextData.Quote.Statement.Discounts.length}}
+<div id="taxes" class="item row-fluid">
+{{#Discounts}}
+<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
+{{/Discounts}}
+{{#Discounts.length}}
+</div>
+{{/Discounts.length}}
+<label>
+	<input type="text" value="" placeholder="{{textdata.Coupon Code}}" class="span6" />
+	<small><a href"#">Apply</a></small>
+	<span class="pull-right">----</span>
+</label>
+</div>
+<div id="msgs" class="item row-fluid">
+	<div class="msg-yellow">
+	  <p><i class="halflings-icon star"></i> <strong>{{textdata.Total}}</strong><span class="pull-right"><strong>$6,622.38</strong></span></p>
+	  <p><strong>{{textdata.Amount to be charged now}}:</strong><span class="pull-right">{{TotalDueNow.CurrencySymbol}} {{TotalDueNow.SValue}} {{TotalDueNow.Currency}}</span></p>
+	  <p><strong>&nbsp;</strong><span class="pull-right"><small>{{TotalDueNow.LocalCurrencySymbol}} {{TotalDueNow.LocalSValue}} {{TotalDueNow.LocalCurrency}}</small></span></p>
+	</div>
+	{{#ContextData.Quote.PaymentTerms}}
+	<div class="msg-gray msg-center"><p class="text-center">{{&ContextData.Quote.PaymentTerms}}</p></div>
+	{{/ContextData.Quote.PaymentTerms}}
+</div>
 
+{{/ContextData.Quote.Statement}}
 {{/ContextData.Quote.IsValid}}
 {{/result}}
 </script>

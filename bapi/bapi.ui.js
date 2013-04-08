@@ -564,13 +564,13 @@ context.createMakeBookingWidget = function (targetid, options) {
 	var u = $.url(window.location.href);
 	var redir = u.param("redir");
 	var propid = u.param('keyid');
+	var sp = BAPI.session().searchparams;
 	if (redir == "1") {
 		// first time getting to the page, get values from querystring, svae to session and then redirect
 		var checkin = $.url(window.location.href).param('checkin');
 		var checkout = $.url(window.location.href).param('checkout');
 		var adults = $.url(window.location.href).param('adults');
-		var children = $.url(window.location.href).param('children');
-		var sp = BAPI.session().searchparams;
+		var children = $.url(window.location.href).param('children');		
 		var df = BAPI.defaultOptions.dateFormatBAPI;
 		var dfParse = BAPI.defaultOptions.dateFormatMoment();
 		if (typeof (checkin) !== "undefined" && checkin !== null) {  
@@ -580,13 +580,19 @@ context.createMakeBookingWidget = function (targetid, options) {
 			try { sp.checkout = moment(checkout, df).format(df); sp.scheckout=moment(sp.checkout, df).format(dfParse); } catch(err){}
 		}
 		if (typeof (adults) !== "undefined" && adults != null) { sp.adults.min = adults; }
-		if (typeof (children) !== "undefined" && children != null) { sp.children.min = children; }
+		if (typeof (children) !== "undefined" && children != null) { sp.children.min = children; }		
 		BAPI.savesession(); // save the session
 		window.location.href = window.location.pathname + '?keyid=' + propid; // redirect to the same page minus the qs params
 		return;
 	}
-	
+		
 	// render the master form layout
+	
+	// cleanup session
+	if (sp.adults.min===null || sp.adults.min=='null') { sp.adults.min = 2; }
+	if (sp.children.min===null || sp.children.min=='null') { sp.children.min = 0; }	
+	BAPI.log(sp);
+	
 	
 	var propoptions = { avail: 1, seo: 1 }
 	propoptions = $.extend({}, propoptions, BAPI.session().searchparams);
