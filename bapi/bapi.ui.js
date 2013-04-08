@@ -71,11 +71,20 @@ context.inithelpers = {
 			var entity = ctl.attr('data-entity');
 			var templatename = ctl.attr('data-templatename');
 			var applyfixers = parseInt(ctl.attr('data-applyfixers'));
+			var usemylist = parseInt(ctl.attr('data-usemylist'));
 			var searchoptions = null;
 			try { searchoptions = $.parseJSON(ctl.attr('data-searchoptions')); } catch(err) {}
 			var selector = '#' + ctl.attr('id');
 			BAPI.log("Creating summary widget for " + selector);
-			context.createSummaryWidget(selector, { "searchoptions": searchoptions, "entity": entity, "template": BAPI.templates.get(templatename), "log": dologging, "applyfixers": applyfixers });
+			context.createSummaryWidget(selector, { 
+					"searchoptions": searchoptions, 
+					"entity": entity, 
+					"template": BAPI.templates.get(templatename), 
+					"log": dologging, 
+					"applyfixers": applyfixers,
+					"usemylist": usemylist
+					}
+			);
 		});
 	},
 	setupsearchformwidgets: function(options) {
@@ -320,11 +329,20 @@ context.createSummaryWidget = function (targetid, options, callback) {
 		options.searchoptions = $.extend({}, options.searchoptions, BAPI.session().searchparams);
 	}
 	
-	BAPI.search(options.entity, options.searchoptions, function (data) { 
-		if (options.log) { BAPI.log("--search result--"); BAPI.log(data); }
-		ids = data.result; 
+	if (options.usemylist) {
+		ids = [];
+		$.each(BAPI.session().mylist, function (index, item) {
+			ids.push(parseInt(item.ID));			
+		});
 		doSearch(targetid, ids, options.entity, options, alldata, callback); 
-	});	
+	}
+	else {
+		BAPI.search(options.entity, options.searchoptions, function (data) { 
+			if (options.log) { BAPI.log("--search result--"); BAPI.log(data); }
+			ids = data.result; 
+			doSearch(targetid, ids, options.entity, options, alldata, callback); 
+		});	
+	}
 }
 
 /* 
@@ -569,8 +587,6 @@ context.createMakeBookingWidget = function (targetid, options) {
 	}
 	
 	// render the master form layout
-	var masterdata = { "site": BAPI.site, "config": BAPI.config(), "textdata": BAPI.textdata, "session": BAPI.session() };
-	$(targetid).html(Mustache.render(options.mastertemplate, masterdata));
 	
 	var propoptions = { avail: 1, seo: 1 }
 	propoptions = $.extend({}, propoptions, BAPI.session().searchparams);
@@ -578,11 +594,13 @@ context.createMakeBookingWidget = function (targetid, options) {
 		data.site = BAPI.site;
 		data.config = BAPI.config();
 		data.textdata = BAPI.textdata;	
-		data.session = BAPI.session();
+		data.session = BAPI.session();		
+		$(targetid).html(Mustache.render(options.mastertemplate, data));	
 		$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, data));
 		$(options.targetids.statement).html(Mustache.render(options.templates.statement, data));
 		$(options.targetids.renter).html(Mustache.render(options.templates.renter, data));
 		$(options.targetids.creditcard).html(Mustache.render(options.templates.creditcard, data));
+		BAPI.log(data);
 		$('.specialform').hide(); // hide the spam control
 		
 		// setup date pickers

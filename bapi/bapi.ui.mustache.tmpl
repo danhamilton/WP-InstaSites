@@ -1166,19 +1166,39 @@
 	Group: Booking
 */
 <script id="tmpl-booking-makebooking-masterlayout" type="text/html">
-<div style="width:400px" class="left">
-<div id="stayinfo"></div>
-<div id="statement"></div>
+{{#result}}
+<div class="module shadow-border">
+<div class="row-fluid">
+<header class="pagination-centered pd">
+	<h1>{{Headline}}</h1>
+	<p>
+		{{Type}}
+		{{#Bedrooms}}&nbsp;/&nbsp;{{textdata.Beds}}&nbsp;{{Bedrooms}}{{/Bedrooms}}
+		{{#Bathrooms}}&nbsp;/&nbsp;{{textdata.Baths}}&nbsp;{{Bathrooms}}{{/Bathrooms}}
+		{{#Sleeps}}&nbsp;/&nbsp;{{textdata.Sleeps}}&nbsp;{{Sleeps}}{{/Sleeps}}
+	</p>
+	<div class="booking-prop-img">
+		<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" caption="{{PrimaryImage.Captions}} />		
+	</div>
+</header>
+<div class="booking-page bordersolid">
+	<article class="span8 booking-form">
+	<div class="form-horizontal pd">
+	<div id="renter"></div>
+	<hr />
+	<div id="creditcard"></div>
+	<article>
+	<aside class="property-info span4 pd">
+	<hr />
+	<div id="stayinfo"></div>
+	</div>	
+	<div id="statement"></div>	
+	</aside>
+	<div class="clearfix"></div>
 </div>
-
-<div style="width:50px" class="left">
-    &nbsp;
 </div>
-
-<div style="width:400px" class="left">
-<div id="renter"></div>
-<div id="creditcard"></div>
 </div>
+{{/result}}
 </script>
 
 <script id="tmpl-booking-makebooking-stayinfo" type="text/html">
@@ -1329,54 +1349,166 @@
 
 {{/ContextData.Quote.IsValid}}
 {{/result}}
-
-{{#config.rentalpolicysummary}}
-<div class="booking-questions">
-	<div class="ratedisclaimer-headline"><b>{{textdata.Booking Disclaimer}}</div>
-	<div class="ratedisclaimer">
-		<small>{{config.rentalpolicysummary}}</small>
-	</div>
-</div>
-{{/config.rentalpolicysummary}}
 </script>
 
 <script id="tmpl-booking-makebooking-renter" type="text/html">
-<div class="clear2"></div>
-<h3>{{textdata.Guest Information}}</h3>
-{{textdata.First Name}}:<b class="val">*</b> <input type="text" class="bookingfield required" data-field="renterfirstname" size="25" /> <br/>
-{{textdata.Last Name}}:<b class="val">*</b> <input type="text" class="bookingfield required" data-field="renterlastname" size="25" /> <br/>
-{{textdata.Email}}:<b class="val">*</b> <input type="text" class="bookingfield required" data-field="renteremail" size="25" /> <br/>
-{{textdata.Phone}}:<b class="val">*</b> <input type="text" class="bookingfield required" data-field="renterphone" size="25" /> <br/>
-{{textdata.How Did You Hear About Us?}}:  <input type="text" class="bookingfield" data-field="leadsource" size="25" /> <br/>
-<div class="clear2"></div>
-
-<h3>{{textdata.Special Requests}}</h3>
-<textarea rows="3" cols="20" class="bookingfield" data-field="publicnotes" />
-<div class="clear2"></div>
+<legend>1. {{textdata.Guest Information}}</legend>
+<div class="control-group">
+	<label class="control-label" for="renterfirstname">{{textdata.First Name}}:*</label>
+	<div class="controls">
+		<input type="text" id="renterfirstname" class="span10 bookingfield required" data-field="renterfirstname" required />
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label" for="renterlastname">{{textdata.Last Name}}:*</label>
+	<div class="controls">
+		<input type="text" id="renterlastname" class="span10 bookingfield required" data-field="renterlastname" required />
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label" for="renteremail">{{textdata.Email}}:*</label>
+	<div class="controls">
+		<input type="text" id="renteremail" class="span10 bookingfield required" data-field="renteremail" required />
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label" for="renterphone">{{textdata.Phone}}:*</label>
+	<div class="controls">
+		<input type="text" id="renterphone" class="span10 bookingfield required" data-field="renterphone" required />
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label" for="renterls">{{config.leadsources.prompt}}:</label>
+	<div class="controls controls-row">
+		<div class="btn-group span10">
+		<select id="renterls" class="span12 bookingfield" data-field="leadsource">
+			<option value="">-{{config.leadsources.prompt}}-</option>		
+			{{#config.leadsources.values}}<option value="{{Data}}">{{Label}}</option>{{/config.leadsources.values}}
+		</select>					
+		</div>
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label" for="publicnotes">{{textdata.Special Requests}}:</label>
+	<div class="controls">
+		<textarea id="publicnotes" rows="3" class="span10 bookingfield" data-field="publicnotes" />
+	</div>
+</div>
 </script>
 
 <script id="tmpl-booking-makebooking-creditcard" type="text/html">
-<h3>{{textdata.Billing Address}}</h3>
-{{textdata.Address}}:<b class="val">*</b> <input type="text" class="bookingfield" data-field="billingaddress" size="25" /> <br/>
-{{textdata.Addtl Address}}: <input type="text" class="bookingfield" data-field="billingaddress2" size="25" /> <br/>
-{{textdata.City}}: <input type="text" class="bookingfield" data-field="billingcity" size="25" /> <br/>
-{{textdata.Postal Code}}:<b class="val">*</b> <input type="text" class="bookingfield" data-field="billingpostalcode" size="25" /> <br/>
-{{textdata.Country}}: <input type="text" class="bookingfield" data-field="billingcountry" size="25" /> <br/>
-<div class="clear2"></div>
-
-<h3>{{textdata.Credit Card Information}}</h3>
-{{textdata.Name on Card}}:<b class="val">*</b> <input type="text" class="bookingfield required" data-field="ccnameoncard" size="25" /> <br/>
-{{textdata.Card Type}}: <input type="text" class="bookingfield" data-field="cctype" size="25" /> <br/>
-{{textdata.Card Number}}:<b class="val">*</b> <input type="text" class="bookingfield required ccnum" data-field="cccardnum" size="25" /> <br/>
-{{textdata.Expiration}}&nbsp;<small>MM/YY</small>:<b class="val">*</b> <input type="text" class="bookingfield required ccexpiry" data-field="ccexpiry" size="25" /> <br/>
-{{textdata.Security Code}}:<b class="val">*</b>  <input type="text" class="bookingfield required cccvv" data-field="cccvv" size="25" /> <br/>
-<div id="specialform" class="specialform">
-Special:<input type="text" autocomplete="off" id="txtSpecial" class="bookingfield" data-field="special" />
+<legend>
+	<div class="control controls-row">
+		<span class="span8">2. {{textdata.Credit Card Information}}</span>
+		<div class="credit-icon span4">
+			<img src="/wp-content/themes/instatheme04/images/credit-cards.jpg" alt="credit cards" />
+		</div>
+	</div>
+</legend>
+<div class="control-group">
+	<label class="control-label" for="noc">{{textdata.Name on Card}}:</label>
+	<div class="controls">
+		<input type="text" id="noc" class="span10 bookingfield required" data-field="ccnameoncard" required />
+	</div>
 </div>
-		
-{{textdata.I have read and accept the terms and conditions}}&nbsp;<a target="_blank" href="/book/rentalpolicy">{{textdata.Review Now}}</a>
-<br/>
-<a href="javascript:void(0);" class="makebooking" data-field-selector="bookingfield">{{textdata.Reserve Now}}</a>
+<div class="control-group">
+	<label class="control-label" for="ccnum">{{textdata.Card Number}}:</label>
+	<div class="controls">
+		<input type="text" id="ccnum" class="span10 bookingfield required" data-field="cccardnum" required />
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label inline" for="ccexpr">{{textdata.Expiration}}:</label>
+	<div class="controls controls-row">
+		<select class="span5 bookingfield required" required>
+			<option>{{textdata.Month}}</option>
+		</select>
+		<select class="span5 bookingfield required" required>
+			<option>{{textdata.Year}}</option>
+		</select>
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label" for="cccvv">{{textdata.Security Code}}:</label>
+	<div class="controls controls-row">
+		<input type="text" id="cccvv" class="span5 bookingfield required" data-field="cccvv" required />
+	</div>
+</div>
+<hr />
+
+<legend>3. {{textdata.Billing Address}}</legend>
+<div class="control-group">
+	<label class="control-label" for="cccvv">{{textdata.Country}}:</label>
+	<div class="controls">
+		<select class="span5 bookingfield required" required>
+			<option>{{textdata.Country}}</option>
+		</select>		
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label" for="billingaddress">{{textdata.Street Line 1}}:</label>
+	<div class="controls">
+		<input type="text" id="billingaddress" class="span10 bookingfield required" data-field="billingaddress" required />
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label" for="billingaddress2">{{textdata.Street Line 2}}:</label>
+	<div class="controls">
+		<input type="text" id="billingaddress2" class="span10 bookingfield" data-field="billingaddress2" />
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label" for="billingcity">{{textdata.City}}:</label>
+	<div class="controls">
+		<input type="text" id="billingcity" class="span10 bookingfield" data-field="billingcity" />
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label inline" for="billingstate">{{textdata.State}}:</label>
+	<div class="controls controls-row">
+		<input type="text" id="billingstate" class="span4 bookingfield" data-field="billingstate" />
+		<label class="control-label span3 row-fluid">{{textdata.Postal Code}}:</label>
+		<input type="text" class="span3 row-fluid" data-field="billingpostalcode" />
+	</div>
+</div>
+<hr />
+
+<legend>4. Accept Terms and Conditions</legend>
+<div class="control-group">
+	<p>{{config.rentalpolicysummary}}</p>
+	<div class="controls-rows">
+		<label class="checkbox span6">	
+			<small>
+			<em>
+				<input type="checkbox">{{textdata.I have read and accept the terms and conditions}}:</input>&nbsp;
+				<a target="_blank" href="/rentalpolicy">{{textdata.Rental Policy}}</a>&nbsp;
+				<a target="_blank" href="/termsofuse">{{textdata.Terms of Service}}</a>
+			</em>
+			</small>		
+		</label>
+	</div>
+</div>
+<div class="control-group">
+	<div class="controls-rows">
+		<div class="btn-book-header span6">
+			<span class="line1">
+				<a href="javascript:void(0);" class="btn btn-large btn-primary span12 makebooking" data-field-selector="bookingfield">{{textdata.Reserve Now}}</a>
+			</span>
+			<span class="line2">
+				This page is secure - <a href="#">check here</a>
+			</span>
+		</div>
+		{{#result}}
+		<div class="amount-bk span4">
+			<h5>Amount to be charged now:</h5>
+			{{#ContextData.Quote.Statement}}
+			<h3>{{TotalDueNow.CurrencySymbol}}&nbsp;{{TotalDueNow.SValue}}&nbsp;{{TotalDueNow.Currency}}</h3>
+			{{/ContextData.Quote.Statement}}
+		</div>
+		{{/result}}
+	</div>
+</div>
+
 </script>
 
 <script id="tmpl-booking-rentalpolicy" type="text/html">
