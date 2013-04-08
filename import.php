@@ -6,7 +6,7 @@
 	$pkid = $_POST['pkid'];
 	$primaryimage = $_POST['PrimaryImage'];
 	$content = $_POST['content'];
-	$content = utf8_encode($content);	
+	$content = $content; //utf8_encode($content);	
 	$bookingurl = $_POST['BookingURL'];
 	$detailurl =  $_POST['DetailURL'];
 	$keyword = $_POST['Keyword'];

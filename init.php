@@ -49,7 +49,7 @@
 			//if ($post['post_title'] == "Contact Us") {
 				//print_r($wrapper);
 			//}
-			$post['post_content'] = utf8_encode($string);				
+			$post['post_content'] = $string; //utf8_encode($string);				
 		}
 		$post['post_type'] = 'page';			
 				

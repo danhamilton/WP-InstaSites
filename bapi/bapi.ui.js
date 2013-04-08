@@ -245,11 +245,12 @@ context.createRateBlockWidget = function (targetid, options) {
 			var reqdata = saveFormToSession(this, options);
 			BAPI.log(BAPI.session().searchparams);
 			var url = "/makebooking?redir=1&keyid=" + cur.ID + 
-						"&checkin=" + 
-						"&checkout=" + 
-						"&adults=" + 
-						"&children=";
-			BAPI.log(url);
+						"&checkin=" + BAPI.session().searchparams.checkin +
+						"&checkout=" + BAPI.session().searchparams.checkout +
+						"&adults=" + BAPI.session().searchparams.adults.min +
+						"&children=" + BAPI.session().searchparams.children.min +
+						"&rooms=" + BAPI.session().searchparams.rooms.min;
+			window.location.href = url;
 		});
 	});	
 }

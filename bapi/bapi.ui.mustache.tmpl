@@ -469,7 +469,7 @@
 					<div class="info-html">
 						<div class="marker-infowindow"> 
 							<a target="_blank" href="/rentalsearch/house-breckenridge-busroute-580">
-								<div class="prop-image"> <img src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"> </div>
+								<div class="prop-image"> <img src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></div>
 								<h3 class="prop-title">{{Name}}</h3>
 							</a>
 							<div class="prop-location">
@@ -520,6 +520,8 @@
 </section>
 {{/result}}
 <span class="end"></span>
+<div id="bapi-rateblock" class="bapi-rateblock" data-templatename="tmpl-search-rateblock" data-log="1"></div>
+<div class="bapi-moveme" data-from="#bapi-rateblock" data-to=".detail-overview-target" data-method="append">
 </script>
 
 <script id="tmpl-propertyrates-grid" type="text/html">
@@ -933,60 +935,62 @@
 {{#result}}
 <div class="bapi-entityadvisor" data-pkid="{{ID}}" data-entity="specials"></div>
 <section class="row-fluid">
-	<div class="span12 item-snapshot module shadow-border">        
-		<div class="top-block">
-		<div class="row-fluid">
-			<div class="span12 box-sides">
-			<h2 class="title">{{Name}}</h2>                
-			</div>
-		  </div>  
-		</div>		
-		<div class="item-slideshow">
-			<div id="slider" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "sync": "#carousel" }'>
-			  <ul class="slides">
-			  {{^Images}}
-				<li><img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" />
-				{{#PrimaryImage.Caption}}
-				<p class="flex-caption">{{PrimaryImage.Caption}}</p></li>
-				{{/PrimaryImage.Caption}}
-			  {{/Images}}
-			  {{#Images}}
-				<li><img alt="{{Caption}}" src="{{&MediumURL}}" />
-				{{#Caption}}
-				<p class="flex-caption">{{Caption}}</p></li>
-				{{/Caption}}
-			  {{/Images}}                    
-			  </ul>
-			</div>
-			<div id="carousel" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "itemWidth": 50, "itemMargin": 10, "asNavFor": "#slider" }'>
-			  <ul class="slides">
-			  {{^Images}}
-				<li><img alt="" src="{{&PrimaryImage.ThumbnailURL}}" /></li>	
-			  {{/Images}}
-			  {{#Images}}
-				<li><img alt="" src="{{&ThumbnailURL}}" /></li>
-			  {{/Images}}                   
-			  </ul>
-			</div>				
-		</div>	
-	</div>
-</section>
+        <div class="span12 item-snapshot module shadow-border">        
+            <div class="top-block">
+            <div class="row-fluid">
+                <div class="span12 box-sides">
+                <h2 class="title">{{Name}}</h2>                
+                </div>
+              </div>  
+            </div>            
+            <div class="item-slideshow">
+                <div id="slider" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "sync": "#carousel" }'>
+                  <ul class="slides">
+				  {{^Images}}
+				  	<li><img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" />
+					{{#PrimaryImage.Caption}}
+					<p class="flex-caption">{{PrimaryImage.Caption}}</p></li>
+					{{/PrimaryImage.Caption}}
+				  {{/Images}}
+				  {{#Images}}
+                    <li><img alt="{{Caption}}" src="{{&MediumURL}}" />
+					{{#Caption}}
+					<p class="flex-caption">{{Caption}}</p></li>
+					{{/Caption}}
+                  {{/Images}}                    
+                  </ul>
+                </div>
+                <div id="carousel" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "itemWidth": 50, "itemMargin": 10, "asNavFor": "#slider" }'>
+                  <ul class="slides">
+				  {{^Images}}
+				  	<li><img alt="" src="{{&PrimaryImage.ThumbnailURL}}" /></li>	
+				  {{/Images}}
+                  {{#Images}}
+                    <li><img alt="" src="{{&ThumbnailURL}}" /></li>
+                  {{/Images}}                   
+                  </ul>
+                </div>                    
+            </div>        
+        </div>
+    </section>	
 <div class="specials-contact-details module shadow">
 <div class="pd">
 <h3>{{textdata.Details}}</h3>
-<hr/>
-    <dl>
-	{{#Type}}
-    <dt>{{textdata.Effective Date}}</dt><dd>{{EffectiveDate.LongDate}} - {{ExpirationDate.LongDate}}</dd>
-	{{/Type}}
-	{{#CouponCode}}
-	<dt>{{textdata.Coupon Code}}</dt><dd>{{CouponCode}} <button class="btn btn-mini btn-success" type="button">ACTIVATE</button></dd>
-	{{/CouponCode}}
-	<dt>{{textdata.Check-In}}</dt><dd><input type="text" placeholder="{{textdata.Check-In}}" class="span12"></dd>
-	<dt>{{textdata.Check-Out}}</dt><dd><input type="text" placeholder="{{textdata.Check-Out}}" class="span12"></dd>
-	{{#Description}}
-	<dt>{{textdata.Description}}</dt><dd>{{&Description}}</dd>
-	{{/Description}}	
+	<hr/>
+	<dl>
+	{{#EffectiveDate.LongDate}}<dt>{{textdata.Effective Date}}</dt><dd>{{EffectiveDate.LongDate}} - {{ExpirationDate.LongDate}}</dd>{{/EffectiveDate.LongDate}}
+	{{#CouponCode}}<dt>{{textdata.Coupon Code}}</dt><dd>{{CouponCode}}</dd>{{/CouponCode}}
+	</dl>
+	<hr/>
+	<h5>Select your desired travel dates:</h5>
+	<div>
+	<input type="text" placeholder="{{textdata.Check-In}}" class="span6"><input type="text" placeholder="{{textdata.Check-Out}}" class="span6">
+	</div>
+	<div class="clearfix"></div>
+	<button class="btn btn-success btn-block" type="button">Activate this Special</button>
+	<hr/>
+	<dl>
+	{{#Description}}<dt>{{textdata.Description}}</dt><dd>{{&Description}}</dd>{{/Description}}
 	</dl>
 </div>
 </div>
