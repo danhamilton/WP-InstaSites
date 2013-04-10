@@ -84,6 +84,39 @@ $(window).load(function() {
 	}
 });
 
+
+/* Data Manager (only defined for properties right now) */
+var bapidata = { 
+	"property": { } 
+};
+context.datamanager = {
+	get: function(entity, pkid, callback) {		
+		var obj = bapidata[entity][pkid];
+		if (typeof(obj)!=="undefined" && obj!==null) { 
+			if (typeof(callback)!=="undefined" && callback!==null) {
+				callback(bapidata[entity][pkid]);
+			}
+			return obj; 
+		}
+		BAPI.get(pkid, entity, context.datamanager.getparams(entity), function(data) {
+			bapidata[entity][pkid] = data.result[0];	
+			if (typeof(callback)!=="undefined" && callback!==null) {
+				callback(bapidata[entity][pkid]);
+			}
+		});
+	},
+	clear: function(entity, pkid) {
+		bapidata[entity][pkid] = null;
+	},
+	getparams: function(entity) {
+		return $.extend({}, { avail: 1, seo: 1 }, context.datamanager.getbookingcontext());		
+	},
+	getbookingcontext: function() {
+		var sp = BAPI.session().searchparams;
+		return { "checkin": sp.checkin, "checkout": sp.checkout, "los": sp.los, "adults": sp.adults, "children": sp.children, "rooms": sp.rooms }
+	}
+}
+
 /* Session */
 function PersonProfile() {
 	this.visitorid = null;

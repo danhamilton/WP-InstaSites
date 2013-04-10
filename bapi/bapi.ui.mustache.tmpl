@@ -133,11 +133,11 @@
 	<div class="row-fluid">
 		<div class="span6">
 		<label>{{textdata.Check-In}}</label>
-		<input class="span12 quicksearch datepickercheckin" type="text" placeholder="{{session.searchparams.scheckin}}" data-field="checkin" required>
+		<input class="span12 quicksearch datepickercheckin" type="text" placeholder="{{textdata.Check-In}}" value="{{session.searchparams.scheckin}}" data-field="checkin" required>
 		</div>
       <div class="span6">
 	  <label>{{textdata.Check-Out}}</label>
-      <input class="span12 quicksearch datepickercheckout" type="text" placeholder="{{session.searchparams.scheckout}}" data-field="checkin" required>	  
+      <input class="span12 quicksearch datepickercheckout" type="text" placeholder="{{textdata.Check-Out}}" value="{{session.searchparams.scheckout}}" data-field="checkout" required>	  
       </div>
 	</div>
 	<button class="btn btn-mini bapi-getquote" type="button">Change</button>
@@ -209,8 +209,9 @@
 </div>
 {{/result}}
 </div>
-{{^islastpage}}<div><a href='javascript:void(0)' class='showmore'>{{textdata.Show More Results}} ({{totalcount}})</a></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore">{{textdata.There are no more results}}</div>{{/islastpage}}
+<div class="clearfix"></div>
+{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalcount}})</a></span></div>{{/islastpage}}
+{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
 </script>
 
 <script id="tmpl-propertysearch-listview" type="text/html">
@@ -266,8 +267,9 @@
 </div>
 {{/result}}
 </div>
-{{^islastpage}}<div><a href='javascript:void(0)' class='showmore'>{{textdata.Show More Results}} ({{totalcount}})</a></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore">{{textdata.There are no more results}}</div>{{/islastpage}}
+<div class="clearfix"></div>
+{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalcount}})</a></span></div>{{/islastpage}}
+{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
 </script>
 
 <script id="tmpl-allproperties" type="text/html">
@@ -308,8 +310,9 @@
 {{/result}}
 </tbody>
 </table>
-{{^islastpage}}<div><a href='javascript:void(0)' class='showmore'>{{textdata.Show More Results}} ({{totalcount}})</a></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore">{{textdata.There are no more results}}</div>{{/islastpage}}
+<div class="clearfix"></div>
+{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalcount}})</a></span></div>{{/islastpage}}
+{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
 </script> 
 
 <script id="tmpl-properties-detail" type="text/html">
@@ -685,11 +688,9 @@
           </div>
 {{/result}}
 </div>
-{{^islastpage}}<div><a href='javascript:void(0)' class='showmore'>{{textdata.Show More Results}} ({{totalcount}})</a></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore">{{textdata.There are no more results}}</div>{{/islastpage}}
-{{^result}}
-<div class="nomore">{{textdata.There are no more results}}</div>
-{{/result}}
+<div class="clearfix"></div>
+{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalcount}})</a></span></div>{{/islastpage}}
+{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
 </script>
 
 <script id="tmpl-developments-detail" type="text/html">
@@ -805,11 +806,9 @@
   </div>
 </div>
 {{/result}}  
-{{^islastpage}}<div><a href='javascript:void(0)' class='showmore'>{{textdata.Show More Results}} ({{totalcount}})</a></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore">{{textdata.There are no more results}}</div>{{/islastpage}}
-{{^result}}
-<div class="nomore">{{textdata.There are no more results}}</div>
-{{/result}}
+<div class="clearfix"></div>
+{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalcount}})</a></span></div>{{/islastpage}}
+{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
 </script>
 
 <script id="tmpl-attractions-detail" type="text/html">
@@ -947,8 +946,9 @@
   </div>
 </div>
 {{/result}}  
-{{^islastpage}}<div><a href='javascript:void(0)' class='showmore'>{{textdata.Show More Results}} ({{totalcount}})</a></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore">{{textdata.There are no more results}}</div>{{/islastpage}}
+<div class="clearfix"></div>
+{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalcount}})</a></span></div>{{/islastpage}}
+{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
 </script>
 
 <script id="tmpl-specials-detail" type="text/html">
@@ -1064,8 +1064,9 @@
   </div>
 </div>
 {{/result}}  
-{{^islastpage}}<div><a href='javascript:void(0)' class='showmore'>{{textdata.Show More Results}} ({{totalcount}})</a></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore">{{textdata.There are no more results}}</div>{{/islastpage}}
+<div class="clearfix"></div>
+{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalcount}})</a></span></div>{{/islastpage}}
+{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
 </script>
 
 <script id="tmpl-searches-detail" type="text/html">

@@ -55,6 +55,7 @@ context.init = function(options) {
 	context.inithelpers.setupsummarywidgets(options);
 	context.inithelpers.setupsearchformwidgets(options);
 	context.inithelpers.setupinquiryformwidgets(options);
+	context.inithelpers.setuppopupinquiryformwidgets(options);
 	context.inithelpers.setupavailcalendarwidgets(options);
 	context.inithelpers.setuprateblockwidgets(options);
 	context.inithelpers.applyflexsliders(options);
@@ -119,6 +120,22 @@ context.inithelpers = {
 			BAPI.log("Creating inquiry form for " + selector);
 			context.createInquiryForm(selector, { "pkid": pkid, "template": BAPI.templates.get(templatename), "hasdatesoninquiryform": hasdates, "log": dologging });		
 		});	
+	},
+	setuppopupinquiryformwidgets: function(options) {
+		$('.bapi-inquirypopup').live("click", function() {
+			BAPI.log(this);
+			var ctl = $(this);	
+			var pkid = ctl.attr("data-pkid");
+			if (pkid!==null && pkid!='') {
+				BAPI.get(pkid, BAPI.entities.property, { "avail": 1 }, function(data) {
+					var selector = '#' + ctl.attr('id');
+					var options = {};
+					try { options = $.parseJSON(ctl.attr('data-options')); } catch(err) {}
+					BAPI.log("Creating availability calendar for " + selector);	
+					context.createAvailabilityWidget(selector, data, options);
+				});		
+			}
+		});		
 	},
 	setupavailcalendarwidgets: function(options) {
 		$.each($('.bapi-availcalendar'), function (i, item) {
@@ -206,8 +223,6 @@ context.inithelpers = {
 		});	
 	},
 	applyentityadvisor: function(options) {
-		// start by clearing
-		
 		$.each($('.bapi-entityadvisor'), function (i, item) {
 			var ctl = $(item);		
 			var pkid = ctl.attr('data-pkid');
@@ -233,21 +248,32 @@ context.createRateBlockWidget = function (targetid, options) {
 	if (typeof(cur)==="undefined" || cur===null || !(cur.ID>0) || cur.entity!=BAPI.entities.property) {
 		return;
 	}
-	var searchoptions = { avail: 1 };
-	searchoptions = $.extend({}, searchoptions, BAPI.session().searchparams);
-	
-	BAPI.get(cur.ID, BAPI.entities.property, searchoptions, function (data) {
+	options.dataselector = "quicksearch";
+	$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
+	BAPI.datamanager.get(BAPI.entities.property, cur.ID, function(p) {
+		$(targetid).unblock();
+		var data = {};
+		data.result = [p];
 		data.site = BAPI.site;
 		data.config = BAPI.config();
 		data.textdata = BAPI.textdata;
-		data.session = BAPI.session();			
-		//if (options.log) { BAPI.log("--createSearchWidget.res--"); BAPI.log(res); }
+		data.session = BAPI.session();
+		if (options.log) { BAPI.log("--createSearchWidget.res--"); BAPI.log(data); }
 		$(targetid).html(Mustache.render(options.template, data));
-		BAPI.log(data);
+		
+		context.createDatePicker('.datepickercheckin', { "property": p, "checkoutID": '.datepickercheckout' });
+		context.createDatePicker('.datepickercheckout', { "property": p });		
+		
 		// handle simple get quote
 		$(".bapi-getquote").on("click", function () {
 			var reqdata = saveFormToSession(this, options);
+			BAPI.datamanager.clear(BAPI.entities.property, cur.ID);
 			context.createRateBlockWidget(targetid, options);			
+		});
+		
+		$(".bapi-inquire").on("click", function() {
+			context.createInquiryForm("#modal-inquiry-form");
+			$("#modal-inquiry").dialog();
 		});
 		
 		$(".bapi-booknow").on("click", function() {
@@ -612,15 +638,17 @@ context.createMakeBookingWidget = function (targetid, options) {
 		// setup date pickers
 		context.createDatePicker('.datepickercheckin', { "property": data.result[0], "checkoutID": '.datepickercheckout' });
 		context.createDatePicker('.datepickercheckout', { "property": data.result[0] });	
-		$('.datepickercheckin').watermark(BAPI.textdata["Check-In"]);	
-		$('.datepickercheckout').watermark(BAPI.textdata["Check-Out"]);	
 		
 		// handle simple get quote
-		$(".quicksearch-getquote").on("click", function () {
+		$(".bapi-getquote").on("click", function () {
+			BAPI.log("--getting formdata--");
+			BAPI.log(options);
 			var reqdata = getFormData(options.dataselector);			
 			reqdata.pid = propid;
 			reqdata.quoteonly = 1;
-			// do fixup for the checkin/checkout
+			// do fixup for the checkin/checkout			
+			BAPI.log("-- outputint form data--");
+			BAPI.log(reqdata);
 			BAPI.session().searchparams.scheckin = reqdata.scheckin;
 			BAPI.session().searchparams.scheckout = reqdata.scheckout;
 			BAPI.savesession();
@@ -634,13 +662,7 @@ context.createMakeBookingWidget = function (targetid, options) {
 				sdata.textdata = BAPI.textdata;	
 				sdata.session = BAPI.session();				
 				$(options.targetids.statement).html(Mustache.render(options.templates.statement, sdata));
-				$(options.targetids.stayinfo).unblock();		
-				
-				/*$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, sdata));				
-				context.createDatePicker('.datepickercheckin', { "property": sdata.result[0], "checkoutID": '.datepickercheckout' });
-				context.createDatePicker('.datepickercheckout', { "property": sdata.result[0] });	
-				$('.datepickercheckin').watermark(BAPI.textdata["Check-In"]);	
-				$('.datepickercheckout').watermark(BAPI.textdata["Check-Out"]);	*/
+				$(options.targetids.stayinfo).unblock();									
 			});		
 		});
 		
@@ -844,12 +866,10 @@ function loadFormFromSession(s) {
 }
 
 function saveFormToSession(ctl, options) {
-	$.watermark.hideAll();
 	var reqdata = {};
 	var sp = BAPI.session().searchparams;
 	var dfparse = BAPI.defaultOptions.dateFormatMoment();
 	var df = BAPI.defaultOptions.dateFormatBAPI;
-	//BAPI.log('--saveFormToSession--');
 	$('.' + options.dataselector).each(function () {			
 		var k = $(this).attr('data-field');
 		var v = $(this).attr('data-value');
@@ -857,7 +877,7 @@ function saveFormToSession(ctl, options) {
 		if (k != null && k.length > 0) { 
 			if (k=="checkin") {					
 				sp.scheckin = v; // need to ensure that the display search param gets set
-				v = (v===null || v=='') ? null : moment(v, dfparse).format(df);				
+				v = (v===null || v=='') ? null : moment(v, dfparse).format(df);								
 			}
 			else if  (k=="checkout") {
 				sp.scheckout = v; // need to ensure that the display search param gets set
@@ -866,10 +886,8 @@ function saveFormToSession(ctl, options) {
 			reqdata[k] = v;
 			sp[k] = v;
 		}
-	});
+	});	
 	BAPI.savesession();
-	//BAPI.log(BAPI.session());
-	$.watermark.showAll();
 	return reqdata;
 }
 
