@@ -68,6 +68,8 @@ context.init = function(options) {
 	context.inithelpers.applytruncate(options);	
 	context.inithelpers.setupmapwidgets(options);	
 	context.inithelpers.applymovemes(options);			
+	context.inithelpers.setupprintlisteners(options);
+	context.inithelpers.setupbapitracker(options);
 }
 
 context.inithelpers = {	
@@ -256,12 +258,45 @@ context.inithelpers = {
 			var pkid = ctl.attr('data-pkid');
 			var entity = ctl.attr('data-entity');
 			BAPI.log("Setting entity advisor to entity=" + entity + ", pkid=" + pkid);
-			BAPI.session().mylisttracker.add(pkid, entity);
-			BAPI.savesession();
+			BAPI.curentity = { "ID": pkid, "entity": entity };			
 		});
+	},
+	setupprintlisteners: function(options) {
+		$('.bapi-print').live("click", function() {
+			window.print(); return;
+		});			
+	},
+	setupbapitracker: function(options) {		
+		$('.bapi-wishlisttracker').live("click", function() {
+			var ctl = $(this);
+			var pkid = ctl.attr("data-pkid");
+			if (ctl.hasClass('active')) {
+				BAPI.log("adding pkid=" + pkid);
+				BAPI.mylisttracker.add(pkid, BAPI.entities.property);
+			} else {				
+				BAPI.log("Turning inactive");
+				BAPI.mylisttracker.del(pkid, BAPI.entities.property);
+			}
+			BAPI.savesession();
+		});				
 	}
 }
-
+/*
+function MyListTracker() {
+	this.current = null;
+	this.mylist = [];
+	this.mylisttracker = {		
+		add: function(id, entity) {					
+			if (typeof(entity)==="undefined" || entity===null) { entity = BAPI.entities.property; }
+			self.mylist.push( { "ID": id, "entity": entity });
+			if (self.mylist.length>10) { self.mylist = self.mylist.slice(1); }
+		},
+		del: function(id, entity) {	},
+		clear: function(callback) { self.mylist = []; },		
+		current: function() { return self.mylist.length==0 ? null : self.mylist[self.mylist.length-1]; }			
+	}
+}
+*/
 context.rowfix = function(selector, wraprows) {
 	var divs = $(selector);
 	if (divs!==null && divs.length > 0) {
@@ -272,7 +307,7 @@ context.rowfix = function(selector, wraprows) {
 	Group: Search Widgets 
 */
 context.createRateBlockWidget = function (targetid, options) {
-	var cur = BAPI.session().mylisttracker.current();
+	var cur = BAPI.curentity;
 	if (typeof(cur)==="undefined" || cur===null || !(cur.ID>0) || cur.entity!=BAPI.entities.property) {
 		return;
 	}
@@ -504,7 +539,7 @@ context.createInquiryForm = function (targetid, options) {
 		$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
 		processing = true; // make sure we do not reenter				
 		
-		var cur = BAPI.session().mylisttracker.current();
+		var cur = BAPI.curentity;
 		var pkid = (cur===null) ? null : cur.ID;
 		var selname = $(this).attr('data-field-selector');
 		var reqdata = { "pid": pkid, "checkin": options.checkin, "checkout": options.checkout };

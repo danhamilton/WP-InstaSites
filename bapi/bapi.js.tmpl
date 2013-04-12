@@ -51,6 +51,7 @@ context.initialized = false;
 context.reqid = null;
 context.stime = new Date();
 context.etime = new Date();
+context.curentity = null;
 context.init = function (apikey, options) {
 	if (context.initialized) { return; }
 	context.initialized = true;	
@@ -117,6 +118,31 @@ context.datamanager = {
 	}
 }
 
+/* My List tracking */
+context.mylisttracker = {
+	add: function(id, entity) {			
+		if (typeof(entity)==="undefined" || entity===null) { entity = BAPI.entities.property; }
+		var i = context.mylisttracker.indexof(id, entity);
+		if (i==-1) {
+			context.session().mylist.push( { "ID": id, "entity": entity });
+			if (context.session().mylist.length>10) { self.mylist = self.mylist.slice(1); }
+		}
+	},
+	del: function(id, entity) {	
+		var i = context.mylisttracker.indexof(id, entity);
+		if (i>-1) { context.session().mylist.splice(i,1); }
+	},
+	indexof: function(id, entity) {
+		for (var i =0; i < context.session().mylist.length; i++) {
+		   if (context.session().mylist[i].ID===id && context.session().mylist[i].entity===entity) {
+			  return i;			  
+		   }
+	   }
+	   return -1;
+	},
+	clear: function(callback) { context.session().mylist = []; },				
+}
+
 /* Session */
 function PersonProfile() {
 	this.visitorid = null;
@@ -136,7 +162,6 @@ function PersonProfile() {
 }
 
 function SessionProfile() {
-	var self = this;
 	this.visitorid = 0;
 	this.visitorid2 = {{Visit.Current.VisitorID}};
 	this.personid = {{Visit.Current.PersonID}};
@@ -146,18 +171,8 @@ function SessionProfile() {
 	};
 	this.searchmode = 0;
 	this.searchparams = new SearchParams();		
-	this.currency = context.defaultOptions.currency;		
-	this.mylist = [];
-	this.mylisttracker = {		
-		add: function(id, entity) {			
-			if (typeof(entity)==="undefined" || entity===null) { entity = BAPI.entities.property; }
-			self.mylist.push( { "ID": id, "entity": entity });
-			if (self.mylist.length>10) { self.mylist = self.mylist.slice(1); }
-		},
-		del: function(id, entity) {	},
-		clear: function(callback) { self.mylist = []; },		
-		current: function() { return self.mylist.length==0 ? null : self.mylist[self.mylist.length-1]; }			
-	}
+	this.currency = context.defaultOptions.currency;	
+	this.mylist = [];	
 }
 
 function SearchParams() {
@@ -205,6 +220,9 @@ context.loadsession = function() {
 		_session.personid = a.personid;
 		_session.searchmode = a.searchmode;
 		_session.currency = (typeof(a.currency) === "undefined" || a.currency === null ? context.defaultOptions.currency : a.currency);
+		_session.profiledata = a.profiledata;
+		_session.searchmode = a.searchmode;
+		_session.mylist = a.mylist;
 		_session.searchparams.checkin = a.searchparams.checkin;
 		_session.searchparams.checkout = a.searchparams.checkout;
 		_session.searchparams.los = a.searchparams.los;
