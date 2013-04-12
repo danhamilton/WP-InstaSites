@@ -277,13 +277,12 @@ context.savesession = function() {
 	}
 	
 	// try to set the los
-	if (sp.checkin!==null && sp.checkout!=null) {
-		sp.los = sp.moment(sp.checkout).diff(moment(sp.checkin),'days');
-	}
+	try { sp.los = moment(sp.checkout).diff(moment(sp.checkin),'days'); } catch(err) { }
 	
 	//context.log("--In savesession--"); context.log(_session);	
 	$.cookie(_cookiename, JSON.stringify(s),  { expires: 30, path: '/' }); 
-}	
+}
+
 context.clearsession = function() {	
 	_session = new SessionProfile();
 	context.savesession();	

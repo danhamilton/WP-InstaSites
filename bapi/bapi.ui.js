@@ -47,6 +47,7 @@ BAPI.UI = BAPI.UI || {};
 (function(context) {
 
 context.maps = {};
+context.newdatepicker = false;
 
 /*
 	Group: Initialization
@@ -537,8 +538,8 @@ context.createInquiryForm = function (targetid, options) {
 /*
 	Group: DatePickers
 */
-context.createDatePicker = function (targetid, options) {
-	if (typeof (options) === "undefined" || options == null) { options = new Object(); }
+function InitDatePickerOptions(options) {
+	if (typeof (options) === "undefined" || options == null) { options = {}; }
 	if (typeof (options.datepicker) === "undefined") { options.datepicker = {}; }
 	if (typeof (options.datepicker.showOn) === "undefined") { options.datepicker.showOn = 'both'; }
 	//if (typeof (options.datepicker.buttonImage) === "undefined") { options.datepicker.buttonImage = '//booktplatform.s3.amazonaws.com/App_SharedStyles/images/checkInBtn.png'; }
@@ -549,7 +550,11 @@ context.createDatePicker = function (targetid, options) {
 	if (typeof (options.minlos) === "undefined") { options.minlos = BAPI.config().minlos; }
 	if (typeof (options.languageISO) === "undefined") { options.languageISO = BAPI.defaultOptions.languageISO; }	
 	if (typeof (options.property) === "undefined") { options.property = null; }	
-	
+	return options;
+}
+
+function createDatePickerJQuery(targetid, options) {
+	options = InitDatePickerOptions(options);	
 	if (options.languageISO=='en' && options.language!='en-AU' && options.language!='en-GB' && options.language!='en-NZ') {
 		$.datepicker.setDefaults( $.datepicker.regional[''] );
 	}
@@ -610,6 +615,84 @@ context.createDatePicker = function (targetid, options) {
 		BAPI.log("datepicker trigger");
 		$(targetid).datepicker("show");
 	});
+}
+
+function createDatePickerPickadate(targetid, options) {
+	options = InitDatePickerOptions(options);
+	var p = options.property;
+	var ctl = $(targetid);
+	var checkinpickers = $('.datepickercheckin');
+	var checkoutpickers = $('.datepickercheckout');
+	var mind = true; if (BAPI.config().minbookingdays>0) { mind = BAPI.config().minbookingdays; }
+	
+	var blockouts = [];
+	if (p!==null) {
+		$.each(p.ContextData.Availability, function (index, item) {	
+			var cin = moment(item.CheckIn);
+			var cout = moment(item.CheckOut);
+			while (cin.isSame(cout) || cin.isBefore(cout)) {				
+				blockouts.push([cin.years(), cin.months(), cin.days()]);
+				cin = cin.add('days',1);
+			}
+		});				
+	}
+	BAPI.log(blockouts);
+	
+	var poptions = {};	
+	if (ctl.hasClass("datepickercheckin")) {
+		poptions = {
+			dateMin: mind,
+			dateMax: BAPI.config().maxbookingdays,
+			format: BAPI.defaultOptions.dateFormat.toLowerCase(),
+			formatSubmit: BAPI.defaultOptions.dateFormat.toLowerCase(),
+			onSelect: function() {
+				if (checkoutpickers!==null && checkoutpickers.length>0) {
+					var fromDate = createDateArray(this.getDate( 'yyyy-mm-dd'));				
+					checkoutpickers.data('pickadate').setDateLimit(fromDate);
+				}
+			}
+		}
+	}
+	else if (ctl.hasClass("datepickercheckout")) {
+		poptions = {
+			dateMin: mind,
+			dateMax: BAPI.config().maxbookingdays,
+			format: BAPI.defaultOptions.dateFormat.toLowerCase(),
+			formatSubmit: BAPI.defaultOptions.dateFormat.toLowerCase(),
+			onSelect: function() {
+				if (checkinpickers!==null && checkinpickers.length>0) {
+					var toDate = createDateArray(this.getDate( 'yyyy-mm-dd'))
+					checkinpickers.data( 'pickadate' ).setDateLimit(toDate, 1);
+				}
+			}
+		}
+	}
+	BAPI.log(poptions);
+	var input = $(targetid).pickadate(poptions);
+	var calendar = input.data('pickadate');
+	
+	var trigger = $('<span>', { "class": "halflings calendar cal-icon-trigger" });
+	trigger.append("<i>");	
+	$(targetid).after(trigger);	
+	trigger.click(function() {
+		BAPI.log("datepicker trigger");
+		BAPI.log(calendar.isOpen());
+		input.click();
+		//calendar.open();
+		BAPI.log(calendar.isOpen());
+	});
+	
+	// Create an array from the date while parsing each date unit as an integer
+	function createDateArray( date ) { return date.split( '-' ).map(function( value ) { return +value }) }
+}
+
+context.createDatePicker = function (targetid, options) {
+	if (!context.newdatepicker) {
+		createDatePickerJQuery(targetid, options);
+	}
+	else {
+		createDatePickerPickadate(targetid, options);		
+	}
 }
 
 /*
@@ -673,7 +756,10 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 		$(options.targetids.accept).html(Mustache.render(options.templates.accept, data));
 		$('.specialform').hide(); // hide the spam control
 		context.createDatePicker('.datepickercheckin', { "property": data.result[0], "checkoutID": '.datepickercheckout' });
-		context.createDatePicker('.datepickercheckout', { "property": data.result[0] });	
+		context.createDatePicker('.datepickercheckout', { "property": data.result[0] });
+				
+		// show the revise your dates if quote is not valid
+		if (!data.result[0].ContextData.Quote.IsValid) { try { $('#revisedates').modal('show'); } catch(err) {} }
 		
 		$(".bapi-revisedates").live("click", function () {
 			var reqdata = getFormData("revisedates");			
@@ -991,18 +1077,21 @@ function saveFormToSession(ctl, options) {
 		var v = $(this).attr('data-value');
 		if (v == null | v == '') v = $(this).val();
 		if (k != null && k.length > 0) { 
-			if (k=="checkin") {					
+			if (k=="checkin") {		
+				sp.checkin = null;
 				sp.scheckin = v; // need to ensure that the display search param gets set
 				v = (v===null || v=='') ? null : moment(v, dfparse).format(df);								
 			}
-			else if  (k=="checkout") {
+			else if (k=="checkout") {
+				sp.checkout = null;
 				sp.scheckout = v; // need to ensure that the display search param gets set
 				v = (v===null || v=='') ? null : moment(v, dfparse).format(df);				
-			}
+			}			
 			reqdata[k] = v;
 			sp[k] = v;
 		}
 	});	
+	BAPI.log(reqdata);
 	BAPI.savesession();
 	return reqdata;
 }

@@ -702,7 +702,9 @@ class BAPI_Weather_Widget extends WP_Widget {
 				// lookup woid here: http://woeid.rosselliot.co.nz/
 				var woid = '<?= $woid ?>';
 				if (woid!='') {
-					BAPI.UI.createWeatherWidget('#weather-widget', ['<?= $woid ?>'], { link: false, woeid: true });
+					var unit = 'c';
+					if (BAPI.defaultOptions.language=="en-US") { unit = 'f'; }
+					BAPI.UI.createWeatherWidget('#weather-widget', ['<?= $woid ?>'], { "link": false, "woeid": true, "unit": unit });
 				}
 			});
         </script>
@@ -739,7 +741,6 @@ class BAPI_Weather_Widget extends WP_Widget {
 		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
         <label for="<?php echo $this->get_field_id( 'text' ); ?>"><?php _e( 'WOID:' ); ?></label>
         <input id="<?php echo $this->get_field_id( 'text' ); ?>" name="<?php echo $this->get_field_name( 'text' ); ?>" type="text" value="<?php echo esc_attr( $woid ); ?>" />
-        
 		</p>
 		<?php 
 	}

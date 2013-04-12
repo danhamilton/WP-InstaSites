@@ -141,10 +141,21 @@
 		</div>
       <div class="span6">
 	  <label>{{textdata.Check-Out}}</label>
-      <input class="span12 quicksearch datepickercheckout" type="text" placeholder="{{textdata.Check-Out}}" value="{{session.searchparams.scheckout}}" data-field="checkout" required>	  
+      <input class="span12 quicksearch datepickercheckout" type="text" placeholder="{{textdata.Check-Out}}" value="{{session.searchparams.scheckout}}" data-field="checkout" required>
+	  <input style="display:none" class="quicksearch" type="text" value="" data-field="los">
       </div>
 	</div>
 	<button class="btn btn-mini bapi-getquote" type="button">{{textdata.Update}}</button>
+	<hr />
+	<div class="wylt-block"> 
+	<h5>Would you like to</h5>
+	<ul>
+		<li><span>Print</span> this Page</li>
+		<li><span>Email</span> to a Friend</li>
+	</ul>
+	</div>
+	<hr />
+	<button class="btn add-wishlist bapi-wishlisttracker" data-pkid="{{ID}}" type="button" data-toggle="button"><span class="halflings heart-empty"><i></i>ADD TO WISHLIST</span></button>
 </div>
 </div>	
 {{/result}}
@@ -1210,7 +1221,7 @@
 			{{#Sleeps}}&nbsp;/&nbsp;{{textdata.Sleeps}}&nbsp;{{Sleeps}}{{/Sleeps}}
 		</p>
 		<div class="booking-prop-img">
-			<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" caption="{{PrimaryImage.Captions}}" />		
+			<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.OriginalURL}}" caption="{{PrimaryImage.Captions}}" />		
 		</div>
 	</header>	
 	<div class="booking-page bordersolid">
