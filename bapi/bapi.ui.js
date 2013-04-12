@@ -74,21 +74,18 @@ context.inithelpers = {
 		$.each($('.bapi-summary'), function (i, item) {
 			var ctl = $(item);		
 			var dologging = (ctl.attr('data-log') == '1');
-			var entity = ctl.attr('data-entity');
-			var templatename = ctl.attr('data-templatename');
-			var applyfixers = parseInt(ctl.attr('data-applyfixers'));
-			var usemylist = parseInt(ctl.attr('data-usemylist'));
 			var searchoptions = null;
 			try { searchoptions = $.parseJSON(ctl.attr('data-searchoptions')); } catch(err) {}
 			var selector = '#' + ctl.attr('id');
 			BAPI.log("Creating summary widget for " + selector);
 			context.createSummaryWidget(selector, { 
 					"searchoptions": searchoptions, 
-					"entity": entity, 
-					"template": BAPI.templates.get(templatename), 
+					"entity": ctl.attr('data-entity'), 
+					"template": BAPI.templates.get(ctl.attr('data-templatename')), 
 					"log": dologging, 
-					"applyfixers": applyfixers,
-					"usemylist": usemylist
+					"applyfixers": parseInt(ctl.attr('data-applyfixers')),
+					"usemylist": parseInt(ctl.attr('data-usemylist')),
+					"ignoresession": parseInt(ctl.attr('data-ignoresession'))
 					}
 			);
 		});
@@ -381,11 +378,7 @@ context.createSummaryWidget = function (targetid, options, callback) {
 	options = initOptions(options, 10, 'tmpl-base-summary');
 	if (options.log) { BAPI.log("--options--"); BAPI.log(options); }
 	var ids=[], alldata=[];
-	context.loading.show();
-	
-	if (options.entity == BAPI.entities.property) {
-		options.searchoptions = $.extend({}, options.searchoptions, BAPI.session().searchparams);
-	}
+	context.loading.show();	
 	
 	if (options.usemylist) {
 		ids = [];
@@ -395,9 +388,17 @@ context.createSummaryWidget = function (targetid, options, callback) {
 		doSearch(targetid, ids, options.entity, options, alldata, callback); 
 	}
 	else {
+		// see if we should ignore the session for the initial search
+		if (options.entity == BAPI.entities.property && options.ignoresession!='1') {
+			options.searchoptions = $.extend({}, options.searchoptions, BAPI.session().searchparams);
+		}
 		BAPI.search(options.entity, options.searchoptions, function (data) { 
 			if (options.log) { BAPI.log("--search result--"); BAPI.log(data); }
 			ids = data.result; 
+			// for the actual retrieval of the records, we want to include the context
+			if (options.entity == BAPI.entities.property) {
+				options.searchoptions = $.extend({}, options.searchoptions, BAPI.session().searchparams);
+			}
 			doSearch(targetid, ids, options.entity, options, alldata, callback); 
 		});	
 	}

@@ -124,6 +124,11 @@
 	if(get_option('bapi_secureurl')){
 		$secureurl = get_option('bapi_secureurl');
 	}
+	$siteurl = get_option('home');
+	if(get_option('bapi_site_cdn_domain')){
+		$siteurl = get_option('bapi_site_cdn_domain');
+	}
+	$siteurl = str_replace("http://", "", $siteurl);
 ?>
 <link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/jquery.ui/jquery-ui-1.10.2.min.css', __FILE__) ?>" />
 
@@ -146,6 +151,7 @@
 <script type="text/javascript">		
 	BAPI.defaultOptions.baseURL = '<?= getbapiurl() ?>';
 	BAPI.UI.loading.setLoadingImgUrl('<?= plugins_url("/img/loading.gif", __FILE__) ?>');
+	BAPI.site.url =  '<?= $siteurl ?>';
 	<?php if ($secureurl!='') { ?>
 	BAPI.site.secureurl = '<?= $secureurl ?>';
 	<?php } ?>

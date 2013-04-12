@@ -275,6 +275,12 @@ context.savesession = function() {
 		}
 		sp.checkout = moment(sp.checkout).format(df); // format to bapi default dateformat
 	}
+	
+	// try to set the los
+	if (sp.checkin!==null && sp.checkout!=null) {
+		sp.los = sp.moment(sp.checkout).diff(moment(sp.checkin),'days');
+	}
+	
 	//context.log("--In savesession--"); context.log(_session);	
 	$.cookie(_cookiename, JSON.stringify(s),  { expires: 30, path: '/' }); 
 }	

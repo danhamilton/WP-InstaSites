@@ -202,12 +202,12 @@
 			<div class="location"><span><b>{{textdata.City}}:</b> {{City}}</span> {{#Bedrooms}}<b>{{textdata.Beds}}</b>: {{Bedrooms}} | {{/Bedrooms}}{{#Bathrooms}}<b>{{textdata.Baths}}</b>: {{Bathrooms}} | {{/Bathrooms}}<b>{{textdata.Sleeps}}</b>: {{Sleeps}}</div>			
 			<div class="portal-rates">
 				{{^ContextData.Quote.IsValid}}
-				<div class="system-msg-error">{{ContextData.Quote.ValidationMessage}}</div>
+				<div class="no-rate">{{ContextData.Quote.ValidationMessage}}</div>
 				{{/ContextData.Quote.IsValid}}
 				{{#ContextData.Quote.IsValid}}
-				{{#ContextData.Quote.QuoteDisplay.prefix}}<span>{{ContextData.Quote.QuoteDisplay.prefix}}:</span>{{/ContextData.Quote.QuoteDisplay.prefix}}
-				<strong class="rate">{{ContextData.Quote.QuoteDisplay.value}}</strong>
-				{{#ContextData.Quote.QuoteDisplay.suffix}}<span classs="input-small">/{{ContextData.Quote.QuoteDisplay.suffix}}</span>{{/ContextData.Quote.QuoteDisplay.suffix}}
+				{{#ContextData.Quote.QuoteDisplay.prefix}}<span class="prefix">{{ContextData.Quote.QuoteDisplay.prefix}}:</span>{{/ContextData.Quote.QuoteDisplay.prefix}}
+				{{ContextData.Quote.QuoteDisplay.value}}
+				{{#ContextData.Quote.QuoteDisplay.suffix}}<span classs="suffix">/{{ContextData.Quote.QuoteDisplay.suffix}}</span>{{/ContextData.Quote.QuoteDisplay.suffix}}
 				{{/ContextData.Quote.IsValid}}
 			</div>			
 		</div>
@@ -260,12 +260,12 @@
 		<div class="rates clearfix">
 		<div class="portal-rates pull-left">
 			{{^ContextData.Quote.IsValid}}
-			<div><small>{{ContextData.Quote.ValidationMessage}}</small></div>
+			<div class="no-rate">{{ContextData.Quote.ValidationMessage}}</div>
 			{{/ContextData.Quote.IsValid}}
 			{{#ContextData.Quote.IsValid}}
-			{{#ContextData.Quote.QuoteDisplay.prefix}}<span>{{ContextData.Quote.QuoteDisplay.prefix}}:</span>{{/ContextData.Quote.QuoteDisplay.prefix}}
-			<strong class="rate">{{ContextData.Quote.QuoteDisplay.value}}</strong>
-			{{#ContextData.Quote.QuoteDisplay.suffix}}<span classs="input-small">/{{ContextData.Quote.QuoteDisplay.suffix}}</span>{{/ContextData.Quote.QuoteDisplay.suffix}}
+			{{#ContextData.Quote.QuoteDisplay.prefix}}<span class="prefix">{{ContextData.Quote.QuoteDisplay.prefix}}:</span>{{/ContextData.Quote.QuoteDisplay.prefix}}
+			{{ContextData.Quote.QuoteDisplay.value}}
+			{{#ContextData.Quote.QuoteDisplay.suffix}}<span classs="suffix">/{{ContextData.Quote.QuoteDisplay.suffix}}</span>{{/ContextData.Quote.QuoteDisplay.suffix}}
 			{{/ContextData.Quote.IsValid}}
 		</div>
 		{{#ContextData.SEO.Keyword}}<a class="property-link pull-right" href="{{&ContextData.SEO.DetailURL}}">{{textdata.Details}} <span>&rarr;</span></a>{{/ContextData.SEO.Keyword}}
