@@ -22,7 +22,7 @@ s=function(f){d=new Date;return r=new Date(d.toDateString()+" "+f)}})}})(jQuery)
 /* Watermark */
 ;(function(n,t,i){var g="TEXTAREA",d="function",nt="password",c="maxLength",v="type",r="",u=!0,rt="placeholder",h=!1,tt="watermark",s=tt,o="watermarkClass",w="watermarkFocus",a="watermarkSubmit",b="watermarkMaxLength",e="watermarkPassword",f="watermarkText",l=/\r/g,ft=/^(button|checkbox|hidden|image|radio|range|reset|submit)$/i,it="input:data("+s+"),textarea:data("+s+")",p=":watermarkable",k=["Page_ClientValidate"],y=h,ut=rt in document.createElement("input");n.watermark=n.watermark||{version:"3.1.4",runOnce:u,options:{className:tt,useNative:u,hideBeforeUnload:u},hide:function(t){n(t).filter(it).each(function(){n.watermark._hide(n(this))})},_hide:function(n,i){var a=n[0],w=(a.value||r).replace(l,r),h=n.data(f)||r,p=n.data(b)||0,y=n.data(o),s,u;h.length&&w==h&&(a.value=r,n.data(e)&&(n.attr(v)||r)==="text"&&(s=n.data(e)||[],u=n.parent()||[],s.length&&u.length&&(u[0].removeChild(n[0]),u[0].appendChild(s[0]),n=s)),p&&(n.attr(c,p),n.removeData(b)),i&&(n.attr("autocomplete","off"),t.setTimeout(function(){n.select()},1))),y&&n.removeClass(y)},show:function(t){n(t).filter(it).each(function(){n.watermark._show(n(this))})},_show:function(t){var p=t[0],g=(p.value||r).replace(l,r),i=t.data(f)||r,k=t.attr(v)||r,d=t.data(o),h,s,a;g.length!=0&&g!=i||t.data(w)?n.watermark._hide(t):(y=u,t.data(e)&&k===nt&&(h=t.data(e)||[],s=t.parent()||[],h.length&&s.length&&(s[0].removeChild(t[0]),s[0].appendChild(h[0]),t=h,t.attr(c,i.length),p=t[0])),(k==="text"||k==="search")&&(a=t.attr(c)||0,a>0&&i.length>a&&(t.data(b,a),t.attr(c,i.length))),d&&t.addClass(d),p.value=i)},hideAll:function(){y&&(n.watermark.hide(p),y=h)},showAll:function(){n.watermark.show(p)}},n.fn.watermark=n.fn.watermark||function(i,y){var tt="string";if(!this.length)return this;var k=h,b=typeof i==tt;return b&&(i=i.replace(l,r)),typeof y=="object"?(k=typeof y.className==tt,y=n.extend({},n.watermark.options,y)):typeof y==tt?(k=u,y=n.extend({},n.watermark.options,{className:y})):y=n.watermark.options,typeof y.useNative!=d&&(y.useNative=y.useNative?function(){return u}:function(){return h}),this.each(function(){var et="dragleave",ot="dragenter",ft=this,h=n(ft),st,d,tt,it;if(h.is(p)){if(h.data(s))(b||k)&&(n.watermark._hide(h),b&&h.data(f,i),k&&h.data(o,y.className));else{if(ut&&y.useNative.call(ft,h)&&(h.attr("tagName")||r)!==g){b&&h.attr(rt,i);return}h.data(f,b?i:r),h.data(o,y.className),h.data(s,1),(h.attr(v)||r)===nt?(st=h.wrap("<span>").parent(),d=n(st.html().replace(/type=["']?password["']?/i,'type="text"')),d.data(f,h.data(f)),d.data(o,h.data(o)),d.data(s,1),d.attr(c,i.length),d.focus(function(){n.watermark._hide(d,u)}).bind(ot,function(){n.watermark._hide(d)}).bind("dragend",function(){t.setTimeout(function(){d.blur()},1)}),h.blur(function(){n.watermark._show(h)}).bind(et,function(){n.watermark._show(h)}),d.data(e,h),h.data(e,d)):h.focus(function(){h.data(w,1),n.watermark._hide(h,u)}).blur(function(){h.data(w,0),n.watermark._show(h)}).bind(ot,function(){n.watermark._hide(h)}).bind(et,function(){n.watermark._show(h)}).bind("dragend",function(){t.setTimeout(function(){n.watermark._show(h)},1)}).bind("drop",function(n){var i=h[0],t=n.originalEvent.dataTransfer.getData("Text");(i.value||r).replace(l,r).replace(t,r)===h.data(f)&&(i.value=t),h.focus()}),ft.form&&(tt=ft.form,it=n(tt),it.data(a)||(it.submit(n.watermark.hideAll),tt.submit?(it.data(a,tt.submit),tt.submit=function(t,i){return function(){var r=i.data(a);n.watermark.hideAll(),r.apply?r.apply(t,Array.prototype.slice.call(arguments)):r()}}(tt,it)):(it.data(a,1),tt.submit=function(t){return function(){n.watermark.hideAll(),delete t.submit,t.submit()}}(tt))))}n.watermark._show(h)}})},n.watermark.runOnce&&(n.watermark.runOnce=h,n.extend(n.expr[":"],{data:n.expr.createPseudo?n.expr.createPseudo(function(t){return function(i){return!!n.data(i,t)}}):function(t,i,r){return!!n.data(t,r[3])},watermarkable:function(n){var t,i=n.nodeName;return i===g?u:i!=="INPUT"?h:(t=n.getAttribute(v),!t||!ft.test(t))}}),function(t){n.fn.val=function(){var u=this,e=Array.prototype.slice.call(arguments),o;return u.length?e.length?(t.apply(u,e),n.watermark.show(u),u):u.data(s)?(o=(u[0].value||r).replace(l,r),o===(u.data(f)||r)?r:o):t.apply(u):e.length?u:i}}(n.fn.val),k.length&&n(function(){for(var u,r,i=k.length-1;i>=0;i--)u=k[i],r=t[u],typeof r==d&&(t[u]=function(t){return function(){return n.watermark.hideAll(),t.apply(null,Array.prototype.slice.call(arguments))}}(r))}),n(t).bind("beforeunload",function(){n.watermark.options.hideBeforeUnload&&n.watermark.hideAll()}))})(jQuery,window);
 
-/* CC Validation */
+/* CC Validation (jquerycreditcardvalidator.com) */
 ;(function(){var $,__indexOf=[].indexOf||function(item){for(var i=0,l=this.length;i<l;i++){if(i in this&&this[i]===item){return i}}return -1};$=jQuery;$.fn.validateCreditCard=function(callback,options){var card,card_type,card_types,get_card_type,is_valid_length,is_valid_luhn,normalize,validate,validate_number,_i,_len,_ref,_ref1;card_types=[{name:"amex",pattern:/^3[47]/,valid_length:[15]},{name:"diners_club_carte_blanche",pattern:/^30[0-5]/,valid_length:[14]},{name:"diners_club_international",pattern:/^36/,valid_length:[14]},{name:"jcb",pattern:/^35(2[89]|[3-8][0-9])/,valid_length:[16]},{name:"laser",pattern:/^(6304|670[69]|6771)/,valid_length:[16,17,18,19]},{name:"visa_electron",pattern:/^(4026|417500|4508|4844|491(3|7))/,valid_length:[16]},{name:"visa",pattern:/^4/,valid_length:[16]},{name:"mastercard",pattern:/^5[1-5]/,valid_length:[16]},{name:"maestro",pattern:/^(5018|5020|5038|6304|6759|676[1-3])/,valid_length:[12,13,14,15,16,17,18,19]},{name:"discover",pattern:/^(6011|622(12[6-9]|1[3-9][0-9]|[2-8][0-9]{2}|9[0-1][0-9]|92[0-5]|64[4-9])|65)/,valid_length:[16]}];if(options==null){options={}}if((_ref=options.accept)==null){options.accept=(function(){var _i,_len,_results;_results=[];for(_i=0,_len=card_types.length;_i<_len;_i++){card=card_types[_i];_results.push(card.name)}return _results})()}_ref1=options.accept;for(_i=0,_len=_ref1.length;_i<_len;_i++){card_type=_ref1[_i];if(__indexOf.call((function(){var _j,_len1,_results;_results=[];for(_j=0,_len1=card_types.length;_j<_len1;_j++){card=card_types[_j];_results.push(card.name)}return _results})(),card_type)<0){throw"Credit card type '"+card_type+"' is not supported"}}get_card_type=function(number){var _j,_len1,_ref2;_ref2=(function(){var _k,_len1,_ref2,_results;_results=[];for(_k=0,_len1=card_types.length;_k<_len1;_k++){card=card_types[_k];if(_ref2=card.name,__indexOf.call(options.accept,_ref2)>=0){_results.push(card)}}return _results})();for(_j=0,_len1=_ref2.length;_j<_len1;_j++){card_type=_ref2[_j];if(number.match(card_type.pattern)){return card_type}}return null};is_valid_luhn=function(number){var digit,n,sum,_j,_len1,_ref2;sum=0;_ref2=number.split("").reverse();for(n=_j=0,_len1=_ref2.length;_j<_len1;n=++_j){digit=_ref2[n];digit=+digit;if(n%2){digit*=2;if(digit<10){sum+=digit}else{sum+=digit-9}}else{sum+=digit}}return sum%10===0};is_valid_length=function(number,card_type){var _ref2;return _ref2=number.length,__indexOf.call(card_type.valid_length,_ref2)>=0};validate_number=function(number){var length_valid,luhn_valid;card_type=get_card_type(number);luhn_valid=false;length_valid=false;if(card_type!=null){luhn_valid=is_valid_luhn(number);length_valid=is_valid_length(number,card_type)}return callback({card_type:card_type,luhn_valid:luhn_valid,length_valid:length_valid})};validate=function(){var number;number=normalize($(this).val());return validate_number(number)};normalize=function(number){return number.replace(/[ -]/g,"")};this.bind("input",function(){$(this).unbind("keyup");return validate.call(this)});this.bind("keyup",function(){return validate.call(this)});if(this.length!==0){validate.call(this)}return this}}).call(this);
 
 /* Marker Manager */
@@ -37,6 +37,9 @@ var StyledIconTypes={};var StyledMarker,StyledIcon;(function(){var bu_="http://c
 /* jquery.jmapping */
 (function($){$.jMapping=function(map_elm,options){var settings,gmarkers,mapped,map,markerManager,places,bounds,jMapper,info_windows;map_elm=(typeof map_elm=="string")?$(map_elm).get(0):map_elm;if(!($(map_elm).data("jMapping"))){settings=$.extend(true,{},$.jMapping.defaults);$.extend(true,settings,options);gmarkers={};info_windows=[];var init=function(doUpdate){var info_window_selector,min_zoom,zoom_level;info_window_selector=[settings.side_bar_selector,settings.location_selector,settings.info_window_selector].join(" ");$(info_window_selector).hide();places=getPlaces();bounds=getBounds(doUpdate);if(doUpdate){gmarkers={};info_windows=[];markerManager.clearMarkers();google.maps.event.trigger(map,"resize");map.fitBounds(bounds);if(settings.force_zoom_level){map.setZoom(settings.force_zoom_level)}}else{map=createMap();markerManager=new MarkerManager(map)}places.each(function(){var marker=createMarker(this);if(!(settings.link_selector===false)){setupLink(this)}$(document).trigger("markerCreated.jMapping",[marker])});if(doUpdate){updateMarkerManager()}else{google.maps.event.addListener(markerManager,"loaded",function(){updateMarkerManager();if(settings.default_zoom_level){map.setZoom(settings.default_zoom_level)}})}if(!(settings.link_selector===false)&&!doUpdate){attachMapsEventToLinks()}};var createMap=function(){if(settings.map_config){map=new google.maps.Map(map_elm,settings.map_config)}else{map=new google.maps.Map(map_elm,{navigationControlOptions:{style:google.maps.NavigationControlStyle.SMALL},mapTypeControl:false,mapTypeId:google.maps.MapTypeId.ROADMAP,zoom:9})}map.fitBounds(bounds);if(settings.force_zoom_level){map.setZoom(settings.force_zoom_level)}return map};var getPlaces=function(){return $(settings.side_bar_selector+" "+settings.location_selector)};var getPlacesData=function(doUpdate){return places.map(function(){if(doUpdate){$(this).data("metadata",false)}return $(this).metadata(settings.metadata_options)})};var getBounds=function(doUpdate){var places_data=getPlacesData(doUpdate),newBounds,initialPoint;if(places_data.length){initialPoint=$.jMapping.makeGLatLng(places_data[0].point)}else{initialPoint=$.jMapping.makeGLatLng(settings.default_point)}newBounds=new google.maps.LatLngBounds(initialPoint,initialPoint);for(var i=1,len=places_data.length;i<len;i++){newBounds.extend($.jMapping.makeGLatLng(places_data[i].point))}return newBounds};var setupLink=function(place_elm){var $place_elm=$(place_elm),location_data=$place_elm.metadata(settings.metadata_options),link=$place_elm.find(settings.link_selector);link.attr("href",("#"+location_data.id))};var chooseIconOptions=function(category){if(settings.category_icon_options){if($.isFunction(settings.category_icon_options)){return settings.category_icon_options(category)}else{return settings.category_icon_options[category]||settings.category_icon_options["default"]}}else{return{}}};var createMarker=function(place_elm){var $place_elm=$(place_elm),place_data,point,marker,$info_window_elm,info_window;place_data=$place_elm.metadata(settings.metadata_options);point=$.jMapping.makeGLatLng(place_data.point);if(settings.category_icon_options){icon_options=chooseIconOptions(place_data.category);if((typeof icon_options==="string")||(icon_options instanceof google.maps.MarkerImage)){marker=new google.maps.Marker({icon:icon_options,position:point,map:map})}else{marker=new StyledMarker({styleIcon:new StyledIcon(StyledIconTypes.MARKER,icon_options),position:point,map:map})}}else{marker=new google.maps.Marker({position:point,map:map})}$info_window_elm=$place_elm.find(settings.info_window_selector);if($info_window_elm.length>0){info_window=new google.maps.InfoWindow({content:$info_window_elm.html(),maxWidth:settings.info_window_max_width});info_windows.push(info_window);google.maps.event.addListener(marker,"click",function(){$.each(info_windows,function(index,iwindow){if(info_window!=iwindow){iwindow.close()}});info_window.open(map,marker)})}gmarkers[parseInt(place_data.id,10)]=marker;return marker};var updateMarkerManager=function(){if(settings.always_show_markers===true){min_zoom=0}else{zoom_level=map.getZoom();min_zoom=(zoom_level<7)?0:(zoom_level-7)}markerManager.addMarkers(gmarkersArray(),min_zoom);markerManager.refresh();if(settings.force_zoom_level){map.setZoom(settings.force_zoom_level)}};var attachMapsEventToLinks=function(){var location_link_selector=[settings.side_bar_selector,settings.location_selector,settings.link_selector].join(" ");$(location_link_selector).live("click",function(e){e.preventDefault();var marker_index=parseInt($(this).attr("href").split("#")[1],10);google.maps.event.trigger(gmarkers[marker_index],"click")})};var gmarkersArray=function(){var marker_arr=[];$.each(gmarkers,function(key,value){marker_arr.push(value)});return marker_arr};if($(document).trigger("beforeMapping.jMapping",[settings])!=false){init();mapped=true}else{mapped=false}jMapper={gmarkers:gmarkers,settings:settings,mapped:mapped,map:map,markerManager:markerManager,gmarkersArray:gmarkersArray,getBounds:getBounds,getPlacesData:getPlacesData,getPlaces:getPlaces,update:function(){if($(document).trigger("beforeUpdate.jMapping",[this])!=false){init(true);this.map=map;this.gmarkers=gmarkers;this.markerManager=markerManager;$(document).trigger("afterUpdate.jMapping",[this])}}};$(document).trigger("afterMapping.jMapping",[jMapper]);return jMapper}else{return $(map_elm).data("jMapping")}};$.extend($.jMapping,{defaults:{side_bar_selector:"#map-side-bar:first",location_selector:".map-location",link_selector:"a.map-link",info_window_selector:".info-box",info_window_max_width:425,default_point:{lat:0,lng:0},metadata_options:{type:"attr",name:"data-jmapping"}},makeGLatLng:function(place_point){return new google.maps.LatLng(place_point.lat,place_point.lng)}});$.fn.jMapping=function(options){if((options=="update")&&$(this[0]).data("jMapping")){$(this[0]).data("jMapping").update()}else{if(options=="update"){options={}}$(this[0]).data("jMapping",$.jMapping(this[0],options))}return this}})(jQuery);
 
+/* typeaheadmap */
+!function(b){var c=function(e,d){this.$element=b(e);this.options=b.extend({},b.fn.typeaheadmap.defaults,d);this.matcher=this.options.matcher||this.matcher;this.sorter=this.options.sorter||this.sorter;this.highlighter=this.options.highlighter||this.highlighter;this.updater=this.options.updater||this.updater;this.$menu=b(this.options.menu);this.source=this.options.source;this.shown=false;this.key=this.options.key;this.value=this.options.value;this.listener=this.options.listener||this.listener;this.displayer=this.options.displayer||this.displayer;this.notfound=this.options.notfound||new Array();this.listen()};c.prototype={constructor:c,listener:function(e,d){},select:function(){var d=this.$menu.find(".active");var e=d.attr("data-key");this.listener(e,d.attr("data-value"));this.$element.val(this.updater(e)).change();return this.hide()},updater:function(d){return d},show:function(){var d=b.extend({},this.$element.position(),{height:this.$element[0].offsetHeight});this.$menu.insertAfter(this.$element).css({top:d.top+d.height,left:d.left}).show();this.shown=true;return this},hide:function(){this.$menu.hide();this.shown=false;return this},lookup:function(f){var e=this,d,g;this.query=this.$element.val();if(!this.query||this.query.length<this.options.minLength){return this.shown?this.hide():this}d=b.isFunction(this.source)?this.source(this.query,b.proxy(this.process,this)):this.source;return d?this.process(d):this},process:function(d){var e=this;d=b.grep(d,function(f){return e.matcher(f)});d=this.sorter(d);if(!d.length){if(this.shown){if(!this.notfound.length){return this.hide()}else{return this.render(this.notfound).show()}}else{return this}}return this.render(d.slice(0,this.options.items)).show()},matcher:function(d){return ~d[this.key].toLowerCase().indexOf(this.query.toLowerCase())},sorter:function(f){var g=[],e=[],d=[],h;while(h=f.shift()){if(!h[this.key].toLowerCase().indexOf(this.query.toLowerCase())){g.push(h)}else{if(~h[this.key].indexOf(this.query)){e.push(h)}else{d.push(h)}}}return g.concat(e,d)},highlighter:function(e,d){var f=this.query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g,"\\$&");return d.displayer(d,e,e[d.key].replace(new RegExp("("+f+")","ig"),function(g,h){return"<strong>"+h+"</strong>"}))},displayer:function(f,e,d){return d+" "+e[f.value]},render:function(d){var e=this;d=b(d).map(function(f,g){f=b(e.options.item).attr("data-key",g[e.key]);f.attr("data-value",g[e.value]);f.find("a").html(e.highlighter(g,e));return f[0]});d.first().addClass("active");this.$menu.html(d);return this},next:function(e){var f=this.$menu.find(".active").removeClass("active"),d=f.next();if(!d.length){d=b(this.$menu.find("li")[0])}d.addClass("active")},prev:function(e){var f=this.$menu.find(".active").removeClass("active"),d=f.prev();if(!d.length){d=this.$menu.find("li").last()}d.addClass("active")},listen:function(){this.$element.on("blur",b.proxy(this.blur,this)).on("keypress",b.proxy(this.keypress,this)).on("keyup",b.proxy(this.keyup,this));if(this.eventSupported("keydown")){this.$element.on("keydown",b.proxy(this.keydown,this))}this.$menu.on("click",b.proxy(this.click,this)).on("mouseenter","li",b.proxy(this.mouseenter,this))},eventSupported:function(d){var e=d in this.$element;if(!e){this.$element.setAttribute(d,"return;");e=typeof this.$element[d]==="function"}return e},move:function(d){if(!this.shown){return}switch(d.keyCode){case 9:case 13:case 27:d.preventDefault();break;case 38:d.preventDefault();this.prev();break;case 40:d.preventDefault();this.next();break}d.stopPropagation()},keydown:function(d){this.suppressKeyPressRepeat=~b.inArray(d.keyCode,[40,38,9,13,27]);this.move(d)},keypress:function(d){if(this.suppressKeyPressRepeat){return}this.move(d)},keyup:function(d){switch(d.keyCode){case 40:case 38:case 16:case 17:case 18:break;case 9:case 13:if(!this.shown){return}this.select();break;case 27:if(!this.shown){return}this.hide();break;default:this.lookup()}d.stopPropagation();d.preventDefault()},blur:function(f){var d=this;setTimeout(function(){d.hide()},150)},click:function(d){d.stopPropagation();d.preventDefault();this.select()},mouseenter:function(d){this.$menu.find(".active").removeClass("active");b(d.currentTarget).addClass("active")}};var a=b.fn.typeaheadmap;b.fn.typeaheadmap=function(d){return this.each(function(){var g=b(this),f=g.data("typeaheadmap"),e=typeof d=="object"&&d;if(!f){g.data("typeaheadmap",(f=new c(this,e)))}if(typeof d=="string"){f[d]()}})};b.fn.typeaheadmap.defaults={source:[],items:8,menu:'<ul class="typeaheadmap dropdown-menu"></ul>',item:'<li><a href="#"></a></li>',minLength:1};b.fn.typeaheadmap.Constructor=c;b.fn.typeaheadmap.noConflict=function(){b.fn.typeaheadmap=a;return this};b(document).on("focus.typeaheadmap.data-api",'[data-provide="typeaheadmap"]',function(f){var d=b(this);if(d.data("typeaheadmap")){return}f.preventDefault();d.typeaheadmap(d.data())})}(window.jQuery);
+
 /* Bookt API */
 var BAPI = BAPI || {};
 BAPI.UI = BAPI.UI || {};
@@ -48,12 +51,14 @@ context.maps = {};
 /*
 	Group: Initialization
 */
+context.jsroot = '/';
 context.init = function(options) {
 	BAPI.log("BAPI.UI initializing.");
 	if (typeof(options)==="undefined" || options===null) { options = {} };	
 	context.inithelpers.applyentityadvisor(options);
 	context.inithelpers.setupsummarywidgets(options);
 	context.inithelpers.setupsearchformwidgets(options);
+	context.inithelpers.setupbookingform(options);
 	context.inithelpers.setupinquiryformwidgets(options);
 	context.inithelpers.setuppopupinquiryformwidgets(options);
 	context.inithelpers.setupavailcalendarwidgets(options);
@@ -61,7 +66,7 @@ context.init = function(options) {
 	context.inithelpers.applyflexsliders(options);
 	context.inithelpers.applytruncate(options);	
 	context.inithelpers.setupmapwidgets(options);	
-	context.inithelpers.applymovemes(options);		
+	context.inithelpers.applymovemes(options);			
 }
 
 context.inithelpers = {	
@@ -151,6 +156,31 @@ context.inithelpers = {
 				});		
 			}
 		});	
+	},
+	setupbookingform: function(options) {
+		var ctl = $('.bapi-bookingform');
+		if (typeof(ctl)==="undefined" || ctl===null || ctl.length==0) { return; }
+		
+		var options = {
+			"mastertemplate": BAPI.templates.get('tmpl-booking-makebooking-masterlayout'),
+			"targetids": {                
+				"stayinfo": "#stayinfo",
+				"statement": "#statement",
+				"renter": "#renter",
+				"creditcard": "#creditcard",
+				"accept": "#accept"
+			},
+			"templates": {                
+				"stayinfo": BAPI.templates.get('tmpl-booking-makebooking-stayinfo'),
+				"statement": BAPI.templates.get('tmpl-booking-makebooking-statement'),
+				"renter": BAPI.templates.get('tmpl-booking-makebooking-renter'),
+				"creditcard": BAPI.templates.get('tmpl-booking-makebooking-creditcard'),
+				"accept": BAPI.templates.get('tmpl-booking-makebooking-accept')
+			}
+		};
+		$.getScript(context.jsroot + "bapi/bapi.ui.cchelper.js", function(data, ts, jqxhr) {
+			BAPI.UI.createMakeBookingWidget('#bookingform', options);
+		});
 	},
 	applyflexsliders: function(options) {
 		$.each($('.bapi-flexslider'), function (i, item) {
@@ -277,6 +307,7 @@ context.createRateBlockWidget = function (targetid, options) {
 		});
 		
 		$(".bapi-booknow").on("click", function() {
+			$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
 			var reqdata = saveFormToSession(this, options);
 			BAPI.log(BAPI.session().searchparams);
 			var url = "/makebooking?redir=1&keyid=" + cur.ID + 
@@ -285,6 +316,7 @@ context.createRateBlockWidget = function (targetid, options) {
 						"&adults=" + BAPI.session().searchparams.adults.min +
 						"&children=" + BAPI.session().searchparams.children.min +
 						"&rooms=" + BAPI.session().searchparams.rooms.min;
+			url = context.secureurl(url);
 			window.location.href = url;
 		});
 	});	
@@ -582,44 +614,49 @@ context.createDatePicker = function (targetid, options) {
 /*
 	Group: Booking
 */
-context.createMakeBookingWidget = function (targetid, options) {
-	if (typeof (options.dataselector) === "undefined") { options.dataselector = "bookingfield"; }
-	context.loading.ctlshow(options.targetids.statement);
-
-	// check if we need to redirect
-	var u = $.url(window.location.href);
-	var redir = u.param("redir");
-	var propid = u.param('keyid');
-	var sp = BAPI.session().searchparams;
-	if (redir == "1") {
-		// first time getting to the page, get values from querystring, svae to session and then redirect
-		var checkin = $.url(window.location.href).param('checkin');
-		var checkout = $.url(window.location.href).param('checkout');
-		var adults = $.url(window.location.href).param('adults');
-		var children = $.url(window.location.href).param('children');		
-		var df = BAPI.defaultOptions.dateFormatBAPI;
-		var dfParse = BAPI.defaultOptions.dateFormatMoment();
-		if (typeof (checkin) !== "undefined" && checkin !== null) {  
-			try { sp.checkin = moment(checkin, df).format(df); sp.scheckin=moment(sp.checkin, df).format(dfParse); } catch(err){}
-		}
-		if (typeof (checkout) !== "undefined" && checkout !== null) { 
-			try { sp.checkout = moment(checkout, df).format(df); sp.scheckout=moment(sp.checkout, df).format(dfParse); } catch(err){}
-		}
-		if (typeof (adults) !== "undefined" && adults != null) { sp.adults.min = adults; }
-		if (typeof (children) !== "undefined" && children != null) { sp.children.min = children; }		
-		BAPI.savesession(); // save the session
-		window.location.href = window.location.pathname + '?keyid=' + propid; // redirect to the same page minus the qs params
-		return;
+context.secureurl = function(path) {	
+	if (window.location.host=="localhost") {
+		return path;
 	}
-		
-	// render the master form layout
+	return "https://" + BAPI.site.secureurl + path;
+}
+
+context.nonsecureurl = function(path) {	
+	if (window.location.host=="localhost") {
+		return path;
+	}
+	return "http://" + BAPI.site.url + path;
+}
+
+function bookingHelper_DoRedirect(u) {
+	var redir = u.param("redir");
+	if (redir != "1") { return false; }
 	
-	// cleanup session
+	// first time getting to the page, get values from querystring, svae to session and then redirect
+	var checkin = u.param('checkin');
+	var checkout = u.param('checkout');
+	var adults = u.param('adults');
+	var children = u.param('children');		
+	var df = BAPI.defaultOptions.dateFormatBAPI;
+	var dfParse = BAPI.defaultOptions.dateFormatMoment();
+	var sp = BAPI.session().searchparams;				
+	if (typeof (checkin) !== "undefined" && checkin !== null) {  
+		try { sp.checkin = moment(checkin, df).format(df); sp.scheckin=moment(sp.checkin, df).format(dfParse); } catch(err){}
+	}
+	if (typeof (checkout) !== "undefined" && checkout !== null) { 
+		try { sp.checkout = moment(checkout, df).format(df); sp.scheckout=moment(sp.checkout, df).format(dfParse); } catch(err){}
+	}
+	if (typeof (adults) !== "undefined" && adults != null) { sp.adults.min = adults; }
+	if (typeof (children) !== "undefined" && children != null) { sp.children.min = children; }		
 	if (sp.adults.min===null || sp.adults.min=='null') { sp.adults.min = 2; }
-	if (sp.children.min===null || sp.children.min=='null') { sp.children.min = 0; }	
-	BAPI.log(sp);
-	
-	
+	if (sp.children.min===null || sp.children.min=='null') { sp.children.min = 0; }			
+	BAPI.savesession(); // save the session
+	var propid = u.param('keyid');
+	window.location.href = window.location.pathname + '?keyid=' + propid; // redirect to the same page minus the qs params
+	return true;
+}
+
+function bookingHelper_FullLoad(targetid,options,propid) {
 	var propoptions = { avail: 1, seo: 1 }
 	propoptions = $.extend({}, propoptions, BAPI.session().searchparams);
 	BAPI.get(propid, BAPI.entities.property, propoptions, function (data) {		
@@ -632,79 +669,157 @@ context.createMakeBookingWidget = function (targetid, options) {
 		$(options.targetids.statement).html(Mustache.render(options.templates.statement, data));
 		$(options.targetids.renter).html(Mustache.render(options.templates.renter, data));
 		$(options.targetids.creditcard).html(Mustache.render(options.templates.creditcard, data));
-		BAPI.log(data);
+		$(options.targetids.accept).html(Mustache.render(options.templates.accept, data));
 		$('.specialform').hide(); // hide the spam control
-		
-		// setup date pickers
 		context.createDatePicker('.datepickercheckin', { "property": data.result[0], "checkoutID": '.datepickercheckout' });
 		context.createDatePicker('.datepickercheckout', { "property": data.result[0] });	
 		
-		// handle simple get quote
-		$(".bapi-getquote").on("click", function () {
-			BAPI.log("--getting formdata--");
-			BAPI.log(options);
-			var reqdata = getFormData(options.dataselector);			
+		$(".bapi-revisedates").live("click", function () {
+			var reqdata = getFormData("revisedates");			
 			reqdata.pid = propid;
-			reqdata.quoteonly = 1;
-			// do fixup for the checkin/checkout			
-			BAPI.log("-- outputint form data--");
-			BAPI.log(reqdata);
-			BAPI.session().searchparams.scheckin = reqdata.scheckin;
-			BAPI.session().searchparams.scheckout = reqdata.scheckout;
+			reqdata.quoteonly = 1;			
+			if (typeof(reqdata.checkin)!=="undefined") { BAPI.session().searchparams.scheckin = reqdata.checkin; }
+			if (typeof(reqdata.checkout)!=="undefined") { BAPI.session().searchparams.scheckout = reqdata.checkout; }
+			if (typeof(reqdata.adults)!=="undefined") { BAPI.session().searchparams.adults.min = reqdata.adults; }
+			if (typeof(reqdata.children)!=="undefined") { BAPI.session().searchparams.children.min = reqdata.children; }
 			BAPI.savesession();
 			reqdata.checkin = BAPI.session().searchparams.checkin;
 			reqdata.checkout = BAPI.session().searchparams.checkout;
 			
 			$(options.targetids.stayinfo).block({ message: "<img src='" + loadingImgUrl + "' />" });
 			BAPI.get(propid, BAPI.entities.property, reqdata, function (sdata) {			
+				$(".modal").modal('hide');
 				sdata.site = BAPI.site;
 				sdata.config = BAPI.config();
 				sdata.textdata = BAPI.textdata;	
 				sdata.session = BAPI.session();				
 				$(options.targetids.statement).html(Mustache.render(options.templates.statement, sdata));
+				$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, sdata));
+				$(options.targetids.accept).html(Mustache.render(options.templates.accept, sdata));
+				context.createDatePicker('.datepickercheckin', { "property": data.result[0], "checkoutID": '.datepickercheckout' });
+				context.createDatePicker('.datepickercheckout', { "property": data.result[0] });	
 				$(options.targetids.stayinfo).unblock();									
-			});		
+			});	
 		});
+	});
+}
+
+function BookingHelper_SetupFormHandlers() {
+	$('.bapi-country').live('focus', function() {
+		$(this).typeaheadmap({ "source": BAPI.UI.countries, "key": "name", "value": "name" });		
+	});
+	/*$('.bapi-state').live('focus', function() {
+		new google.maps.places.Autocomplete(this, cco);
+	});
+	$('.bapi-city').live('focus', function() {		
+		var cco = { types: ['(cities)'], componentRestrictions: {country: $('.bapi-country').val()} };
+		new google.maps.places.Autocomplete(this, cco);
+	});*/	
+				
+	// do credit card validtion
+	$(".ccverify").live('keyup', function() {
+		var ctl = $(this);
+		ctl.validateCreditCard(function(e) {
+			if (e.luhn_valid && e.length_valid) { ctl.attr('data-isvalid', '1'); } 
+			else { ctl.attr('data-isvalid', '0'); }
+		})			
+	});
+	
+	// try to auto set the name on card
+	$('.autofullname').live('focus', function() {
+		var c = $(this);
+		if (c.val()===null || c.val()=='') {
+			c.val($('#renterfirstname').val() + ' ' + $('#renterlastname').val());
+		}
+	});
+}
+
+function BookingHelper_ValidateForm(reqfields) {
+	for (i=0; i < reqfields.length; ++i) {
+		var rf = $(reqfields[i]);
+		$.validity.clear();
+		$.validity.start();	
+		var match = rf.attr('data-validity');				
+		if (typeof(match)==="undefined" || match===null) {
+			rf.require();
+		} else {
+			rf.require().match(match);
+		}								
+		var result = $.validity.end();
+		if (!result.valid) {		
+			alert(BAPI.textdata['Please fill out all required fields']); rf.focus(); return false;
+		}
+		// special case for credit card field
+		if (rf.hasClass('ccverify') && rf.attr('data-isvalid')!='1') {
+			alert(BAPI.textdata['The entered credit card is invalid']); rf.focus(); return false;
+		}
+		if (rf.hasClass('checkbox')) {
+			BAPI.log(rf.attr('checked'));
+			if (!rf.attr('checked')) {
+				alert(BAPI.textdata['Please accept the terms and conditions']); rf.focus(); return false;
+			}
+		}
+	}
+	return true;
+}
+function BookingHelper_BookHandler(targetid, options, propid) {
+	var processing = false;	
+	$(".makebooking").live("click", function () { 		
+		if (processing) { return; } // already in here
+		processing = true; // make sure we do not reenter
 		
-		var processing = false;	
-		$(".makebooking").on("click", function () { 		
-			BAPI.log("make booking");
-			if (processing) { return; } // already in here
-			
-			$.validity.start();
-			$('.required').require();
-			var result = $.validity.end();
-			if (!result.valid) {
-				//processing = false; alert('Please fill out all required fields.'); return;
+		// get the list of required fields and validate them
+		var reqfields = $.extend([],$('.required'));
+		processing = BookingHelper_ValidateForm(reqfields);				
+		if (!processing) { $(targetid).unblock(); return; }		
+		
+		var reqdata = getFormData(options.dataselector);		
+		// add the current booking context to our request form
+		if (typeof(reqdata.checkin)==="undefined" || reqdata.checkin==null) { reqdata.checkin = BAPI.session().searchparams.checkin; }
+		if (typeof(reqdata.checkout)==="undefined" || reqdata.checkout==null) { reqdata.checkout = BAPI.session().searchparams.checkout; }
+		if (typeof(reqdata.numadults)==="undefined" || reqdata.numadults==null) { reqdata.numadults = BAPI.session().searchparams.adults.min; }
+		if (typeof(reqdata.numchildren)==="undefined" || reqdata.numchildren==null) { reqdata.numchildren = BAPI.session().searchparams.children.min; }
+		if (typeof(reqdata.numrooms)==="undefined" || reqdata.numrooms==null) { reqdata.numrooms = BAPI.session().searchparams.rooms.min; }
+		BAPI.log(reqdata);
+		
+		$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
+		reqdata.pid = propid;						
+		if (typeof(reqdata.special)!=="undefined" && reqdata.special!==null && reqdata.special!='') {
+			window.location.href = options.responseurl + '?special=1';
+			processing = false;
+			return; // special textbox has a value, not a real person
+		}
+
+		BAPI.save(BAPI.entities.booking, reqdata, function(bres) {
+			BAPI.log(bres);
+			$(targetid).unblock();
+			processing = false;
+			if (!bres.result.IsValid) {
+				alert(bres.result.ValidationMessage);
+			} else {
+				options.responseurl = "/bookingconfirmation";
+				window.location.href = context.nonsecureurl(options.responseurl + '?bid=' + bres.result.ID + '&pid=' + bres.result.PersonID);
 			}
-			
-			$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
-			processing = true; // make sure we do not reenter				
-			
-			var reqdata = getFormData(options.dataselector);			
-			reqdata.pid = propid;						
-			if (typeof(reqdata.special)!=="undefined" && reqdata.special!==null && reqdata.special!='') {
-				window.location.href = options.responseurl + '?special=1';
-				processing = false;
-				return; // special textbox has a value, not a real person
-			}
-			// do fixup for the checkin/checkout
-			BAPI.session().searchparams.scheckin = reqdata.scheckin;
-			BAPI.session().searchparams.scheckout = reqdata.scheckout;
-			BAPI.savesession();
-			reqdata.checkin = BAPI.session().searchparams.checkin;
-			reqdata.checkout = BAPI.session().searchparams.checkout;
-			
-			BAPI.log(reqdata);			
-			BAPI.save(BAPI.entities.booking, reqdata, function(bres) {
-				$(targetid).unblock();
-				processing = false;
-				if (!bres.result.IsValid) {
-					alert(bres.result.ValidationMessage);
-				}
-			});			
-		});		
-	});					
+		});			
+	});		
+}
+
+context.createMakeBookingWidget = function (targetid, options) {
+	if (typeof (options.dataselector) === "undefined") { options.dataselector = "bookingfield"; }
+	
+	// check if we need to redirect
+	var u = $.url(window.location.href);
+	if (bookingHelper_DoRedirect(u)) { return; }
+	var propid = u.param('keyid');
+	if (typeof(propid)==="undefined" || propid===null) {
+		alert("You have reached this page in error.  You will be redirected back to the home page.");
+		window.location = "/"; //TODO: need to redirect back to the correct place
+		return;
+	}
+	
+	bookingHelper_FullLoad(targetid, options, propid);	
+	BookingHelper_SetupFormHandlers();
+	BookingHelper_BookHandler(targetid, options, propid);		
 }
 
 

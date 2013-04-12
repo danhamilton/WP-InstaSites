@@ -12,9 +12,10 @@ function bapi_options_init(){
 	register_setting('bapi_options','api_key');
 	register_setting('bapi_options','bapi_language');
 	register_setting('bapi_options','bapi_solutiondata');
-	register_setting('bapi_options','bapi_baseurl');	
+	register_setting('bapi_options','bapi_baseurl');		
 	register_setting('bapi_options','bapi_custom_tmpl_loc');
 	register_setting('bapi_options','bapi_site_cdn_domain'); 
+	register_setting('bapi_options','bapi_secureurl');
 	register_setting('bapi_options','bapi_slideshow_image1');
 	register_setting('bapi_options','bapi_slideshow_image2');
 	register_setting('bapi_options','bapi_slideshow_image3');
@@ -34,7 +35,10 @@ function bapi_settings_page() {
 	if(get_option('bapi_site_cdn_domain')){
 		$cdn_url = get_option('bapi_site_cdn_domain');
 	}
-	
+	$surl = '';
+	if(get_option('bapi_secureurl')){
+		$surl = get_option('bapi_secureurl');
+	}
 	$bapi_baseurl = 'connect.bookt.com';
 	if(get_option('bapi_baseurl')){
 		$bapi_baseurl = get_option('bapi_baseurl');
@@ -42,6 +46,7 @@ function bapi_settings_page() {
 	if(empty($bapi_baseurl)){
 		$bapi_baseurl = 'connect.bookt.com';
 	}
+	
 ?>
 <style type="text/css">
 	.available-tags ul { margin:0; padding:0; }
@@ -66,12 +71,10 @@ function bapi_settings_page() {
         <?php settings_fields( 'bapi_options' ); ?>
         <table class="form-table">
 		<tr valign="top">
-			<th scope="row">Solution ID</th>
-			<td><input type="text" name="solution_id" size="6" value="<?php echo get_option('solution_id'); ?>" /></td>
-		</tr> 
-		<tr valign="top">
 			<th scope="row">API Key</th>
-			<td><input type="text" name="api_key" size="60" value="<?php echo get_option('api_key'); ?>" /></td>
+			<td><input type="text" name="api_key" id="apikey" size="60" value="<?php echo get_option('api_key'); ?>" />
+				<a href="javascript:void(0)" id="validate-apikey">Validate</a>
+			</td>
 		</tr>
 		<tr valign="top">
 			<th scope="row">Language</th>
@@ -82,8 +85,12 @@ function bapi_settings_page() {
 			<td><input type="text" name="bapi_baseurl" size="60" value="<?php echo $bapi_baseurl; ?>" /></td>
 		</tr>
 		<tr valign="top" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">
-			<th scope="row">CDN Site URL</th>
+			<th scope="row">Site URL</th>
 			<td><input type="text" name="bapi_site_cdn_domain" size="60" value="<?php echo $cdn_url; ?>" /></td>
+		</tr>
+		<tr valign="top" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">
+			<th scope="row">Secure Site URL</th>
+			<td><input type="text" name="bapi_secureurl" size="60" value="<?php echo $surl; ?>" /></td>
 		</tr>
 		<tr>
 			<td colspan="2"><em>If you do not already have an API key for Bookt, please contact <a href="mailto:support@bookt.com?subject=API%20Key%20-%20Wordpress%20Plugin">support@bookt.com</a> to obtain an API key.</em></td>
@@ -252,7 +259,7 @@ function bapi_settings_page() {
 						BAPI.get(pkid, entity, { "nearbyprops": 1, "avail": 1, "reviews": 1, "seo": 1, "descrip": 1, "rates": 1, "poi": 1 }, function(pdata) {
 							pdata.config = BAPI.config();
 							pdata.textdata = BAPI.textdata;
-							var url = '<?= plugins_url('/import.php', __FILE__) ?>';
+							var url = '<?= plugins_url('/import.php?p=1', __FILE__) ?>';
 							params.pkid = pkid;
 							params.PrimaryImage = pdata.result[0].PrimaryImage.MediumURL;
 							params.BookingURL = pdata.result[0].ContextData.SEO.BookingURL;
@@ -298,7 +305,7 @@ function bapi_settings_page() {
 				$('#dlg-result').dialog({width:700});
 				var txtresult = $('#dlg-txtresult');
 				txtresult.html('<h5>Setting up menu system</h5>');
-				var url = '<?= plugins_url('/init.php', __FILE__) ?>';
+				var url = '<?= plugins_url('/init.php?p=1', __FILE__) ?>';
 				BAPI.utils.dopost(url, { "pagedefs": pagedefs }, function(res) {
 					txtresult.append(res);
 				});
@@ -310,6 +317,14 @@ function bapi_settings_page() {
 					});					
 				});*/							
 			}
+		});
+	
+		$('#validate-apikey').click(function() {
+			var apikey = $('#apikey').val();
+			var url = BAPI.defaultOptions.baseURL + "/js/bapi.js?apikey=" + apikey;
+			$.ajax(url)
+				.done(function() { alert("This is a valid api key"); })
+				.fail(function() { alert("This is not a valid api key"); });
 		});
 	
 		$('input#bapi_slideshow_image1,input#image-pick1').click(function(){

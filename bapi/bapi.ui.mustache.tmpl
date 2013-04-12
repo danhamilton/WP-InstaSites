@@ -5,12 +5,12 @@
 <div class="property-search-block">
 {{#config.checkin.enabled}}
 <div class="category-block">
-	<input type="text" class="span12 txtb quicksearch sessioncheckin datepickercheckin" data-field="checkin" />
+	<input type="text" class="span12 txtb quicksearch sessioncheckin datepickercheckin" data-field="checkin" placeholder="{{textdata.Check-In}}" />
 </div>
 {{/config.checkin.enabled}}
 {{#config.checkout.enabled}}
 <div class="category-block">
-	<input type="text" class="span12 txtb quicksearch sessioncheckout datepickercheckout" data-field="checkout" />
+	<input type="text" class="span12 txtb quicksearch sessioncheckout datepickercheckout" data-field="checkout" placeholder="{{textdata.Check-Out}}" />
 </div>
 {{/config.checkout.enabled}}
 {{#config.los.enabled}}
@@ -116,19 +116,23 @@
 </script> 
 
 <script id="tmpl-search-rateblock" type="text/html">
+{{#result}}
 <div id="book-block" class="module shadow">
 <div class="pd">
-	<div class="rate-type">
-		{{#result}}
+	<div class="rate-type">		
 		{{^ContextData.Quote.IsValid}}
-		{{ContextData.Quote.ValidationMessage}}
+		<div class="alert alert-error">{{ContextData.Quote.ValidationMessage}}</div>
 		{{/ContextData.Quote.IsValid}}
 		{{#ContextData.Quote.IsValid}}
-		{{ContextData.Quote.PublicNotes}}
-		{{/ContextData.Quote.IsValid}}	
-		{{/result}}
+		{{#ContextData.Quote.QuoteDisplay.prefix}}<span>{{ContextData.Quote.QuoteDisplay.prefix}}:</span>{{/ContextData.Quote.QuoteDisplay.prefix}}
+		<div class="clearfix"></div>
+		<strong class="rate">{{ContextData.Quote.QuoteDisplay.value}}</strong>
+		{{#ContextData.Quote.QuoteDisplay.suffix}}<span classs="input-small">/{{ContextData.Quote.QuoteDisplay.suffix}}</span>{{/ContextData.Quote.QuoteDisplay.suffix}}
+		{{/ContextData.Quote.IsValid}}			
 	</div>       
+	{{#ContextData.Quote.IsValid}}
 	<button class="book-btn btn btn-large btn-warning bapi-booknow" type="button">{{textdata.Book Now}}</button>
+	{{/ContextData.Quote.IsValid}}			
 	<hr />  
 	<div class="row-fluid">
 		<div class="span6">
@@ -140,9 +144,10 @@
       <input class="span12 quicksearch datepickercheckout" type="text" placeholder="{{textdata.Check-Out}}" value="{{session.searchparams.scheckout}}" data-field="checkout" required>	  
       </div>
 	</div>
-	<button class="btn btn-mini bapi-getquote" type="button">Change</button>
+	<button class="btn btn-mini bapi-getquote" type="button">{{textdata.Update}}</button>
 </div>
 </div>	
+{{/result}}
 </script>
 
 {{#config.checkout.enabled}}
@@ -200,7 +205,9 @@
 				<div class="system-msg-error">{{ContextData.Quote.ValidationMessage}}</div>
 				{{/ContextData.Quote.IsValid}}
 				{{#ContextData.Quote.IsValid}}
-				{{ContextData.Quote.PublicNotes}}
+				{{#ContextData.Quote.QuoteDisplay.prefix}}<span>{{ContextData.Quote.QuoteDisplay.prefix}}:</span>{{/ContextData.Quote.QuoteDisplay.prefix}}
+				<strong class="rate">{{ContextData.Quote.QuoteDisplay.value}}</strong>
+				{{#ContextData.Quote.QuoteDisplay.suffix}}<span classs="input-small">/{{ContextData.Quote.QuoteDisplay.suffix}}</span>{{/ContextData.Quote.QuoteDisplay.suffix}}
 				{{/ContextData.Quote.IsValid}}
 			</div>			
 		</div>
@@ -253,10 +260,12 @@
 		<div class="rates clearfix">
 		<div class="portal-rates pull-left">
 			{{^ContextData.Quote.IsValid}}
-			<div class="system-msg-error">{{ContextData.Quote.ValidationMessage}}</div>
+			<div><small>{{ContextData.Quote.ValidationMessage}}</small></div>
 			{{/ContextData.Quote.IsValid}}
 			{{#ContextData.Quote.IsValid}}
-			{{ContextData.Quote.PublicNotes}}
+			{{#ContextData.Quote.QuoteDisplay.prefix}}<span>{{ContextData.Quote.QuoteDisplay.prefix}}:</span>{{/ContextData.Quote.QuoteDisplay.prefix}}
+			<strong class="rate">{{ContextData.Quote.QuoteDisplay.value}}</strong>
+			{{#ContextData.Quote.QuoteDisplay.suffix}}<span classs="input-small">/{{ContextData.Quote.QuoteDisplay.suffix}}</span>{{/ContextData.Quote.QuoteDisplay.suffix}}
 			{{/ContextData.Quote.IsValid}}
 		</div>
 		{{#ContextData.SEO.Keyword}}<a class="property-link pull-right" href="{{&ContextData.SEO.DetailURL}}">{{textdata.Details}} <span>&rarr;</span></a>{{/ContextData.SEO.Keyword}}
@@ -324,7 +333,7 @@
 	<div class="row-fluid">
 		<div class="span7 left-side">
 		<h2 class="title">{{Headline}}</h2>
-		<p class="location"><span><b>{{textdata.City}}:</b> {{City}}</span> {{#Bedrooms}}<b>{{textdata.Beds}}</b>: {{Bedrooms}} | {{/Bedrooms}}{{#Bathrooms}}<b>{{textdata.Baths}}</b>: {{Bathrooms}} | {{/Bathrooms}}<b>{{textdata.Sleeps}}</b>: {{Sleeps}}</p>                
+		<p class="location"><span><b>{{textdata.City}}:</b> {{City}}</span> {{#Bedrooms}}<b>{{textdata.Beds}}</b>: {{Bedrooms}} | {{/Bedrooms}}{{#Bathrooms}}<b>{{textdata.Baths}}</b>: {{Bathrooms}} | {{/Bathrooms}}<b>{{#Sleeps}}{{textdata.Sleeps}}</b>: {{Sleeps}}{{/Sleeps}}</p>                
 		</div>			
 		<div class="span5 nav-links">
 			<a class="link" href="/rentalsearch"><span>&larr;</span>&nbsp;{{textdata.Back to Results}}</a>
@@ -357,7 +366,7 @@
 	<div class="tabbable">
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="#tab1" data-toggle="tab">{{textdata.General}}</a></li>
-		<li><a href="#tab2" data-toggle="tab">{{textdata.Details & Availability}}</a></li>
+		<li><a href="#tab2" data-toggle="tab">{{textdata.Rates & Availability}}</a></li>
 		<li><a href="#tab3" data-toggle="tab">{{textdata.Amenities}}</a></li>
 		<li><a href="#tab4" id="tabs4" data-toggle="tab">{{textdata.Attractions}}</a></li>
 		<li><a href="#tab5" data-toggle="tab">{{textdata.Reviews}}</a></li>
@@ -373,9 +382,6 @@
 		<div class="tab-pane" id="tab2">					
 		<div class="row-fluid">
 		<div class="span12 box-sides">		
-		<h3>Property Location</h3>
-		<img src="//maps.googleapis.com/maps/api/staticmap?center={{Latitude}},{{Longitude}}&zoom=8&size=750x250&maptype=roadmap&markers=color:blue%7Clabel:%20%7C{{Latitude}},{{Longitude}}&sensor=false" />  
-		<hr/>
 		<h3>{{textdata.Rates & Availability}}</h3>
 		<div id="avail" class="bapi-availcalendar" data-options='{ "availcalendarmonths":{{config.availcalendarmonths}}, "numinrow": 3 }' data-pkid="{{ID}}" />
 		<hr/>
@@ -417,29 +423,26 @@
 		</table>
 		</div>
 		</div>
-		</div>
-		
+		</div>		
 		<div class="tab-pane" id="tab3">			
 		<div class="row-fluid">
 		<div class="span12 box-sides">
 		<h3>{{textdata.Amenities}}</h3>
-		<ul class="amenities-list clearfix">
+		<ul class="amenities-list unstyled clearfix">
 		{{#Amenities2}}
 		{{#Values}}
-			<li>{{Label}}</li>
+			<li><span class="halflings ok-sign"><i></i>{{Label}}</span></li>
 		{{/Values}}
 		{{/Amenities2}}
 		</ul>
 		<div class="clearfix"></div>
 		</div>
 		</div>
-		</div>
-		
+		</div>		
 		<div class="tab-pane" id="tab4">			
 		<div class="row-fluid">
 		<div class="span12 box-sides">
-			<div id="poi-map-prop" class="bapi-map" data-loc-selector='.poi-map-location' data-refresh-selector='#tabs3' data-refresh-selector-event='shown' data-link-selector='.poi-map-item' data-category-icons='{ "starred": { "color": "#E8413A" }, "poi": { "color": "#465AE0" } }'style="width:100%; height:400px;"></div>
-			
+			<div id="poi-map-prop" class="bapi-map" data-loc-selector='.poi-map-location' data-refresh-selector='#tabs4' data-refresh-selector-event='shown' data-link-selector='.poi-map-item' data-category-icons='{ "starred": { "color": "#E8413A" }, "poi": { "color": "#465AE0" } }' style="width:100%; height:400px;"></div>			
 			<div id="map-side-bar">
 			<table class="table table-bordered table-striped poi-map-locations">
 			<thead>
@@ -463,14 +466,14 @@
 							<div class="prop-location">
 								<span>
 								<b>{{textdata.City}}: </b>{{City}} 
-								{{#Beds}}<b>{{textdata.Beds}}: </b>{{Beds}}&nbsp;{{/Beds}}
-								{{#Baths}}<b>{{textdata.Baths}}: </b>{{Baths}}&nbsp;{{/Baths}}
+								{{#Bedrooms}}<b>{{textdata.Beds}}: </b>{{Bedrooms}}&nbsp;{{/Bedrooms}}
+								{{#Bathrooms}}<b>{{textdata.Baths}}: </b>{{Bathrooms}}&nbsp;{{/Bathrooms}}
 								{{#Sleeps}}<b>{{textdata.Sleeps}}: </b>{{Sleeps}}&nbsp;{{/Sleeps}}
 								</span>
 							</div>
 							<div class="portal-rates">
 								{{^ContextData.Quote.IsValid}}
-								<div class="system-msg-error">{{ContextData.Quote.ValidationMessage}}</div>
+								<div class="alert alert-error">{{ContextData.Quote.ValidationMessage}}</div>
 								{{/ContextData.Quote.IsValid}}
 								{{#ContextData.Quote.IsValid}}
 								{{ContextData.Quote.PublicNotes}}
@@ -481,8 +484,7 @@
 				</td>
 				<td>{{Headline}}</td>
 				<td>{{Type}}</td>
-				<td>-</td>  
-			
+				<td>-</td>  			
 			</tr>
 			{{#ContextData.Attractions}}
 			<tr>
@@ -518,22 +520,31 @@
 		</div>
 		<div class="tab-pane" id="tab5">
 		<div class="row-fluid">
-		<div class="span12 box-sides">                
+		<div class="span12 box-sides">
 		{{#ContextData.Reviews}}
-		<ul class="unstyled">
-			<li><b>Title: </b>{{Title}}</li>
-			<li><b>Added By: </b>{{AddedByPersonID}}</li>
-			<li><b>Added On: </b>{{AddedOn}}</li>
-			<li><b>Feedback: </b>{{FeedbackValue}}</li>
-			<li><b>Comment: </b>{{&Comment}}</li>
-			<li></li>
-			<li><b>Modified By: </b>{{ModifiedByPersonID}}</li>
-			<li><b>Modified On: </b>{{ModifiedOn}}</li>
-			<li></li>
-			<li><b>Reviewed By: </b>{{ReviewerDisplayName}}</li>
-			<li><b>Response: </b>{{&Response}}</li>
-		</ul>
-		{{/ContextData.Reviews}}
+		<div class="row-fluid review">
+			<div class="span2 left-side">
+				<span class="glyphicons chat" href=""><i></i></span>
+				<h5 class="username">Username</h5>
+			</div>
+			<div class="span10">
+				<h5 class="title">{{Title}}</h5>
+				<div class="rating">{{Rating}} <span>Posted on: {{SubmittedOn.ShortDate}}</span></div>
+				<div class="comment">
+				{{&Comment}}
+				</div>
+				{{#Response}}
+				<div class="response-block">
+				<span class="postdate">Posted on by <strong>{{ReviewedBy.FirstName}} {{ReviewedBy.LastName}}</strong></span>
+				<div class="response">{{&Response}}</div>
+				</div>
+				{{/Response}}
+				
+				<a class="full-rev-link" href="">See full review on Flipkey</a>
+			</div>
+		</div>
+		<hr/>
+		{{/ContextData.Reviews}}		
 		</div>
 		</div>					
 		</div>
@@ -799,7 +810,7 @@
 	  </div>
 	  <div class="item-info shadow">		
 			<h2 class="title">{{Name}}</h2>
-			<div class="description">{{&Summary}}</div>
+			<div class="description bapi-truncate" data-trunclen="100">{{&Summary}}</div>
 			{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}" class="btn">{{textdata.See Details}}</a>{{/ContextData.SEO.Keyword}}
 			</div>
 	</div>
@@ -1201,17 +1212,15 @@
 		<div class="booking-prop-img">
 			<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" caption="{{PrimaryImage.Captions}}" />		
 		</div>
-	</header>
-	{{^ContextData.Quote.IsValid}}
-	<div class="alert alert-error">{{ContextData.Quote.ValidationMessage}}</div>
-	{{/ContextData.Quote.IsValid}}
-	
+	</header>	
 	<div class="booking-page bordersolid">
 		<article class="span8 booking-form">
 		<div class="form-horizontal pd">
 			<div id="renter"></div>
 			<hr />
 			<div id="creditcard"></div>
+			<hr />
+			<div id="accept"></div>
 		</div>
 		</article>
 		
@@ -1238,13 +1247,45 @@
 
 <script id="tmpl-booking-makebooking-stayinfo" type="text/html">
 {{#result}}
+{{^ContextData.Quote.IsValid}}
+<div class="alert alert-error">{{ContextData.Quote.ValidationMessage}}</div>
+{{/ContextData.Quote.IsValid}}
 <span class="glyphicons module notes_2"><i></i>{{textdata.Booking Details}}</span>
 <div id="details" class="item row-fluid">                  
 	<p><span class="glyphicons calendar"><i></i>{{textdata.Check-In}}</span> <span class="pull-right">{{session.searchparams.scheckin}}</span></p>
 	<p><span class="glyphicons calendar"><i></i>{{textdata.Check-Out}}</span> <span class="pull-right">{{session.searchparams.scheckout}}</span></p>
 	<p><span class="glyphicons group"><i></i>{{textdata.Adults}}</span><span class="pull-right">{{session.searchparams.adults.min}}</span></p>
 	<p><span class="glyphicons group"><i></i>{{textdata.Children}}</span><span class="pull-right">{{session.searchparams.children.min}}</span></p>
-	<p><span class="pull-right"><a href="#">Change Info</a></span></p>
+	<p><span class="pull-right"><a href="#revisedates" data-toggle="modal" class="bapi-showrevise">{{textdata.Change Info}}</a></span></p>
+</div>
+
+<div id="revisedates" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-body">
+    <div class="row-fluid">
+		<div class="span6">
+			<label>{{textdata.Check-In}}</label>
+			<input class="span12 revisedates datepickercheckin" type="text" placeholder="{{textdata.Check-In}}" value="{{session.searchparams.scheckin}}" data-field="checkin" required>
+		</div>
+		<div class="span6">
+			<label>{{textdata.Check-Out}}</label>
+			<input class="span12 revisedates datepickercheckout" type="text" placeholder="{{textdata.Check-Out}}" value="{{session.searchparams.scheckout}}" data-field="checkout" required>	  
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span6">
+			<label>{{textdata.Adults}}</label>
+			<input class="span12 revisedates" type="text" placeholder="{{textdata.Adults}}" value="{{session.searchparams.adults.min}}" data-field="adults" required>
+		</div>
+		<div class="span6">
+			<label>{{textdata.Children}}</label>
+			<input class="span12 revisedates" type="text" placeholder="{{textdata.Adults}}" value="{{session.searchparams.children.min}}" data-field="children" required>	  
+		</div>
+	</div>
+  </div>
+  <div class="modal-footer">
+	<button class="btn" data-dismiss="modal" aria-hidden="true">{{textdata.Close}}</button>
+    <button class="btn btn-primary bapi-revisedates">{{textdata.Update}}</button>    
+  </div>
 </div>
 {{/result}}
 </script>
@@ -1297,8 +1338,8 @@
 {{/OptionalFees.length}}
 {{#OptionalFees}}
 	<p>
-	{{#BoolField}}<input type="checkbox" />{{/BoolField}}
-	{{^BoolField}}<input type="text" value="{{Quantity}}" />{{/BoolField}} 
+	{{#BoolField}}<input type="checkbox" class=" bapi-monitorstatement" data-rid="{{RelatedToID}}" data-reid="{{RelatedToEntityID}}" />{{/BoolField}}
+	{{^BoolField}}<input type="text" class="span2 bapi-monitorstatement" value="{{Quantity}}" data-rid="{{RelatedToID}}" data-reid="{{RelatedToEntityID}}" />{{/BoolField}}
 	{{{Notes}}}
 	<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span>
 	</p>
@@ -1354,7 +1395,7 @@
 <div class="control-group">
 	<label class="control-label" for="renteremail">{{textdata.Email}}:*</label>
 	<div class="controls">
-		<input type="text" id="renteremail" class="span10 bookingfield required" data-field="renteremail" required />
+		<input type="text" id="renteremail" class="span10 bookingfield required" data-validity="email" data-field="renteremail" required />
 	</div>
 </div>
 <div class="control-group">
@@ -1394,23 +1435,29 @@
 <div class="control-group">
 	<label class="control-label" for="noc">{{textdata.Name on Card}}:</label>
 	<div class="controls">
-		<input type="text" id="noc" class="span10 bookingfield required" data-field="ccnameoncard" required />
+		<input type="text" id="noc" class="span10 bookingfield required autofullname" data-field="ccnameoncard" required />
 	</div>
 </div>
 <div class="control-group">
 	<label class="control-label" for="ccnum">{{textdata.Card Number}}:</label>
 	<div class="controls">
-		<input type="text" id="ccnum" class="span10 bookingfield required" data-field="cccardnum" required />
+		<input type="text" id="ccnum" class="span10 bookingfield required ccverify" data-isvalid="0" data-field="cccardnum" required />
 	</div>
 </div>
 <div class="control-group">
 	<label class="control-label inline" for="ccexpr">{{textdata.Expiration}}:</label>
 	<div class="controls controls-row">
 		<select class="span5 bookingfield required" required>
-			<option>{{textdata.Month}}</option>
+			<option value="">-{{textdata.Month}}-</option>
+			{{#config.ccmonths.values}}
+			<option value="{{Data}}">{{Label}}</option>
+			{{/config.ccmonths.values}}
 		</select>
 		<select class="span5 bookingfield required" required>
-			<option>{{textdata.Year}}</option>
+			<option value="">-{{textdata.Year}}-</option>
+			{{#config.ccyears.values}}
+			<option value="{{Data}}">{{Label}}</option>
+			{{/config.ccyears.values}}
 		</select>
 	</div>
 </div>
@@ -1426,9 +1473,7 @@
 <div class="control-group">
 	<label class="control-label" for="cccvv">{{textdata.Country}}:</label>
 	<div class="controls">
-		<select class="span5 bookingfield required" required>
-			<option>{{textdata.Country}}</option>
-		</select>		
+		<input type="text" id="billingcountry" class="span10 bookingfield required bapi-country" data-field="billingcountry" required />						
 	</div>
 </div>
 <div class="control-group">
@@ -1444,29 +1489,33 @@
 	</div>
 </div>
 <div class="control-group">
-	<label class="control-label" for="billingcity">{{textdata.City}}:</label>
+	<label class="control-label" for="billingcity">{{textdata.City}}/{{textdata.Town}}:</label>
 	<div class="controls">
-		<input type="text" id="billingcity" class="span10 bookingfield" data-field="billingcity" />
+		<input type="text" id="billingcity" class="span10 bookingfield bapi-city" data-field="billingcity" />
 	</div>
 </div>
 <div class="control-group">
-	<label class="control-label inline" for="billingstate">{{textdata.State}}:</label>
+	<label class="control-label inline" for="billingstate">{{textdata.State}}/{{textdata.Province}}:</label>
 	<div class="controls controls-row">
-		<input type="text" id="billingstate" class="span4 bookingfield" data-field="billingstate" />
+		<input type="text" id="billingstate" class="span4 bookingfield bapi-state" data-field="billingstate" />
 		<label class="control-label span3 row-fluid">{{textdata.Postal Code}}:</label>
 		<input type="text" class="span3 row-fluid" data-field="billingpostalcode" />
 	</div>
 </div>
 <hr />
+</script>
 
-<legend>4. Accept Terms and Conditions</legend>
+<script id="tmpl-booking-makebooking-accept" type="text/html">
+{{#result}}
+{{#ContextData.Quote.IsValid}}
+<legend>4. {{textdata.Accept Terms and Conditions}}</legend>
 <div class="control-group">
 	<p>{{config.rentalpolicysummary}}</p>
 	<div class="controls-rows">
 		<label class="checkbox span6">	
 			<small>
 			<em>
-				<input type="checkbox">{{textdata.I have read and accept the terms and conditions}}:</input>&nbsp;
+				<input type="checkbox" class="required checkbox">{{textdata.I have read and accept the terms and conditions}}:</input>&nbsp;
 				<a target="_blank" href="/rentalpolicy">{{textdata.Rental Policy}}</a>&nbsp;
 				<a target="_blank" href="/termsofuse">{{textdata.Terms of Service}}</a>
 			</em>
@@ -1494,7 +1543,11 @@
 		{{/result}}
 	</div>
 </div>
-
+{{/ContextData.Quote.IsValid}}
+{{^ContextData.Quote.IsValid}}
+<div class="alert alert-error">{{ContextData.Quote.ValidationMessage}}</div>
+{{/ContextData.Quote.IsValid}}
+{{/result}}
 </script>
 
 <script id="tmpl-booking-rentalpolicy" type="text/html">

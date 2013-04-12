@@ -1,1 +1,1 @@
-<div id="results" class="propertyfinders-results bapi-summary" data-log="0" data-templatename="tmpl-searches-summary" data-entity="searches" data-rowfixselector=".propertyfinders-results%20%3E%20.span4" data-rowfixcount="3">BAPI RESULTS - DO NOT REMOVE</div>
+<div id="results" class="propertyfinders-results bapi-summary" data-log="0" data-templatename="tmpl-searches-summary" data-entity="searches" data-rowfixselector=".propertyfinders-results%20%3E%20.span4" data-rowfixcount="3"><span style="display:none">BAPI RESULTS - DO NOT REMOVE</span></div>

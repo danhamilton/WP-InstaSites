@@ -346,6 +346,8 @@ context.site = {
 	siteid: {{#SiteID}}{{SiteID}}{{/SiteID}}{{^SiteID}}0{{/SiteID}},
 	solutionid: {{#SolutionID}}{{SolutionID}}{{/SolutionID}}{{^SolutionID}}0{{/SolutionID}},
 	url: '{{PrimaryURL}}',
+	secureurl: '{{SecureURL}}',
+	uniqueprefix: '{{UniquePrefix}}',
 	slideshowimages: [
 {{#Site.SlideShowImages}}
 			{ imgurl: '{{OriginalURL}}', caption: '{{Caption}}' },
@@ -459,6 +461,7 @@ context.utils = {
 		}		
 	},
 	dopost: function (url, postdata, callback) {
+		url = url + '&apikey=' + context.defaultOptions.apikey + '&language=' + context.defaultOptions.language;
 		var posting = $.post( url, postdata );		
 		posting.done(function( res ) {
 			if (typeof(callback)!=="undefined" && callback!=null) {

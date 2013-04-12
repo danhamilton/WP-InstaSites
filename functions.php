@@ -9,7 +9,7 @@
 		if(empty($bapi_baseurl)){
 			$bapi_baseurl = 'connect.bookt.com';
 		}
-		if (stripos($bapi_baseurl, "localhost", 0) === 0) {
+		if (stripos($bapi_baseurl, "localhost", 0) === 0) {			
 			return "http://" . $bapi_baseurl;
 		}
 		return "https://" . $bapi_baseurl;
@@ -119,6 +119,11 @@
 			$apiKey = get_option('api_key');
 			$language = getbapilanguage();
 			$gmapkey = getGoogleMapKey();
+			
+	$secureurl = '';
+	if(get_option('bapi_secureurl')){
+		$secureurl = get_option('bapi_secureurl');
+	}
 ?>
 <link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/jquery.ui/jquery-ui-1.10.2.min.css', __FILE__) ?>" />
 
@@ -133,14 +138,19 @@
 <script type="text/javascript" src="<?= plugins_url('/js/mustache.min.js', __FILE__) ?>" ></script>
 
 <script type="text/javascript" src="<?= getbapijsurl($apiKey) ?>"></script>
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= $gmapkey ?>&sensor=false"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&key=<?= $gmapkey ?>&sensor=false"></script>
+
 <script type="text/javascript" src="<?= plugins_url('/bapi/bapi.ui.js', __FILE__) ?>" ></script>		
 <script src="<?= getbapiurl() ?>/js/bapi.textdata.js?apikey=<?= $apiKey ?>&language=<?= $language ?>" type="text/javascript"></script>
 <script type="text/javascript" src="<?= plugins_url('/bapi.templates.php', __FILE__) ?>" ></script>		
 <script type="text/javascript">		
 	BAPI.defaultOptions.baseURL = '<?= getbapiurl() ?>';
 	BAPI.UI.loading.setLoadingImgUrl('<?= plugins_url("/img/loading.gif", __FILE__) ?>');
+	<?php if ($secureurl!='') { ?>
+	BAPI.site.secureurl = '<?= $secureurl ?>';
+	<?php } ?>
 	BAPI.init('<?= $apiKey ?>');
+	BAPI.UI.jsroot = '<?= plugins_url("/", __FILE__) ?>'
 	$(document).ready(function () {
 		BAPI.UI.init();
 	});    
