@@ -691,6 +691,10 @@ class BAPI_Weather_Widget extends WP_Widget {
 		extract($args);
 		$title = apply_filters('widget_title',$instance['title']);
 		$woid = esc_textarea($instance['text']);
+		$unit = $instance['unit'];
+		if(empty($unit)){
+			$unit = 'f';
+		}
 		echo $before_widget;
 		if(!empty($title))
 			echo $before_title . "<span class='glyphicons brightness_increase'><i></i>" . $title . "</span>" . $after_title;
@@ -701,6 +705,7 @@ class BAPI_Weather_Widget extends WP_Widget {
 				// weather widget uses code found here: http://www.zazar.net/developers/jquery/zweatherfeed/
 				// lookup woid here: http://woeid.rosselliot.co.nz/
 				var woid = '<?= $woid ?>';
+				var unit = '<?= $unit ?>';
 				if (woid!='') {
 					var unit = 'c';
 					if (BAPI.defaultOptions.language=="en-US") { unit = 'f'; }
@@ -715,6 +720,7 @@ class BAPI_Weather_Widget extends WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 		$instance = array();
 		$instance['title'] = strip_tags( $new_instance['title'] );
+		$instance['unit'] = $new_instance['unit'];
 		if ( current_user_can('unfiltered_html') )
 			$instance['text'] =  $new_instance['text'];
 		else
@@ -735,12 +741,25 @@ class BAPI_Weather_Widget extends WP_Widget {
 		else {
 			$woid = __( '2450022', 'text_domain' );
 		}
+		if ( isset( $instance[ 'unit' ] ) ) {
+			$unit =  $instance['unit'];
+		}
+		else {
+			$unit = 'f';
+		}
+		print_r($instance);
 		?>
 		<p>
 		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
 		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
         <label for="<?php echo $this->get_field_id( 'text' ); ?>"><?php _e( 'WOID:' ); ?></label>
         <input id="<?php echo $this->get_field_id( 'text' ); ?>" name="<?php echo $this->get_field_name( 'text' ); ?>" type="text" value="<?php echo esc_attr( $woid ); ?>" />
+		<div class="clear"></div>
+		<label for="<?php echo $this->get_field_id( 'unit' ); ?>">Unit</label>
+		<select id="<?php echo $this->get_field_id( 'unit' ); ?>" name="<?php echo $this->get_field_name( 'unit' ); ?>">
+			<option value="f" <?php if($unit=='f') echo 'selected'; ?>>Farenheit</option>
+			<option value="c" <?php if($unit=='c') echo 'selected'; ?>>Celcius</option>
+		</select>
 		</p>
 		<?php 
 	}
