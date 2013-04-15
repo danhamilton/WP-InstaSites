@@ -66,7 +66,7 @@ context.init = function(options) {
 	context.inithelpers.setuprateblockwidgets(options);
 	context.inithelpers.applyflexsliders(options);
 	context.inithelpers.applytruncate(options);	
-	context.inithelpers.setupmapwidgets(options);	
+	context.inithelpers.setupmapwidgets(options);
 	context.inithelpers.applymovemes(options);			
 	context.inithelpers.setupprintlisteners(options);
 	context.inithelpers.setupbapitracker(options);
@@ -203,42 +203,48 @@ context.inithelpers = {
 		});	
 	},
 	setupmapwidgets: function(options) {
-		$.each($('.bapi-map'), function (i, item) {
-			var ctl = $(item);		
-			var selector = '#' + ctl.attr('id');
-			var lsel = ctl.attr('data-refresh-selector');
-			var lselevent = ctl.attr('data-refresh-selector-event');
-			var locsel = ctl.attr('data-loc-selector');
-			if (locsel===null || locsel=='') { locsel = '.map-location'; }
-			var linksel = ctl.attr('data-link-selector');
-			if (linksel===null || linksel=='') { linksel = '.map-item'; }
-			var caticons = null;
-			try { caticons = $.parseJSON(ctl.attr('data-category-icons'));}
-			catch(err) {}
-			BAPI.log("Creating map widget for " + selector + ', location selector=' + locsel + ', link selector=' + linksel);
-			ctl.jMapping({
-				//side_bar_selector: '#map-locations:first',
-				location_selector: locsel,
-				link_selector: linksel,
-				info_window_selector: '.info-html',
-				category_icon_options: caticons,
-				map_config: {
-					navigationControlOptions: {
-					style: google.maps.NavigationControlStyle.DEFAULT,
-					streetViewControl: false
-				  },
-				  mapTypeId: google.maps.MapTypeId.HYBRID,
-				  zoom: 7
-				}
-			});
-			
-			if (typeof(lsel)!=="undefined" && lsel!==null && lsel!='') {
-				$(lsel).on(lselevent, function() {
-					BAPI.log("Refresh selector clicked");
-					ctl.jMapping('update');
+		//var mapurl = '//maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAY7wxlnkMG6czYy9K-wM4OWXs0YFpFzEE&sensor=false';
+		//$.getScript(url, function(data, textStatus, jqxhr) {
+			$.each($('.bapi-map'), function (i, item) {
+				var ctl = $(item);		
+				var selector = '#' + ctl.attr('id');
+				var lsel = ctl.attr('data-refresh-selector');
+				var lselevent = ctl.attr('data-refresh-selector-event');
+				var locsel = ctl.attr('data-loc-selector');
+				if (locsel===null || locsel=='') { locsel = '.map-location'; }
+				var linksel = ctl.attr('data-link-selector');
+				if (linksel===null || linksel=='') { linksel = '.map-item'; }
+				var caticons = null;
+				try { caticons = $.parseJSON(ctl.attr('data-category-icons'));}
+				catch(err) {}
+				var infowindowmaxwidth = ctl.attr('data-info-window-max-width');
+				if (infowindowmaxwidth!==null) { infowindowmaxwidth = parseInt(infowindowmaxwidth); }
+				BAPI.log("Creating map widget for " + selector + ', location selector=' + locsel + ', link selector=' + linksel);
+				ctl.jMapping({
+					side_bar_selector: '#map-locations:first',
+					location_selector: locsel,
+					link_selector: linksel,
+					info_window_selector: '.info-html',
+					category_icon_options: caticons,
+					info_window_max_width: infowindowmaxwidth,
+					map_config: {
+						navigationControlOptions: {
+						style: google.maps.NavigationControlStyle.DEFAULT,
+						streetViewControl: false
+					  },
+					  mapTypeId: google.maps.MapTypeId.HYBRID,
+					  zoom: 7
+					}
 				});
-			}
-		});	
+				
+				if (typeof(lsel)!=="undefined" && lsel!==null && lsel!='') {
+					$(lsel).on(lselevent, function() {
+						BAPI.log("Refresh selector clicked");
+						ctl.jMapping('update');
+					});
+				}
+			});	
+		//});	
 	},
 	applymovemes: function(options) {
 		$.each($('.bapi-moveme'), function (i, item) {
@@ -273,9 +279,11 @@ context.inithelpers = {
 			if (ctl.hasClass('active')) {
 				BAPI.log("adding pkid=" + pkid);
 				BAPI.mylisttracker.add(pkid, BAPI.entities.property);
+				ctl.html('<span class="halflings heart-empty"><i></i>REMOVE FROM WISHLIST</span>');
 			} else {				
-				BAPI.log("Turning inactive");
+				BAPI.log("removing pkid=" + pkid);
 				BAPI.mylisttracker.del(pkid, BAPI.entities.property);
+				ctl.html('<span class="halflings heart-empty"><i></i>ADD TO WISHLIST</span>');
 			}
 			BAPI.savesession();
 		});				
@@ -316,7 +324,7 @@ context.createRateBlockWidget = function (targetid, options) {
 	BAPI.datamanager.get(BAPI.entities.property, cur.ID, function(p) {
 		$(targetid).unblock();
 		var data = {};
-		data.result = [p];
+		data.result = applyMyList([p],cur.entity);;
 		data.site = BAPI.site;
 		data.config = BAPI.config();
 		data.textdata = BAPI.textdata;
@@ -421,6 +429,9 @@ context.createSummaryWidget = function (targetid, options, callback) {
 		$.each(BAPI.session().mylist, function (index, item) {
 			ids.push(parseInt(item.ID));			
 		});
+		if (options.entity == BAPI.entities.property) {
+			options.searchoptions = $.extend({}, options.searchoptions, BAPI.session().searchparams);
+		}
 		doSearch(targetid, ids, options.entity, options, alldata, callback); 
 	}
 	else {
@@ -726,7 +737,12 @@ context.createDatePicker = function (targetid, options) {
 		createDatePickerJQuery(targetid, options);
 	}
 	else {
-		createDatePickerPickadate(targetid, options);		
+		var url = context.jsroot + 'js/pickadate/source/pickadate.min.js';
+		var cssurl = context.jsroot + 'js/pickadate/themes/pickadate.01.default.css';
+		$("<link/>", { rel: "stylesheet", type: "text/css", href: cssurl }).appendTo("head");
+		$.getScript(url, function(data, textStatus, jqxhr) {
+			createDatePickerPickadate(targetid, options);
+		});
 	}
 }
 
@@ -1024,6 +1040,14 @@ function initOptions(options, initpagesize, inittemplatename) {
 	return options;
 }
 
+function applyMyList(result,entity) {
+	if (typeof(result)==="undefined" || result==null) { return null; }
+	$.each(result, function (index, item) { 
+		item.inmylist = (BAPI.mylisttracker.indexof(item.ID.toString(),entity) > -1);
+	});
+	return result;
+}
+
 function doSearch(targetid, ids, entity, options, alldata, callback) {
 	//BAPI.log("Showing page: " + options.searchoptions.page);
 	BAPI.get(ids, entity, options.searchoptions, function (data) {
@@ -1031,13 +1055,13 @@ function doSearch(targetid, ids, entity, options, alldata, callback) {
 		$.each(data.result, function (index, item) { alldata.push(item); }); // update the alldata array
 		if (options.log) { BAPI.log("--data result--"); BAPI.log(data); }
 		// package up the data to bind to the mustache template
-		data.result = alldata;
+		data.result = applyMyList(alldata,entity);
 		data.totalcount = ids.length;
 		data.isfirstpage = (options.searchoptions.page == 1);
 		data.islastpage = (options.searchoptions.page*options.searchoptions.pagesize) > data.totalcount;		
 		data.curpage = options.searchoptions.page - 1;
 		data.config = BAPI.config(); 						
-		data.textdata = options.textdata;
+		data.textdata = options.textdata;		
 		var html = Mustache.render(options.template, data); // do the mustache call
 		$(targetid).html(html); // update the target				
 				
@@ -1054,6 +1078,7 @@ function doSearch(targetid, ids, entity, options, alldata, callback) {
 			BAPI.log("Applying fixers.");
 			context.inithelpers.applytruncate();	
 			context.inithelpers.applyflexsliders(options);
+			context.inithelpers.setupmapwidgets(options);
 		}
 		
 		if (callback) { callback(data); }

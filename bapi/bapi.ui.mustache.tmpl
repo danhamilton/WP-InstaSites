@@ -151,11 +151,12 @@
 	<h5>Would you like to</h5>
 	<ul>
 		<li><span class="bapi-print" data-class="media">Print this Page</span></li>
-		<li><span>Email</span> to a Friend</li>
+		<li style="display:none"><span>Email</span> to a Friend</li>
 	</ul>
 	</div>
 	<hr />
-	<button class="btn add-wishlist bapi-wishlisttracker" data-pkid="{{ID}}" type="button" data-toggle="button"><span class="halflings heart-empty"><i></i>ADD TO WISHLIST</span></button>
+	<button class="btn add-wishlist bapi-wishlisttracker{{#inmylist}} active{{/inmylist}}" data-pkid="{{ID}}" type="button" data-toggle="button">
+		<span class="halflings heart-empty"><i></i>{{^inmylist}}ADD TO WISHLIST{{/inmylist}}{{#inmylist}}REMOVE FROM WISHLIST{{/inmylist}}</span></button>
 </div>
 </div>	
 {{/result}}
@@ -256,7 +257,7 @@
 		<div id="slider" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "sync": "#carousel" }'>
 		<ul class="slides">
 		{{#Images}}
-			<li><img alt="{{Caption}}" src="{{&MediumURL}}" /> </li>
+			<li><img alt="{{Caption}}" src="{{&ThumbnailURL}}" /> </li>
 		{{/Images}}  
 		</ul>
 		</div>
@@ -279,7 +280,13 @@
 			{{#ContextData.Quote.QuoteDisplay.suffix}}<span classs="suffix">/{{ContextData.Quote.QuoteDisplay.suffix}}</span>{{/ContextData.Quote.QuoteDisplay.suffix}}
 			{{/ContextData.Quote.IsValid}}
 		</div>
-		{{#ContextData.SEO.Keyword}}<a class="property-link pull-right" href="{{&ContextData.SEO.DetailURL}}">{{textdata.Details}} <span>&rarr;</span></a>{{/ContextData.SEO.Keyword}}
+		</div>
+		<div class="rates clearfix">
+			<span class="pull-left">
+			<button class="btn add-wishlist bapi-wishlisttracker{{#inmylist}} active{{/inmylist}}" data-pkid="{{ID}}" type="button" data-toggle="button">
+			<span class="halflings heart-empty"><i></i>{{^inmylist}}ADD TO WISHLIST{{/inmylist}}{{#inmylist}}REMOVE FROM WISHLIST{{/inmylist}}</span></button>
+			</span>
+			{{#ContextData.SEO.Keyword}}<a class="property-link pull-right" href="{{&ContextData.SEO.DetailURL}}">{{textdata.Details}} <span>&rarr;</span></a>{{/ContextData.SEO.Keyword}}
 		</div>
 	</div>
 	</div>
@@ -689,25 +696,25 @@
 <div class="development-results">
 {{#result}}
 <div class="portal-result">
-            <div class="portal-inner row-fluid shadow">
-              <div class="portal-images span4">
-			  {{^Images.0.MediumURL}}
-				<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" />
-			  {{/Images.0.MediumURL}}				
-			  {{#Images.0.MediumURL}}
-				<img alt="{{Images.0.Caption}}" src="{{&Images.0.MediumURL}}" />
-			  {{/Images.0.MediumURL}}                
-              </div>
-              <div class="portal-info span8">                
-                  <h2 class="title"><a href="{{&ContextData.SEO.DetailURL}}">{{Name}}</a></h2>
-				  <div class="location"><span class="type">{{Type}},</span> {{Region}}, {{State}}</div>
-				  <div class="brick-wrap">
-                    <strong>{{textdata.Amenities}}:</strong> <span>{{TopAmenities}}</span>                 
-				  </div>
-				  <a class="detail-link pull-right" href="{{&ContextData.SEO.DetailURL}}">Details <span>&rarr;</span></a>                                   
-              </div>             
-            </div>
-          </div>
+<div class="portal-inner row-fluid shadow">
+  <div class="portal-images span4">
+  {{^Images.0.MediumURL}}
+	<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" />
+  {{/Images.0.MediumURL}}				
+  {{#Images.0.MediumURL}}
+	<img alt="{{Images.0.Caption}}" src="{{&Images.0.MediumURL}}" />
+  {{/Images.0.MediumURL}}                
+  </div>
+  <div class="portal-info span8">                
+	  <h2 class="title"><a href="{{&ContextData.SEO.DetailURL}}">{{Name}}</a></h2>
+	  <div class="location"><span class="type">{{Type}},</span> {{Region}}, {{State}}</div>
+	  <div class="brick-wrap">
+		<strong>{{textdata.Amenities}}:</strong> <span>{{TopAmenities}}</span>                 
+	  </div>
+	  <a class="detail-link pull-right" href="{{&ContextData.SEO.DetailURL}}">Details <span>&rarr;</span></a>                                   
+  </div>             
+</div>
+</div>
 {{/result}}
 </div>
 <div class="clearfix"></div>
@@ -803,21 +810,49 @@
 	Group: Attractions
 */
 <script id="tmpl-attractions-summary-list" type="text/html">
+<div id="poi-map-prop" class="bapi-map" data-loc-selector='.poi-map-location' data-link-selector='.poi-map-item' data-category-icons='{ "starred": { "color": "#E8413A" }, "poi": { "color": "#465AE0" } }' style="width:100%; height:350px; float:left;"></div>
+<ul id="map-locations">
+{{#result}}
+<li class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}} }, "category": "poi"}'>
+	<div class="info-html">
+	<div class="marker-infowindow"> 		
+		<span class="prop-image pull-left"><img style="max-height:175px" src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>					
+		<span class="prop-location pull-right" style="float:left; padding-left:10px">
+			<span>
+			{{#ContextData.SEO.Keyword}}<a target="_blank" href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
+			<b>{{Name}}</b>
+			{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}<br/>			
+			<b>{{textdata.Category}}:</b>{{Type}}<br/> 
+			<b>{{textdata.Address}}: </b>{{&Location}} 								
+			</span>
+		</span>
+	</div>
+	</div>	
+</li>
+{{/result}}
+</ul>
+
+<section class="row-fluid search-result-controls attraction-result-controls">
+<div class="span6">
+	<p class="showing"></p>    
+</div>
+<div class="span6 form-horizontal">
+	<div class="control-group control-group-attraction">
+			&nbsp;
+		</div>
+	</div>
+</div>
+</section>
+
 {{#result}}
 <div class="span4">
   <div class="item-result">
 	<div class="item-inner">
 	  <div class="item-images">
 	  <div class="number-tag">{{&ContextData.ItemIndex}}</div>
-	  <a href="{{&ContextData.SEO.DetailURL}}">
-	  {{^Images.0.MediumURL}}
-	  	<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" />
-	  {{/Images.0.MediumURL}}
-	  	
-      {{#Images.0.MediumURL}}
-	  	<img alt="{{Images.0.Caption}}" src="{{&Images.0.MediumURL}}" />
-	  {{/Images.0.MediumURL}}
-	  </a>
+	  {{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
+	  <img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" />
+	  {{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 	  </div>
 	  <div class="item-info shadow">		
 			<h2 class="title">{{Name}}</h2>
@@ -905,7 +940,7 @@
 						
 					<div class="span6 box-right">                
 					<h3>{{textdata.Map}}</h3>
-					<div id="poi-map-prop" class="bapi-map" data-loc-selector='.poi-map-location' data-link-selector='.poi-map-item' data-category-icons='{ "starred": { "color": "#E8413A" }, "poi": { "color": "#465AE0" } }'style="width:350px; height:350px; float:left;"></div>
+					<div id="poi-map-prop" class="bapi-map" data-loc-selector='.poi-map-location' data-link-selector='.poi-map-item' data-category-icons='{ "starred": { "color": "#E8413A" }, "poi": { "color": "#465AE0" } }' style="width:350px; height:350px; float:left;"></div>
 					</div>						
 				</div>
 			</div>
@@ -1072,6 +1107,9 @@
 	Group: Predefined Searches 
 */
 <script id="tmpl-searches-summary" type="text/html">
+<header class="pagination-centered">
+	<h1>{{textdata.Search Buckets}}</h1>
+</header>
 {{#result}}
 <div class="span4">
   <div class="item-result">
@@ -1161,7 +1199,7 @@
 	{{#Description}}
 	<div class="pf-description bapi-truncate" data-trunclen="100">{{&Description}}</div>
 	{{/Description}}
-	{{#ContextData.SEO.Keyword}}<a class="details-link" href="{{&ContextData.SEO.DetailURL}}">{{textdata.Details}}&nbsp;<span>&rarr;</span></a>{{/ContextData.SEO.Keyword}}
+	{{#ContextData.SEO.Keyword}}<a class="details-link pull-right" href="{{&ContextData.SEO.DetailURL}}">{{textdata.Details}}&nbsp;<span>&rarr;</span></a>{{/ContextData.SEO.Keyword}}
 </div>
 </div>
 {{/result}}
