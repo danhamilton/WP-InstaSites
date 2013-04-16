@@ -516,7 +516,7 @@ class BAPI_Property_Finders extends WP_Widget {
 		if(!empty($title))
 			echo $before_title.$title.$after_title;		
 		?>		
-		<div id="propertyfinders" class="bapi-summary propertyfinders row-fluid" data-log="0" data-templatename="tmpl-searches-horiz"  data-entity="searches" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }' data-rowfixselector=".propertyfinders-results%20%3E%20.span4" data-rowfixcount="3"></div>
+		<div id="propertyfinders" class="bapi-summary propertyfinders row-fluid" data-applyfixers="1" data-log="0" data-templatename="tmpl-searches-horiz"  data-entity="searches" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }' data-rowfixselector=".propertyfinders-results%20%3E%20.span4" data-rowfixcount="3"></div>
         <?php
 		echo $after_widget;
 	}

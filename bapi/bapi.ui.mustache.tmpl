@@ -79,7 +79,7 @@
 {{/config.baths.enabled}}
 {{#config.location.enabled}}
 <div class="category-block">
-	<input type="text" class="span12 property-search-input quicksearch sessionlocation" data-field="location" />
+	<input type="text" class="span12 property-search-input quicksearch sessionlocation bapi-locationsearch" data-field="location" placeholder="{{config.location.prompt}}" />
 </div>
 {{/config.location.enabled}}
 {{#config.rate.enabled}}
@@ -184,7 +184,7 @@
 <div class="span7 form-horizontal">&nbsp;</div>
 <div class="span5 form-horizontal">
 <div class="control-group pull-right">
-	<label class="control-label">View as</label>
+	<label class="control-label"></label>
 	<div class="controls">
 		<div class="btn-group" data-toggle="buttons-radio">
 		<button class="btn changeview" data-template="tmpl-propertysearch-listview"><i class="icon-list"></i>&nbsp;{{textdata.List}}</button>
@@ -238,7 +238,7 @@
 <div class="span7 form-horizontal">&nbsp;</div>
 <div class="span5 form-horizontal">
 <div class="control-group pull-right">
-	<label class="control-label">View as</label>
+	<label class="control-label"></label>
 	<div class="controls">
 		<div class="btn-group" data-toggle="buttons-radio">
 		<button class="btn changeview active" data-template="tmpl-propertysearch-listview"><i class="icon-list"></i>&nbsp;{{textdata.List}}</button>
@@ -629,8 +629,10 @@
 	<div class="fp-title"><a href='{{ContextData.SEO.DetailURL}}'>{{Headline}}</a></div>
 	{{#NumReviews}}<div class="fpstar{{AvgReview}}"></div>{{/NumReviews}}
 	<div class="fp-details">
-		<b class="smarthide">{{Type}}&nbsp;-&nbsp;</b>
-		<b class="smarthide">{{textdata.Sleeps}}: {{Sleeps}}</b>       
+		<b>{{Type}}&nbsp;-&nbsp;</b>
+		{{#Bedrooms}}&nbsp;|&nbsp;<b>{{textdata.Beds}}:</b>&nbsp;{{Bedrooms}}{{/Bedrooms}}
+		{{#Bathrooms}}&nbsp;|&nbsp;<b>{{textdata.Baths}}:</b>&nbsp;{{Bathrooms}}{{/Bathrooms}}
+		{{#Sleeps}}&nbsp;|&nbsp;<b>{{textdata.Sleeps}}:</b>&nbsp;{{Sleeps}}{{/Sleeps}}
 	</div>
 	<div class="clear"></div>
 	<hr/>
@@ -1114,12 +1116,12 @@
 <div class="span4">
   <div class="item-result">
 	<div class="item-inner">
-	  <div class="item-images"><a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}"><img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" /></a></div>
-	  <div class="item-info shadow">		
+	  <div class="item-images"><a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}"><img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" /></a></div>
+	  <div class="item-info shadow">					
 			<h2 class="title">{{Name}}</h2>
-			<div class="description">{{&Summary}}</div>
+			<div class="description bapi-dotdotdot" style="max-height:100px" data-trunclen="100">{{&Summary}}</div>
 			{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}" class="btn">{{textdata.See Details}}</a>{{/ContextData.SEO.Keyword}}
-			</div>		
+		</div>		
 	</div>
   </div>
 </div>
@@ -1194,12 +1196,11 @@
 	</a>
 </div>
 <div class="pf-outer">	
-	<a class="pf-title" href='{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}'>{{Name}}</a>	
+	<a class="pf-title" href='{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}'>{{Name}}</a>
 	<hr/>	
 	{{#Description}}
-	<div class="pf-description bapi-truncate" data-trunclen="100">{{&Description}}</div>
-	{{/Description}}
-	{{#ContextData.SEO.Keyword}}<a class="details-link pull-right" href="{{&ContextData.SEO.DetailURL}}">{{textdata.Details}}&nbsp;<span>&rarr;</span></a>{{/ContextData.SEO.Keyword}}
+	<div class="pf-description bapi-dotdotdot" style="max-height:100px">{{&Description}}</div>
+	{{/Description}}	
 </div>
 </div>
 {{/result}}

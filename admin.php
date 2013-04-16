@@ -290,7 +290,7 @@ function bapi_settings_page() {
 			{ "title": "Services", "url": "services", "intid": "bapi_services", "parent": "", "order": 5, "template": "page-templates/full-width.php", "content": '/default-content/services.php', "addtomenu": true },
 			{ "title": "About Us", "url": "aboutus", "intid": "bapi_about_us", "parent": "", "order": 6, "template": "page-templates/full-width.php", "content": '/default-content/aboutus.php', "addtomenu": true },			
 			{ "title": "Contact Us", "url": "contact", "intid": "bapi_contact", "parent": "", "order": 7, "template": "page-templates/full-width.php", "content": '/default-content/contactus.php', "addtomenu": true },
-			{ "title": "Blog", "url": "blog", "intid": "bapi_blog", "parent": "", "order": 8, "template": "page-templates/full-width.php", "content": '', "addtomenu": true },
+			{ "title": "Blog", "url": "blog", "intid": "bapi_blog", "parent": "", "order": 8, "template": "", "content": '', "addtomenu": true },
 			{ "title": "Make Booking", "url": "makebooking", "intid": "bapi_makebooking", "parent": "", "order": 9, "template": "page-templates/full-width.php", "content": '/default-content/makebooking.php', "addtomenu": false },
 			{ "title": "Make a Payment", "url": "makepayment", "intid": "bapi_makepayment", "parent": "", "order": 10, "template": "page-templates/full-width.php", "content": '/default-content/makepayment.php', "addtomenu": false },
 			{ "title": "Booking Confirmation", "url": "bookingconfirmation", "intid": "bapi_booking_confirm", "parent": "", "order": 11, "template": "page-templates/full-width.php", "content": '/default-content/bookingconfirmation.php', "addtomenu": false },
