@@ -32,9 +32,10 @@ include_once(dirname( __FILE__ ).'/cdn-linker/wp-cdn-linker.php');
 
 //add_filter('save_post','update_post_bapi');
 add_filter('home_url','home_url_cdn',10,2);
+add_filter('wp_head','add_server_name_meta',1);
 add_action('template_redirect', 'do_ossdl_off_ob_start');
 add_action('wp_head','getconfig');
-add_action('wp_head','getproperty');
+//add_action('wp_head','getproperty');
 
 // create custom plugin settings menu
 add_action('admin_menu', 'bapi_create_menu');

@@ -246,4 +246,9 @@
 		
 		return $home_url;
 	}
+	
+	function add_server_name_meta(){
+		$sn = gethostname();
+		echo '<meta name="SERVERNAME" content="'.$sn.'" />'."\n";
+	}
 ?>
