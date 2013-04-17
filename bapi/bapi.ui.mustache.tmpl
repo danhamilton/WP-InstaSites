@@ -79,7 +79,7 @@
 {{/config.baths.enabled}}
 {{#config.location.enabled}}
 <div class="category-block">
-	<input type="text" class="span12 property-search-input quicksearch sessionlocation" data-field="location" />
+	<input type="text" class="span12 property-search-input quicksearch sessionlocation bapi-locationsearch" data-field="location" placeholder="{{config.location.prompt}}" />
 </div>
 {{/config.location.enabled}}
 {{#config.rate.enabled}}
@@ -156,7 +156,7 @@
 	</div>
 	<hr />
 	<button class="btn add-wishlist bapi-wishlisttracker{{#inmylist}} active{{/inmylist}}" data-pkid="{{ID}}" type="button" data-toggle="button">
-		<span class="halflings heart-empty"><i></i>{{^inmylist}}ADD TO WISHLIST{{/inmylist}}{{#inmylist}}REMOVE FROM WISHLIST{{/inmylist}}</span></button>
+		<span class="halflings heart-empty"><i></i>{{^inmylist}}{{textdata.Add to Wishlist}}{{/inmylist}}{{#inmylist}}{{textdata.Remove from Wishlist}}{{/inmylist}}</span></button>
 </div>
 </div>	
 {{/result}}
@@ -180,11 +180,11 @@
 	Group: Properties
 */
 <script id="tmpl-propertysearch-galleryview" type="text/html">
-<header class="row-fluid search-result-controls">
+<header class="row-fluid search-result-controls hidden-phone">
 <div class="span7 form-horizontal">&nbsp;</div>
 <div class="span5 form-horizontal">
 <div class="control-group pull-right">
-	<label class="control-label">View as</label>
+	<label class="control-label"></label>
 	<div class="controls">
 		<div class="btn-group" data-toggle="buttons-radio">
 		<button class="btn changeview" data-template="tmpl-propertysearch-listview"><i class="icon-list"></i>&nbsp;{{textdata.List}}</button>
@@ -204,23 +204,24 @@
 			<div id="slider" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "sync": "#carousel" }'>
 			  <ul class="slides">
 				  {{#Images}}
-				  <li><a class="property-link" href="{{&ContextData.SEO.DetailURL}}"><img alt="{{Caption}}" src="{{&MediumURL}}" /></a></li>
+				  <li><a class="property-link" href="{{&ContextData.SEO.DetailURL}}"><img alt="{{Caption}}" src="{{&ThumbnailURL}}" /></a></li>
 				  {{/Images}} 
 			  </ul>
 			</div>           
 		</div>       
 		<div class="portal-info">
 			<h2 class="property-title"><a href="{{&ContextData.SEO.DetailURL}}">{{Headline}}</a></h2>
-			<div class="location"><span><b>{{textdata.City}}:</b> {{City}}</span> {{#Bedrooms}}<b>{{textdata.Beds}}</b>: {{Bedrooms}} | {{/Bedrooms}}{{#Bathrooms}}<b>{{textdata.Baths}}</b>: {{Bathrooms}} | {{/Bathrooms}}<b>{{textdata.Sleeps}}</b>: {{Sleeps}}</div>			
+			<div class="location"><span class="hidden-phone"><b>{{textdata.City}}:</b> {{City}}</span> {{#Bedrooms}}<b>{{textdata.Beds}}</b>: {{Bedrooms}} | {{/Bedrooms}}{{#Bathrooms}}<b>{{textdata.Baths}}</b>: {{Bathrooms}} | {{/Bathrooms}}<b>{{textdata.Sleeps}}</b>: {{Sleeps}}</div>			
 			<div class="portal-rates">
 				{{^ContextData.Quote.IsValid}}
-				<div class="no-rate">{{ContextData.Quote.ValidationMessage}}</div>
+				{{#session.scheckin}}{{#session.scheckout}}<div class="no-rate">{{ContextData.Quote.ValidationMessage}}</div>{{/session.scheckout}}{{/session.scheckin}}
 				{{/ContextData.Quote.IsValid}}
-				{{#ContextData.Quote.IsValid}}
+				
+				{{#ContextData.Quote.QuoteDisplay.value}}
 				{{#ContextData.Quote.QuoteDisplay.prefix}}<span class="prefix">{{ContextData.Quote.QuoteDisplay.prefix}}:</span>{{/ContextData.Quote.QuoteDisplay.prefix}}
 				{{ContextData.Quote.QuoteDisplay.value}}
 				{{#ContextData.Quote.QuoteDisplay.suffix}}<span classs="suffix">/{{ContextData.Quote.QuoteDisplay.suffix}}</span>{{/ContextData.Quote.QuoteDisplay.suffix}}
-				{{/ContextData.Quote.IsValid}}
+				{{/ContextData.Quote.QuoteDisplay.value}}
 			</div>			
 		</div>
 	</div>
@@ -234,15 +235,15 @@
 </script>
 
 <script id="tmpl-propertysearch-listview" type="text/html">
-<header class="row-fluid search-result-controls">
+<header class="row-fluid search-result-controls hidden-phone">
 <div class="span7 form-horizontal">&nbsp;</div>
 <div class="span5 form-horizontal">
 <div class="control-group pull-right">
-	<label class="control-label">View as</label>
+	<label class="control-label"></label>
 	<div class="controls">
 		<div class="btn-group" data-toggle="buttons-radio">
-		<button class="btn changeview active" data-template="tmpl-propertysearch-listview"><i class="icon-list"></i>&nbsp;{{textdata.List}}</button>
-		<button class="btn changeview" data-template="tmpl-propertysearch-galleryview"><i class="icon-th-large"></i>&nbsp;{{textdata.Photo}}</button>		
+		<button class="btn changeview active" data-template="tmpl-propertysearch-listview" data-rowfixselector="" data-rowfixcount"1"><i class="icon-list"></i>&nbsp;{{textdata.List}}</button>
+		<button class="btn changeview" data-template="tmpl-propertysearch-galleryview" data-rowfixselector=".gallery-view-page%20%3E%20.span6" data-rowfixcount="2"><i class="icon-th-large"></i>&nbsp;{{textdata.Photo}}</button>		
 		</div>
         <button class="btn changeview" data-template="tmpl-propertysearch-galleryview" style="display:none"><i class="icon-map-marker"></i>&nbsp;{{textdata.Map}}</button>
 	</div>
@@ -254,39 +255,38 @@
 <div class="portal-result">
 <div class="portal-inner row-fluid shadow">
 	<div class="portal-images span4">
-		<div id="slider" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "sync": "#carousel" }'>
-		<ul class="slides">
-		{{#Images}}
-			<li><img alt="{{Caption}}" src="{{&ThumbnailURL}}" /> </li>
-		{{/Images}}  
-		</ul>
+		<div id="slider"">
+		{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" />{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 		</div>
 	</div>
 	<div class="portal-info span8">
-	<div class="property-info">
-		<h2 class="property-title">{{Headline}}</h2>
-		<div class="location"><span><b>City:</b> {{City}}</span> {{#Bedrooms}}<b>{{textdata.Beds}}</b>: {{Bedrooms}} | {{/Bedrooms}}{{#Bathrooms}}<b>{{textdata.Baths}}</b>: {{Bathrooms}} | {{/Bathrooms}}<b>{{textdata.Sleeps}}</b>: {{Sleeps}}</div>
+	<div class="property-info">	
+		<h2 class="property-title">
+			{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
+				{{Headline}}
+			{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
+		</h2>
+		<div class="location"><span class="hidden-phone"><b>{{textdata.City}}:</b> {{City}}</span> | {{#Bedrooms}}<b>{{textdata.Beds}}</b>: {{Bedrooms}} | {{/Bedrooms}}{{#Bathrooms}}<b>{{textdata.Baths}}</b>: {{Bathrooms}} | {{/Bathrooms}}<b>{{textdata.Sleeps}}</b>: {{Sleeps}}</div>
 		<div class="brick-wrap">
 			<div class="description bapi-truncate" data-trunclen="100">{{&Summary}}</div>
 		</div>
-		<div class="rates clearfix">
-		<div class="portal-rates pull-left">
-			{{^ContextData.Quote.IsValid}}
-			<div class="no-rate">{{ContextData.Quote.ValidationMessage}}</div>
+		<div class="row-fluid">
+		<div class="{{^ContextData.Quote.IsValid}}span12{{/ContextData.Quote.IsValid}}{{#ContextData.Quote.IsValid}}span6{{/ContextData.Quote.IsValid}} portal-rates">			
+			{{^ContextData.Quote.IsValid}}			
+			{{#session.scheckin}}{{#session.scheckout}}<div class="alert alert-info no-rate">{{ContextData.Quote.ValidationMessage}}</div>{{/session.scheckout}}{{/session.scheckin}}
 			{{/ContextData.Quote.IsValid}}
-			{{#ContextData.Quote.IsValid}}
+			
+			{{#ContextData.Quote.QuoteDisplay.value}}
 			{{#ContextData.Quote.QuoteDisplay.prefix}}<span class="prefix">{{ContextData.Quote.QuoteDisplay.prefix}}:</span>{{/ContextData.Quote.QuoteDisplay.prefix}}
 			{{ContextData.Quote.QuoteDisplay.value}}
 			{{#ContextData.Quote.QuoteDisplay.suffix}}<span classs="suffix">/{{ContextData.Quote.QuoteDisplay.suffix}}</span>{{/ContextData.Quote.QuoteDisplay.suffix}}
-			{{/ContextData.Quote.IsValid}}
+			{{/ContextData.Quote.QuoteDisplay.value}}
 		</div>
+		<div class="{{^ContextData.Quote.IsValid}}span12{{/ContextData.Quote.IsValid}}{{#ContextData.Quote.IsValid}}span6{{/ContextData.Quote.IsValid}} right-side-actions">
+			<button class="btn btn-mini add-wishlist bapi-wishlisttracker{{#inmylist}} active{{/inmylist}}" data-pkid="{{ID}}" type="button" data-toggle="button">
+			<span class="halflings heart-empty"><i></i>{{^inmylist}}{{textdata.Add to Wishlist}}{{/inmylist}}{{#inmylist}}{{textdata.Remove from Wishlist}}{{/inmylist}}</span></button>
+			{{#ContextData.SEO.Keyword}}&nbsp;|&nbsp;<a class="property-link" href="{{&ContextData.SEO.DetailURL}}">{{textdata.Details}} <span>&rarr;</span></a>{{/ContextData.SEO.Keyword}}
 		</div>
-		<div class="rates clearfix">
-			<span class="pull-left">
-			<button class="btn add-wishlist bapi-wishlisttracker{{#inmylist}} active{{/inmylist}}" data-pkid="{{ID}}" type="button" data-toggle="button">
-			<span class="halflings heart-empty"><i></i>{{^inmylist}}ADD TO WISHLIST{{/inmylist}}{{#inmylist}}REMOVE FROM WISHLIST{{/inmylist}}</span></button>
-			</span>
-			{{#ContextData.SEO.Keyword}}<a class="property-link pull-right" href="{{&ContextData.SEO.DetailURL}}">{{textdata.Details}} <span>&rarr;</span></a>{{/ContextData.SEO.Keyword}}
 		</div>
 	</div>
 	</div>
@@ -629,8 +629,10 @@
 	<div class="fp-title"><a href='{{ContextData.SEO.DetailURL}}'>{{Headline}}</a></div>
 	{{#NumReviews}}<div class="fpstar{{AvgReview}}"></div>{{/NumReviews}}
 	<div class="fp-details">
-		<b class="smarthide">{{Type}}&nbsp;-&nbsp;</b>
-		<b class="smarthide">{{textdata.Sleeps}}: {{Sleeps}}</b>       
+		<b>{{Type}}&nbsp;-&nbsp;</b>
+		{{#Bedrooms}}&nbsp;|&nbsp;<b>{{textdata.Beds}}:</b>&nbsp;{{Bedrooms}}{{/Bedrooms}}
+		{{#Bathrooms}}&nbsp;|&nbsp;<b>{{textdata.Baths}}:</b>&nbsp;{{Bathrooms}}{{/Bathrooms}}
+		{{#Sleeps}}&nbsp;|&nbsp;<b>{{textdata.Sleeps}}:</b>&nbsp;{{Sleeps}}{{/Sleeps}}
 	</div>
 	<div class="clear"></div>
 	<hr/>
@@ -1114,12 +1116,12 @@
 <div class="span4">
   <div class="item-result">
 	<div class="item-inner">
-	  <div class="item-images"><a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}"><img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" /></a></div>
-	  <div class="item-info shadow">		
+	  <div class="item-images"><a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}"><img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" /></a></div>
+	  <div class="item-info shadow">					
 			<h2 class="title">{{Name}}</h2>
-			<div class="description">{{&Summary}}</div>
+			<div class="description bapi-dotdotdot" style="max-height:100px" data-trunclen="100">{{&Summary}}</div>
 			{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}" class="btn">{{textdata.See Details}}</a>{{/ContextData.SEO.Keyword}}
-			</div>		
+		</div>		
 	</div>
   </div>
 </div>
@@ -1194,12 +1196,11 @@
 	</a>
 </div>
 <div class="pf-outer">	
-	<a class="pf-title" href='{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}'>{{Name}}</a>	
+	<a class="pf-title" href='{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}'>{{Name}}</a>
 	<hr/>	
 	{{#Description}}
-	<div class="pf-description bapi-truncate" data-trunclen="100">{{&Description}}</div>
-	{{/Description}}
-	{{#ContextData.SEO.Keyword}}<a class="details-link pull-right" href="{{&ContextData.SEO.DetailURL}}">{{textdata.Details}}&nbsp;<span>&rarr;</span></a>{{/ContextData.SEO.Keyword}}
+	<div class="pf-description bapi-dotdotdot" style="max-height:100px">{{&Description}}</div>
+	{{/Description}}	
 </div>
 </div>
 {{/result}}

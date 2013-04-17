@@ -14,7 +14,7 @@
       <div class="contact-info vcard">
 		{{#Office}}
         <div class="contact-type"><span class="fn org">{{SolutionName}}</span><br />
-			<span class="adr"><span class="street-address">{{#Address1}}{{Address1}}<br/>{{/Address1}}{{#Address2}}{{Address2}}<br/>{{/Address2}}</span><span class="locality">{{City}}</span>,&nbsp;<span class="region">{{State}}</span><span class="postal-code">{{PostalCode}}</span><br/><span class="country">{{Country}}</span></span></div>
+			<span class="adr"><span class="street-address">{{#Address1}}{{Address1}}<br/>{{/Address1}}{{#Address2}}{{Address2}}<br/>{{/Address2}}</span><span class="locality">{{City}}</span>,&nbsp;<span class="region">{{State}}</span><br/><span class="postal-code">{{PostalCode}}</span><br/><span class="country">{{Country}}</span></span></div>
         <hr/>
         <h3><span class="glyphicons conversation"><i></i>{{textdata.Talk to Us}}</span></h3>
         <div class="contact-type tel"> {{#PrimaryPhone}}
