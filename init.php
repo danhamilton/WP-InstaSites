@@ -7,14 +7,15 @@
 	$pagedefs = $_POST['pagedefs'];
 	$navmap = array();
 	foreach ($pagedefs as $pagedef) {
-		addpage($pagedef, $navmap, $menu_id);
+		addpage($pagedef, $menu_id);
 		//print_r($pagedef);
 		//print_r("<br />");
 	}
 	return;
 	
 	
-	function addpage($pagedef, $navmap, $menu_id) {
+	function addpage($pagedef, $menu_id) {
+		global $navmap;
 		$parent = $pagedef['parent'];	
 		$parentid = 0;
 		$test = get_page_by_path($parent);
@@ -68,7 +69,7 @@
 		$miid = 0;
 		$addtomenu = ($pagedef['addtomenu'] == 'true');
 		if($addtomenu && !doesNavMenuExist($pid)) {				
-			$miid = addtonav($pid, $menu_id, $post, $parent, $navmap);
+			$miid = addtonav($pid, $menu_id, $post, $parent);
 		}
 		
 		if($post['post_title']=='Home'){
@@ -78,15 +79,17 @@
 		if($post['post_title']=='Blog'){
 			update_option( 'page_for_posts', $pid);
 		}
-		print_r('<div>' . $action . ' menu item <b>' . $post['post_title'] . '</b> post_id=' . $pid . ',miid=' . $miid . '</div>');
+		print_r('<div>' . $action . ' menu item <b>' . $post['post_title'] . '</b> post_id=' . $pid . ', miid=' . $miid . '</div>');
+		print_r($navmap);
 	}	
 
-	function addtonav($pid, $menu_id, $post, $parent, $navmap) {
-		$navParentID = $navmap[$parent];
-		if (empty($navParentID)) {
-			$navParentID = $menu_id; //getNavMenuID($parent); //$menu_id;
+	function addtonav($pid, $menu_id, $post, $parent) {
+		global $navmap;
+		$navParentID = 0;
+		if (!empty($navmap[$parent])&&!empty($parent)) {
+			$navParentID = $navmap[$parent]; //getNavMenuID($parent); //$menu_id;
 		}
-		//print_r("navParentID=" . $navParentID . "<br/>");
+		print_r("Parent=".$parent.", navParentID=" . $navParentID . "<br/>");
 		$miid = wp_update_nav_menu_item($menu_id, 0, array(
 								'menu-item-title' => $post['post_title'],
 								'menu-item-object' => 'page',
@@ -95,7 +98,7 @@
 								'menu-item-status' => 'publish',
 								'menu-item-parent-id' => $navParentID,
 								'menu-item-position' => $post['menu_order']));
-		$url = $post['post_title'];
+		$url = $post['post_name'];
 		$navmap[$url] = $miid;		
 		return $miid;
 	}
