@@ -206,7 +206,6 @@ function bapi_settings_page() {
 <script type="text/javascript" src="<?= plugins_url('/js/jquery-migrate-1.0.0.min.js', __FILE__) ?>" ></script>		
 <script type="text/javascript" src="<?= plugins_url('/js/jquery-ui-1.10.2.min.js', __FILE__) ?>" ></script>
 <script type="text/javascript" src="<?= plugins_url('/js/jquery-ui-i18n.min.js', __FILE__) ?>" ></script>			
-<script type="text/javascript" src="<?= plugins_url('/js/mustache.min.js', __FILE__) ?>" ></script>			
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= $gmapkey ?>&sensor=false"></script>
 <script type="text/javascript" src="<?= getbapijsurl($apiKey) ?>"></script>
 <script type="text/javascript" src="<?= plugins_url('/bapi/bapi.ui.js', __FILE__) ?>" ></script>		

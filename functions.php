@@ -137,11 +137,6 @@
 <script type="text/javascript" src="<?= plugins_url('/js/jquery-ui-1.10.2.min.js', __FILE__) ?>" ></script>
 <script type="text/javascript" src="<?= plugins_url('/js/jquery-ui-i18n.min.js', __FILE__) ?>" ></script>			
 
-<script type="text/javascript" src="<?php echo includes_url(); ?>insta-common/bootstrap/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="<?php echo includes_url(); ?>insta-common/js/jquery.flexslider-min.js"></script>
-<script type="text/javascript" src="<?= plugins_url('/js/validity.js', __FILE__) ?>" ></script>
-<script type="text/javascript" src="<?= plugins_url('/js/mustache.min.js', __FILE__) ?>" ></script>
-
 <script type="text/javascript" src="<?= getbapijsurl($apiKey) ?>"></script>
 <script type="text/javascript" src="//maps.googleapis.com/maps/api/js?v=3.5&sensor=false&libraries=places&key=<?= $gmapkey ?>"></script>
 
