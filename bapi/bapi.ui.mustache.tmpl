@@ -277,12 +277,7 @@
 				{{Headline}}
 			{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 		</h2>
-		<div class="location">
-			{{#City}}<span class="hidden-phone"><b>{{textdata.City}}:</b> {{City}} | </span>{{/City}}
-			{{#Bedrooms}}<b>{{textdata.Beds}}</b>: {{Bedrooms}}{{/Bedrooms}}
-			{{#Bathrooms}} | <b>{{textdata.Baths}}</b>: {{Bathrooms}}{{/Bathrooms}}
-			{{#Sleeps}} | <b>{{textdata.Sleeps}}</b>: {{Sleeps}}{{/Sleeps}}
-		</div>
+		<div class="location"><span><b>{{textdata.City}}:</b> {{City}}</span>  {{#Bedrooms}}<span class="hidden-phone">| </span><b>{{textdata.Beds}}</b>: {{Bedrooms}} | {{/Bedrooms}}{{#Bathrooms}}<b>{{textdata.Baths}}</b>: {{Bathrooms}} | {{/Bathrooms}}<b>{{textdata.Sleeps}}</b>: {{Sleeps}}</div>
 		<div class="brick-wrap">
 			<div class="description bapi-truncate" data-trunclen="100">{{&Summary}}</div>
 		</div>
@@ -334,7 +329,7 @@
 {{#result}}
 <tr>
     <td>
-		{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}">
+		{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
 		{{Headline}}
 		{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 	</td>
@@ -1113,7 +1108,7 @@
 	<h1>{{textdata.Search Buckets}}</h1>
 </header>
 {{#result}}
-<div class="span4">
+<div class="pfrowfix span4">
   <div class="item-result">
 	<div class="item-inner">
 	  <div class="item-images"><a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}"><img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" /></a></div>
@@ -1477,9 +1472,7 @@
 <legend>
 	<div class="control controls-row">
 		<span class="span8">2. {{textdata.Credit Card Information}}</span>
-		<div class="credit-icon span4">
-			<img src="/wp-content/themes/instatheme04/images/credit-cards.jpg" alt="credit cards" />
-		</div>
+		<div class="credit-icon span4"><span class="credit-card-icon"></span></div>
 	</div>
 </legend>
 <div class="control-group">

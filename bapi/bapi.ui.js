@@ -253,7 +253,8 @@ context.inithelpers = {
 						style: google.maps.NavigationControlStyle.DEFAULT,
 						streetViewControl: false
 					  },
-					  mapTypeId: google.maps.MapTypeId.HYBRID,
+					  //mapTypeId: google.maps.MapTypeId.HYBRID,
+					  mapTypeId: google.maps.MapTypeId.ROADMAP,
 					  zoom: 7
 					}
 				});
@@ -551,11 +552,15 @@ context.createInquiryForm = function (targetid, options) {
 		BAPI.log("Processing lead request");
 		if (processing) { return; } // already in here
 		
+		var reqfields = $.extend([],$('.required'));
+		processing = BookingHelper_ValidateForm(reqfields);				
+		if (!processing) { $(targetid).unblock(); return; }		
+		/*
 		$.validity.start();
 		$('.required').require();
 		var result = $.validity.end();
 		if (!result.valid) { processing = false; alert('Please fill out all required fields.'); return; }
-		
+		*/
 		$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
 		processing = true; // make sure we do not reenter				
 		
@@ -676,6 +681,7 @@ function createDatePickerPickadate(targetid, options) {
 	options = InitDatePickerOptions(options);
 	var p = options.property;
 	var ctl = $(targetid);
+	ctl.addClass("no-disabled");
 	var checkinpickers = $('.datepickercheckin');
 	var checkoutpickers = $('.datepickercheckout');
 	var mind = true; if (BAPI.config().minbookingdays>0) { mind = BAPI.config().minbookingdays; }
