@@ -300,11 +300,11 @@ context.inithelpers = {
 			if (ctl.hasClass('active')) {
 				BAPI.log("adding pkid=" + pkid);
 				BAPI.mylisttracker.add(pkid, BAPI.entities.property);
-				ctl.html('<span class="halflings heart-empty"><i></i>REMOVE FROM WISHLIST</span>');
+				ctl.html('<span class="halflings heart-empty"><i></i>' + BAPI.textdata['WishListed'] + '</span>');
 			} else {				
 				BAPI.log("removing pkid=" + pkid);
 				BAPI.mylisttracker.del(pkid, BAPI.entities.property);
-				ctl.html('<span class="halflings heart-empty"><i></i>ADD TO WISHLIST</span>');
+				ctl.html('<span class="halflings heart-empty"><i></i>' + BAPI.textdata['WishList'] + '</span>');
 			}
 			BAPI.savesession();
 		});				
@@ -390,7 +390,6 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 	var p = options.property;
 	
 	// load the session to the form
-	var s = BAPI.session.searchparams;
 	loadFormFromSession(BAPI.session.searchparams);		
 	
 	// setup date pickers
@@ -403,13 +402,11 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 	
 	// handle user clicking Search
 	$(".quicksearch-dosearch").on("click", function() {
-		$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
-		var reqdata = saveFormToSession(this, options);
-		/*
+		$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });		
+		var reqdata = saveFormToSession(this, options);	
 		if (doSearchCallback) { doSearchCallback(); }
 		if (!BAPI.isempty(options.searchurl)) { window.location.href = options.searchurl; }
-		else { $(targetid).unblock(); }
-		*/
+		else { $(targetid).unblock(); }		
 	});
 	
 	// handle user clicking Clear
@@ -694,7 +691,7 @@ function createDatePickerPickadate(targetid, options) {
 			}
 		});				
 	}
-	BAPI.log(blockouts);
+	//BAPI.log(blockouts);
 	
 	var poptions = {};	
 	if (ctl.hasClass("datepickercheckin")) {
@@ -725,7 +722,7 @@ function createDatePickerPickadate(targetid, options) {
 			}
 		}
 	}
-	BAPI.log(poptions);
+	//BAPI.log(poptions);
 	var input = $(targetid).pickadate(poptions);
 	var calendar = input.data('pickadate');
 	
@@ -734,10 +731,10 @@ function createDatePickerPickadate(targetid, options) {
 	$(targetid).after(trigger);	
 	trigger.click(function() {
 		BAPI.log("datepicker trigger");
-		BAPI.log(calendar.isOpen());
+		//BAPI.log(calendar.isOpen());
 		input.click();
 		//calendar.open();
-		BAPI.log(calendar.isOpen());
+		//BAPI.log(calendar.isOpen());
 	});
 	
 	// Create an array from the date while parsing each date unit as an integer
@@ -1167,7 +1164,7 @@ function saveFormToSession(ctl, options) {
 			BAPI.session.searchparams[k] = v;
 		}
 	});	
-	BAPI.log(reqdata);
+	//BAPI.log(reqdata);
 	BAPI.savesession();
 	return reqdata;
 }

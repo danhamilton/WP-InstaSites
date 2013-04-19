@@ -16,7 +16,7 @@
 {{#config.los.enabled}}
 <div class="category-block">
 	<select class="span12 property-search-input quicksearch sessionlos" data-field="los">
-		<option value="">-{{config.los.prompt}}-</option>		
+		<option value="">{{config.los.prompt}}</option>		
 		{{#config.los.values}}<option value="{{Data}}">{{Label}}</option>{{/config.los.values}}
 	</select>
 </div>
@@ -24,7 +24,7 @@
 {{#config.adults.enabled}}
 <div class="category-block">
 	<select class="span12 property-search-input quicksearch sessionadultsmin" data-field="adults[min]">
-		<option value="">-{{config.adults.prompt}}-</option>		
+		<option value="">{{config.adults.prompt}}</option>		
 		{{#config.adults.values}}<option value="{{Data}}">{{Label}}</option>{{/config.adults.values}}
 	</select>
 </div>
@@ -32,7 +32,7 @@
 {{#config.children.enabled}}
 <div class="category-block">
 	<select class="span12 property-search-input quicksearch sessionchildrenmin" data-field="children[min]">
-		<option value="">-{{config.children.prompt}}-</option>		
+		<option value="">{{config.children.prompt}}</option>		
 		{{#config.children.values}}<option value="{{Data}}">{{Label}}</option>{{/config.children.values}}
 	</select>
 </div>
@@ -40,7 +40,7 @@
 {{#config.category.enabled}}
 <div class="category-block">
 	<select class="span12 property-search-input quicksearch sessioncategory" data-field="category">
-		<option value="">-{{config.category.prompt}}-</option>		
+		<option value="">{{config.category.prompt}}</option>		
 		{{#config.category.values}}<option value="{{Data}}">{{Label}}</option>{{/config.category.values}}
 	</select>
 </div>
@@ -48,7 +48,7 @@
 {{#config.dev.enabled}}
 <div class="category-block">
 	<select class="span12 property-search-input quicksearch sessiondevid" data-field="devid">
-		<option value="">-{{config.dev.prompt}}-</option>		
+		<option value="">{{config.dev.prompt}}</option>		
 		{{#config.dev.values}}<option value="{{Data}}">{{Label}}</option>{{/config.dev.values}}
 	</select>
 </div>
@@ -56,7 +56,7 @@
 {{#config.sleeps.enabled}}
 <div class="category-block">
 	<select class="span12 property-search-input quicksearch sessionsleepsmin" data-field="sleeps[min]">
-		<option value="">-{{config.sleeps.prompt}}-</option>
+		<option value="">{{config.sleeps.prompt}}</option>
 		{{#config.sleeps.values}}<option value="{{Data}}">{{Label}}</option>{{/config.sleeps.values}}
 	</select>
 </div>
@@ -64,7 +64,7 @@
 {{#config.beds.enabled}}
 <div class="category-block">
 	<select class="span12 property-search-input quicksearch sessionbedsmin" data-field="beds[min]">
-		<option value="">-{{config.beds.prompt}}-</option>
+		<option value="">{{config.beds.prompt}}</option>
 		{{#config.beds.values}}<option value="{{Data}}">{{Label}}</option>{{/config.beds.values}}
 	</select>
 </div>
@@ -72,7 +72,7 @@
 {{#config.baths.enabled}}
 <div class="category-block">
 	<select class="span12 property-search-input quicksearch sessionbathsmin" data-field="baths[min]">
-		<option value="">-{{config.baths.prompt}}-</option>
+		<option value="">{{config.baths.prompt}}</option>
 		{{#config.baths.values}}<option value="{{Data}}">{{Label}}</option>{{/config.baths.values}}
 	</select>
 </div>
@@ -85,7 +85,7 @@
 {{#config.rate.enabled}}
 <div class="category-block">
 	<select class="span12 property-search-input quicksearch sessionratemin" data-field="rate[min]">
-		<option value="">-{{config.rate.prompt}}-</option>
+		<option value="">{{config.rate.prompt}}</option>
 		{{#config.rate.values}}<option value="{{Data}}">{{Label}}</option>{{/config.rate.values}}
 	</select>
 </div>
@@ -93,7 +93,7 @@
 {{#config.rooms.enabled}}
 <div class="category-block">
 	<select class="span12 property-search-input quicksearch sessionroomsmin" data-field="rooms[min]">
-		<option value="">-{{config.rooms.prompt}}-</option>
+		<option value="">{{config.rooms.prompt}}</option>
 		{{#config.rooms.values}}<option value="{{Data}}">{{Label}}</option>{{/config.rooms.values}}
 	</select>
 </div>
@@ -148,15 +148,15 @@
 	<button class="btn btn-mini bapi-getquote" type="button">{{textdata.Update}}</button>
 	<hr />
 	<div class="wylt-block"> 
-	<h5>Would you like to</h5>
+	<h5>{{textdata.Would you like to}}</h5>
 	<ul>
-		<li><span class="bapi-print" data-class="media">Print this Page</span></li>
+		<li><span class="bapi-print" data-class="media">{{textdata.Print this Page}}</span></li>
 		<li style="display:none"><span>Email</span> to a Friend</li>
 	</ul>
 	</div>
 	<hr />
 	<button class="btn add-wishlist bapi-wishlisttracker{{#inmylist}} active{{/inmylist}}" data-pkid="{{ID}}" type="button" data-toggle="button">
-		<span class="halflings heart-empty"><i></i>{{^inmylist}}{{textdata.Add to Wishlist}}{{/inmylist}}{{#inmylist}}{{textdata.Remove from Wishlist}}{{/inmylist}}</span></button>
+		<span class="halflings heart-empty"><i></i>{{^inmylist}}{{textdata.WishList}}{{/inmylist}}{{#inmylist}}{{textdata.WishListed}}{{/inmylist}}</span></button>
 </div>
 </div>	
 {{/result}}
@@ -277,25 +277,31 @@
 				{{Headline}}
 			{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 		</h2>
-		<div class="location"><span class="hidden-phone"><b>{{textdata.City}}:</b> {{City}}</span> | {{#Bedrooms}}<b>{{textdata.Beds}}</b>: {{Bedrooms}} | {{/Bedrooms}}{{#Bathrooms}}<b>{{textdata.Baths}}</b>: {{Bathrooms}} | {{/Bathrooms}}<b>{{textdata.Sleeps}}</b>: {{Sleeps}}</div>
+		<div class="location">
+			{{#City}}<span class="hidden-phone"><b>{{textdata.City}}:</b> {{City}} | </span>{{/City}}
+			{{#Bedrooms}}<b>{{textdata.Beds}}</b>: {{Bedrooms}}{{/Bedrooms}}
+			{{#Bathrooms}} | <b>{{textdata.Baths}}</b>: {{Bathrooms}}{{/Bathrooms}}
+			{{#Sleeps}} | <b>{{textdata.Sleeps}}</b>: {{Sleeps}}{{/Sleeps}}
+		</div>
 		<div class="brick-wrap">
 			<div class="description bapi-truncate" data-trunclen="100">{{&Summary}}</div>
 		</div>
-		<div class="row-fluid">
-		<div class="{{^ContextData.Quote.IsValid}}span12{{/ContextData.Quote.IsValid}}{{#ContextData.Quote.IsValid}}span6{{/ContextData.Quote.IsValid}} portal-rates">			
-			{{^ContextData.Quote.IsValid}}			
+		
+		{{^ContextData.Quote.IsValid}}			
 			{{#session.scheckin}}{{#session.scheckout}}<div class="alert alert-info no-rate">{{ContextData.Quote.ValidationMessage}}</div>{{/session.scheckout}}{{/session.scheckin}}
-			{{/ContextData.Quote.IsValid}}
-			
+		{{/ContextData.Quote.IsValid}}
+		
+		<div class="row-fluid">
+		<div class="span7 portal-rates">			
 			{{#ContextData.Quote.QuoteDisplay.value}}
 			{{#ContextData.Quote.QuoteDisplay.prefix}}<span class="prefix">{{ContextData.Quote.QuoteDisplay.prefix}}:</span>{{/ContextData.Quote.QuoteDisplay.prefix}}
 			{{ContextData.Quote.QuoteDisplay.value}}
-			{{#ContextData.Quote.QuoteDisplay.suffix}}<span classs="suffix">/{{ContextData.Quote.QuoteDisplay.suffix}}</span>{{/ContextData.Quote.QuoteDisplay.suffix}}
+			{{#ContextData.Quote.QuoteDisplay.suffix}}<span class="suffix">/{{ContextData.Quote.QuoteDisplay.suffix}}</span>{{/ContextData.Quote.QuoteDisplay.suffix}}
 			{{/ContextData.Quote.QuoteDisplay.value}}
 		</div>
-		<div class="{{^ContextData.Quote.IsValid}}span12{{/ContextData.Quote.IsValid}}{{#ContextData.Quote.IsValid}}span6{{/ContextData.Quote.IsValid}} right-side-actions">
+		<div class="span5 right-side-actions">
 			<button class="btn btn-mini add-wishlist bapi-wishlisttracker{{#inmylist}} active{{/inmylist}}" data-pkid="{{ID}}" type="button" data-toggle="button">
-			<span class="halflings heart-empty"><i></i>{{^inmylist}}{{textdata.Add to Wishlist}}{{/inmylist}}{{#inmylist}}{{textdata.Remove from Wishlist}}{{/inmylist}}</span></button>
+			<span class="halflings heart-empty"><i></i>{{^inmylist}}{{textdata.WishList}}{{/inmylist}}{{#inmylist}}{{textdata.WishListed}}{{/inmylist}}</span></button>
 			{{#ContextData.SEO.Keyword}}&nbsp;|&nbsp;<a class="property-link" href="{{&ContextData.SEO.DetailURL}}">{{textdata.Details}} <span>&rarr;</span></a>{{/ContextData.SEO.Keyword}}
 		</div>
 		</div>
@@ -314,7 +320,6 @@
 <table class="table table-bordered table-striped">
 <thead>
 <tr>
-	<th>{{textdata.Compare}}</th>
 	<th>{{textdata.Property Name}}</th>
 	<th>{{textdata.Category}}</th>
 	<th>{{textdata.Beds}}</th>
@@ -328,8 +333,11 @@
 <tbody>
 {{#result}}
 <tr>
-    <td><input type='checkbox' /></td>	
-    <td><a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}">{{Headline}}</a></td>
+    <td>
+		{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}">
+		{{Headline}}
+		{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
+	</td>
     <td>{{Type}}</td>
     <td>{{Bedrooms}}</td> 
     <td>{{Bathrooms}}</td> 
@@ -343,6 +351,8 @@
 		{{#IsBookable}}
 		<a class="btn btn-small btn-primary" href='{{ContextData.SEO.BookingURL}}'>{{textdata.Select}}</a>
 		{{/IsBookable}}
+		<button class="btn btn-mini add-wishlist bapi-wishlisttracker{{#inmylist}} active{{/inmylist}}" data-pkid="{{ID}}" type="button" data-toggle="button">
+		<span class="halflings heart-empty"><i></i>{{^inmylist}}{{textdata.WishList}}{{/inmylist}}{{#inmylist}}{{textdata.WishListed}}{{/inmylist}}</span></button>		
 	</td>   
 </tr>
 {{/result}}
@@ -651,7 +661,13 @@
 	</div>
 	<div class="clear"></div>
 	<hr/>
-	<div class="fp-rates">{{ContextData.Quote.PublicNotes}}</div>
+	<div class="fp-rates">
+		{{#ContextData.Quote.QuoteDisplay.value}}
+		{{#ContextData.Quote.QuoteDisplay.prefix}}<span class="prefix">{{ContextData.Quote.QuoteDisplay.prefix}}:</span>{{/ContextData.Quote.QuoteDisplay.prefix}}
+		{{ContextData.Quote.QuoteDisplay.value}}
+		{{#ContextData.Quote.QuoteDisplay.suffix}}<span classs="suffix">/{{ContextData.Quote.QuoteDisplay.suffix}}</span>{{/ContextData.Quote.QuoteDisplay.suffix}}
+		{{/ContextData.Quote.QuoteDisplay.value}}
+	</div>
 	{{#ContextData.SEO.Keyword}}<a class="property-link" href="{{ContextData.SEO.DetailURL}}">{{textdata.Details}}&nbsp;<span>&rarr;</span></a>{{/ContextData.SEO.Keyword}}
 	<div class="clearfix"></div>
 	</div>
@@ -1210,7 +1226,7 @@
 		</li>
 		<li id="lsform">
 			<select class="span12 leadrequestfield required email" data-field="ls">
-				<option value="">-{{config.leadsources.prompt}}-</option>		
+				<option value="">{{config.leadsources.prompt}}</option>
 				{{#config.leadsources.values}}<option value="{{Data}}">{{Label}}</option>{{/config.leadsources.values}}
 			</select>					
 		</li>

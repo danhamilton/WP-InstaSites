@@ -54,23 +54,15 @@ context.stime = new Date();
 context.etime = new Date();
 context.curentity = null;
 context.init = function (apikey, options) {
-	if (context.initialized) { return; }
-	context.initialized = true;	
-    this.defaultOptions.apikey = apikey;
-	
+	this.defaultOptions.apikey = apikey;	
 	context.reqid = $("meta[name=REQUESTID]").attr("content");
-	if (context.reqid === null) { context.reqid = guid(); }
-	
-    if (typeof apikey === "undefined" || apikey === null) {
-        context.defaultOptions.baseURL = '/misc';
-	}
-	if (typeof(options) === "undefined" || options === null) { options = new Object(); }	
-	if (typeof(options.baseURL) !== "undefined") { context.defaultOptions.baseURL = options.baseURL;	}		
-	if (typeof(options.jsonp) !== "undefined") { 
-		context.defaultOptions.jsonp = options.jsonp; 
-	}
-		
+	if (!_isempty(context.reqid)) { context.reqid = guid(); }	
+    if (_isempty(apikey)) { context.defaultOptions.baseURL = '/misc'; }
+	if (_isempty(options)) { options = {}; }	
+	if (!_isempty(options.baseURL)) { context.defaultOptions.baseURL = options.baseURL;	}		
+	if (!_isempty(options.jsonp)) { context.defaultOptions.jsonp = options.jsonp; }		
 	context.loadsession();	
+	context.initialized = true;
 }
 
 var hasloggedpageview = false;
@@ -208,17 +200,20 @@ var _cookiename = 'BAPI';
 var _scookiename = 'BAPIS';
 context.session = context.session || {};
 function _isempty(a) { return typeof(a)==="undefined" || a===null; }
-context.isempty = function(a) { _isempty(a); }
+context.isempty = function(a) { return _isempty(a); }
 context.loadsession = function() {		
 	var a = $.parseJSON($.cookie(_scookiename));
 	var b = $.parseJSON($.cookie(_cookiename));
-	if (_isempty(a) && _isempty(b)) {
+	if (_isempty(a)) {
 		context.log("Creating new BAPI session.");
 		context.session = new SessionProfile();		
 	} else {
-		context.session = context.session || {}; a = a || {}; b = b || {};
+		context.session = b;
+		/*
+		context.session = context.session || {};
 		if (_isempty(context.session.searchparams)) { context.session.searchparams = new SearchParams(); }
-		a.searchparams = a.searchparams || {}; b.searchparams = b.searchparams || {};
+		if (_isempty(a)) { a = new SessionProfile(); }
+		if (_isempty(b)) { b = new SessionProfile(); }
 		
 		context.session.visitorid = (_isempty(a.visitorid) ? b.visitorid : a.visitorid);
 		context.session.visitorid2 = (_isempty(a.visitorid2) ? b.visitorid2 : a.visitorid2);
@@ -271,6 +266,7 @@ context.loadsession = function() {
 		if (_isempty(a.searchparams.rate) && _isempty(b.searchparams.rate)) { context.session.searchparams.rate = new MultiSearchParam(); } 
 		else if (_isempty(a.searchparams.rate)) { context.session.searchparams.rate = b.searchparams.rate; } 
 		else { context.session.searchparams.rate = a.searchparams.rate; }			
+		*/
 	}
 	
 	// cleanup the checkin/checkout dates
@@ -282,8 +278,8 @@ context.loadsession = function() {
 	
 }
 
-function isEmptyDate(s) {
-	return (typeof(s)==="undefined" || s===null || s=='');
+function _isemptydate(s) {
+	return (_isempty(s) || s=='');
 }
 context.savesession = function() {	
 	var s = context.session;
@@ -295,41 +291,43 @@ context.savesession = function() {
 	//BAPI.log("->mind=" + mind.format(df) + ", maxd=" + maxd.format(df));	
 	
 	// set the checkin
-	if (_isempty(sp.scheckin)) { sp.checkin = null; }
+	if (_isemptydate(sp.scheckin)) { sp.checkin = null; sp.scheckin = null; }
 	else {		
 		sp.checkin = moment(sp.scheckin, dfparse); // set the checkin to whatever was in the display version
 		if (sp.checkin.isBefore(mind)) { sp.checkin = mind; } // make sure the checkin is great than the minbookingdate
 		if (sp.checkin.isAfter(maxd)) { sp.checkin = mind; } // make sure the checkin is before the maxbookingdate
-		sp.checkin = moment(sp.checkin).format(df); // format to bapi default dateformat
+		sp.scheckin = moment(sp.checkin).format(dfparse);
+		sp.checkin = moment(sp.checkin).format(df); // format to bapi default dateformat		
 	}
 	
 	// set the checkout
-	vart testlos = parseInt(sp.los);	
-	if (context.config().los.enabled && !_isempty(sp.los) && !isNaN(testlos) !_isempty(sp.checkin)) {
-		// this means that the los field has been enabled
-		sp.los = testlos;
-		sp.checkout = moment(sp.checkin).add("d", sp.los);
-		if (sp.checkout.isSame(sp.checkin) || sp.checkout.isBefore(sp.checkn)) { // make sure the checkout is great than the checkin
-			sp.checkoout = moment(sp.checkin).add("days", context.config().minlos);
+	var testlos = parseInt(sp.los);	
+	if (context.config().los.enabled && !isNaN(testlos) && testlos>0 && !_isempty(sp.checkin)) {		
+		sp.checkout = moment(sp.checkin, df).add("d", testlos);
+		if (sp.checkout.isSame(sp.checkin) || sp.checkout.isBefore(sp.checkin)) { // make sure the checkout is great than the checkin
+			sp.checkout = moment(sp.checkin).add("days", context.config().minlos);
 		}
-		sp.checkout = moment(sp.checkout).format(df); // format to bapi default dateformat
 		sp.scheckout = moment(sp.checkout).format(dfparse);
+		sp.checkout = moment(sp.checkout).format(df); // format to bapi default dateformat		
 	}
-	else if (_isempty(sp.scheckout)) { sp.checkout = null; }
+	else if (_isemptydate(sp.scheckout)) { sp.checkout = null; sp.scheckout = null; }
 	else {
 		sp.checkout = moment(sp.scheckout, dfparse); // set the checkout to whatever was in the display version		
 		if (sp.checkout.isSame(sp.checkin) || sp.checkout.isBefore(sp.checkn)) { // make sure the checkout is great than the checkin
 			sp.checkoout = moment(sp.checkin).add("days", context.config().minlos);
 		}
+		sp.scheckout = moment(sp.checkout).format(dfparse);
 		sp.checkout = moment(sp.checkout).format(df); // format to bapi default dateformat
 	}
 	
 	// try to set the los
-	try { sp.los = moment(sp.checkout).diff(moment(sp.checkin),'days'); } catch(err) { sp.los = null; }
+	try { sp.los = moment(sp.checkout,df).diff(moment(sp.checkin,df),'days'); } catch(err) { sp.los = null; }
+	if (isNaN(sp.los)) { sp.los = null; }
 	
 	//context.log("--In savesession--"); context.log(context.session);	
-	$.cookie(_cookiename, JSON.stringify(s),  { expires: 30, path: '/' }); 
-	$.cookie(_scookiename, JSON.stringify(s)); 
+	var sc = JSON.stringify(s);
+	$.cookie(_cookiename, sc,  { expires: 30, path: '/' }); 
+	$.cookie(_scookiename, sc); 
 }
 
 context.clearsession = function() {	
@@ -553,44 +551,36 @@ function cleanupSearchParams() {
 	var sp = context.session.searchparams;
 	
 	// fixup the checkin (data)
-	if (typeof(sp.checkin)==="undefined") { sp.checkin = null; }
-	if (typeof(sp.checkout)==="undefined") { sp.checkout = null; }
-	if (sp.checkin!==null && sp.checkin!='' && moment(sp.checkin).isValid()) {
-		if (moment(sp.checkin).isBefore(mind) || moment(sp.checkin).isAfter(maxd)) {
-			sp.checkin = mind; // make sure checkin is between the min and max booking dates
-		}
-		sp.checkin = moment(sp.checkin).format(df);
+	if (_isempty(sp.checkin)) { sp.checkin = null; }
+	if (_isempty(sp.checkout)) { sp.checkout = null; }
+	if (_isempty(sp.scheckin)) { sp.scheckin = null; }
+	if (_isempty(sp.scheckout)) { sp.scheckout = null; }
+	var cin = null;
+	try { cin = moment(sp.checkin,df); } catch(err) { cin = null; }
+	if (cin===null || !cin.isValid()) {
+		try { cin = moment(sp.scheckin,dfparse); } catch(err) { cin = null; }
 	}
-	else {
-		sp.checkin = null;
+	var cout = null;
+	try { cout = moment(sp.checkout,df); } catch(err) { cout = null; }
+	if (cout===null || !cout.isValid()) {
+		try { cout = moment(sp.scheckout,dfparse); } catch(err) { cout = null; }
 	}
+	
+	if (!_isempty(cin) && cin.isValid()) {
+		// make sure checkin is between the min and max booking dates
+		if (cin.isBefore(mind) || cin.isAfter(maxd)) { cin = mind; }
+		sp.checkin = cin.format(df);
+		sp.scheckin = cin.format(dfparse);
+	}
+	else { sp.checkin = null; sp.scheckin = null; }
 	
 	// fixup the checkout (data)
-	if (sp.checkout!==null && sp.checkout!='' && moment(sp.checkout).isValid()) {
-		if (moment(sp.checkout).isBefore(sp.checkin) || moment(sp.checkout).isAfter(maxd)) {
-			sp.checkout = moment(sp.checkin).add('days', context.config().minlos);
-		}
-		sp.checkout = moment(sp.checkout).format(df);
+	if (!_isempty(sp.checkin) && !_isempty(sp.checkout) && cin.isValid() && cout.isValid()) {
+		if (cout.isBefore(cin) || cout.isAfter(maxd)) { cout = cin.add('days', context.config().minlos); }
+		sp.checkout = cout.format(df);
+		sp.scheckout = cout.format(dfparse);
 	}
-	else {
-		sp.checkout = null;
-	}
-	
-	// fixup the checkin (display)
-	if (sp.checkin!==null && sp.checkin!='' && moment(sp.checkin).isValid()) {
-		sp.scheckin = moment(sp.checkin).format(dfparse);
-	}
-	else {
-		sp.scheckin = null;
-	}	
-	
-	// fixup the checkout (display)
-	if (sp.checkout!==null && sp.checkout!='' && moment(sp.checkout).isValid()) {
-		sp.scheckout = moment(sp.checkout).format(dfparse);
-	}
-	else {
-		sp.scheckout = null;
-	}	
+	else { sp.checkout = null; sp.scheckout = null; }	
 }
 
 })(BAPI); 
