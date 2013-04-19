@@ -180,7 +180,7 @@
 	Group: Properties
 */
 <script id="tmpl-propertysearch-galleryview" type="text/html">
-<header class="row-fluid search-result-controls hidden-phone">
+<header class="row-fluid search-result-controls">
 <div class="span7 form-horizontal">&nbsp;</div>
 <div class="span5 form-horizontal">
 <div class="control-group pull-right">
@@ -201,28 +201,39 @@
 <div class="portal-result">
     <div class="portal-inner">    
         <div class="portal-images">
-			<div id="slider" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "sync": "#carousel" }'>
+		{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
+			<div id="slider" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false }'>
 			  <ul class="slides">
-				  {{#Images}}
-				  <li><a class="property-link" href="{{&ContextData.SEO.DetailURL}}"><img alt="{{Caption}}" src="{{&ThumbnailURL}}" /></a></li>
-				  {{/Images}} 
-			  </ul>
-			</div>           
+				  <li><img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" /></li>
+				  {{#Images.1}}<li><img alt="{{Caption}}" src="{{&ThumbnailURL}}" /></li>{{/Images.1}}
+				  {{#Images.2}}<li><img alt="{{Caption}}" src="{{&ThumbnailURL}}" /></li>{{/Images.2}} 
+			  </ul>		  
+			</div>
+			{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 		</div>       
 		<div class="portal-info">
-			<h2 class="property-title"><a href="{{&ContextData.SEO.DetailURL}}">{{Headline}}</a></h2>
-			<div class="location"><span class="hidden-phone"><b>{{textdata.City}}:</b> {{City}}</span> {{#Bedrooms}}<b>{{textdata.Beds}}</b>: {{Bedrooms}} | {{/Bedrooms}}{{#Bathrooms}}<b>{{textdata.Baths}}</b>: {{Bathrooms}} | {{/Bathrooms}}<b>{{textdata.Sleeps}}</b>: {{Sleeps}}</div>			
-			<div class="portal-rates">
-				{{^ContextData.Quote.IsValid}}
-				{{#session.scheckin}}{{#session.scheckout}}<div class="no-rate">{{ContextData.Quote.ValidationMessage}}</div>{{/session.scheckout}}{{/session.scheckin}}
-				{{/ContextData.Quote.IsValid}}
+			<h2 class="property-title">{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}{{Headline}}{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}</h2>
+			<div class="location">
+			<span class="hidden-phone"><b>{{textdata.City}}:</b> {{City}}</span> {{#Bedrooms}}| <b>{{textdata.Beds}}</b>: {{Bedrooms}} | {{/Bedrooms}}{{#Bathrooms}}<b>{{textdata.Baths}}</b>: {{Bathrooms}} | {{/Bathrooms}}<b>{{textdata.Sleeps}}</b>: {{Sleeps}}
+			</div>
+			
+			{{^ContextData.Quote.IsValid}}
+			{{#session.scheckin}}{{#session.scheckout}}<div class="alert alert-info no-rate">{{ContextData.Quote.ValidationMessage}}</div>{{/session.scheckout}}{{/session.scheckin}}
+			{{/ContextData.Quote.IsValid}}
 				
+			<div class="row-fluid">
+			<div class="span9 portal-rates">
 				{{#ContextData.Quote.QuoteDisplay.value}}
 				{{#ContextData.Quote.QuoteDisplay.prefix}}<span class="prefix">{{ContextData.Quote.QuoteDisplay.prefix}}:</span>{{/ContextData.Quote.QuoteDisplay.prefix}}
 				{{ContextData.Quote.QuoteDisplay.value}}
 				{{#ContextData.Quote.QuoteDisplay.suffix}}<span classs="suffix">/{{ContextData.Quote.QuoteDisplay.suffix}}</span>{{/ContextData.Quote.QuoteDisplay.suffix}}
 				{{/ContextData.Quote.QuoteDisplay.value}}
-			</div>			
+			</div>
+			<div class="span3 right-side-actions">
+			{{#ContextData.SEO.Keyword}}<a class="property-link" href="{{&ContextData.SEO.DetailURL}}">{{textdata.Details}} <span>&rarr;</span></a>{{/ContextData.SEO.Keyword}}
+			</div>
+			</div>
+					
 		</div>
 	</div>
 </div>
@@ -235,7 +246,7 @@
 </script>
 
 <script id="tmpl-propertysearch-listview" type="text/html">
-<header class="row-fluid search-result-controls hidden-phone">
+<header class="row-fluid search-result-controls">
 <div class="span7 form-horizontal">&nbsp;</div>
 <div class="span5 form-horizontal">
 <div class="control-group pull-right">
@@ -618,18 +629,22 @@
 {{/result}}
 </script>
 
-/* Featured Properties (horizontal) */
-<script id="tmpl-featuredproperties-horiz" type="text/html">
+/* 
+	Featured Properties - QuickView
+*/
+<script id="tmpl-featuredproperties-quickview" type="text/html">
 {{#result}}
-<div class="fp-featured span6">    
+<div class="fp-featured">    
 	<div class="fp-image">
-		<a href="{{ContextData.SEO.DetailURL}}"><img src="{{&PrimaryImage.ThumbnailURL}}" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" /></a>
+		{{#ContextData.SEO.Keyword}}<a href="{{ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
+		<img src="{{&PrimaryImage.ThumbnailURL}}" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />
+		{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 	</div>
 	<div class="fp-outer"> 
 	<div class="fp-title"><a href='{{ContextData.SEO.DetailURL}}'>{{Headline}}</a></div>
 	{{#NumReviews}}<div class="fpstar{{AvgReview}}"></div>{{/NumReviews}}
 	<div class="fp-details">
-		<b>{{Type}}&nbsp;-&nbsp;</b>
+		<b class="hidden-phone">{{Type}}</b>
 		{{#Bedrooms}}&nbsp;|&nbsp;<b>{{textdata.Beds}}:</b>&nbsp;{{Bedrooms}}{{/Bedrooms}}
 		{{#Bathrooms}}&nbsp;|&nbsp;<b>{{textdata.Baths}}:</b>&nbsp;{{Bathrooms}}{{/Bathrooms}}
 		{{#Sleeps}}&nbsp;|&nbsp;<b>{{textdata.Sleeps}}:</b>&nbsp;{{Sleeps}}{{/Sleeps}}
@@ -638,33 +653,7 @@
 	<hr/>
 	<div class="fp-rates">{{ContextData.Quote.PublicNotes}}</div>
 	{{#ContextData.SEO.Keyword}}<a class="property-link" href="{{ContextData.SEO.DetailURL}}">{{textdata.Details}}&nbsp;<span>&rarr;</span></a>{{/ContextData.SEO.Keyword}}
-	</div>
-</div>
-{{/result}}
-</script>
-
-/* Featured Properties (vertical) */
-<script id="tmpl-featuredproperties" type="text/html">
-{{#result}}
-{{#textdata.You May Also Like}}<h1>{{textdata.You May Also Like}}</h1>{{/textdata.You May Also Like}}
-<div class="sp-featured">
-	<div class="sp-image">
-		<a href="{{ContextData.SEO.DetailURL}}">
-			<img width="155px" src="{{&PrimaryImage.ThumbnailURL}}" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />
-		</a>
-	</div>
-	<div class="sp-outer">
-		<div class="sp-title">
-			{{Headline}}
-			<div class="sp-details">
-				{{#Bedrooms}}<b>{{textdata.Beds}}:</b>{{Bedrooms}}&nbsp;|&nbsp;{{/Bedrooms}}
-				{{#Bathrooms}}<b>{{textdata.Baths}}:</b>{{Bathrooms}}&nbsp;|&nbsp;{{/Bathrooms}}
-				{{#Sleeps}}<b>{{textdata.Sleeps}}:</b>{{Sleeps}}{{/Sleeps}}
-			</div>
-			<div class="sp-rates">
-				{{ContextData.Quote.PublicNotes}}
-			</div>
-		</div>		
+	<div class="clearfix"></div>
 	</div>
 </div>
 {{/result}}
@@ -1084,23 +1073,18 @@
 {{/result}}
 </script>
 
-<script id="tmpl-specials-vert" type="text/html">
+<script id="tmpl-specials-quickview" type="text/html">
 {{#result}}
 <div class="special-holder">
-		<div class="special-image">
-		<a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}">
-		{{^Images}}
-		<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" />	
-		{{/Images}}
-		{{#Images}}
-		<img alt="{{Images.Caption}}" src="{{&ThumbnailURL}}" />
-		{{/Images}}
-		</a>
-		</div>
-		<div class="special-description">
-			<a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}"><h4 class="special-title">{{Name}}</h4></a>
-		<div class="special-sum">{{&Summary}}</div>
-		</div>
+	<div class="special-image">
+	<a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}">
+		<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" />	
+	</a>
+	</div>
+	<div class="special-description">
+		<a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}"><h4 class="special-title">{{Name}}</h4></a>
+	<div class="special-sum">{{&Summary}}</div>
+	</div>
 </div>
 {{/result}}
 </script> 
@@ -1187,13 +1171,13 @@
 {{/result}}
 </script>
 
-<script id="tmpl-searches-horiz" type="text/html">
+<script id="tmpl-searches-quickview" type="text/html">
 {{#result}}
-<div class="pf-featured span4">    
+<div class="pf-featured">    
 <div class="pf-image">
-	<a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}">
+	{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
 		<img src="{{&PrimaryImage.ThumbnailURL}}" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />
-	</a>
+	{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 </div>
 <div class="pf-outer">	
 	<a class="pf-title" href='{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}'>{{Name}}</a>
@@ -1216,13 +1200,13 @@
 		<fieldset id="have-question" class="leadrequest">
 		<ul class="unstyled">
 		<li id="phoneform">
-			<input type="text" id="txtName" class="span12 leadrequestfield required input-text" minlength="2" data-field="name" placeholder="{{textdata.Name}}" required />
+			<input type="text" id="txtName" class="span12 leadrequestfield required input-text" minlength="2" data-field="name" placeholder="{{textdata.Name}}*" required />
 		</li>			
 		<li id="emailform">
-			<input type="text" id="txtEmail" class="span12 leadrequestfield required input-text" size="25" data-field="email" type="email" placeholder="{{textdata.Email}}" required />
+			<input type="text" id="txtEmail" class="span12 leadrequestfield required input-text" size="25" data-field="email" type="email" placeholder="{{textdata.Email}}*" required />
 		</li>
 		<li id="phoneform">
-			<input type="text" id="txtPhone" class="span12 leadrequestfield required email input-text" data-field="homephone" placeholder="{{textdata.Phone}}" required />				
+			<input type="text" id="txtPhone" class="span12 leadrequestfield required email input-text" data-field="homephone" placeholder="{{textdata.Phone}}*" required />				
 		</li>
 		<li id="lsform">
 			<select class="span12 leadrequestfield required email" data-field="ls">

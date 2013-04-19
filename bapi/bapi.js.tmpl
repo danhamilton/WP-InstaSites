@@ -75,7 +75,7 @@ context.init = function (apikey, options) {
 
 var hasloggedpageview = false;
 $(window).load(function() {
-	context.session().lasteventtime = new Date();		
+	context.session.lasteventtime = new Date();		
 	context.savesession();
 	// do logging
 	context.etime = new Date();
@@ -114,7 +114,7 @@ context.datamanager = {
 		return $.extend({}, { avail: 1, seo: 1 }, context.datamanager.getbookingcontext());		
 	},
 	getbookingcontext: function() {
-		var sp = BAPI.session().searchparams;
+		var sp = context.session.searchparams;
 		return { "checkin": sp.checkin, "checkout": sp.checkout, "los": sp.los, "adults": sp.adults, "children": sp.children, "rooms": sp.rooms }
 	}
 }
@@ -125,23 +125,23 @@ context.mylisttracker = {
 		if (typeof(entity)==="undefined" || entity===null) { entity = BAPI.entities.property; }
 		var i = context.mylisttracker.indexof(id, entity);
 		if (i==-1) {
-			context.session().mylist.push( { "ID": id, "entity": entity });
-			if (context.session().mylist.length>10) { self.mylist = self.mylist.slice(1); }
+			context.session.mylist.push( { "ID": id, "entity": entity });
+			if (context.session.mylist.length>10) { self.mylist = self.mylist.slice(1); }
 		}
 	},
 	del: function(id, entity) {	
 		var i = context.mylisttracker.indexof(id, entity);
-		if (i>-1) { context.session().mylist.splice(i,1); }
+		if (i>-1) { context.session.mylist.splice(i,1); }
 	},
 	indexof: function(id, entity) {
-		for (var i =0; i < context.session().mylist.length; i++) {
-		   if (context.session().mylist[i].ID===id && context.session().mylist[i].entity===entity) {
+		for (var i =0; i < context.session.mylist.length; i++) {
+		   if (context.session.mylist[i].ID===id && context.session.mylist[i].entity===entity) {
 			  return i;			  
 		   }
 	   }
 	   return -1;
 	},
-	clear: function(callback) { context.session().mylist = []; },				
+	clear: function(callback) { context.session.mylist = []; },				
 }
 
 /* Session */
@@ -173,7 +173,8 @@ function SessionProfile() {
 	this.searchmode = 0;
 	this.searchparams = new SearchParams();		
 	this.currency = context.defaultOptions.currency;	
-	this.mylist = [];	
+	this.mylist = [];
+	this.sessionid = guid();
 }
 
 function SearchParams() {
@@ -204,42 +205,72 @@ function MultiSearchParam() {
 }
 
 var _cookiename = 'BAPI';
-var _session = new SessionProfile();
-context.session = function() {
-	return _session;
-}
+var _scookiename = 'BAPIS';
+context.session = context.session || {};
+function _isempty(a) { return typeof(a)==="undefined" || a===null; }
+context.isempty = function(a) { _isempty(a); }
 context.loadsession = function() {		
-	//var a = JSON.parse($.cookie(_cookiename));
-	var a = $.parseJSON($.cookie(_cookiename));
-	if (typeof (a) === "undefined" || a === null) {
+	var a = $.parseJSON($.cookie(_scookiename));
+	var b = $.parseJSON($.cookie(_cookiename));
+	if (_isempty(a) && _isempty(b)) {
 		context.log("Creating new BAPI session.");
-		_session = new SessionProfile();		
-	}	
-	else {
-		_session.visitorid = a.visitorid;
-		_session.visitorid2 = a.visitorid2;
-		_session.personid = a.personid;
-		_session.searchmode = a.searchmode;
-		_session.currency = (typeof(a.currency) === "undefined" || a.currency === null ? context.defaultOptions.currency : a.currency);
-		_session.profiledata = a.profiledata;
-		_session.searchmode = a.searchmode;
-		_session.mylist = a.mylist;
-		_session.searchparams.checkin = a.searchparams.checkin;
-		_session.searchparams.checkout = a.searchparams.checkout;
-		_session.searchparams.los = a.searchparams.los;
-		_session.searchparams.adults = (typeof(a.searchparams.adults) === "undefined" || a.searchparams.adults === null ? new MultiSearchParam() : a.searchparams.adults);
-		_session.searchparams.children = (typeof(a.searchparams.children) === "undefined" || a.searchparams.children === null ? new MultiSearchParam() : a.searchparams.children);
-		_session.searchparams.beds = (typeof(a.searchparams.beds) === "undefined" || a.searchparams.beds === null ? new MultiSearchParam() : a.searchparams.beds);
-		_session.searchparams.baths = (typeof(a.searchparams.baths) === "undefined" || a.searchparams.baths === null ? new MultiSearchParam() : a.searchparams.baths);
-		_session.searchparams.sleeps = (typeof(a.searchparams.sleeps) === "undefined" || a.searchparams.sleeps === null ? new MultiSearchParam() : a.searchparams.sleeps);
-		_session.searchparams.rooms = (typeof(a.searchparams.rooms) === "undefined" || a.searchparams.rooms === null ? new MultiSearchParam() : a.searchparams.rooms);
-		_session.searchparams.category = a.searchparams.category;
-		_session.searchparams.location = a.searchparams.location;
-		_session.searchparams.altid = a.searchparams.altid;
-		_session.searchparams.dev = a.searchparams.dev;
-		_session.searchparams.amenities = a.searchparams.amenities;
-		_session.searchparams.headline = a.searchparams.headline;
-		_session.searchparams.rate = (typeof(a.searchparams.rate) === "undefined" || a.searchparams.rate === null ? new MultiSearchParam() : a.searchparams.rate);		
+		context.session = new SessionProfile();		
+	} else {
+		context.session = context.session || {}; a = a || {}; b = b || {};
+		if (_isempty(context.session.searchparams)) { context.session.searchparams = new SearchParams(); }
+		a.searchparams = a.searchparams || {}; b.searchparams = b.searchparams || {};
+		
+		context.session.visitorid = (_isempty(a.visitorid) ? b.visitorid : a.visitorid);
+		context.session.visitorid2 = (_isempty(a.visitorid2) ? b.visitorid2 : a.visitorid2);
+		context.session.personid = (_isempty(a.personid) ? b.personid : a.personid);
+		context.session.searchmode = (_isempty(a.searchmode) ? b.searchmode : a.searchmode);
+		context.session.sessionid = a.sessionid; // always point to the session cookie
+		if (_isempty(context.session.sessionid)) { context.session.sessionid = guid(); }
+		
+		if (_isempty(a.currency) && _isempty(b.currency)) { context.session.currency = context.defaultOptions.currency; } 
+		else if (_isempty(a.currency)) { context.session.currency = b.currency; }
+		else { context.session.currency = a.currency; }
+		
+		context.session.profiledata = (_isempty(a.profiledata) ? b.profiledata : a.profiledata);		
+		context.session.mylist = (_isempty(a.mylist) ? b.mylist : a.mylist);
+		if (_isempty(context.session.mylist)) { context.session.mylist = []; }
+		context.session.searchparams.checkin = (_isempty(a.searchparams.checkin) ? b.searchparams.checkin : a.searchparams.checkin);
+		context.session.searchparams.checkout = (_isempty(a.searchparams.checkout) ? b.searchparams.checkout : a.searchparams.checkout);
+		context.session.searchparams.los = (_isempty(a.searchparams.los) ? b.searchparams.los : a.searchparams.los);
+		context.session.searchparams.category = (_isempty(a.searchparams.category) ? b.searchparams.category : a.searchparams.category);
+		context.session.searchparams.location = (_isempty(a.searchparams.location) ? b.searchparams.location : a.searchparams.location);
+		context.session.searchparams.altid = (_isempty(a.searchparams.altid) ? b.searchparams.altid : a.searchparams.altid);
+		context.session.searchparams.dev = (_isempty(a.searchparams.dev) ? b.searchparams.dev : a.searchparams.dev);
+		context.session.searchparams.amenities = (_isempty(a.searchparams.amenities) ? b.searchparams.amenities : a.searchparams.amenities);
+		context.session.searchparams.headline = (_isempty(a.searchparams.headline) ? b.searchparams.headline : a.searchparams.headline);
+		
+		if (_isempty(a.searchparams.adults) && _isempty(b.searchparams.adults)) { context.session.searchparams.adults = new MultiSearchParam(); } 
+		else if (_isempty(a.searchparams.adults)) { context.session.searchparams.adults = b.searchparams.adults; } 
+		else { context.session.searchparams.adults = a.searchparams.adults; }
+		
+		if (_isempty(a.searchparams.children) && _isempty(b.searchparams.children)) { context.session.searchparams.children = new MultiSearchParam(); } 
+		else if (_isempty(a.searchparams.children)) { context.session.searchparams.children = b.searchparams.children; } 
+		else { context.session.searchparams.children = a.searchparams.children; }
+		
+		if (_isempty(a.searchparams.beds) && _isempty(b.searchparams.beds)) { context.session.searchparams.beds = new MultiSearchParam(); } 
+		else if (_isempty(a.searchparams.beds)) { context.session.searchparams.beds = b.searchparams.beds; } 
+		else { context.session.searchparams.beds = a.searchparams.beds; }
+		
+		if (_isempty(a.searchparams.baths) && _isempty(b.searchparams.baths)) { context.session.searchparams.baths = new MultiSearchParam(); } 
+		else if (_isempty(a.searchparams.baths)) { context.session.searchparams.baths = b.searchparams.baths; } 
+		else { context.session.searchparams.baths = a.searchparams.baths; }
+		
+		if (_isempty(a.searchparams.sleeps) && _isempty(b.searchparams.sleeps)) { context.session.searchparams.sleeps = new MultiSearchParam(); } 
+		else if (_isempty(a.searchparams.sleeps)) { context.session.searchparams.sleeps = b.searchparams.sleeps; } 
+		else { context.session.searchparams.sleeps = a.searchparams.sleeps; }
+		
+		if (_isempty(a.searchparams.rooms) && _isempty(b.searchparams.rooms)) { context.session.searchparams.rooms = new MultiSearchParam(); } 
+		else if (_isempty(a.searchparams.rooms)) { context.session.searchparams.rooms = b.searchparams.rooms; } 
+		else { context.session.searchparams.rooms = a.searchparams.rooms; }
+		
+		if (_isempty(a.searchparams.rate) && _isempty(b.searchparams.rate)) { context.session.searchparams.rate = new MultiSearchParam(); } 
+		else if (_isempty(a.searchparams.rate)) { context.session.searchparams.rate = b.searchparams.rate; } 
+		else { context.session.searchparams.rate = a.searchparams.rate; }			
 	}
 	
 	// cleanup the checkin/checkout dates
@@ -247,7 +278,7 @@ context.loadsession = function() {
 	
 	// update the visitorID to be the client one
 	if (_pt == null) { context.logging.init(); }
-	if (_pt!=null) { _session.visitorid = _pt.getVisitorId(); }
+	if (_pt!=null) { context.session.visitorid = _pt.getVisitorId(); }
 	
 }
 
@@ -255,8 +286,8 @@ function isEmptyDate(s) {
 	return (typeof(s)==="undefined" || s===null || s=='');
 }
 context.savesession = function() {	
-	var s = _session;
-	var sp = _session.searchparams;
+	var s = context.session;
+	var sp = context.session.searchparams;
 	var df = context.defaultOptions.dateFormatBAPI;
 	var dfparse = context.defaultOptions.dateFormatMoment();
 	var mind = moment(context.config().minbookingdate);
@@ -264,9 +295,7 @@ context.savesession = function() {
 	//BAPI.log("->mind=" + mind.format(df) + ", maxd=" + maxd.format(df));	
 	
 	// set the checkin
-	if (sp.scheckin===null || sp.scheckin=='') {
-		sp.checkin = null;
-	}
+	if (_isempty(sp.scheckin)) { sp.checkin = null; }
 	else {		
 		sp.checkin = moment(sp.scheckin, dfparse); // set the checkin to whatever was in the display version
 		if (sp.checkin.isBefore(mind)) { sp.checkin = mind; } // make sure the checkin is great than the minbookingdate
@@ -275,8 +304,10 @@ context.savesession = function() {
 	}
 	
 	// set the checkout
-	if (context.config().los.enabled && sp.los > 0 && sp.checkin != null) {
+	vart testlos = parseInt(sp.los);	
+	if (context.config().los.enabled && !_isempty(sp.los) && !isNaN(testlos) !_isempty(sp.checkin)) {
 		// this means that the los field has been enabled
+		sp.los = testlos;
 		sp.checkout = moment(sp.checkin).add("d", sp.los);
 		if (sp.checkout.isSame(sp.checkin) || sp.checkout.isBefore(sp.checkn)) { // make sure the checkout is great than the checkin
 			sp.checkoout = moment(sp.checkin).add("days", context.config().minlos);
@@ -284,9 +315,7 @@ context.savesession = function() {
 		sp.checkout = moment(sp.checkout).format(df); // format to bapi default dateformat
 		sp.scheckout = moment(sp.checkout).format(dfparse);
 	}
-	else if (sp.scheckout===null || sp.scheckout=='') {
-		sp.checkout = null;
-	}
+	else if (_isempty(sp.scheckout)) { sp.checkout = null; }
 	else {
 		sp.checkout = moment(sp.scheckout, dfparse); // set the checkout to whatever was in the display version		
 		if (sp.checkout.isSame(sp.checkin) || sp.checkout.isBefore(sp.checkn)) { // make sure the checkout is great than the checkin
@@ -296,20 +325,21 @@ context.savesession = function() {
 	}
 	
 	// try to set the los
-	try { sp.los = moment(sp.checkout).diff(moment(sp.checkin),'days'); } catch(err) { }
+	try { sp.los = moment(sp.checkout).diff(moment(sp.checkin),'days'); } catch(err) { sp.los = null; }
 	
-	//context.log("--In savesession--"); context.log(_session);	
+	//context.log("--In savesession--"); context.log(context.session);	
 	$.cookie(_cookiename, JSON.stringify(s),  { expires: 30, path: '/' }); 
+	$.cookie(_scookiename, JSON.stringify(s)); 
 }
 
 context.clearsession = function() {	
-	_session = new SessionProfile();
+	context.session = new SessionProfile();
 	context.savesession();	
 }
 
 /* Logging */
 context.log = function (a) {
-    if (context.defaultOptions.logging) { if (typeof (console) !== "undefined") { console.log(a); } }
+    if (context.defaultOptions.logging && !_isempty(console) && !_isempty(console.log)) { console.log(a); }
 }
 
 /* CRUD */
@@ -322,7 +352,7 @@ context.save = function(entity, postdata, callback) {
 
 context.search = function (entity, options, callback) {
     if (typeof(options) === "undefined" || options === null) { options = new Object(); }
-	if (typeof(options.currency) === "undefined" || options.currency === null) { options.currency = context.session().currency; }
+	if (typeof(options.currency) === "undefined" || options.currency === null) { options.currency = context.session.currency; }
 	if (typeof(options.currency) === "undefined" || options.currency === null) { options.currency = context.defaultOptions.currency; }
     var optionsURL = jQuery.param(options);        
     var url = context.defaultOptions.baseURL + '/ws/' + '?method=search' + '&entity=' + entity + '&' + optionsURL;                                            
@@ -334,7 +364,7 @@ context.get = function (ids, entity, options, callback) {
     if (typeof(options) === "undefined" || options === null) { options = new Object(); }
 	if (typeof (options.page) === "undefined" || options.page === null || options.page <= 0) { options.page = 1; }
 	if (typeof (options.pagesize) === "undefined" || options.pagesize === null || options.pagesize <= 0) { options.pagesize = 5; }	
-	if (typeof(options.currency) === "undefined" || options.currency === null) { options.currency = context.session().currency; }
+	if (typeof(options.currency) === "undefined" || options.currency === null) { options.currency = context.session.currency; }
 	if (typeof(options.currency) === "undefined" || options.currency === null) { options.currency = context.defaultOptions.currency; }
 	var si = (options.page-1) * options.pagesize;
 	var ei = si + options.pagesize;
@@ -354,7 +384,7 @@ context.createevent = function (options, callback) {
     var url = context.defaultOptions.baseURL + '/ws/' + '?method=createevent' + '&' + optionsURL;                                            
 	context.utils.getJSON2(url, function (data) { 
 		if (data !== null && data.result !== null) {
-			context.session().personid = data.result.Lead.ID;
+			context.session.personid = data.result.Lead.ID;
 			context.savesession();
 		}
 		callback(data); 
@@ -424,8 +454,9 @@ context.logging = {
 		if (_pt == null) { context.logging.init(); }
 		context.log('Page took ' + t + 'ms.');		
 		_pt.setCustomVariable(1, "msloadtime", t);
+		_pt.setCustomVariable(2, "sid", context.session.sessionid);
 		_pt.trackPageView();				
-		} catch(err) { context.log(err); }
+		} catch(err) { context.log("Error occurred in logpageview"); context.log(err); }
 	},
 	pt: function() {
 		return _pt;
@@ -518,8 +549,8 @@ function cleanupSearchParams() {
 	var maxd = moment(context.config().maxbookingdate);
 	var df = context.defaultOptions.dateFormatBAPI;
 	var dfparse = context.defaultOptions.dateFormatMoment();
-	var s = _session;
-	var sp = _session.searchparams;
+	var s = context.session;
+	var sp = context.session.searchparams;
 	
 	// fixup the checkin (data)
 	if (typeof(sp.checkin)==="undefined") { sp.checkin = null; }

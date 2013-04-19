@@ -50,7 +50,8 @@ BAPI.UI = BAPI.UI || {};
 (function(context) {
 
 context.maps = {};
-context.newdatepicker = false;
+//context.newdatepicker = false;
+context.newdatepicker = true;
 
 /*
 	Group: Initialization
@@ -309,26 +310,14 @@ context.inithelpers = {
 		});				
 	}
 }
-/*
-function MyListTracker() {
-	this.current = null;
-	this.mylist = [];
-	this.mylisttracker = {		
-		add: function(id, entity) {					
-			if (typeof(entity)==="undefined" || entity===null) { entity = BAPI.entities.property; }
-			self.mylist.push( { "ID": id, "entity": entity });
-			if (self.mylist.length>10) { self.mylist = self.mylist.slice(1); }
-		},
-		del: function(id, entity) {	},
-		clear: function(callback) { self.mylist = []; },		
-		current: function() { return self.mylist.length==0 ? null : self.mylist[self.mylist.length-1]; }			
-	}
-}
-*/
+
 context.rowfix = function(selector, wraprows) {
 	var divs = $(selector);
+	divs.addClass("span" + Math.ceil(12.0/wraprows))
 	if (divs!==null && divs.length > 0) {
-		for(var i = 0; i < divs.length; i+=wraprows) { divs.slice(i, i+wraprows).wrapAll("<div class='row-fluid'></div>"); }					
+		for(var i = 0; i < divs.length; i+=wraprows) { 
+			try { divs.slice(i, i+wraprows).wrapAll("<div class='row-fluid'></div>"); } catch(err) {} 
+		}	
 	}
 }
 /* 
@@ -348,7 +337,7 @@ context.createRateBlockWidget = function (targetid, options) {
 		data.site = BAPI.site;
 		data.config = BAPI.config();
 		data.textdata = BAPI.textdata;
-		data.session = BAPI.session();
+		data.session = BAPI.session;
 		if (options.log) { BAPI.log("--createSearchWidget.res--"); BAPI.log(data); }
 		$(targetid).html(Mustache.render(options.template, data));
 		
@@ -370,13 +359,13 @@ context.createRateBlockWidget = function (targetid, options) {
 		$(".bapi-booknow").on("click", function() {
 			$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
 			var reqdata = saveFormToSession(this, options);
-			BAPI.log(BAPI.session().searchparams);
+			BAPI.log(BAPI.session.searchparams);
 			var url = "/makebooking?redir=1&keyid=" + cur.ID + 
-						"&checkin=" + BAPI.session().searchparams.checkin +
-						"&checkout=" + BAPI.session().searchparams.checkout +
-						"&adults=" + BAPI.session().searchparams.adults.min +
-						"&children=" + BAPI.session().searchparams.children.min +
-						"&rooms=" + BAPI.session().searchparams.rooms.min;
+						"&checkin=" + BAPI.session.searchparams.checkin +
+						"&checkout=" + BAPI.session.searchparams.checkout +
+						"&adults=" + BAPI.session.searchparams.adults.min +
+						"&children=" + BAPI.session.searchparams.children.min +
+						"&rooms=" + BAPI.session.searchparams.rooms.min;
 			url = context.secureurl(url);
 			window.location.href = url;
 		});
@@ -401,8 +390,8 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 	var p = options.property;
 	
 	// load the session to the form
-	var s = BAPI.session().searchparams;
-	loadFormFromSession(BAPI.session().searchparams);		
+	var s = BAPI.session.searchparams;
+	loadFormFromSession(BAPI.session.searchparams);		
 	
 	// setup date pickers
 	context.createDatePicker('.datepickercheckin', { "property": p, "checkoutID": '.datepickercheckout' });
@@ -416,13 +405,11 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 	$(".quicksearch-dosearch").on("click", function() {
 		$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
 		var reqdata = saveFormToSession(this, options);
+		/*
 		if (doSearchCallback) { doSearchCallback(); }
-		if (typeof(options.searchurl)!= "undefined" && options.searchurl!='') {
-			window.location.href = options.searchurl;			
-		}
-		else {
-			$(targetid).unblock();
-		}
+		if (!BAPI.isempty(options.searchurl)) { window.location.href = options.searchurl; }
+		else { $(targetid).unblock(); }
+		*/
 	});
 	
 	// handle user clicking Clear
@@ -445,30 +432,31 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 context.createSummaryWidget = function (targetid, options, callback) {
 	options = initOptions(options, 10, 'tmpl-base-summary');
 	if (options.log) { BAPI.log("--options--"); BAPI.log(options); }
+	if (options.template===null) { BAPI.log("Undefined template for " + targetid); }
 	var ids=[], alldata=[];
 	context.loading.show();	
 	
 	if (options.usemylist) {
 		ids = [];
-		$.each(BAPI.session().mylist, function (index, item) {
+		$.each(BAPI.session.mylist, function (index, item) {
 			ids.push(parseInt(item.ID));			
 		});
 		if (options.entity == BAPI.entities.property) {
-			options.searchoptions = $.extend({}, options.searchoptions, BAPI.session().searchparams);
+			options.searchoptions = $.extend({}, options.searchoptions, BAPI.session.searchparams);
 		}
 		doSearch(targetid, ids, options.entity, options, alldata, callback); 
 	}
 	else {
 		// see if we should ignore the session for the initial search
 		if (options.entity == BAPI.entities.property && options.ignoresession!='1') {
-			options.searchoptions = $.extend({}, options.searchoptions, BAPI.session().searchparams);
+			options.searchoptions = $.extend({}, options.searchoptions, BAPI.session.searchparams);
 		}
 		BAPI.search(options.entity, options.searchoptions, function (data) { 
 			if (options.log) { BAPI.log("--search result--"); BAPI.log(data); }
 			ids = data.result; 
 			// for the actual retrieval of the records, we want to include the context
 			if (options.entity == BAPI.entities.property) {
-				options.searchoptions = $.extend({}, options.searchoptions, BAPI.session().searchparams);
+				options.searchoptions = $.extend({}, options.searchoptions, BAPI.session.searchparams);
 			}
 			doSearch(targetid, ids, options.entity, options, alldata, callback); 
 		});	
@@ -578,7 +566,7 @@ context.createInquiryForm = function (targetid, options) {
 		var pkid = (cur===null) ? null : cur.ID;
 		var selname = $(this).attr('data-field-selector');
 		var reqdata = { "pid": pkid, "checkin": options.checkin, "checkout": options.checkout };
-		reqdata = $.extend({}, reqdata, BAPI.session().searchparams);
+		reqdata = $.extend({}, reqdata, BAPI.session.searchparams);
 		$('.' + selname).each(function() {
 			var k = $(this).attr('data-field');
 			var v = $(this).val();
@@ -798,7 +786,7 @@ function bookingHelper_DoRedirect(u) {
 	var children = u.param('children');		
 	var df = BAPI.defaultOptions.dateFormatBAPI;
 	var dfParse = BAPI.defaultOptions.dateFormatMoment();
-	var sp = BAPI.session().searchparams;				
+	var sp = BAPI.session.searchparams;				
 	if (typeof (checkin) !== "undefined" && checkin !== null) {  
 		try { sp.checkin = moment(checkin, df).format(df); sp.scheckin=moment(sp.checkin, df).format(dfParse); } catch(err){}
 	}
@@ -817,12 +805,12 @@ function bookingHelper_DoRedirect(u) {
 
 function bookingHelper_FullLoad(targetid,options,propid) {
 	var propoptions = { avail: 1, seo: 1 }
-	propoptions = $.extend({}, propoptions, BAPI.session().searchparams);
+	propoptions = $.extend({}, propoptions, BAPI.session.searchparams);
 	BAPI.get(propid, BAPI.entities.property, propoptions, function (data) {		
 		data.site = BAPI.site;
 		data.config = BAPI.config();
 		data.textdata = BAPI.textdata;	
-		data.session = BAPI.session();		
+		data.session = BAPI.session;		
 		$(targetid).html(Mustache.render(options.mastertemplate, data));	
 		$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, data));
 		$(options.targetids.statement).html(Mustache.render(options.templates.statement, data));
@@ -840,13 +828,13 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 			var reqdata = getFormData("revisedates");			
 			reqdata.pid = propid;
 			reqdata.quoteonly = 1;			
-			if (typeof(reqdata.checkin)!=="undefined") { BAPI.session().searchparams.scheckin = reqdata.checkin; }
-			if (typeof(reqdata.checkout)!=="undefined") { BAPI.session().searchparams.scheckout = reqdata.checkout; }
-			if (typeof(reqdata.adults)!=="undefined") { BAPI.session().searchparams.adults.min = reqdata.adults; }
-			if (typeof(reqdata.children)!=="undefined") { BAPI.session().searchparams.children.min = reqdata.children; }
+			if (typeof(reqdata.checkin)!=="undefined") { BAPI.session.searchparams.scheckin = reqdata.checkin; }
+			if (typeof(reqdata.checkout)!=="undefined") { BAPI.session.searchparams.scheckout = reqdata.checkout; }
+			if (typeof(reqdata.adults)!=="undefined") { BAPI.session.searchparams.adults.min = reqdata.adults; }
+			if (typeof(reqdata.children)!=="undefined") { BAPI.session.searchparams.children.min = reqdata.children; }
 			BAPI.savesession();
-			reqdata.checkin = BAPI.session().searchparams.checkin;
-			reqdata.checkout = BAPI.session().searchparams.checkout;
+			reqdata.checkin = BAPI.session.searchparams.checkin;
+			reqdata.checkout = BAPI.session.searchparams.checkout;
 			
 			$(options.targetids.stayinfo).block({ message: "<img src='" + loadingImgUrl + "' />" });
 			BAPI.get(propid, BAPI.entities.property, reqdata, function (sdata) {			
@@ -854,7 +842,7 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 				sdata.site = BAPI.site;
 				sdata.config = BAPI.config();
 				sdata.textdata = BAPI.textdata;	
-				sdata.session = BAPI.session();				
+				sdata.session = BAPI.session;				
 				$(options.targetids.statement).html(Mustache.render(options.templates.statement, sdata));
 				$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, sdata));
 				$(options.targetids.accept).html(Mustache.render(options.templates.accept, sdata));
@@ -937,11 +925,11 @@ function BookingHelper_BookHandler(targetid, options, propid) {
 		
 		var reqdata = getFormData(options.dataselector);		
 		// add the current booking context to our request form
-		if (typeof(reqdata.checkin)==="undefined" || reqdata.checkin==null) { reqdata.checkin = BAPI.session().searchparams.checkin; }
-		if (typeof(reqdata.checkout)==="undefined" || reqdata.checkout==null) { reqdata.checkout = BAPI.session().searchparams.checkout; }
-		if (typeof(reqdata.numadults)==="undefined" || reqdata.numadults==null) { reqdata.numadults = BAPI.session().searchparams.adults.min; }
-		if (typeof(reqdata.numchildren)==="undefined" || reqdata.numchildren==null) { reqdata.numchildren = BAPI.session().searchparams.children.min; }
-		if (typeof(reqdata.numrooms)==="undefined" || reqdata.numrooms==null) { reqdata.numrooms = BAPI.session().searchparams.rooms.min; }
+		if (typeof(reqdata.checkin)==="undefined" || reqdata.checkin==null) { reqdata.checkin = BAPI.session.searchparams.checkin; }
+		if (typeof(reqdata.checkout)==="undefined" || reqdata.checkout==null) { reqdata.checkout = BAPI.session.searchparams.checkout; }
+		if (typeof(reqdata.numadults)==="undefined" || reqdata.numadults==null) { reqdata.numadults = BAPI.session.searchparams.adults.min; }
+		if (typeof(reqdata.numchildren)==="undefined" || reqdata.numchildren==null) { reqdata.numchildren = BAPI.session.searchparams.children.min; }
+		if (typeof(reqdata.numrooms)==="undefined" || reqdata.numrooms==null) { reqdata.numrooms = BAPI.session.searchparams.rooms.min; }
 		BAPI.log(reqdata);
 		
 		$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
@@ -1009,7 +997,7 @@ context.createSiteSearchWidget = function (id, options) {
 context.createCurrencySelectorWidget = function (id, options) {
 	var c = $(id);
 	
-	var wrapper = { "session": BAPI.session(), "config": BAPI.config() }
+	var wrapper = { "session": BAPI.session, "config": BAPI.config() }
 	var template = BAPI.templates.get('tmpl-currencyselector');
 	var html = Mustache.render(template, wrapper);
 	c.html(html);
@@ -1017,7 +1005,7 @@ context.createCurrencySelectorWidget = function (id, options) {
 	$(".changecurrency").on("click", function () {                
 		var newcurrency = $(this).attr('data-currency');
 		$('#currencypopup').dialog("close");
-		BAPI.session().currency = newcurrency;
+		BAPI.session.currency = newcurrency;
 		BAPI.savesession();
 		document.location.reload(true);
 	});
@@ -1065,11 +1053,11 @@ function initOptions(options, initpagesize, inittemplatename) {
 }
 
 function applyMyList(result,entity) {
-	if (typeof(result)==="undefined" || result==null) { return null; }
+	if (BAPI.isempty(result)) { return null; }
 	$.each(result, function (index, item) { 
-		if (typeof(item)!=="undefined" && item!==null && typeof(item.ID)!=="undefined" && item.ID!==null) {
+		if (!BAPI.isempty(item) && !BAPI.isempty(item.ID)) {
 			item.inmylist = (BAPI.mylisttracker.indexof(item.ID.toString(),entity) > -1);
-		} else { result = result.slice(index,1) }
+		} else { try { result = result.slice(index,1); } catch(err) {} }
 		
 	});
 	return result;
@@ -1080,7 +1068,7 @@ function doSearch(targetid, ids, entity, options, alldata, callback) {
 	BAPI.get(ids, entity, options.searchoptions, function (data) {
 		context.loading.hide(); // hide any loading indicator
 		$.each(data.result, function (index, item) { alldata.push(item); }); // update the alldata array
-		if (options.log) { BAPI.log("--data result--"); BAPI.log(data); }
+		if (options.log) { BAPI.log("--data result--"); BAPI.log(data); }		
 		// package up the data to bind to the mustache template
 		data.result = applyMyList(alldata,entity);
 		data.totalcount = ids.length;
@@ -1088,11 +1076,11 @@ function doSearch(targetid, ids, entity, options, alldata, callback) {
 		data.islastpage = (options.searchoptions.page*options.searchoptions.pagesize) > data.totalcount;		
 		data.curpage = options.searchoptions.page - 1;
 		data.config = BAPI.config(); 						
-		data.session = BAPI.session().searchparams;
+		data.session = BAPI.session.searchparams;
 		data.textdata = options.textdata;		
 		var html = Mustache.render(options.template, data); // do the mustache call
 		$(targetid).html(html); // update the target				
-BAPI.log(data);
+
 		// apply rowfix
 		var rowfixselector = $(targetid).attr('data-rowfixselector');
 		var rowfixcount = parseInt($(targetid).attr('data-rowfixcount'));
@@ -1158,7 +1146,6 @@ function loadFormFromSession(s) {
 
 function saveFormToSession(ctl, options) {
 	var reqdata = {};
-	var sp = BAPI.session().searchparams;
 	var dfparse = BAPI.defaultOptions.dateFormatMoment();
 	var df = BAPI.defaultOptions.dateFormatBAPI;
 	$('.' + options.dataselector).each(function () {			
@@ -1167,17 +1154,17 @@ function saveFormToSession(ctl, options) {
 		if (v == null | v == '') v = $(this).val();
 		if (k != null && k.length > 0) { 
 			if (k=="checkin") {		
-				sp.checkin = null;
-				sp.scheckin = v; // need to ensure that the display search param gets set
+				BAPI.session.searchparams.checkin = null;
+				BAPI.session.searchparams.scheckin = v; // need to ensure that the display search param gets set
 				v = (v===null || v=='') ? null : moment(v, dfparse).format(df);								
 			}
 			else if (k=="checkout") {
-				sp.checkout = null;
-				sp.scheckout = v; // need to ensure that the display search param gets set
+				BAPI.session.searchparams.checkout = null;
+				BAPI.session.searchparams.scheckout = v; // need to ensure that the display search param gets set
 				v = (v===null || v=='') ? null : moment(v, dfparse).format(df);				
 			}			
 			reqdata[k] = v;
-			sp[k] = v;
+			BAPI.session.searchparams[k] = v;
 		}
 	});	
 	BAPI.log(reqdata);
@@ -1203,7 +1190,7 @@ function setRows(findThis,wrapthis,howManyWrap){
 function initRows(wrapthis,howManyWrap) {	
 	var divs = $(wrapthis);
 	for(var i = 0; i < divs.length; i+=howManyWrap) {
-		divs.slice(i, i+howManyWrap).wrapAll("<div class='row-fluid'></div>");
+		try { divs.slice(i, i+howManyWrap).wrapAll("<div class='row-fluid'></div>"); } catch(err) {}
 	}			
 }
 

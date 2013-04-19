@@ -446,11 +446,14 @@ class BAPI_Featured_Properties extends WP_Widget {
 		extract($args);
 		$title = apply_filters('widget_title',$instance['title']);
 		$pagesize = esc_textarea($instance['text']);
+		$rowsize = intval($instance['rowsize']);
+		if($rowsize<=0) { $rowsize=1; }
+		
 		echo $before_widget;
 		if(!empty($title))
 			echo $before_title.$title.$after_title;
 		?>
-		<div id="featuredproperties" class="bapi-summary featuredproperties row-fluid" data-log="0" data-templatename="tmpl-featuredproperties-horiz"  data-entity="property" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }' data-rowfixselector=".featuredproperties%3E.span6" data-rowfixcount="2"></div>
+		<div id="featuredproperties" class="bapi-summary featuredproperties row-fluid" data-log="0" data-templatename="tmpl-featuredproperties-quickview"  data-entity="property" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }' data-rowfixselector=".fp-featured" data-rowfixcount="<?= $rowsize ?>"></div>
         <?php
 		echo $after_widget;
 	}
@@ -462,29 +465,25 @@ class BAPI_Featured_Properties extends WP_Widget {
 			$instance['text'] =  $new_instance['text'];
 		else
 			$instance['text'] = stripslashes( wp_filter_post_kses( addslashes($new_instance['text']) ) ); // wp_filter_post_kses() expects slashed
+		$instance['rowsize'] = $new_instance['rowsize'];
 		return $instance;
 	}
 
 	public function form( $instance ) {
-		if ( isset( $instance[ 'title' ] ) ) {
-			$title = $instance[ 'title' ];
-		}
-		else {
-			$title = __( 'Featured Properties', 'text_domain' );
-		}
-		if ( isset( $instance[ 'text' ] ) ) {
-			$pagesize =  esc_textarea($instance['text']);
-		}
-		else {
-			$pagesize = __( '4', 'text_domain' );
-		}
+		if ( isset( $instance[ 'title' ] ) ) { $title = $instance[ 'title' ]; }
+		else { $title = __( 'Featured Properties', 'text_domain' ); }
+		if ( isset( $instance[ 'text' ] ) ) { $pagesize =  esc_textarea($instance['text']); }
+		else { $pagesize = __( '4', 'text_domain' ); }
+		if ( isset( $instance[ 'rowsize' ] ) ) { $rowsize =  $instance['rowsize']; }
+		else { $rowsize = '1'; }
 		?>
 		<p>
 		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
 		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
         <label for="<?php echo $this->get_field_id( 'text' ); ?>"><?php _e( '# of Properties:' ); ?></label>
         <input id="<?php echo $this->get_field_id( 'text' ); ?>" name="<?php echo $this->get_field_name( 'text' ); ?>" type="text" value="<?php echo esc_attr( $pagesize ); ?>" />
-        
+        <label for="<?php echo $this->get_field_id( 'rowsize' ); ?>"><?php _e( 'Row Size:' ); ?></label>
+        <input id="<?php echo $this->get_field_id( 'rowsize' ); ?>" name="<?php echo $this->get_field_name( 'rowsize' ); ?>" type="text" value="<?php echo esc_attr( $rowsize ); ?>" />
 		</p>
 		<?php 
 	}
@@ -512,11 +511,13 @@ class BAPI_Property_Finders extends WP_Widget {
 		extract($args);
 		$title = apply_filters('widget_title',$instance['title']);
 		$pagesize = esc_textarea($instance['text']);
+		$rowsize = intval($instance['rowsize']);
+		if($rowsize<=0) { $rowsize=1; }
 		echo $before_widget;
 		if(!empty($title))
 			echo $before_title.$title.$after_title;		
 		?>		
-		<div id="propertyfinders" class="bapi-summary propertyfinders row-fluid" data-applyfixers="1" data-log="0" data-templatename="tmpl-searches-horiz"  data-entity="searches" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }' data-rowfixselector=".propertyfinders-results%20%3E%20.span4" data-rowfixcount="3"></div>
+		<div id="propertyfinders" class="bapi-summary propertyfinders row-fluid" data-applyfixers="1" data-log="0" data-templatename="tmpl-searches-quickview"  data-entity="searches" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }' data-rowfixselector=".pf-featured" data-rowfixcount="<?= $rowsize ?>"></div>
         <?php
 		echo $after_widget;
 	}
@@ -528,29 +529,25 @@ class BAPI_Property_Finders extends WP_Widget {
 			$instance['text'] =  $new_instance['text'];
 		else
 			$instance['text'] = stripslashes( wp_filter_post_kses( addslashes($new_instance['text']) ) ); // wp_filter_post_kses() expects slashed
+		$instance['rowsize'] = $new_instance['rowsize'];
 		return $instance;
 	}
 
 	public function form( $instance ) {
-		if ( isset( $instance[ 'title' ] ) ) {
-			$title = $instance[ 'title' ];
-		}
-		else {
-			$title = __( 'Property Finders', 'text_domain' );
-		}
-		if ( isset( $instance[ 'text' ] ) ) {
-			$pagesize =  esc_textarea($instance['text']);
-		}
-		else {
-			$pagesize = __( '4', 'text_domain' );
-		}
+		if ( isset( $instance[ 'title' ] ) ) { $title = $instance[ 'title' ]; }
+		else { $title = __( 'Property Finders', 'text_domain' ); }
+		if ( isset( $instance[ 'text' ] ) ) { $pagesize =  esc_textarea($instance['text']); }
+		else { $pagesize = __( '4', 'text_domain' ); }
+		if ( isset( $instance[ 'rowsize' ] ) ) { $rowsize =  $instance['rowsize']; }
+		else { $rowsize = '1'; }		
 		?>
 		<p>
 		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
 		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
         <label for="<?php echo $this->get_field_id( 'text' ); ?>"><?php _e( '# of Properties:' ); ?></label>
         <input id="<?php echo $this->get_field_id( 'text' ); ?>" name="<?php echo $this->get_field_name( 'text' ); ?>" type="text" value="<?php echo esc_attr( $pagesize ); ?>" />
-        
+        <label for="<?php echo $this->get_field_id( 'rowsize' ); ?>"><?php _e( 'Row Size:' ); ?></label>
+        <input id="<?php echo $this->get_field_id( 'rowsize' ); ?>" name="<?php echo $this->get_field_name( 'rowsize' ); ?>" type="text" value="<?php echo esc_attr( $rowsize ); ?>" />
 		</p>
 		<?php 
 	}
@@ -577,11 +574,13 @@ class BAPI_Specials_Widget extends WP_Widget {
 		extract($args);
 		$title = apply_filters('widget_title',$instance['title']);
 		$pagesize = esc_textarea($instance['text']);
+		$rowsize = intval($instance['rowsize']);
+		if($rowsize<=0) { $rowsize=1; }
 		echo $before_widget;
 		if(!empty($title))
 			echo $before_title . "<span class='glyphicons tags'><i></i>" . $title . "</span>" . $after_title;
 		?>
-        <div id="specials-widget" class="bapi-summary specials-widget row-fluid" data-log="0" data-templatename="tmpl-specials-vert" data-entity="specials" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }' data-rowfixselector=".specials-results%20%3E%20.span4" data-rowfixcount="3"></div>		
+        <div id="specials-widget" class="bapi-summary specials-widget row-fluid" data-log="0" data-templatename="tmpl-specials-quickview" data-entity="specials" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }' data-rowfixselector=".special-holder" data-rowfixcount="<?= $rowsize ?>"></div>		
         <?php
 		echo $after_widget;
 	}
@@ -593,29 +592,25 @@ class BAPI_Specials_Widget extends WP_Widget {
 			$instance['text'] =  $new_instance['text'];
 		else
 			$instance['text'] = stripslashes( wp_filter_post_kses( addslashes($new_instance['text']) ) ); // wp_filter_post_kses() expects slashed
+		$instance['rowsize'] = $new_instance['rowsize'];
 		return $instance;
 	}
 
 	public function form( $instance ) {
-		if ( isset( $instance[ 'title' ] ) ) {
-			$title = $instance[ 'title' ];
-		}
-		else {
-			$title = __( 'Special Offers', 'text_domain' );
-		}
-		if ( isset( $instance[ 'text' ] ) ) {
-			$pagesize =  esc_textarea($instance['text']);
-		}
-		else {
-			$pagesize = __( '4', 'text_domain' );
-		}
+		if ( isset( $instance[ 'title' ] ) ) { $title = $instance[ 'title' ]; }
+		else { $title = __( 'Special Offers', 'text_domain' ); }
+		if ( isset( $instance[ 'text' ] ) ) { $pagesize =  esc_textarea($instance['text']); }
+		else { $pagesize = __( '4', 'text_domain' ); }
+		if ( isset( $instance[ 'rowsize' ] ) ) { $rowsize =  $instance['rowsize']; }
+		else { $rowsize = '1'; }		
 		?>
 		<p>
 		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
 		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
         <label for="<?php echo $this->get_field_id( 'text' ); ?>"><?php _e( '# of Properties:' ); ?></label>
         <input id="<?php echo $this->get_field_id( 'text' ); ?>" name="<?php echo $this->get_field_name( 'text' ); ?>" type="text" value="<?php echo esc_attr( $pagesize ); ?>" />
-        
+        <label for="<?php echo $this->get_field_id( 'rowsize' ); ?>"><?php _e( 'Row Size:' ); ?></label>
+        <input id="<?php echo $this->get_field_id( 'rowsize' ); ?>" name="<?php echo $this->get_field_name( 'rowsize' ); ?>" type="text" value="<?php echo esc_attr( $rowsize ); ?>" />
 		</p>
 		<?php 
 	}
@@ -641,11 +636,14 @@ class BAPI_Similar_Properties extends WP_Widget {
 		extract($args);
 		$title = apply_filters('widget_title',$instance['title']);
 		$pagesize = esc_textarea($instance['text']);
+		$rowsize = intval($instance['rowsize']);
+		if($rowsize<=0) { $rowsize=1; }
+		
 		echo $before_widget;
 		if(!empty($title))
 			echo $before_title.$title.$after_title;
 		?>
-        <div id="featuredproperties" class="bapi-summary" data-log="0" data-templatename="tmpl-featuredproperties-vert"  data-entity="property" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }' data-rowfixselector="" data-rowfixcount=""></div>
+        <div id="featuredproperties" class="bapi-summary" data-log="0" data-templatename="tmpl-featuredproperties-quickview"  data-entity="property" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }' data-rowfixselector=".fp-featured" data-rowfixcount="<?= $rowsize ?>"></div>
 		<?php
 		echo $after_widget;
 	}
@@ -653,21 +651,21 @@ class BAPI_Similar_Properties extends WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 		$instance = array();
 		$instance['title'] = strip_tags( $new_instance['title'] );
+		$instance['rowsize'] = $new_instance['rowsize'];
 		return $instance;
 	}
 
 	public function form( $instance ) {
-		if ( isset( $instance[ 'title' ] ) ) {
-			$title = $instance[ 'title' ];
-		}
-		else {
-			$title = __( 'Similar Properties', 'text_domain' );
-		}
+		if ( isset( $instance[ 'title' ] ) ) { $title = $instance[ 'title' ]; }
+		else { $title = __( 'Similar Properties', 'text_domain' ); }
+		if ( isset( $instance[ 'rowsize' ] ) ) { $rowsize =  $instance['rowsize']; }
+		else { $rowsize = '1'; }		
 		?>
 		<p>
 		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
 		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
-        
+        <label for="<?php echo $this->get_field_id( 'rowsize' ); ?>"><?php _e( 'Row Size:' ); ?></label>
+        <input id="<?php echo $this->get_field_id( 'rowsize' ); ?>" name="<?php echo $this->get_field_name( 'rowsize' ); ?>" type="text" value="<?php echo esc_attr( $rowsize ); ?>" />
 		</p>
 		<?php 
 	}
@@ -692,6 +690,7 @@ class BAPI_Weather_Widget extends WP_Widget {
 		$title = apply_filters('widget_title',$instance['title']);
 		$woid = esc_textarea($instance['text']);
 		$unit = $instance['unit'];
+		if(empty($woid)) return;
 		if(empty($unit)){
 			$unit = 'f';
 		}
