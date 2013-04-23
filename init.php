@@ -80,7 +80,7 @@
 			update_option( 'page_for_posts', $pid);
 		}
 		print_r('<div>' . $action . ' menu item <b>' . $post['post_title'] . '</b> post_id=' . $pid . ', miid=' . $miid . '</div>');
-		print_r($navmap);
+		//print_r($navmap);
 	}	
 
 	function addtonav($pid, $menu_id, $post, $parent) {
