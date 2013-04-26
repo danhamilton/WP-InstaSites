@@ -373,6 +373,12 @@ context.get = function (ids, entity, options, callback) {
 }
 
 context.del = function (ids, entity, options, callback) {
+	if (typeof (ids) === "undefined" || ids === null || ids.length === 0) { callback({ "status": 0, "result": [] }); return; }
+    if (typeof(options) === "undefined" || options === null) { options = new Object(); }
+	var nids = ids; //[].concat(ids).slice(si, ei);	
+	var optionsURL = jQuery.param(options);
+	var url = context.defaultOptions.baseURL + '/ws/' + '?method=del' + '&ids=' + nids + '&entity=' + entity + '&' + optionsURL;                                          
+	context.utils.getJSON2(url, function (data) { callback(data); }, true);
 }
 
 context.createevent = function (options, callback) {
