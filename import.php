@@ -60,21 +60,21 @@
 	// Helper function
 	function getrootpath($entity) {		
 		if($entity=='property') {
-			return '/rentalsearch';
+			return '/rentals/allrentals/';
 		}
 		elseif($entity=='development') {
-			return '/rentalsearch/developments';
+			return '/rentals/developments/';
 		}
 		elseif($entity=='specials') {
-			return '/rentalsearch/specials';
+			return '/specials/';
 		}
 		elseif($entity=='poi') {
-			return '/attractions';
+			return '/attractions/';
 		}
 		elseif($entity=='searches') {
-			return '/rentalsearch/searchbuckets';
+			return '/rentals/searchbuckets/';
 		}
-		return '/rentalsearch';
+		return '/rentals/';
 	}
 	
 	function getpagetemplate($entity) {

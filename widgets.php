@@ -118,7 +118,7 @@ class BAPI_HP_Slideshow extends WP_Widget {
 
 	public function widget( $args, $instance ) {
 		?>
-        <div id="bapi-hp-slideshow"></div>
+        <div id="bapi-hp-slideshow"></div>		
         <script type="text/javascript">
 			$(document).ready(function () {
 				var imgurl = ''; //BAPI.site().slideshowimages[0].imgurl;
@@ -185,15 +185,12 @@ class BAPI_HP_LogoWithTagline extends WP_Widget {
 	}
 
 	public function widget( $args, $instance ) {
+		$wrapper = getbapisolutiondata();
+		$logo = $wrapper["site"]["SolutionLogo"];
+		$tagline = $wrapper["site"]["SolutionTagline"];
 		?>
-        <div id="logo-replace"></div>
-        <script type="text/javascript">
-			$(document).ready(function () {
-				var logourl = BAPI.site.logo;
-				var tagline = BAPI.site.tagline;
-				$('#logo-replace').parent().prepend('<img src="'+logourl+'" alt=""><h2>'+tagline+'</h2>');
-			});
-        </script>
+		<a href="/"><img src="<?= $logo ?>" alt="" /></a>
+		<h2><?= $logo ?></h2>
         <?php
 	}
 
@@ -238,18 +235,11 @@ class BAPI_HP_Logo extends WP_Widget {
 	}
 
 	public function widget( $args, $instance ) {
+		$wrapper = getbapisolutiondata();
+		$logo = $wrapper["site"]["SolutionLogo"];				
 		?>
-        <style type="text/css">
-			#bapi-logo{ margin-bottom:16px; }
-		</style>
-        <div id="bapi-logo"></div>
-        <script type="text/javascript">
-			$(document).ready(function () {
-				var logourl = BAPI.site.logo;
-				$('#bapi-logo').html('<img src="'+logourl+'" alt="">');
-			});
-        </script>
-        <?php
+        <div class="bapi-logo"><a href="/" ><img src="<?= $logo ?>" alt="" /></a></div>
+		<?php
 	}
 
 	public function update( $new_instance, $old_instance ) {
@@ -299,7 +289,7 @@ class BAPI_HP_Search extends WP_Widget {
 		if ( ! empty( $title ) )
 			echo $before_title . "<span class='glyphicons search'><i></i>" . $title . "</span>" . $after_title;
 		?>
-        <div id="bapi-search" class="bapi-search" data-searchurl="/rentalsearch" data-templatename="tmpl-search-homepage" data-log="0"></div>
+        <div id="bapi-search" class="bapi-search" data-searchurl="/rentals/rentalsearch/" data-templatename="tmpl-search-homepage" data-log="0"></div>
         <?php
 		echo $after_widget;
 	}
@@ -349,7 +339,7 @@ class BAPI_Search extends WP_Widget {
 		if ( ! empty( $title ) )
 			echo $before_title . "<span class='glyphicons search'><i></i>" . $title . "</span>" . $after_title;
 		?>
-        <div id="bapi-search" class="bapi-search" data-searchurl="/rentalsearch" data-templatename="tmpl-search-homepage" data-log="0"></div>
+        <div id="bapi-search" class="bapi-search" data-searchurl="/rentals/rentalsearch" data-templatename="tmpl-search-homepage" data-log="0"></div>
         <?php
 		echo $after_widget;
 	}
