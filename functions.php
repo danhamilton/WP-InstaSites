@@ -22,6 +22,10 @@
 		}
 		return $language;	
 	}
+	
+	function bapi_language_attributes($doctype) {
+		return 'lang="'.getbapilanguage().'"';
+	}
 
 	function getbapijsurl($apiKey) {
 		return getbapiurl() . "/js/bapi.js?apikey=" . $apiKey . "&language=" . getbapilanguage();

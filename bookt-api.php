@@ -34,6 +34,7 @@ include_once(dirname( __FILE__ ).'/cdn-linker/wp-cdn-linker.php');
 add_filter('home_url','home_url_cdn',10,2);
 add_filter('wp_head','add_server_name_meta',1);
 add_filter('redirect_canonical','bapi_redirect_fix',10,2);
+add_filter('language_attributes','bapi_language_attributes',10);
 add_action('template_redirect', 'do_ossdl_off_ob_start');
 add_action('wp_head','getconfig');
 //add_action('wp_head','getproperty');
