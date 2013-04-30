@@ -38,22 +38,21 @@
 		$post['post_status'] = 'publish';
 		$post['post_parent'] = $parentid;
 		$post['comment_status'] = 'closed';		
+		
+		// set the default content
 		$content = $pagedef['content'];	
 		if($content!=''){				
-			$t = file_get_contents(plugins_url($content, __FILE__));			
+			$cpath = get_local(plugins_url($content,__FILE__));
+			echo '<div>'.$cpath.'</div>';
+			$t = file_get_contents($cpath);
 			$m = new Mustache_Engine();
 		
 			$wrapper = getbapisolutiondata();			
-			$string = $m->render($t, $wrapper);
-			//print_r($string);
-			//if ($post['post_title'] == "Contact Us") {
-				//print_r($wrapper);
-			//}
+			$string = $m->render($t, $wrapper);			
 			$post['post_content'] = $string; //utf8_encode($string);				
 		}
 		$post['post_type'] = 'page';			
-				
-		//remove_filter('save_post','update_post_bapi');
+						
 		$action = "Added";
 		if ($pid == 0) {			
 			$pid = wp_insert_post($post, $error);			
@@ -63,8 +62,7 @@
 			wp_update_post($post);
 		}
 		add_post_meta($pid, 'bapi_page_id', $pagedef['intid'], true);
-		update_post_meta($pid, "_wp_page_template", $pagedef['template']);			
-		//add_filter('save_post','update_post_bapi');
+		update_post_meta($pid, "_wp_page_template", $pagedef['template']);					
 			
 		$miid = 0;
 		$addtomenu = ($pagedef['addtomenu'] == 'true');
@@ -79,8 +77,7 @@
 		if($post['post_title']=='Blog'){
 			update_option( 'page_for_posts', $pid);
 		}
-		print_r('<div>' . $action . ' menu item <b>' . $post['post_title'] . '</b> post_id=' . $pid . ', miid=' . $miid . '</div>');
-		//print_r($navmap);
+		print_r('<div>' . $action . ' menu item <b>' . $post['post_title'] . '</b> post_id=' . $pid . ', miid=' . $miid . '</div>');		
 	}	
 
 	function addtonav($pid, $menu_id, $post, $parent) {

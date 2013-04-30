@@ -1,5 +1,10 @@
 <?php
-
+	/* Converted a url to a physical file path */
+	function get_local($url) {
+		$urlParts = parse_url($url);
+		return realpath($_SERVER['DOCUMENT_ROOT']) . $urlParts['path'];				
+	}
+	
 	/* BAPI Helpers */	
 	function getbapiurl() {
 		$bapi_baseurl = 'connect.bookt.com';

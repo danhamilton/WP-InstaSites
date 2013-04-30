@@ -45,8 +45,7 @@ function bapi_settings_page() {
 	}
 	if(empty($bapi_baseurl)){
 		$bapi_baseurl = 'connect.bookt.com';
-	}
-	
+	}	
 ?>
 <style type="text/css">
 	.available-tags ul { margin:0; padding:0; }
@@ -276,7 +275,7 @@ function bapi_settings_page() {
 				});						
 			}
 		});
-	
+		
 		var pagedefs = [
 			{ "title": "Home", "url": "", "intid": "bapi_home", "parent": "", "order": 1, "template": "page-templates/front-page.php", "content": '/default-content/home.php', "addtomenu": false },
 			{ "title": "Rentals", "url": "rentals", "intid": "bapi_rentals", "parent": "", "order": 2, "template": "page-templates/search-page.php", "content": '', "addtomenu": true },
