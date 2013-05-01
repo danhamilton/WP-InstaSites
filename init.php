@@ -43,7 +43,6 @@
 		$content = $pagedef['content'];	
 		if($content!=''){				
 			$cpath = get_local(plugins_url($content,__FILE__));
-			echo '<div>'.$cpath.'</div>';
 			$t = file_get_contents($cpath);
 			$m = new Mustache_Engine();
 		

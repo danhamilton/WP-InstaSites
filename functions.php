@@ -67,10 +67,13 @@
 		return $res;
 	}
 
+	$solutiontd = null;
 	function getbapitextdata() {
-		$c = file_get_contents(getbapiurl() . '/ws/?method=get&entity=textdata&apikey=' . getbapiapikey() . '&language=' . getbapilanguage());
-		$res = json_decode($c,TRUE);
-		return $res;
+		if (empty($solutiontd)) {
+			$c = file_get_contents(getbapiurl() . '/ws/?method=get&entity=textdata&apikey=' . getbapiapikey() . '&language=' . getbapilanguage());
+			$solutiontd = json_decode($c,TRUE);
+		}
+		return $solutiontd;
 	}
 
 	/*

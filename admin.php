@@ -59,8 +59,7 @@ function bapi_settings_page() {
 <ul>
 		<li><a href="#tabs-1">BAPI Configuration</a></li>
 		<li><a href="#tabs-2">Slideshow</a></li>
-		<li><a href="#tabs-3">Data Synchronization</a></li>
-		<li><a href="#tabs-4">Solution Info (Debug)</a></li>
+		<li><a href="#tabs-3">Data Synchronization</a></li>		
 </ul>
 	
     <form method="post" action="options.php" id="bapi-options-form" enctype="multipart/form-data">
@@ -179,23 +178,10 @@ function bapi_settings_page() {
 	<div id="dlg-result" style="display:none; width:600px">
 		<div id="dlg-txtresult" style="padding:10px; height:300px; overflow: auto"></div>
 	</div>
-	
-	
-	<div id="tabs-4">
-    <h3>Solution Data</h3>
-		<div style="padding:10px; height:300px; overflow: auto">
-		<?php			
-			echo "<pre>";
-            print_r(getbapisolutiondata()); 
-            echo "</pre>";
-		?>
-		</div>
-	</div>
-	
+		
     <?php
 		$apiKey = get_option('api_key');
-		$language = getbapilanguage();
-		$gmapkey = getGoogleMapKey();
+		$language = getbapilanguage();		
 	?>	
 </div>
 <link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/jquery.ui/jquery-ui-1.10.2.min.css', __FILE__) ?>" />

@@ -417,9 +417,11 @@
 					<h4>Property Details</h4>
 					<ul class="unstyled">
 						<li>Development: <span>{{Development}}</span></li>
+						<li>Category: <span>{{Type}}</span></li>
 						<li>{{textdata.Beds}}: <span>{{Bedrooms}}</span></li>
 						<li>{{textdata.Baths}}: <span>{{Bathrooms}}</span></li>
 						<li>{{textdata.Sleeps}}: <span>{{Sleeps}}</span></li>
+						<li>Stories: <span>{{Stories}}</span></li>
 						<li>Floor: <span>{{Floor}}</span></li>
 					</ul>
 					</div>
@@ -567,11 +569,13 @@
 		<div class="tab-pane" id="tab5">
 		<div class="row-fluid">
 		<div class="span12 box-sides">
+		<a class="flipkeyPowered" rel="nofollow" target="_blank" href="www.flipkey.com"><span></span></a>
+		<div class="clearfix"></div>
 		{{#ContextData.Reviews}}
 		<div class="row-fluid review">
 			<div class="span2 left-side">
 				<span class="glyphicons chat" href=""><i></i></span>
-				<h5 class="username">Username</h5>
+				<h5 class="username">{{ReviewedBy.FirstName}}&nbsp;{{ReviewedBy.LastName}}</h5>
 			</div>
 			<div class="span10">
 				<h5 class="title">{{Title}}</h5>
@@ -581,11 +585,11 @@
 				</div>
 				{{#Response}}
 				<div class="response-block">
-				<span class="postdate"><strong>{{ReviewedBy.FirstName}} {{ReviewedBy.LastName}}</strong></span>
+				<h5 class="response-title">Response</h5>
 				<div class="response">{{&Response}}</div>
 				</div>
 				{{/Response}}				
-				<a class="full-rev-link" href="" target="_blank">See full review on Flipkey</a>
+				<a class="full-rev-link" href="{{ExternalLink}}" target="_blank">See full review on Flipkey</a>
 			</div>
 		</div>
 		<hr/>
@@ -721,10 +725,13 @@
   </div>
   <div class="portal-info span8">                
 	  <h2 class="title"><a href="{{&ContextData.SEO.DetailURL}}">{{Name}}</a></h2>
-	  <div class="location"><span class="type">{{Type}},</span> {{Region}}, {{State}}</div>
+	  <div class="location"><span class="type">{{Type}}</span>{{#Region}}, {{Region}}{{/Region}}{{#State}}, {{State}}{{/State}}</div>
 	  <div class="brick-wrap">
-		<strong>{{textdata.Amenities}}:</strong> <span>{{TopAmenities}}</span>                 
+		<strong>{{textdata.Amenities}}:</strong> <span>{{TopAmenities}}</span>
+		<hr/>        
+		<div class="description bapi-truncate" data-trunclen="200">{{&Summary}}</div>         
 	  </div>
+	  
 	  <a class="detail-link pull-right" href="{{&ContextData.SEO.DetailURL}}">Details <span>&rarr;</span></a>                                   
   </div>             
 </div>
@@ -868,8 +875,10 @@
 	  <img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" />
 	  {{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 	  </div>
-	  <div class="item-info shadow">		
+	  <div class="item-info shadow">
+	  {{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}		
 			<h2 class="title">{{Name}}</h2>
+			{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 			<div class="description bapi-truncate" data-trunclen="100">{{&Summary}}</div>
 			{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}" class="btn">{{textdata.See Details}}</a>{{/ContextData.SEO.Keyword}}
 			</div>
@@ -1006,16 +1015,26 @@
 <div class="span4">
   <div class="item-result">
 	<div class="item-inner">
-	  <div class="item-images"><a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}"><img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" /></a></div>
+	  <div class="item-images">
+	  {{#ContextData.SEO.Keyword}}
+	  <a href="{{&ContextData.SEO.DetailURL}}">
+	  {{/ContextData.SEO.Keyword}}
+	  <img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" />
+	  {{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
+	  </div>
 	  <div class="item-info shadow">		
-			<h2 class="title">{{Name}}</h2>
+			{{#ContextData.SEO.Keyword}}
+	  <a href="{{&ContextData.SEO.DetailURL}}">
+	  {{/ContextData.SEO.Keyword}}
+	  <h2 class="title">{{Name}}</h2>
+	  {{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 			<div class="description">{{&Summary}}</div>
 			{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}" class="btn">{{textdata.See Details}}</a>{{/ContextData.SEO.Keyword}}
-		</div>		
+		</div>
 	</div>
   </div>
 </div>
-{{/result}}  
+{{/result}}
 <div class="clearfix"></div>
 {{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalcount}})</a></span></div>{{/islastpage}}
 {{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
@@ -1127,9 +1146,19 @@
 <div class="pfrowfix span4">
   <div class="item-result">
 	<div class="item-inner">
-	  <div class="item-images"><a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}"><img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" /></a></div>
+	  <div class="item-images">
+	  {{#ContextData.SEO.Keyword}}
+	  <a href="{{&ContextData.SEO.DetailURL}}">
+	  {{/ContextData.SEO.Keyword}}
+	  	<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" />
+	  {{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
+	  </div>
 	  <div class="item-info shadow">					
-			<h2 class="title">{{Name}}</h2>
+			{{#ContextData.SEO.Keyword}}
+	  <a href="{{&ContextData.SEO.DetailURL}}">
+	  {{/ContextData.SEO.Keyword}}
+	  <h2 class="title">{{Name}}</h2>
+	  {{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 			<div class="description bapi-dotdotdot" style="max-height:100px" data-trunclen="100">{{&Summary}}</div>
 			{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}" class="btn">{{textdata.See Details}}</a>{{/ContextData.SEO.Keyword}}
 		</div>		
@@ -1263,12 +1292,12 @@
 <div class="module shadow-border">
 <div class="row-fluid">
 	<header class="pagination-centered pd">
-		<h1>{{Headline}}</h1>
+		<h1>{{textdata.Fast Secure Online Booking}}</h1>
 		<p>
-			{{Type}}
+			<strong>{{Headline}}</strong><span class="hidden-phone">&nbsp;-&nbsp;{{Type}}
 			{{#Bedrooms}}&nbsp;/&nbsp;{{textdata.Beds}}&nbsp;{{Bedrooms}}{{/Bedrooms}}
 			{{#Bathrooms}}&nbsp;/&nbsp;{{textdata.Baths}}&nbsp;{{Bathrooms}}{{/Bathrooms}}
-			{{#Sleeps}}&nbsp;/&nbsp;{{textdata.Sleeps}}&nbsp;{{Sleeps}}{{/Sleeps}}
+			{{#Sleeps}}&nbsp;/&nbsp;{{textdata.Sleeps}}&nbsp;{{Sleeps}}{{/Sleeps}}</span>
 		</p>
 		<div class="booking-prop-img">
 			<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.OriginalURL}}" caption="{{PrimaryImage.Captions}}" />		
@@ -1335,11 +1364,11 @@
 	<div class="row-fluid">
 		<div class="span6">
 			<label>{{textdata.Adults}}</label>
-			<input class="span12 revisedates" type="text" placeholder="{{textdata.Adults}}" value="{{session.searchparams.adults.min}}" data-field="adults" required>
+			<input class="span12 revisedates" type="text" placeholder="{{textdata.Adults}}" value="{{#session.searchparams.adults.min}}{{session.searchparams.adults.min}}{{/session.searchparams.adults.min}}{{^session.searchparams.adults.min}}2{{/session.searchparams.adults.min}}" data-field="adults[min]" required>
 		</div>
 		<div class="span6">
 			<label>{{textdata.Children}}</label>
-			<input class="span12 revisedates" type="text" placeholder="{{textdata.Adults}}" value="{{session.searchparams.children.min}}" data-field="children" required>	  
+			<input class="span12 revisedates" type="text" placeholder="{{textdata.Children}}" value="{{#session.searchparams.children.min}}{{session.searchparams.children.min}}{{/session.searchparams.children.min}}{{^session.searchparams.children.min}}0{{/session.searchparams.children.min}}" data-field="children[min]" required>	  
 		</div>
 	</div>
   </div>
@@ -1357,6 +1386,77 @@
 {{#ContextData.Quote.IsValid}}
 {{#ContextData.Quote.Statement}}
 
+<div id="charges" class="item row-fluid">
+<h5>{{textdata.Charges}}<span class="glyphicons circle_question_mark"><a href="#statement-details" data-toggle="modal"><i></i></a></span></h5>
+<p>
+	{{textdata.Rent}}<span class="pull-right">{{ServicesTotal.CurrencySymbol}}{{ServicesTotal.SValue2}}</span>
+	<span class="glyphicons circle_question_mark" style="display:none"><a><i></i></a></span>
+</p>
+<p>
+	{{textdata.Taxes & Fees}}<span class="pull-right">{{TaxesAndFeesTotal.CurrencySymbol}}{{TaxesAndFeesTotal.SValue2}}</span>
+	<span class="glyphicons circle_question_mark" style="display:none"><a><i></i></a></span>
+</p>
+{{#DepositsTotal.Value}}
+<p>
+	{{textdata.Refundable Security Deposit}}<span class="pull-right">{{DepositsTotal.CurrencySymbol}}{{DepositsTotal.SValue2}}</span>
+	<span class="glyphicons circle_question_mark" style="display:none"><a><i></i></a></span>
+</p>
+{{/DepositsTotal.Value}}
+
+{{#OptionalFees.length}}
+<hr />
+<div id="ofees" class="item row-fluid">
+<h5>{{textdata.Optional Fees & Services}}</h5>
+{{/OptionalFees.length}}
+{{#OptionalFees}}
+	<p>
+	{{#BoolField}}<input type="checkbox" class="bapi-optionalfee" {{#Quantity}}checked{{/Quantity}} data-rid="{{RelatedToID}}" data-reid="{{RelatedToEntityID}}" />{{/BoolField}}
+	{{^BoolField}}<input type="number" class="span2 bapi-optionalfee" min="{{MinQty}}" max="{{MaxQty}}" value="{{Quantity}}" data-rid="{{RelatedToID}}" data-reid="{{RelatedToEntityID}}" />{{/BoolField}}
+	{{{Notes}}}
+	<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span>
+	</p>
+{{/OptionalFees}}
+{{#OptionalFees.length}}
+</div>
+{{/OptionalFees.length}}
+
+<div id="discount" class="item row-fluid">
+<hr />
+{{#Discounts}}
+<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
+{{/Discounts}}
+{{#Discounts.length}}
+</div>
+{{/Discounts.length}}
+<label>
+	<input type="text" placeholder="{{textdata.Coupon Code}}" class="span6 revisedates" value="{{session.searchparams.coupon}}" data-field="coupon" />
+	<small><a href"javascript:void(0)" class="bapi-applyspecial">{{textdata.Apply}}</a></small>
+	<span class="pull-right">----</span>
+</label>
+</div>
+<div id="msgs" class="item row-fluid">
+	<div class="msg-yellow">
+	  <p><i class="halflings-icon star"></i> <strong>{{textdata.Total}}</strong><span class="pull-right"><strong>{{Total2.CurrencySymbol}}{{Total2.SValue2}}</strong></span></p>
+	  {{#DiscountsTotal.Value}}<p><strong>You saved<span class="pull-right">{{DiscountsTotal.CurrencySymbol}}{{DiscountsTotal.SValue2}}{{/DiscountsTotal.Value}}</strong></span></p>
+	  <p><strong>Amount Due Now:</strong><span class="pull-right">{{TotalDueNow.CurrencySymbol}} {{TotalDueNow.SValue}} {{TotalDueNow.Currency}}</span></p>	  
+	</div>
+	{{#ContextData.Quote.PaymentTerms}}
+	<div class="msg-gray msg-center"><p class="text-center">{{&ContextData.Quote.PaymentTerms}}</p></div>
+	{{/ContextData.Quote.PaymentTerms}}
+</div>
+
+{{/ContextData.Quote.Statement}}
+{{/ContextData.Quote.IsValid}}
+{{/result}}
+
+{{#result}}
+{{#ContextData.Quote.Statement}}
+<div id="statement-details" class="modal hide fade" role="dialog" aria-hidden="true">
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	<h3>{{textdata.Charges}}</h3>
+</div>
+<div class="modal-body">
 {{#Services.length}}
 <div id="charges" class="item row-fluid">
 <h5>{{textdata.Rent}}</h5>
@@ -1397,14 +1497,7 @@
 <div id="ofees" class="item row-fluid">
 <h5>{{textdata.Optional Fees & Services}}</h5>
 {{/OptionalFees.length}}
-{{#OptionalFees}}
-	<p>
-	{{#BoolField}}<input type="checkbox" class=" bapi-monitorstatement" data-rid="{{RelatedToID}}" data-reid="{{RelatedToEntityID}}" />{{/BoolField}}
-	{{^BoolField}}<input type="text" class="span2 bapi-monitorstatement" value="{{Quantity}}" data-rid="{{RelatedToID}}" data-reid="{{RelatedToEntityID}}" />{{/BoolField}}
-	{{{Notes}}}
-	<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span>
-	</p>
-{{/OptionalFees}}
+{{#OptionalFees}}<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>{{/OptionalFees}}
 {{#OptionalFees.length}}
 </div>
 {{/OptionalFees.length}}
@@ -1417,26 +1510,28 @@
 {{#Discounts.length}}
 </div>
 {{/Discounts.length}}
-<label>
-	<input type="text" value="" placeholder="{{textdata.Coupon Code}}" class="span6" />
-	<small><a href"#">Apply</a></small>
-	<span class="pull-right">----</span>
-</label>
 </div>
-<div id="msgs" class="item row-fluid">
-	<div class="msg-yellow">
-	  <p><i class="halflings-icon star"></i> <strong>{{textdata.Total}}</strong><span class="pull-right"><strong>$6,622.38</strong></span></p>
-	  <p><strong>{{textdata.Amount to be charged now}}:</strong><span class="pull-right">{{TotalDueNow.CurrencySymbol}} {{TotalDueNow.SValue}} {{TotalDueNow.Currency}}</span></p>
-	  <p><strong>&nbsp;</strong><span class="pull-right"><small>{{TotalDueNow.LocalCurrencySymbol}} {{TotalDueNow.LocalSValue}} {{TotalDueNow.LocalCurrency}}</small></span></p>
-	</div>
-	{{#ContextData.Quote.PaymentTerms}}
-	<div class="msg-gray msg-center"><p class="text-center">{{&ContextData.Quote.PaymentTerms}}</p></div>
-	{{/ContextData.Quote.PaymentTerms}}
 </div>
-
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">{{textdata.Close}}</button>                        
+</div>
+</div>
 {{/ContextData.Quote.Statement}}
-{{/ContextData.Quote.IsValid}}
 {{/result}}
+</script>
+
+<script id="tmpl-booking-makebooking-statementdetail" type="text/html">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h3 id="sta">Taxes</h3>
+</div>
+<div class="modal-body">
+<h5>Tax Lorem Ipsum</h5> 
+<p>One fine body…</p>
+</div>
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">{{textdata.Close}}</button>                        
+</div>
 </script>
 
 <script id="tmpl-booking-makebooking-renter" type="text/html">
@@ -1589,6 +1684,7 @@
 				<a href="javascript:void(0);" class="btn btn-large btn-primary span12 makebooking" data-field-selector="bookingfield">{{textdata.Reserve Now}}</a>
 			</span>
 			<span class="line2">
+				{{#result}}{{#ContextData.Quote.Statement.ValidUntil}}Quote is valid until: {{LongDateTime}}<br />{{/ContextData.Quote.Statement.ValidUntil}}{{/result}}
 				This page is secure - <a href="#">check here</a>
 			</span>
 		</div>

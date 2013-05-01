@@ -436,9 +436,16 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 	
 	// handle user clicking Clear
 	$(".quicksearch-doclear").on("click", function() {
+		$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });		
 		BAPI.clearsession();
 		if (doSearchCallback) { doSearchCallback(); }
-		$('.' + options.dataselector).val('');		
+		$('.' + options.dataselector).val('');
+		if (!BAPI.isempty(options.searchurl)) {
+			BAPI.savesession();
+			var rurl = options.searchurl;
+			if (rurl[rurl.length-1]!='/') { rurl = rurl + '/'; }
+			window.location.href = rurl; 
+		}		
 	});
 	
 	$(".quicksearch-doadvanced").on("click", function() {
@@ -853,37 +860,61 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 		$(options.targetids.accept).html(Mustache.render(options.templates.accept, data));
 		$('.specialform').hide(); // hide the spam control
 		context.createDatePicker('.datepickercheckin', { "property": data.result[0], "checkoutID": '.datepickercheckout' });
-		context.createDatePicker('.datepickercheckout', { "property": data.result[0] });
+		context.createDatePicker('.datepickercheckout', { "property": data.result[0] });		
 				
 		// show the revise your dates if quote is not valid
+		BAPI.curentity = data.result[0];		
 		if (!data.result[0].ContextData.Quote.IsValid) { try { $('#revisedates').modal('show'); } catch(err) {} }
 		
+		function partialRender(sdata, options) {			
+			$(".modal").modal('hide');
+			sdata.site = BAPI.site;
+			sdata.config = BAPI.config();
+			sdata.textdata = BAPI.textdata;	
+			sdata.session = BAPI.session;	
+			$(options.targetids.statement).html(Mustache.render(options.templates.statement, sdata));
+			$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, sdata));
+			$(options.targetids.accept).html(Mustache.render(options.templates.accept, sdata));			
+			$(options.targetids.stayinfo).unblock();
+			context.createDatePicker('.datepickercheckin', { "property": BAPI.curentity, "checkoutID": '.datepickercheckout' });
+			context.createDatePicker('.datepickercheckout', { "property": BAPI.curentity });	
+		}
+		
 		$(".bapi-revisedates").live("click", function () {
-			var reqdata = getFormData("revisedates");			
+			var reqdata = saveFormToSession($('.revisedates'), { dataselector: "revisedates" });
 			reqdata.pid = propid;
-			reqdata.quoteonly = 1;			
-			if (typeof(reqdata.checkin)!=="undefined") { BAPI.session.searchparams.scheckin = reqdata.checkin; }
-			if (typeof(reqdata.checkout)!=="undefined") { BAPI.session.searchparams.scheckout = reqdata.checkout; }
-			if (typeof(reqdata.adults)!=="undefined") { BAPI.session.searchparams.adults.min = reqdata.adults; }
-			if (typeof(reqdata.children)!=="undefined") { BAPI.session.searchparams.children.min = reqdata.children; }
-			BAPI.savesession();
-			reqdata.checkin = BAPI.session.searchparams.checkin;
-			reqdata.checkout = BAPI.session.searchparams.checkout;
-			
+			reqdata.quoteonly = 1;
 			$(options.targetids.stayinfo).block({ message: "<img src='" + loadingImgUrl + "' />" });
-			BAPI.get(propid, BAPI.entities.property, reqdata, function (sdata) {			
-				$(".modal").modal('hide');
-				sdata.site = BAPI.site;
-				sdata.config = BAPI.config();
-				sdata.textdata = BAPI.textdata;	
-				sdata.session = BAPI.session;				
-				$(options.targetids.statement).html(Mustache.render(options.templates.statement, sdata));
-				$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, sdata));
-				$(options.targetids.accept).html(Mustache.render(options.templates.accept, sdata));
-				context.createDatePicker('.datepickercheckin', { "property": data.result[0], "checkoutID": '.datepickercheckout' });
-				context.createDatePicker('.datepickercheckout', { "property": data.result[0] });	
-				$(options.targetids.stayinfo).unblock();									
+			BAPI.get(propid, BAPI.entities.property, reqdata, function (sdata) {
+				partialRender(sdata, options);				
 			});	
+		});
+		
+		function modifyStatement() {
+			var reqdata = saveFormToSession($('.revisedates'), { dataselector: "revisedates" });
+			reqdata.pid = propid;
+			reqdata.quoteonly = 1;
+			// get the optional fees
+			reqdata.optionalfees = [];
+			$('.bapi-optionalfee').each(function(i) {
+				var c = $(this);
+				var qty = (c.is(':checkbox') ? (c.is(":checked")?1:0) : c.val());				
+				var ofee = { "RelatedToID": c.attr('data-rid'), "RelatedToEntityID": c.attr('data-reid'), "Quantity": qty };				
+				reqdata.optionalfees.push(ofee);
+			});
+			reqdata.numoptionalfees = reqdata.optionalfees.length;
+			$(options.targetids.stayinfo).block({ message: "<img src='" + loadingImgUrl + "' />" });
+			BAPI.get(propid, BAPI.entities.property, reqdata, function (sdata) {
+				partialRender(sdata, options);				
+			});
+		}
+		
+		$('.bapi-optionalfee').live('change', function() {
+			modifyStatement();
+		});
+		
+		$('.bapi-applyspecial').live('click', function() {
+			modifyStatement();
 		});
 	});
 }
@@ -915,7 +946,7 @@ function BookingHelper_SetupFormHandlers() {
 		if (c.val()===null || c.val()=='') {
 			c.val($('#renterfirstname').val() + ' ' + $('#renterlastname').val());
 		}
-	});
+	});		
 }
 
 function BookingHelper_ValidateForm(reqfields) {
@@ -946,6 +977,7 @@ function BookingHelper_ValidateForm(reqfields) {
 	}
 	return true;
 }
+
 function BookingHelper_BookHandler(targetid, options, propid) {
 	var processing = false;	
 	$(".makebooking").live("click", function () { 		
@@ -974,7 +1006,12 @@ function BookingHelper_BookHandler(targetid, options, propid) {
 			return; // special textbox has a value, not a real person
 		}
 
-		BAPI.save(BAPI.entities.booking, reqdata, function(bres) {
+		if (BAPI.isempty(BAPI.curentity) || BAPI.isempty(BAPI.curentity.ContextData) || BAPI.isempty(BAPI.ContextData.Quote)) {
+			alert("Fatal error trying to save this booking.  The context has been lost."); return;
+		}
+		
+		reqdata.statement = BAPI.curentity.ContextData.Quote;
+		BAPI.save(BAPI.entities.booking, reqdata, function(bres) {		
 			BAPI.log(bres);
 			$(targetid).unblock();
 			processing = false;
@@ -1000,7 +1037,7 @@ context.createMakeBookingWidget = function (targetid, options) {
 		window.location = "/"; //TODO: need to redirect back to the correct place
 		return;
 	}
-	
+
 	bookingHelper_FullLoad(targetid, options, propid);	
 	BookingHelper_SetupFormHandlers();
 	BookingHelper_BookHandler(targetid, options, propid);		
@@ -1097,55 +1134,59 @@ function applyMyList(result,entity) {
 	return result;
 }
 
+function doSearchRender(targetid, ids, entity, options, data, alldata, callback) {	
+	// package up the data to bind to the mustache template
+	data.result = applyMyList(alldata,entity);
+	data.totalcount = ids.length;
+	data.isfirstpage = (options.searchoptions.page == 1);
+	data.islastpage = (options.searchoptions.page*options.searchoptions.pagesize) > data.totalcount;		
+	data.curpage = options.searchoptions.page - 1;
+	data.config = BAPI.config(); 						
+	data.session = BAPI.session.searchparams;
+	data.textdata = options.textdata;		
+	var html = Mustache.render(options.template, data); // do the mustache call
+	$(targetid).html(html); // update the target				
+	
+	// apply rowfix
+	var rowfixselector = $(targetid).attr('data-rowfixselector');
+	var rowfixcount = parseInt($(targetid).attr('data-rowfixcount'));
+	if (typeof(rowfixselector)!=="undefined" && rowfixselector!='' && rowfixcount>0) {
+		rowfixselector = decodeURIComponent(rowfixselector)
+		BAPI.log("Applying row fix to " + rowfixselector + " on every " + rowfixcount + " row.");
+		context.rowfix(rowfixselector, rowfixcount);
+	}
+	
+	if (options.applyfixers==1) {
+		BAPI.log("Applying fixers.");
+		context.inithelpers.applytruncate();	
+		context.inithelpers.applydotdotdot();
+		context.inithelpers.applyflexsliders(options);
+		context.inithelpers.setupmapwidgets(options);
+	}
+	
+	if (callback) { callback(data); }
+}
+
 function doSearch(targetid, ids, entity, options, alldata, callback) {
-	//BAPI.log("Showing page: " + options.searchoptions.page);
+	//BAPI.log("Showing page: " + options.searchoptions.page);	
 	BAPI.get(ids, entity, options.searchoptions, function (data) {
-		context.loading.hide(); // hide any loading indicator
+		context.loading.hide(); // hide any loading indicator		
 		$.each(data.result, function (index, item) { alldata.push(item); }); // update the alldata array
 		if (options.log) { BAPI.log("--data result--"); BAPI.log(data); }		
-		// package up the data to bind to the mustache template
-		data.result = applyMyList(alldata,entity);
-		data.totalcount = ids.length;
-		data.isfirstpage = (options.searchoptions.page == 1);
-		data.islastpage = (options.searchoptions.page*options.searchoptions.pagesize) > data.totalcount;		
-		data.curpage = options.searchoptions.page - 1;
-		data.config = BAPI.config(); 						
-		data.session = BAPI.session.searchparams;
-		data.textdata = options.textdata;		
-		var html = Mustache.render(options.template, data); // do the mustache call
-		$(targetid).html(html); // update the target				
-
-		// apply rowfix
-		var rowfixselector = $(targetid).attr('data-rowfixselector');
-		var rowfixcount = parseInt($(targetid).attr('data-rowfixcount'));
-		if (typeof(rowfixselector)!=="undefined" && rowfixselector!='' && rowfixcount>0) {
-			rowfixselector = decodeURIComponent(rowfixselector)
-			BAPI.log("Applying row fix to " + rowfixselector + " on every " + rowfixcount + " row.");
-			context.rowfix(rowfixselector, rowfixcount);
-		}
-		
-		if (options.applyfixers==1) {
-			BAPI.log("Applying fixers.");
-			context.inithelpers.applytruncate();	
-			context.inithelpers.applydotdotdot();
-			context.inithelpers.applyflexsliders(options);
-			context.inithelpers.setupmapwidgets(options);
-		}
-		
-		if (callback) { callback(data); }
-		$(".showmore").on("click", function () { 				
-			options.searchoptions.page++; 
-			$(this).block({ message: "<img src='" + loadingImgUrl + "' />" });
-			doSearch(targetid, ids, entity, options, alldata, callback); 
-		});
-		
-		$('.changeview').on('click', function() {
-			context.loading.show();
-			options.template = BAPI.templates.get($(this).attr('data-template'));
-			$(targetid).attr('data-rowfixselector',$(this).attr('data-rowfixselector'));
-			$(targetid).attr('data-rowfixcount',$(this).attr('data-rowfixcount'));			
-			doSearch(targetid, ids, entity, options, alldata, callback);
-		});
+		doSearchRender(targetid, ids, entity, options, data, alldata);					
+	});
+	
+	$(".showmore").live("click", function () { 				
+		options.searchoptions.page++; 
+		$(this).block({ message: "<img src='" + loadingImgUrl + "' />" });
+		doSearch(targetid, ids, entity, options, alldata, callback); 
+	});
+	
+	$('.changeview').live('click', function() {
+		options.template = BAPI.templates.get($(this).attr('data-template'));
+		$(targetid).attr('data-rowfixselector',$(this).attr('data-rowfixselector'));
+		$(targetid).attr('data-rowfixcount',$(this).attr('data-rowfixcount'));						
+		doSearchRender(targetid, ids, entity, options, {}, alldata);		
 	});
 }
 
@@ -1196,13 +1237,26 @@ function saveFormToSession(ctl, options) {
 				BAPI.session.searchparams.checkout = null;
 				BAPI.session.searchparams.scheckout = v; // need to ensure that the display search param gets set
 				v = (v===null || v=='') ? null : moment(v, dfparse).format(df);				
-			}			
-			reqdata[k] = v;
-			BAPI.session.searchparams[k] = v;
+			}
+						
+			// assign to the req and the session
+			var i = k.indexOf('[');
+			if (i==-1) {
+				reqdata[k] = v;
+				BAPI.session.searchparams[k] = v;
+			} else {
+				// special case when the data-attribute value has nested brackets (such as adults[min])
+				var k1 = k.substring(0,i);
+				var k2 = k.substring(i+1,k.length-1);
+				reqdata[k1] = reqdata[k1] || {};
+				reqdata[k1][k2] = v;
+				BAPI.session.searchparams[k1] = BAPI.session.searchparams[k1] || {};
+				BAPI.session.searchparams[k1][k2] = v;
+			}
 		}
 	});	
-	//BAPI.log(reqdata);
-	BAPI.savesession();
+	if (BAPI.isempty(reqdata.los)) { BAPI.session.searchparams.los = null } // clear out the los if not supplied
+	BAPI.savesession();	
 	return reqdata;
 }
 
