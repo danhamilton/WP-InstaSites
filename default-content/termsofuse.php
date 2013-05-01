@@ -1,3 +1,4 @@
+<div class="static-page">
 <p>{{SolutionName}} requires that all persons or entities visiting any {{SolutionName}} Sites on the World Wide Web (&quot;Sites&quot;) agree to the following terms and conditions.&nbsp; By accessing a Site, you confirm your agreement to and acceptance of these terms.</p>
 <p><b>Use of Information</b><br />
 Unless otherwise specified, copyright in all copyrightable subject matter on any Site is owned by {{SolutionName}}. To the extent that {{SolutionName}} have the right to do so without compensation to third parties, and except for materials or information specifically provided under other terms, {{SolutionName}} grants you permission to copy or otherwise download from any Site, information and materials (including related graphics), provided: 1. The materials are for internal, non-commercial use only, and 2. Any copies of materials or portions thereof must include the copyright notice specified on the Site.</p>
@@ -24,3 +25,4 @@ You agree that you will comply with any security processes and procedures (such 
 <p><b>Information Provided by You </b><br />
 Any information provided by you to {{SolutionName}}, including but not limited to feedback, data, questions, comments, suggestions, or the like, shall be deemed to be non confidential. {{SolutionName}} shall have no obligation of any kind with respect to such information and shall be free to reproduce, use, disclose, and distribute the information to others without limitation.</p>
 <p>Additionally, {{SolutionName}} shall be free to use any ideas, concepts, know-how or techniques contained in such information for any purpose whatsoever, including but not limited to developing, manufacturing, and marketing products incorporating such information.</p>
+</div>
