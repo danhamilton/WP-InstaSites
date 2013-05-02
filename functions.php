@@ -260,10 +260,13 @@
 	function bapi_redirect_fix($redirect_url, $requested_url){
 		$cdn_domain = parse_url(get_option('bapi_site_cdn_domain'));
 		$redirect = parse_url($redirect_url);
-		$redirect_url = $redirect['scheme'].'://'.$cdn_domain['host'];
-		$redirect_url .= $redirect['path'];
-		if ( !empty($redirect['query']) )
-			$redirect_url .= '?' . $redirect['query'];
-		return $redirect_url; 
+		if($redirect['scheme']!='https'){
+			$redirect_url = $redirect['scheme'].'://'.$cdn_domain['host'];
+			$redirect_url .= $redirect['path'];
+			if ( !empty($redirect['query']) )
+				$redirect_url .= '?' . $redirect['query'];
+			return $redirect_url; 
+		}
+		return $redirect_url
 	}
 ?>
