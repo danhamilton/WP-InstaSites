@@ -232,4 +232,18 @@
 		}
 		return $redirect_url;
 	}
+	
+	function bapi_getmeta(){
+		$pid = get_the_ID();
+		
+		$metak = get_post_meta($pid,'bapi_meta_keywords',true);
+		$metak = str_replace('"', "", $metak);
+		$metak = str_replace("'", "", $metak);
+		
+		$metad = get_post_meta($pid,'bapi_meta_description',true);
+		$metad = str_replace('"', "", $metad);
+		$metad = str_replace("'", "", $metad);
+		
+		?><meta name="KEYWORDS" content="<?= $metak ?>" /><?= "\n" ?><meta name="DESCRIPTION" content="<?= $metad ?>" /><?= "\n" ?><?php
+	}
 ?>

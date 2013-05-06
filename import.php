@@ -42,12 +42,20 @@
 	$thepost['post_status'] = 'publish';
 	$thepost['comment_status'] = 'closed';
 	$thepost['post_parent'] = $parentid;
+	
+	$metak = 'Testing Keyword Meta';
+	$metad = $metadescrip;
+	if(strlen($metadescrip)<2){
+		$metad = 'Testing Keyword Description';
+	}
 		
 	$pagetemplate = getpagetemplate($entity);
 	if ($isnew) {
 		$pid = wp_insert_post($thepost,$wp_error);
 		add_post_meta($pid, 'bapi_last_update', time(), true);
-		add_post_meta($pid, 'bapikey', getPageKeyForEntity($entity, $pkid), true);	
+		add_post_meta($pid, 'bapikey', getPageKeyForEntity($entity, $pkid), true);
+		add_post_meta($pid, 'bapi_meta_keywords', $metak, true);
+		add_post_meta($pid, 'bapi_meta_description', $metad, true);	
 		update_post_meta($pid, "_wp_page_template", $pagetemplate);
 		print_r('<div>Added post_id=' . $pid . ', title=' . $thepost['post_title'] . ', t=' . $pagetemplate . '</div>');
 	}
@@ -55,7 +63,9 @@
 		$pid = $thepost['ID'];
 		wp_update_post($thepost,$wp_error);
 		add_post_meta($pid, 'bapi_last_update', time(), true);
-		add_post_meta($pid, 'bapikey', getPageKeyForEntity($entity, $pkid), true);	
+		add_post_meta($pid, 'bapikey', getPageKeyForEntity($entity, $pkid), true);
+		add_post_meta($pid, 'bapi_meta_keywords', $metak, true);
+		add_post_meta($pid, 'bapi_meta_description', $metad, true);	
 		update_post_meta($pid, "_wp_page_template", $pagetemplate);		
 		print_r('<div>Edited post_id=' . $thepost['ID'] . ', title=' . $thepost['post_title'] . ', t=' . $pagetemplate . '</div>');
 	}	
