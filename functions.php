@@ -246,4 +246,25 @@
 		
 		?><meta name="KEYWORDS" content="<?= $metak ?>" /><?= "\n" ?><meta name="DESCRIPTION" content="<?= $metad ?>" /><?= "\n" ?><?php
 	}
+	
+	function bapi_refresh_keywords(){
+		$apikey = get_option('api_key');
+		$baseurl = get_option('bapi_baseurl');
+		$lang = get_option('bapi_language');
+		$seo = get_option('bapi_keywords_array');
+		$lastmod = get_option('bapi_keywords_lastmod');
+		if(empty($seo)||empty($lastmod)||((time()-$lastmod)>3600)){
+			$seourl = 'https://'.$baseurl.'/ws/?method=get&entity=seo&apikey='.$apikey.'&language='.$lang;
+			$seoarr = file_get_contents($seourl);
+			update_option('bapi_keywords_array',$seoarr);
+			update_option('bapi_keywords_lastmod',time());
+			//$seoarr = json_decode($seoarr);
+			//print_r($seoarr);
+			//print_r(get_option('bapi_keywords_array'));
+			//echo 'keyword list updated';
+		}
+		else{
+			//echo 'no update required';
+		}
+	}
 ?>

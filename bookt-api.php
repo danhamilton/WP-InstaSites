@@ -38,6 +38,7 @@ add_filter('language_attributes','bapi_language_attributes',10);
 add_action('template_redirect', 'do_ossdl_off_ob_start');
 add_action('wp_head','getconfig');
 add_action('wp_head','bapi_getmeta',1);
+add_action('init','bapi_refresh_keywords',1);
 //remove_filter( 'the_content', 'wpautop' );
 
 // create custom plugin settings menu

@@ -15,6 +15,8 @@ function bapi_options_init(){
 	register_setting('bapi_options','bapi_solutiondata_lastmod');
 	register_setting('bapi_options','bapi_textdata');
 	register_setting('bapi_options','bapi_textdata_lastmod');
+	register_setting('bapi_options','bapi_keywords_array');
+	register_setting('bapi_options','bapi_keywords_lastmod');
 	register_setting('bapi_options','bapi_baseurl');		
 	register_setting('bapi_options','bapi_custom_tmpl_loc');
 	register_setting('bapi_options','bapi_site_cdn_domain'); 
