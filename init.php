@@ -47,7 +47,10 @@
 			$m = new Mustache_Engine();
 		
 			$wrapper = getbapisolutiondata();			
-			$string = $m->render($t, $wrapper);			
+			$string = $m->render($t, $wrapper);	
+			$string = str_replace("\t", '', $string); // remove tabs
+			$string = str_replace("\n", '', $string); // remove new lines
+			$string = str_replace("\r", '', $string); // remove carriage returns			
 			$post['post_content'] = $string; //utf8_encode($string);				
 		}
 		$post['post_type'] = 'page';			

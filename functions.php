@@ -66,49 +66,12 @@
 		$res = json_decode($c,TRUE);
 		return $res;
 	}
-
-	$solutiontd = null;
-	function getbapitextdata() {
-		if (empty($solutiontd)) {
-			$c = file_get_contents(getbapiurl() . '/ws/?method=get&entity=textdata&apikey=' . getbapiapikey() . '&language=' . getbapilanguage());
-			$solutiontd = json_decode($c,TRUE);
-		}
-		return $solutiontd;
-	}
-
-	/*
-	function bapi_get_template($tmpl,$url='http://bapi.s3.amazonaws.com/dev/bapi.ui.mustache.tmpl'){
-		$templates= file_get_contents($url);
-		$tmpl = preg_quote($tmpl);
-		preg_match_all('/<script id=\"'.$tmpl.'\" type=\"text\/html\">(.*?)<\/script>/s', $templates, $matches);
-		
-		return $matches[1][0]; 
-	} 
 	
-	function gettemplatelocation() {
-		return "http://bapi.s3.amazonaws.com/dev/bapi.ui.mustache.tmpl";
-	}
-
-	function bapi_get_templates($url='http://bapi.s3.amazonaws.com/dev/bapi.ui.mustache.tmpl'){
-		$templates= file_get_contents($url);
-		$domd = new DOMDocument();
-		libxml_use_internal_errors(true);
-		$domd->loadHTML($templates);
-		libxml_use_internal_errors(false);
-		
-		$items = $domd->getElementsByTagName('script');
-		$data = array();
-		
-		foreach($items as $item) {
-			$id = $item->getAttribute('id');
-			$content = $domd->saveXML($item->firstChild);
-			$content = str_replace("<![CDATA[","",$content);
-			$content = str_replace("]]>","",$content);
-			$data[$id] = $content;
-		}
-		return $data;
-	}
-	*/
+	function getbapitextdata() {
+		$c = get_option('bapi_textdata');
+		$c = json_decode($c,TRUE); // convert to json object
+		return $c;
+	}	
 	
 	/* Page Helpers */
 	function getPageKeyForEntity($entity, $pkid) {
@@ -126,21 +89,21 @@
 	}
 
 	/* Common include files needed for BAPI */
-	function getconfig(){
+	function getconfig() {		
 		if(get_option('api_key')){
 			$apiKey = get_option('api_key');
 			$language = getbapilanguage();
 			$gmapkey = getGoogleMapKey();
 			
-	$secureurl = '';
-	if(get_option('bapi_secureurl')){
-		$secureurl = get_option('bapi_secureurl');
-	}
-	$siteurl = get_option('home');
-	if(get_option('bapi_site_cdn_domain')){
-		$siteurl = get_option('bapi_site_cdn_domain');
-	}
-	$siteurl = str_replace("http://", "", $siteurl);
+			$secureurl = '';
+			if(get_option('bapi_secureurl')){
+				$secureurl = get_option('bapi_secureurl');
+			}
+			$siteurl = get_option('home');
+			if(get_option('bapi_site_cdn_domain')){
+				$siteurl = get_option('bapi_site_cdn_domain');
+			}
+			$siteurl = str_replace("http://", "", $siteurl);
 ?>
 <link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/jquery.ui/jquery-ui-1.10.2.min.css', __FILE__) ?>" />
 
@@ -151,7 +114,7 @@
 
 <script type="text/javascript" src="<?= getbapijsurl($apiKey) ?>"></script>
 <script type="text/javascript" src="<?= plugins_url('/bapi/bapi.ui.js', __FILE__) ?>" ></script>		
-<script src="<?= getbapiurl() ?>/js/bapi.textdata.js?apikey=<?= $apiKey ?>&language=<?= $language ?>" type="text/javascript"></script>
+<script type="text/javascript" src="<?= plugins_url('/bapi.textdata.php', __FILE__) ?>" ></script>		
 <script type="text/javascript" src="<?= plugins_url('/bapi.templates.php', __FILE__) ?>" ></script>		
 <script type="text/javascript">		
 	BAPI.defaultOptions.baseURL = '<?= getbapiurl() ?>';
@@ -168,7 +131,6 @@
 </script>
 
 <?php			
-			//bapi_search_page_head($content);
 		}
 	}
 
@@ -257,16 +219,17 @@
 		echo '<meta name="SERVERNAME" content="'.$sn.'" />'."\n";
 	}
 	
-	function bapi_redirect_fix($redirect_url, $requested_url){
+	function bapi_redirect_fix($redirect_url, $requested_url) {
 		$cdn_domain = parse_url(get_option('bapi_site_cdn_domain'));
 		$redirect = parse_url($redirect_url);
-		if($redirect['scheme']!='https'){
+		if($redirect['scheme']!='https') {
 			$redirect_url = $redirect['scheme'].'://'.$cdn_domain['host'];
 			$redirect_url .= $redirect['path'];
-			if ( !empty($redirect['query']) )
+			if ( !empty($redirect['query']) ) {
 				$redirect_url .= '?' . $redirect['query'];
+			}
 			return $redirect_url; 
 		}
-		return $redirect_url
+		return $redirect_url;
 	}
 ?>

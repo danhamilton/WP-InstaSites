@@ -6,7 +6,10 @@
 	$pkid = $_POST['pkid'];
 	$primaryimage = $_POST['PrimaryImage'];
 	$content = $_POST['content'];
-	$content = $content; //utf8_encode($content);	
+	$content = str_replace("\t", '', $content); // remove tabs
+	$content = str_replace("\n", '', $content); // remove new lines
+	$content = str_replace("\r", '', $content); // remove carriage returns
+	//$content = preg_replace(array('/\r/', '/\n/'), '', $content);
 	$bookingurl = $_POST['BookingURL'];
 	$detailurl =  $_POST['DetailURL'];
 	$keyword = $_POST['Keyword'];

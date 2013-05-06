@@ -381,13 +381,13 @@ context.createRateBlockWidget = function (targetid, options) {
 			$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
 			var reqdata = saveFormToSession(this, options);
 			BAPI.log(BAPI.session.searchparams);
-			var url = "/makebooking?redir=1&keyid=" + cur.ID + 
+			var url = "/makebooking/?redir=1&keyid=" + cur.ID + 
 						"&checkin=" + BAPI.session.searchparams.checkin +
 						"&checkout=" + BAPI.session.searchparams.checkout +
 						"&adults=" + BAPI.session.searchparams.adults.min +
 						"&children=" + BAPI.session.searchparams.children.min +
 						"&rooms=" + BAPI.session.searchparams.rooms.min;
-			url = context.secureurl(url);
+			url = context.secureurl(url);			
 			window.location.href = url;
 		});
 	});	

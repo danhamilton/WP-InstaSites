@@ -12,9 +12,6 @@ function bapi_options_init(){
 	register_setting('bapi_options','api_key');
 	register_setting('bapi_options','bapi_language');
 	register_setting('bapi_options','bapi_solutiondata');
-	register_setting('bapi_options','bapi_solutiondata_lastmod');
-	register_setting('bapi_options','bapi_textdata');
-	register_setting('bapi_options','bapi_textdata_lastmod');
 	register_setting('bapi_options','bapi_baseurl');		
 	register_setting('bapi_options','bapi_custom_tmpl_loc');
 	register_setting('bapi_options','bapi_site_cdn_domain'); 
@@ -62,7 +59,8 @@ function bapi_settings_page() {
 <ul>
 		<li><a href="#tabs-1">BAPI Configuration</a></li>
 		<li><a href="#tabs-2">Slideshow</a></li>
-		<li><a href="#tabs-3">Data Synchronization</a></li>		
+		<li><a href="#tabs-3">Data Synchronization</a></li>
+		<li><a href="#tabs-4">Solution Info (Debug)</a></li>
 </ul>
 	
     <form method="post" action="options.php" id="bapi-options-form" enctype="multipart/form-data">
@@ -181,10 +179,23 @@ function bapi_settings_page() {
 	<div id="dlg-result" style="display:none; width:600px">
 		<div id="dlg-txtresult" style="padding:10px; height:300px; overflow: auto"></div>
 	</div>
-		
+	
+	
+	<div id="tabs-4">
+    <h3>Solution Data</h3>
+		<div style="padding:10px; height:300px; overflow: auto">
+		<?php			
+			echo "<pre>";
+            print_r(getbapisolutiondata()); 
+            echo "</pre>";
+		?>
+		</div>
+	</div>
+	
     <?php
 		$apiKey = get_option('api_key');
-		$language = getbapilanguage();		
+		$language = getbapilanguage();
+		$gmapkey = getGoogleMapKey();
 	?>	
 </div>
 <link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/jquery.ui/jquery-ui-1.10.2.min.css', __FILE__) ?>" />
@@ -196,11 +207,11 @@ function bapi_settings_page() {
 <script type="text/javascript" src="<?= plugins_url('/js/jquery-ui-i18n.min.js', __FILE__) ?>" ></script>			
 <script type="text/javascript" src="<?= getbapijsurl($apiKey) ?>"></script>
 <script type="text/javascript" src="<?= plugins_url('/bapi/bapi.ui.js', __FILE__) ?>" ></script>		
-<script type="text/javascript" src="<?= plugins_url('/bapi.textdata.php', __FILE__) ?>" ></script>		
-<script type="text/javascript" src="<?= plugins_url('/bapi.templates.php', __FILE__) ?>" ></script>		
+<script src="<?= getbapiurl() ?>/js/bapi.textdata.js?apikey=<?= $apiKey ?>&language=<?= $language ?>" type="text/javascript"></script>
+<script type="text/javascript" src="<?= plugins_url('/bapi.templates.php', __FILE__) ?>" ></script>	
 <script type="text/javascript">		
 	BAPI.defaultOptions.baseURL = '<?= getbapiurl() ?>';
-	BAPI.init();			
+	BAPI.init('<?= $apiKey ?>');			
 </script>
 <script type="text/javascript">
 
