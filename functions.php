@@ -114,8 +114,8 @@
 
 <script type="text/javascript" src="<?= getbapijsurl($apiKey) ?>"></script>
 <script type="text/javascript" src="<?= plugins_url('/bapi/bapi.ui.js', __FILE__) ?>" ></script>		
-<script type="text/javascript" src="<?= str_replace("http","https",get_option('bapi_site_cdn_domain')) ?>/wp-content/plugins/bookt-api/bapi.textdata.php" ></script>		
-<script type="text/javascript" src="<?= str_replace("http","https",get_option('bapi_site_cdn_domain')) ?>/wp-content/plugins/bookt-api/bapi.templates.php" ></script>		
+<script type="text/javascript" src="<?= home_url() ?>/wp-content/plugins/bookt-api/bapi.textdata.php" ></script>		
+<script type="text/javascript" src="<?= home_url() ?>/wp-content/plugins/bookt-api/bapi.templates.php" ></script>		
 <script type="text/javascript">		
 	BAPI.defaultOptions.baseURL = '<?= getbapiurl() ?>';
 	BAPI.UI.loading.setLoadingImgUrl('<?= plugins_url("/img/loading.gif", __FILE__) ?>');

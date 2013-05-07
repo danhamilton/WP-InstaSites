@@ -31,7 +31,7 @@ include_once(dirname( __FILE__ ).'/widgets.php');
 include_once(dirname( __FILE__ ).'/cdn-linker/wp-cdn-linker.php');
 
 //add_filter('save_post','update_post_bapi');
-add_filter('home_url','home_url_cdn',10,2);
+add_filter('home_url','home_url_cdn',1,2);
 add_filter('wp_head','add_server_name_meta',1);
 add_filter('redirect_canonical','bapi_redirect_fix',10,2);
 add_filter('language_attributes','bapi_language_attributes',10);
