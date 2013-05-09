@@ -26,9 +26,8 @@ class BAPI_Header extends WP_Widget {
 			}
 			if (file_exists($fname)) {
 				$t = file_get_contents($fname);					
-				$m = new Mustache_Engine();
-				$wrapper = getbapisolutiondata();
-				//print_r($wrapper);
+				$m = new Mustache_Engine();				
+				$wrapper = getbapisolutiondata();				
 				$string = $m->render($t, $wrapper);
 				echo $string;			
 			}
@@ -118,29 +117,7 @@ class BAPI_HP_Slideshow extends WP_Widget {
 
 	public function widget( $args, $instance ) {
 		?>
-        <div id="bapi-hp-slideshow"></div>		
-        <script type="text/javascript">
-			$(document).ready(function () {
-				var imgurl = ''; //BAPI.site().slideshowimages[0].imgurl;
-				var logourl = BAPI.site.logo;
-				var tagline = BAPI.site.tagline;
-				$('#bapi-hp-slideshow').parent().css('min-height','350px');
-				$('#bapi-hp-slideshow').parent().css('background-image','url(\''+imgurl+'\') ');
-				$('#bapi-hp-slideshow').parent().css('background-repeat','no-repeat');
-				$('#bapi-hp-slideshow').parent().css('background-position','center');
-				$('#bapi-hp-slideshow').parent().css('background-size','auto 100%');
-				
-				(function slidesLoop (i,t) {   
-					setTimeout(function () {
-						var imgurl = BAPI.site().slideshowimages[t].imgurl;
-						$('#bapi-hp-slideshow').parent().css('background-image','url(\''+imgurl+'\') ');
-						t++;
-						if(t>=i){t=0};
-				    	slidesLoop(i,t);
-				   	}, 8000)
-				})(BAPI.site.slideshowimages.length,1); 
-			});
-        </script>
+        <div id="bapi-hp-slideshow"></div>		        
         <?php
 	}
 
@@ -186,7 +163,7 @@ class BAPI_HP_LogoWithTagline extends WP_Widget {
 
 	public function widget( $args, $instance ) {
 		$wrapper = getbapisolutiondata();
-		$logo = $wrapper["site"]["SolutionLogo"];
+		$logo = str_replace("http:", "https:", $wrapper["site"]["SolutionLogo"]);
 		$tagline = $wrapper["site"]["SolutionTagline"];
 		?>
 		<a href="/"><img src="<?= $logo ?>" alt="" /></a>
@@ -443,7 +420,7 @@ class BAPI_Featured_Properties extends WP_Widget {
 		if(!empty($title))
 			echo $before_title.$title.$after_title;
 		?>
-		<div id="featuredproperties" class="bapi-summary featuredproperties row-fluid" data-log="0" data-templatename="tmpl-featuredproperties-quickview"  data-entity="property" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }' data-rowfixselector=".fp-featured" data-rowfixcount="<?= $rowsize ?>"></div>
+		<div id="featuredproperties" class="bapi-summary featuredproperties row-fluid" data-log="0" data-templatename="tmpl-featuredproperties-quickview" data-ignoresession="1" data-entity="property" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }' data-rowfixselector=".fp-featured" data-rowfixcount="<?= $rowsize ?>"></div>
         <?php
 		echo $after_widget;
 	}

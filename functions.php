@@ -1,9 +1,22 @@
 <?php
+
+	require_once('bapi-php/bapi.php');
+	
 	/* Converted a url to a physical file path */
 	function get_local($url) {
 		$urlParts = parse_url($url);
 		return realpath($_SERVER['DOCUMENT_ROOT']) . $urlParts['path'];				
 	}
+	
+	function get_relative($url) {
+		$urlParts = parse_url($url);
+		return $urlParts['path'];		
+	}
+	
+	function get_adminurl($url) {
+		$url = get_relative( plugins_url($url, __FILE__) );
+		return str_replace("/wp-content/plugins","",$url);	
+	}	
 	
 	/* BAPI Helpers */	
 	function getbapiurl() {
@@ -40,37 +53,19 @@
 		return get_option('api_key');
 	}
 	
-	$solutiondata = null;
 	function getbapisolutiondata() {
-		// TODO: This was loading via get_option but the data can be stale.  Need to think of an efficient way of handling this.
-		$tst = null; //get_option('bapi_solutiondata'); 
-		if (empty($tst)) {
-			if (!empty($solutiondata)) {
-				return $solutiondata;
-			}
-			$ctx = getbapicontext();	
-			$raw = getbapitextdata(); 
-			$td = $raw['result'];	
-			$wrapper = array();	
-			$wrapper['site'] = $ctx;
-			$wrapper['textdata'] = $td;
-			add_option('bapi_solutiondata', $wrapper);
-			$tst = $wrapper;
-		}
-		$solutiondata = $tst;
-		return $tst;	
+		$wrapper = array();	
+		$wrapper['site'] = getbapicontext();
+		$wrapper['textdata'] = getbapitextdata();			
+		return $wrapper;
 	}	
-
-	function getbapicontext() {		
-		$c = file_get_contents(getbapiurl() . '/js/bapi.context?apikey=' . getbapiapikey() . '&language=' . getbapilanguage());
-		$res = json_decode($c,TRUE);
-		return $res;
+	
+	function getbapicontext() {	
+		return json_decode(get_option('bapi_solutiondata'),TRUE); 		
 	}
 	
 	function getbapitextdata() {
-		$c = get_option('bapi_textdata');
-		$c = json_decode($c,TRUE); // convert to json object
-		return $c;
+		return json_decode(get_option('bapi_textdata'),TRUE); 		
 	}	
 	
 	/* Page Helpers */
@@ -84,16 +79,13 @@
 		return get_pages($args);		
 	}
 	
-	function getGoogleMapKey() {
-		return "AIzaSyAY7wxlnkMG6czYy9K-wM4OWXs0YFpFzEE";
-	}
-
 	/* Common include files needed for BAPI */
 	function getconfig() {		
+		//echo 'getconfig';
+		//echo get_option('api_key');
 		if(get_option('api_key')){
 			$apiKey = get_option('api_key');
-			$language = getbapilanguage();
-			$gmapkey = getGoogleMapKey();
+			$language = getbapilanguage();			
 			
 			$secureurl = '';
 			if(get_option('bapi_secureurl')){
@@ -105,17 +97,17 @@
 			}
 			$siteurl = str_replace("http://", "", $siteurl);
 ?>
-<link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/jquery.ui/jquery-ui-1.10.2.min.css', __FILE__) ?>" />
+<link rel="stylesheet" type="text/css" href="<?= get_relative(plugins_url('/css/jquery.ui/jquery-ui-1.10.2.min.css', __FILE__)) ?>" />
 
-<script type="text/javascript" src="<?= plugins_url('/js/jquery.1.9.1.min.js', __FILE__) ?>" ></script>
-<script type="text/javascript" src="<?= plugins_url('/js/jquery-migrate-1.0.0.min.js', __FILE__) ?>" ></script>		
-<script type="text/javascript" src="<?= plugins_url('/js/jquery-ui-1.10.2.min.js', __FILE__) ?>" ></script>
-<script type="text/javascript" src="<?= plugins_url('/js/jquery-ui-i18n.min.js', __FILE__) ?>" ></script>			
+<script type="text/javascript" src="<?= get_relative(plugins_url('/js/jquery.1.9.1.min.js', __FILE__)) ?>" ></script>
+<script type="text/javascript" src="<?= get_relative(plugins_url('/js/jquery-migrate-1.0.0.min.js', __FILE__)) ?>" ></script>		
+<script type="text/javascript" src="<?= get_relative(plugins_url('/js/jquery-ui-1.10.2.min.js', __FILE__)) ?>" ></script>
+<script type="text/javascript" src="<?= get_relative(plugins_url('/js/jquery-ui-i18n.min.js', __FILE__)) ?>" ></script>			
 
 <script type="text/javascript" src="<?= getbapijsurl($apiKey) ?>"></script>
-<script type="text/javascript" src="<?= plugins_url('/bapi/bapi.ui.js', __FILE__) ?>" ></script>		
-<script type="text/javascript" src="<?= home_url() ?>/wp-content/plugins/bookt-api/bapi.textdata.php" ></script>		
-<script type="text/javascript" src="<?= home_url() ?>/wp-content/plugins/bookt-api/bapi.templates.php" ></script>		
+<script type="text/javascript" src="<?= get_relative(plugins_url('/bapi/bapi.ui.js', __FILE__)) ?>" ></script>		
+<script type="text/javascript" src="<?= get_relative(plugins_url('bapi.textdata.php', __FILE__)) ?>" ></script>		
+<script type="text/javascript" src="<?= get_relative(plugins_url('bapi.templates.php', __FILE__)) ?>" ></script>		
 <script type="text/javascript">		
 	BAPI.defaultOptions.baseURL = '<?= getbapiurl() ?>';
 	BAPI.UI.loading.setLoadingImgUrl('<?= plugins_url("/img/loading.gif", __FILE__) ?>');
@@ -247,24 +239,7 @@
 		?><meta name="KEYWORDS" content="<?= $metak ?>" /><?= "\n" ?><meta name="DESCRIPTION" content="<?= $metad ?>" /><?= "\n" ?><?php
 	}
 	
-	function bapi_refresh_keywords(){
-		$apikey = get_option('api_key');
-		$baseurl = get_option('bapi_baseurl');
-		$lang = get_option('bapi_language');
-		$seo = get_option('bapi_keywords_array');
-		$lastmod = get_option('bapi_keywords_lastmod');
-		if(empty($seo)||empty($lastmod)||((time()-$lastmod)>3600)){
-			$seourl = 'https://'.$baseurl.'/ws/?method=get&entity=seo&apikey='.$apikey.'&language='.$lang;
-			$seoarr = file_get_contents($seourl);
-			update_option('bapi_keywords_array',$seoarr);
-			update_option('bapi_keywords_lastmod',time());
-			//$seoarr = json_decode($seoarr);
-			//print_r($seoarr);
-			//print_r(get_option('bapi_keywords_array'));
-			//echo 'keyword list updated';
-		}
-		else{
-			//echo 'no update required';
-		}
-	}
+	function getBAPIObj() {
+		return new BAPI(get_option('api_key'), get_option('bapi_language'), get_option('bapi_baseurl'));
+	}		
 ?>

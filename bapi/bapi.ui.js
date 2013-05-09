@@ -184,8 +184,8 @@ context.inithelpers = {
 		});
 	},
 	applyflexsliders: function(options) {
-		$.each($('.bapi-flexslider'), function (i, item) {
-			var ctl = $(item);		
+		$('.bapi-flexslider').each(function (i) {
+			var ctl = $(this);		
 			var options = null;
 			try { options = $.parseJSON(ctl.attr('data-options')); } catch(err) {}
 			var selector = '#' + ctl.attr('id');
@@ -517,6 +517,9 @@ context.createAvailabilityWidget = function (targetid, data, options) {
 		maxDate: "+" + options.maxbookingdays + "D",
 		createButton: false,
 		beforeShowDay: function (date) {
+			if (BAPI.isempty(p) || !BAPI.isempty(p.ContextData) || !BAPI.isempty(p.ContextData.Availability)) {
+				return [true, "avail", ''];
+			}
 			var taken = false;
 			$.each(p.ContextData.Availability, function (index, item) {
 				if (date >= BAPI.utils.jsondate(item.CheckIn) && date < BAPI.utils.jsondate(item.CheckOut) - 1)
@@ -1073,7 +1076,7 @@ context.createCurrencySelectorWidget = function (id, options) {
 	var html = Mustache.render(template, wrapper);
 	c.html(html);
 	$('.dropdown-toggle').dropdown();
-	$(".changecurrency").on("click", function () {                
+	$(".changecurrency").live("click", function () {                
 		var newcurrency = $(this).attr('data-currency');
 		$('#currencypopup').dialog("close");
 		BAPI.session.currency = newcurrency;

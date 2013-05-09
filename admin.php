@@ -2,25 +2,34 @@
 
 function bapi_create_menu() {
 	//create new top-level menu
-	add_menu_page('Bookt API Plugin Settings', 'Bookt API', 'administrator', __FILE__, 'bapi_settings_page',plugins_url('/img/icon.png', __FILE__));
-
+	$parent = get_adminurl('admin.php');
+	add_menu_page('InstaSite Plugin Settings', 'InstaSite', 'administrator', __FILE__, 'bapi_settings_page', plugins_url('/img/icon.png', __FILE__));	
+	
+	add_submenu_page($parent, 'General','General', 'administrator', get_adminurl('admin.php'));	
+	add_submenu_page($parent, 'Slideshow','Slideshow', 'administrator', get_adminurl('slideshow.php'));
+	add_submenu_page($parent, 'Take me Live','Take me Live', 'administrator', get_adminurl('golive.php'));
+	add_submenu_page($parent, 'Initial Setup','Initial Setup', 'administrator', get_adminurl('initialsetup.php'));	
+	
 	//call register settings function
 	add_action('admin_init','bapi_options_init');
 }
 
 function bapi_options_init(){
+	// register the core settings
 	register_setting('bapi_options','api_key');
 	register_setting('bapi_options','bapi_language');
+	register_setting('bapi_options','bapi_sitelive');
+	register_setting('bapi_options','bapi_basueurl');
+	register_setting('bapi_options','bapi_secureurl');	
 	register_setting('bapi_options','bapi_solutiondata');
-	register_setting('bapi_options','bapi_solutiondata_lastmod');
+	register_setting('bapi_options','bapi_solutiondata_lastmod');	
 	register_setting('bapi_options','bapi_textdata');
 	register_setting('bapi_options','bapi_textdata_lastmod');
-	register_setting('bapi_options','bapi_keywords_array');
-	register_setting('bapi_options','bapi_keywords_lastmod');
-	register_setting('bapi_options','bapi_baseurl');		
-	register_setting('bapi_options','bapi_custom_tmpl_loc');
 	register_setting('bapi_options','bapi_site_cdn_domain'); 
-	register_setting('bapi_options','bapi_secureurl');
+	register_setting('bapi_options','bapi_cloudfronturl'); 
+	
+	// register the slideshow settings
+	// register the settings
 	register_setting('bapi_options','bapi_slideshow_image1');
 	register_setting('bapi_options','bapi_slideshow_image2');
 	register_setting('bapi_options','bapi_slideshow_image3');
@@ -32,342 +41,96 @@ function bapi_options_init(){
 	register_setting('bapi_options','bapi_slideshow_caption3');
 	register_setting('bapi_options','bapi_slideshow_caption4');
 	register_setting('bapi_options','bapi_slideshow_caption5');
-	register_setting('bapi_options','bapi_slideshow_caption6');	
+	register_setting('bapi_options','bapi_slideshow_caption6');		
 }
 
 function bapi_settings_page() {
-	$cdn_url = get_option('home');
-	if(get_option('bapi_site_cdn_domain')){
-		$cdn_url = get_option('bapi_site_cdn_domain');
+	$bapi = getBAPIObj();
+	if(!$bapi->isvalid()) {
+		$url = '/wp-admin/admin.php?page=' . get_adminurl('initialsetup.php');
+		//echo $url;
+		//echo '<script type="text/javascript">window.location.href="' . $url . '"</script>';
+		//exit();
 	}
-	$surl = '';
-	if(get_option('bapi_secureurl')){
-		$surl = get_option('bapi_secureurl');
-	}
-	$bapi_baseurl = 'connect.bookt.com';
-	if(get_option('bapi_baseurl')){
-		$bapi_baseurl = get_option('bapi_baseurl');
-	}
-	if(empty($bapi_baseurl)){
-		$bapi_baseurl = 'connect.bookt.com';
-	}	
+	$lastmod_soldata = get_option('bapi_solutiondata_lastmod');
+	$lastmod_textdata = get_option('bapi_textdata_lastmod');
+	$lastmod_seodata = get_option('bapi_keywords_lastmod');
+	$lastmod_soldata = (!empty($lastmod_soldata) ? date('r',$lastmod_soldata) : "N/A");
+	$lastmod_textdata = (!empty($lastmod_textdata) ? date('r',$lastmod_textdata) : "N/A");
+	$lastmod_seodata = (!empty($lastmod_seodata) ? date('r',$lastmod_seodata) : "N/A");
+	
+	$soldata = is_super_admin() ? get_option('bapi_solutiondata') : 'N/A';
+	$textdata = is_super_admin() ? get_option('bapi_textdata') : 'N/A';
+	$seodata = is_super_admin() ? get_option('bapi_keywords_array') : 'N/A';		
+	
+	$slitelive = get_option('bapi_sitelive');
+	$sitelive = empty($slitelive) ? 'No' : 'Yes';		
 ?>
-<style type="text/css">
-	.available-tags ul { margin:0; padding:0; }
-	.available-tags ul li { margin:0; padding:0; }
-</style>
-<div class="wrap">
-<h1><img src="<?= plugins_url('/img/logo.png', __FILE__) ?>" /></h1>
-<h2>Bookt API Plugin Settings</h2>
 
-<div id="tabs">
-<ul>
-		<li><a href="#tabs-1">BAPI Configuration</a></li>
-		<li><a href="#tabs-2">Slideshow</a></li>
-		<li><a href="#tabs-3">Data Synchronization</a></li>		
-</ul>
-	
-    <form method="post" action="options.php" id="bapi-options-form" enctype="multipart/form-data">
-		
-		<div id="tabs-1">
-    	<input type="hidden" name="update_action" id="bapi-update-action" value="" />
-        <?php settings_fields( 'bapi_options' ); ?>
-        <table class="form-table">
-		<tr valign="top">
-			<th scope="row">API Key</th>
-			<td><input type="text" name="api_key" id="apikey" size="60" value="<?php echo get_option('api_key'); ?>" />
-				<a href="javascript:void(0)" id="validate-apikey">Validate</a>
-			</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Language</th>
-			<td><input type="text" name="bapi_language" size="60" value="<?php echo get_option('bapi_language'); ?>" /></td>
-		</tr>
-		<tr valign="top" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">
-			<th scope="row">BAPI Base URL</th>
-			<td><input type="text" name="bapi_baseurl" size="60" value="<?php echo $bapi_baseurl; ?>" /></td>
-		</tr>
-		<tr valign="top" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">
-			<th scope="row">Site URL</th>
-			<td><input type="text" name="bapi_site_cdn_domain" size="60" value="<?php echo $cdn_url; ?>" /></td>
-		</tr>
-		<tr valign="top" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">
-			<th scope="row">Secure Site URL</th>
-			<td><input type="text" name="bapi_secureurl" size="60" value="<?php echo $surl; ?>" /></td>
-		</tr>
-		<tr>
-			<td colspan="2"><em>If you do not already have an API key for Bookt, please contact <a href="mailto:support@bookt.com?subject=API%20Key%20-%20Wordpress%20Plugin">support@bookt.com</a> to obtain an API key.</em></td>
-		</tr>
-        </table>
-		<div class="clear"></div>
-		<?php submit_button(); ?>
-		
-		<div class="clear"></div>
-		<h3>Initial Configuration</h3>
-		<small>Note: Permalink Settings should be set to Post name for the menu structure to function correctly.</small>
-		<div id="bapi-import-update" style="margin-top:-20px;">			
-			<p class="submit" style="float:left;"><input class="button-primary setuppages" value="Create Default Pages"></p>
-		</div>					
-		</div>
-				
-		<div id="tabs-2">
-        <h3>Slideshow Options</h3>
-        <table class="form-table">		
-            <tr>
-            <th scope="row">Slide 1</th>
-            <td>
-            	Image: <input type="text" id='bapi_slideshow_image1' name="bapi_slideshow_image1" size="60" value="<?php echo get_option('bapi_slideshow_image1'); ?>" /><input type="button" id="image-pick1" name="image-pick1" value="Select Image" /><br/>
-                Caption: <input type="text" id='bapi_slideshow_caption1' name="bapi_slideshow_caption1" size="58" value="<?php echo get_option('bapi_slideshow_caption1'); ?>" />
-            </td>
-            </tr>
-            <tr>
-            <th scope="row">Slide 2</th>
-            <td>
-            	Image: <input type="text" id='bapi_slideshow_image2' name="bapi_slideshow_image2" size="60" value="<?php echo get_option('bapi_slideshow_image2'); ?>" /><input type="button" id="image-pick2" name="image-pick2" value="Select Image" /><br/>
-                Caption: <input type="text" id='bapi_slideshow_caption2' name="bapi_slideshow_caption2" size="58" value="<?php echo get_option('bapi_slideshow_caption2'); ?>" />
-            </td>
-            </tr>
-            <tr>
-            <th scope="row">Slide 3</th>
-            <td>
-            	Image: <input type="text" id='bapi_slideshow_image3' name="bapi_slideshow_image3" size="60" value="<?php echo get_option('bapi_slideshow_image3'); ?>" /><input type="button" id="image-pick3" name="image-pick3" value="Select Image" /><br/>
-                Caption: <input type="text" id='bapi_slideshow_caption3' name="bapi_slideshow_caption3" size="58" value="<?php echo get_option('bapi_slideshow_caption3'); ?>" />
-            </td>
-            </tr>
-            <tr>
-            <th scope="row">Slide 4</th>
-            <td>
-            	Image: <input type="text" id='bapi_slideshow_image4' name="bapi_slideshow_image4" size="60" value="<?php echo get_option('bapi_slideshow_image4'); ?>" /><input type="button" id="image-pick4" name="image-pick4" value="Select Image" /><br/>
-                Caption: <input type="text" id='bapi_slideshow_caption4' name="bapi_slideshow_caption4" size="58" value="<?php echo get_option('bapi_slideshow_caption4'); ?>" />
-            </td>
-            </tr>
-            <tr>
-            <th scope="row">Slide 5</th>
-            <td>
-            	Image: <input type="text" id='bapi_slideshow_image5' name="bapi_slideshow_image5" size="60" value="<?php echo get_option('bapi_slideshow_image5'); ?>" /><input type="button" id="image-pick5" name="image-pick5" value="Select Image" /><br/>
-                Caption: <input type="text" id='bapi_slideshow_caption5' name="bapi_slideshow_caption5" size="58" value="<?php echo get_option('bapi_slideshow_caption5'); ?>" />
-            </td>
-            </tr>
-            <tr>
-            <th scope="row">Slide 6</th>
-            <td>
-            	Image: <input type="text" id='bapi_slideshow_image6' name="bapi_slideshow_image6" size="60" value="<?php echo get_option('bapi_slideshow_image6'); ?>" /><input type="button" id="image-pick6" name="image-pick6" value="Select Image" /><br/>
-                Caption: <input type="text" id='bapi_slideshow_caption6' name="bapi_slideshow_caption6" size="58" value="<?php echo get_option('bapi_slideshow_caption6'); ?>" />
-            </td>
-            </tr>
-        </table>
-        
-        <?php submit_button(); ?>
-		</div>
-		<div class="clear"></div>
-    </form>
-	
-	<div id="tabs-3">
-    <h3>Bulk Update Actions</h3>
-    <div id="bapi-import-update" style="margin-top:-20px;">
-    	<p class="submit" style="float:left;">
-        	<input class="button-primary" value="Update All"> <span id="loading-update"><img src="<?= plugins_url('/img/ajax-loader.gif', __FILE__) ?>" style="display:none;" height="20" valign="middle"></span>     
-			<input class="button-primary import" value="Import All" data-entity="property" data-template="tmpl-properties-detail" data-parentmenu="bapi_search"> 			
-        	<select id="importtype">
-				<option value="property">Property</option>
-				<option value="development">Development</option>
-				<option value="specials">Specials</option>
-				<option value="poi">Attractions</option>
-				<option value="searches">Searches</option>
-			</select>
-		</p>
-    </div>
-	<div class="clear"></div>
-	</div>
-    
-	<div id="dlg-result" style="display:none; width:600px">
-		<div id="dlg-txtresult" style="padding:10px; height:300px; overflow: auto"></div>
-	</div>
-		
-    <?php
-		$apiKey = get_option('api_key');
-		$language = getbapilanguage();		
-	?>	
-</div>
 <link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/jquery.ui/jquery-ui-1.10.2.min.css', __FILE__) ?>" />
-<link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/jquery.ad-gallery.min.css', __FILE__) ?>" />
-
 <script type="text/javascript" src="<?= plugins_url('/js/jquery.1.9.1.min.js', __FILE__) ?>" ></script>
 <script type="text/javascript" src="<?= plugins_url('/js/jquery-migrate-1.0.0.min.js', __FILE__) ?>" ></script>		
 <script type="text/javascript" src="<?= plugins_url('/js/jquery-ui-1.10.2.min.js', __FILE__) ?>" ></script>
-<script type="text/javascript" src="<?= plugins_url('/js/jquery-ui-i18n.min.js', __FILE__) ?>" ></script>			
-<script type="text/javascript" src="<?= getbapijsurl($apiKey) ?>"></script>
-<script type="text/javascript" src="<?= plugins_url('/bapi/bapi.ui.js', __FILE__) ?>" ></script>		
-<script type="text/javascript" src="<?= plugins_url('/bapi.textdata.php', __FILE__) ?>" ></script>		
-<script type="text/javascript" src="<?= plugins_url('/bapi.templates.php', __FILE__) ?>" ></script>		
-<script type="text/javascript">		
-	BAPI.defaultOptions.baseURL = '<?= getbapiurl() ?>';
-	BAPI.init();			
-</script>
 <script type="text/javascript">
-
-	function getImportParams(entity) {
-		if (entity == "property") {
-			return { "entity": entity, "template": "tmpl-properties-detail", "parent": "bapi_search" }
-		}
-		if (entity == 'development') {
-			return { "entity": entity, "template": "tmpl-developments-detail", "parent": "bapi_search" }
-		}
-		if (entity == 'specials') {
-			return { "entity": entity, "template": "tmpl-specials-detail", "parent": "bapi_search" }
-		}
-		if (entity == 'poi') {
-			return { "entity": entity, "template": "tmpl-attractions-detail", "parent": "bapi_search" }
-		}
-		if (entity == 'searches') {
-			return { "entity": entity, "template": "tmpl-searches-detail", "parent": "bapi_search" }
-		}
-	}
 	$(document).ready(function($){
-	
-		$("#tabs").tabs();  
-		
-		$(".import").on("click", function () {			
-			var entity = $('#importtype').val();
-			var params = getImportParams(entity);
-			var template = BAPI.templates.get(params.template);			
-			if (typeof(template)==="undefined") {
-				return alert('Unable to find the template: ' + params.template);
-			}
-			
-			if (confirm("Are you sure you want to import this data?")) {				
-				$('#dlg-result').dialog({width:700});
-				var txtresult = $('#dlg-txtresult');
-				txtresult.html('<h5>Importing Data</h5>');
-				txtresult.append('<div>Requesting ids from BAPI...</div>');
-				BAPI.search(entity, null, function (data) { 
-					txtresult.append('<div>BAPI returned ' + data.result.length + ' results.</div>');
-					$.each(data.result, function (i, pkid) {
-//if (i==0) {
-						BAPI.get(pkid, entity, { "nearbyprops": 1, "avail": 1, "reviews": 1, "seo": 1, "descrip": 1, "rates": 1, "poi": 1 }, function(pdata) {
-							pdata.config = BAPI.config();
-							pdata.textdata = BAPI.textdata;
-							var url = '<?= plugins_url('/import.php?p=1', __FILE__) ?>';
-							params.pkid = pkid;
-							params.PrimaryImage = pdata.result[0].PrimaryImage.MediumURL;
-							params.BookingURL = pdata.result[0].ContextData.SEO.BookingURL;
-							params.DetailURL = pdata.result[0].ContextData.SEO.DetailURL;
-							params.Keyword = pdata.result[0].ContextData.SEO.Keyword;
-							params.MetaDescrip = pdata.result[0].ContextData.SEO.MetaDescrip;
-							params.PageTitle = pdata.result[0].ContextData.SEO.PageTitle;
-							if (BAPI.isempty(params.PageTitle) || params.PageTitle=='') { params.PageTitle = pdata.result[0].Name; }
-							params.content = Mustache.to_html(template, pdata);							
-							BAPI.utils.dopost(url, params, function(res) {
-								txtresult.append(res);
-							});
-						});														
-//}
-					});					
-				});						
-			}
-		});
-		
-		var pagedefs = [
-			{ "title": "Home", "url": "", "intid": "bapi_home", "parent": "", "order": 1, "template": "page-templates/front-page.php", "content": '/default-content/home.php', "addtomenu": false },
-			{ "title": "Rentals", "url": "rentals", "intid": "bapi_rentals", "parent": "", "order": 2, "template": "page-templates/search-page.php", "content": '', "addtomenu": true },
-				{ "title": "Search", "url": "rentalsearch", "intid": "bapi_search", "parent": "rentals", "order": 1, "template": "page-templates/search-page.php", "content": '/default-content/rentalsearch.php', "addtomenu": true },
-				{ "title": "All Rentals", "url": "allrentals", "intid": "bapi_property_grid", "parent": "rentals", "order": 2, "template": "page-templates/full-width.php", "content": '/default-content/allrentals.php', "addtomenu": true },
-				{ "title": "Search Buckets", "url": "searchbuckets", "intid": "bapi_search_buckets", "parent": "rentals", "order": 3, "template": "page-templates/full-width.php", "content": '/default-content/propertyfinders.php', "addtomenu": true },				
-				{ "title": "Developments", "url": "developments", "intid": "bapi_developments", "parent": "rentals", "order": 4, "template": "page-templates/search-page.php", "content": '/default-content/developments.php', "addtomenu": true },
-				{ "title": "My List", "url": "mylist", "intid": "bapi_mylist", "parent": "rentals", "order": 5, "template": "page-templates/search-page.php", "content": '/default-content/mylist.php', "addtomenu": false },
-			{ "title": "Specials", "url": "specials", "intid": "bapi_specials", "parent": "", "order": 3, "template": "page-templates/full-width.php", "content": '/default-content/specials.php', "addtomenu": true },			
-			{ "title": "Attractions", "url": "attractions", "intid": "bapi_attractions", "parent": "", "order": 4, "template": "page-templates/full-width.php", "content": '/default-content/attractions.php', "addtomenu": true },
-			{ "title": "Company", "url": "company", "intid": "bapi_company", "parent": "", "order": 5, "template": "page-templates/full-width.php", "content": '', "addtomenu": true },
-				{ "title": "Services", "url": "services", "intid": "bapi_services", "parent": "company", "order": 1, "template": "page-templates/full-width.php", "content": '/default-content/services.php', "addtomenu": true },
-				{ "title": "About Us", "url": "aboutus", "intid": "bapi_about_us", "parent": "company", "order": 2, "template": "page-templates/full-width.php", "content": '/default-content/aboutus.php', "addtomenu": true },			
-				{ "title": "Contact Us", "url": "contact", "intid": "bapi_contact", "parent": "company", "order": 3, "template": "page-templates/full-width.php", "content": '/default-content/contactus.php', "addtomenu": true },
-				{ "title": "Blog", "url": "blog", "intid": "bapi_blog", "parent": "company", "order": 4, "template": "", "content": '', "addtomenu": true },
-			{ "title": "Make Booking", "url": "makebooking", "intid": "bapi_makebooking", "parent": "", "order": 9, "template": "page-templates/full-width.php", "content": '/default-content/makebooking.php', "addtomenu": false },
-			{ "title": "Make a Payment", "url": "makepayment", "intid": "bapi_makepayment", "parent": "", "order": 10, "template": "page-templates/full-width.php", "content": '/default-content/makepayment.php', "addtomenu": false },
-			{ "title": "Booking Confirmation", "url": "bookingconfirmation", "intid": "bapi_booking_confirm", "parent": "", "order": 11, "template": "page-templates/full-width.php", "content": '/default-content/bookingconfirmation.php', "addtomenu": false },
-			{ "title": "Rental Policy", "url": "rentalpolicy", "intid": "bapi_rental_policy", "parent": "", "order": 12, "template": "page-templates/full-width.php", "content": '/default-content/rentalpolicy.php', "addtomenu": false },
-			{ "title": "Privacy Policy", "url": "privacypolicy", "intid": "bapi_privacy_policy", "parent": "", "order": 13, "template": "page-templates/full-width.php", "content": '/default-content/privacypolicy.php', "addtomenu": false },
-			{ "title": "Terms of Use", "url": "termsofuse", "intid": "bapi_tos", "parent": "", "order": 14, "template": "page-templates/full-width.php", "content": '/default-content/termsofuse.php', "addtomenu": false }
-		];
-		//$defpages[] = array("Title"=>"Owner Login", "URL"=>"/Owners", "IntID"=>"bapi_owners", "Parent"=>''); //TO be added to footer menu only
-
-		$(".setuppages").on("click", function () {			
-			if (confirm("Are you sure you want to setup the menu system")) {
-				$('#dlg-result').dialog({width:700});
-				var txtresult = $('#dlg-txtresult');
-				txtresult.html('<h5>Setting up menu system</h5>');
-				var url = '<?= plugins_url('/init.php?p=1', __FILE__) ?>';
-				BAPI.utils.dopost(url, { "pagedefs": pagedefs }, function(res) {
-					txtresult.append(res);
-				});
-				/*
-				$.each(pagedefs, function (i, pagedef) {
-					var url = '<?= plugins_url('/init.php', __FILE__) ?>?' + $.param(pagedef);
-					$.get(url, function(data) {
-						txtresult.append(data);
-					});					
-				});*/							
-			}
-		});
-	
-		$('#validate-apikey').click(function() {
-			var apikey = $('#apikey').val();
-			var url = BAPI.defaultOptions.baseURL + "/js/bapi.js?apikey=" + apikey;
-			$.ajax(url)
-				.done(function() { alert("This is a valid api key"); })
-				.fail(function() { alert("This is not a valid api key"); });
-		});
-	
-		$('input#bapi_slideshow_image1,input#image-pick1').click(function(){
-			//alert('test');
-			wp.media.editor.send.attachment = function(props, attachment){
-				$('input#bapi_slideshow_image1').val(attachment.url);
-			}
-			wp.media.editor.open(this);
-			return false;
-		});
-		$('input#bapi_slideshow_image2,input#image-pick2').click(function(){
-			//alert('test');
-			wp.media.editor.send.attachment = function(props, attachment){
-				$('input#bapi_slideshow_image2').val(attachment.url);
-			}
-			wp.media.editor.open(this);
-			return false;
-		});
-		$('input#bapi_slideshow_image3,input#image-pick3').click(function(){
-			//alert('test');
-			wp.media.editor.send.attachment = function(props, attachment){
-				$('input#bapi_slideshow_image3').val(attachment.url);
-			}
-			wp.media.editor.open(this);
-			return false;
-		});
-		$('input#bapi_slideshow_image4,input#image-pick4').click(function(){
-			//alert('test');
-			wp.media.editor.send.attachment = function(props, attachment){
-				$('input#bapi_slideshow_image4').val(attachment.url);
-			}
-			wp.media.editor.open(this);
-			return false;
-		});
-		$('input#bapi_slideshow_image5,input#image-pick5').click(function(){
-			//alert('test');
-			wp.media.editor.send.attachment = function(props, attachment){
-				$('input#bapi_slideshow_image5').val(attachment.url);
-			}
-			wp.media.editor.open(this);
-			return false;
-		});
-		$('input#bapi_slideshow_image6,input#image-pick6').click(function(){
-			//alert('test');
-			wp.media.editor.send.attachment = function(props, attachment){
-				$('input#bapi_slideshow_image6').val(attachment.url);
-			}
-			wp.media.editor.open(this);
-			return false;
-		});
+		$('#viewraw-soldata').click(function() { $("#dlg-soldata").dialog({ width: 540});});	
+		$('#viewraw-textdata').click(function() { $("#dlg-textdata").dialog({ width: 540 });});	
+		$('#viewraw-seodata').click(function() { $("#dlg-seodata").dialog({ width: 540 });});	
 	});
 </script>
+
+<div class="wrap">
+<h1><a href="http://www.bookt.com" target="_blank"><img src="<?= plugins_url('/img/logo.png', __FILE__) ?>" /></a></h1>
+<h2>InstaSite Plugin</h2>
+<table class="form-table">
+<tr valign="top">
+	<td scope="row">Site Status:</td>
+	<td><?php echo $sitelive; ?></td>
+</tr>
+<tr valign="top">
+	<td scope="row">API Key:</td>
+	<td><?php echo get_option('api_key'); ?></td>
+</tr>
+<tr valign="top">
+	<td scope="row">Language:</td>
+	<td><?php echo get_option('bapi_language'); ?></td>	
+</tr>
+<tr valign="top">
+	<td scope="row">Solution Data Last Sync:</td>
+	<td><?php echo $lastmod_soldata; ?>
+		<a href="javascript:void(0)" id="viewraw-soldata" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">View Raw</a>
+	</td>
+</tr>
+<tr valign="top">
+	<td scope="row">SEO Last Sync:</td>
+	<td><?php echo $lastmod_seodata; ?>
+		<a href="javascript:void(0)" id="viewraw-seodata" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">View Raw</a>
+	</td>
+</tr>
+<tr valign="top">
+	<th scope="row">Text Data Last Sync:</th>
+	<td><?php echo $lastmod_textdata; ?>
+		<a href="javascript:void(0)" id="viewraw-textdata" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">View Raw</a>
+	</td>
+</tr>
+<tr>
+	<td colspan="2"><em>If you do not already have an API key for Bookt, please contact <a href="mailto:support@bookt.com?subject=API%20Key%20-%20Wordpress%20Plugin">support@bookt.com</a> to obtain an API key.</em></td>
+</tr>
+</table>
+</div>
+
+<div id="dlg-textdata" title="Text Data" style="display:none">
+<textarea style="width:500px;height:300px"><?php echo htmlentities($textdata); ?></textarea>
+</div>
+
+<div id="dlg-soldata" title="Solution Data" style="display:none">
+<textarea style="width:500px;height:300px"><?php echo htmlentities($soldata); ?></textarea>
+</div>
+
+<div id="dlg-seodata" title="SEO Data" style="display:none">
+<textarea style="width:500px;height:300px"><?php echo htmlentities($seodata); ?></textarea>
+</div>
+
 <?php 
 } 
 ?>

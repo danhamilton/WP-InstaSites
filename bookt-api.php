@@ -28,6 +28,7 @@ License: GPL2
 include_once(dirname( __FILE__ ).'/functions.php');
 include_once(dirname( __FILE__ ).'/admin.php');
 include_once(dirname( __FILE__ ).'/widgets.php');
+include_once(dirname( __FILE__ ).'/sync.php');
 include_once(dirname( __FILE__ ).'/cdn-linker/wp-cdn-linker.php');
 
 //add_filter('save_post','update_post_bapi');
@@ -38,8 +39,7 @@ add_filter('language_attributes','bapi_language_attributes',10);
 add_action('template_redirect', 'do_ossdl_off_ob_start');
 add_action('wp_head','getconfig');
 add_action('wp_head','bapi_getmeta',1);
-add_action('init','bapi_refresh_keywords',1);
-//remove_filter( 'the_content', 'wpautop' );
+add_action('init','bapi_sync_coredata',1);
 
 // create custom plugin settings menu
 add_action('admin_menu', 'bapi_create_menu');
