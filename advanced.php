@@ -8,27 +8,6 @@ function bapi_create_menu() {
 	add_action('admin_init','bapi_options_init');
 }
 
-function bapi_options_init(){
-	register_setting('bapi_options','api_key');
-	register_setting('bapi_options','bapi_language');
-	register_setting('bapi_options','bapi_solutiondata');
-	register_setting('bapi_options','bapi_baseurl');		
-	register_setting('bapi_options','bapi_custom_tmpl_loc');
-	register_setting('bapi_options','bapi_site_cdn_domain'); 
-	register_setting('bapi_options','bapi_secureurl');
-	register_setting('bapi_options','bapi_slideshow_image1');
-	register_setting('bapi_options','bapi_slideshow_image2');
-	register_setting('bapi_options','bapi_slideshow_image3');
-	register_setting('bapi_options','bapi_slideshow_image4');
-	register_setting('bapi_options','bapi_slideshow_image5');
-	register_setting('bapi_options','bapi_slideshow_image6');
-	register_setting('bapi_options','bapi_slideshow_caption1');
-	register_setting('bapi_options','bapi_slideshow_caption2');
-	register_setting('bapi_options','bapi_slideshow_caption3');
-	register_setting('bapi_options','bapi_slideshow_caption4');
-	register_setting('bapi_options','bapi_slideshow_caption5');
-	register_setting('bapi_options','bapi_slideshow_caption6');	
-}
 
 function bapi_settings_page() {
 	$cdn_url = get_option('home');

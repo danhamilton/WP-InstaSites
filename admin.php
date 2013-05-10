@@ -8,6 +8,7 @@ function bapi_create_menu() {
 	add_submenu_page($parent, 'General','General', 'administrator', get_adminurl('admin.php'));	
 	add_submenu_page($parent, 'Slideshow','Slideshow', 'administrator', get_adminurl('slideshow.php'));
 	add_submenu_page($parent, 'Take me Live','Take me Live', 'administrator', get_adminurl('golive.php'));
+	add_submenu_page($parent, 'Data Sync','Data Sync', 'administrator', get_adminurl('syncsetup.php'));	
 	add_submenu_page($parent, 'Initial Setup','Initial Setup', 'administrator', get_adminurl('initialsetup.php'));	
 	
 	//call register settings function
