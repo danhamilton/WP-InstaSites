@@ -819,6 +819,66 @@ context.nonsecureurl = function(path) {
 	return "http://" + BAPI.site.url + path;
 }
 
+function bookingHelper_getFormData(options, booking) {
+	/*var reqdata = {};
+	$('.' + selname).each(function() {
+		var k = $(this).attr('data-field');
+		if (k != null && k.length>0) {		
+			reqdata[k] = $(this).val();
+		}
+	});
+	return reqdata;*/
+	var treqdata = {};
+	treqdata.AltID = BAPI.isempty(booking.AltID) ? null : booking.AltID;
+	treqdata.CheckIn = BAPI.isempty(booking.CheckIn) ? null : booking.CheckIn;
+	treqdata.CheckOut = BAPI.isempty(booking.CheckOut) ? null : booking.CheckOut;
+	treqdata.Coupon = BAPI.isempty(booking.Coupon) ? null : booking.Coupon;
+	treqdata.CreditCard = BAPI.isempty(booking.CreditCard) ? null : booking.CreditCard;
+	treqdata.ID = BAPI.isempty(booking.ID) ? null : booking.ID;
+	treqdata.NumAdults = BAPI.isempty(booking.NumAdults) ? null : booking.NumAdults;
+	treqdata.NumChildren = BAPI.isempty(booking.NumChildren) ? null : booking.NumChildren;
+	treqdata.PropertyID = BAPI.isempty(booking.PropertyID) ? null : booking.PropertyID;
+	treqdata.Renter = BAPI.isempty(booking.Renter) ? null : booking.Renter;
+	treqdata.Statement = {};
+	treqdata.Statement.DueOn = booking.Statement.DueOn;
+	treqdata.Statement.Details = booking.Statement.Details;	
+	treqdata.Statement.Total = booking.Statement.Total;
+	treqdata.Statement.Notes = booking.Statement.Notes;
+	treqdata.Statement.Currency = booking.Statement.Currency;
+	treqdata.Statement.CheckSum = booking.Statement.CheckSum;
+	treqdata.TotalDueNow = BAPI.isempty(booking.TotalDueNow) ? null : booking.TotalDueNow;
+	var reqdata = treqdata;
+	
+	var dfparse = BAPI.defaultOptions.dateFormatMoment();
+	var df = BAPI.defaultOptions.dateFormatBAPI;
+	$('.' + options.dataselector).each(function () {			
+		var k = $(this).attr('data-field');
+		var v = $(this).attr('data-value');
+		if (v == null | v == '') v = $(this).val();
+		if (k != null && k.length > 0) { 
+			if (k=="checkin") {		
+				v = (v===null || v=='') ? null : moment(v, dfparse).format(df);								
+			}
+			else if (k=="checkout") {
+				v = (v===null || v=='') ? null : moment(v, dfparse).format(df);				
+			}
+						
+			// assign to the req and the session
+			var i = k.indexOf('[');
+			if (i==-1) {
+				reqdata[k] = v;				
+			} else {
+				// special case when the data-attribute value has nested brackets (such as adults[min])
+				var k1 = k.substring(0,i);
+				var k2 = k.substring(i+1,k.length-1);
+				reqdata[k1] = reqdata[k1] || {};
+				reqdata[k1][k2] = v;				
+			}
+		}
+	});	
+	return reqdata;
+}
+
 function bookingHelper_DoRedirect(u) {
 	var redir = u.param("redir");
 	if (redir != "1") { return false; }
@@ -992,29 +1052,28 @@ function BookingHelper_BookHandler(targetid, options, propid) {
 		processing = BookingHelper_ValidateForm(reqfields);				
 		if (!processing) { $(targetid).unblock(); return; }		
 		
-		var reqdata = getFormData(options.dataselector);		
+		var reqdata = bookingHelper_getFormData(options, BAPI.curentity.ContextData.Quote);		
 		// add the current booking context to our request form
-		if (typeof(reqdata.checkin)==="undefined" || reqdata.checkin==null) { reqdata.checkin = BAPI.session.searchparams.checkin; }
-		if (typeof(reqdata.checkout)==="undefined" || reqdata.checkout==null) { reqdata.checkout = BAPI.session.searchparams.checkout; }
-		if (typeof(reqdata.numadults)==="undefined" || reqdata.numadults==null) { reqdata.numadults = BAPI.session.searchparams.adults.min; }
-		if (typeof(reqdata.numchildren)==="undefined" || reqdata.numchildren==null) { reqdata.numchildren = BAPI.session.searchparams.children.min; }
-		if (typeof(reqdata.numrooms)==="undefined" || reqdata.numrooms==null) { reqdata.numrooms = BAPI.session.searchparams.rooms.min; }
+		if (BAPI.isempty(reqdata.CheckIn)) { reqdata.CheckIn = BAPI.session.searchparams.checkin; }
+		if (BAPI.isempty(reqdata.CheckOut)) { reqdata.CheckOut = BAPI.session.searchparams.checkout; }
+		if (BAPI.isempty(reqdata.NumAdults)) { reqdata.NumAdults = BAPI.session.searchparams.adults.min; }
+		if (BAPI.isempty(reqdata.NumChildren)) { reqdata.NumChildren = BAPI.session.searchparams.children.min; }
+		if (BAPI.isempty(reqdata.NumRooms)) { reqdata.NumRooms = BAPI.session.searchparams.rooms.min; }
 		BAPI.log(reqdata);
 		
-		$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
-		reqdata.pid = propid;						
+		//$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
 		if (typeof(reqdata.special)!=="undefined" && reqdata.special!==null && reqdata.special!='') {
 			window.location.href = options.responseurl + '?special=1';
 			processing = false;
 			return; // special textbox has a value, not a real person
 		}
 
-		if (BAPI.isempty(BAPI.curentity) || BAPI.isempty(BAPI.curentity.ContextData) || BAPI.isempty(BAPI.ContextData.Quote)) {
+		if (BAPI.isempty(BAPI.curentity) || BAPI.isempty(BAPI.curentity.ContextData) || BAPI.isempty(BAPI.curentity.ContextData.Quote)) {
 			alert("Fatal error trying to save this booking.  The context has been lost."); return;
 		}
 		
-		reqdata.statement = BAPI.curentity.ContextData.Quote;
-		BAPI.save(BAPI.entities.booking, reqdata, function(bres) {		
+		var postdata = { "data": JSON.stringify(reqdata) };
+		BAPI.save(BAPI.entities.booking, postdata, function(bres) {		
 			BAPI.log(bres);
 			$(targetid).unblock();
 			processing = false;
@@ -1191,17 +1250,6 @@ function doSearch(targetid, ids, entity, options, alldata, callback) {
 		$(targetid).attr('data-rowfixcount',$(this).attr('data-rowfixcount'));						
 		doSearchRender(targetid, ids, entity, options, {}, alldata);		
 	});
-}
-
-function getFormData(selname) {
-	var reqdata = {};
-	$('.' + selname).each(function() {
-		var k = $(this).attr('data-field');
-		if (k != null && k.length>0) {		
-			reqdata[k] = $(this).val();
-		}
-	});
-	return reqdata;
 }
 
 function loadFormFromSession(s) {
