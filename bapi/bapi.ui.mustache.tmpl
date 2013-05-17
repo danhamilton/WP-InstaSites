@@ -1554,7 +1554,7 @@
 	<label class="control-label" for="renterls">{{config.leadsources.prompt}}:</label>
 	<div class="controls controls-row">
 		<div class="btn-group span10">
-		<select id="renterls" class="span12 bookingfield" data-field="Renter[LeadSource]">
+		<select id="renterls" class="span12 bookingfield" data-field="Renter[LeadSourceID]">
 			<option value="">-{{config.leadsources.prompt}}-</option>		
 			{{#config.leadsources.values}}<option value="{{Data}}">{{Label}}</option>{{/config.leadsources.values}}
 		</select>					
@@ -1591,18 +1591,18 @@
 <div class="control-group">
 	<label class="control-label inline" for="ccexpr">{{textdata.Expiration}}:</label>
 	<div class="controls controls-row">
-		<select class="span5 bookingfield required" required>
+		<select class="span5 bookingfield required" data-field="CreditCard[ExpiryMonth]" required>
 			<option value="">-{{textdata.Month}}-</option>
 			{{#config.ccmonths.values}}
 			<option value="{{Data}}">{{Label}}</option>
 			{{/config.ccmonths.values}}
 		</select>
-		<select class="span5 bookingfield required" required>
+		<select class="span5 bookingfield required"  data-field="CreditCard[ExpiryYear]" required>
 			<option value="">-{{textdata.Year}}-</option>
 			{{#config.ccyears.values}}
 			<option value="{{Data}}">{{Label}}</option>
 			{{/config.ccyears.values}}
-		</select>
+		</select>		
 	</div>
 </div>
 <div class="control-group">
@@ -1643,7 +1643,7 @@
 	<div class="controls controls-row">
 		<input type="text" id="billingstate" class="span4 bookingfield bapi-state" data-field="CreditCard[State]" />
 		<label class="control-label span3 row-fluid">{{textdata.Postal Code}}:</label>
-		<input type="text" class="span3 row-fluid" data-field="billingpostalcode" />
+		<input type="text" class="span3 row-fluid bookingfield" data-field="CreditCard[PostalCode]" />
 	</div>
 </div>
 <hr />

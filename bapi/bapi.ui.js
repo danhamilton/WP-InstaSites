@@ -721,28 +721,28 @@ function createDatePickerPickadate(targetid, options) {
 	var mind = true; if (BAPI.config().minbookingdays>0) { mind = BAPI.config().minbookingdays; }
 	
 	var blockouts = [];
-	if (p!==null) {
+	if (!BAPI.isempty(p) && !BAPI.isempty(p.ContextData) && !BAPI.isempty(p.ContextData.Availability)) {
 		$.each(p.ContextData.Availability, function (index, item) {	
 			var cin = moment(item.CheckIn);
 			var cout = moment(item.CheckOut);
-			while (cin.isSame(cout) || cin.isBefore(cout)) {				
+			while (cin.isSame(cout) || cin.isBefore(cout)) {
 				blockouts.push([cin.years(), cin.months(), cin.days()]);
 				cin = cin.add('days',1);
 			}
 		});				
 	}
-	//BAPI.log(blockouts);
-	
+	BAPI.log(blockouts);
 	var poptions = {};	
 	if (ctl.hasClass("datepickercheckin")) {
 		poptions = {
 			dateMin: mind,
 			dateMax: BAPI.config().maxbookingdays,
+			datesDisabled: blockouts,
 			format: BAPI.defaultOptions.dateFormat.toLowerCase(),
 			formatSubmit: BAPI.defaultOptions.dateFormat.toLowerCase(),
 			onSelect: function() {
 				if (checkoutpickers!==null && checkoutpickers.length>0) {
-					var fromDate = createDateArray(this.getDate( 'yyyy-mm-dd'));				
+					var fromDate = createDateArray(this.getDate( 'yyyy-mm-dd'));
 					checkoutpickers.data('pickadate').setDateLimit(fromDate);
 				}				
 				// if los is enabled and it doesn't have a value, set it to the default
@@ -759,6 +759,7 @@ function createDatePickerPickadate(targetid, options) {
 		poptions = {
 			dateMin: mind,
 			dateMax: BAPI.config().maxbookingdays,
+			datesDisabled: blockouts,
 			format: BAPI.defaultOptions.dateFormat.toLowerCase(),
 			formatSubmit: BAPI.defaultOptions.dateFormat.toLowerCase(),
 			onSelect: function() {
@@ -778,10 +779,7 @@ function createDatePickerPickadate(targetid, options) {
 	$(targetid).after(trigger);	
 	trigger.click(function() {
 		BAPI.log("datepicker trigger");
-		//BAPI.log(calendar.isOpen());
-		input.click();
-		//calendar.open();
-		//BAPI.log(calendar.isOpen());
+		input.click();		
 	});
 	
 	// Create an array from the date while parsing each date unit as an integer
@@ -789,16 +787,17 @@ function createDatePickerPickadate(targetid, options) {
 }
 
 context.createDatePicker = function (targetid, options) {
-	if (!context.newdatepicker) {
+	var islegacy = (!$.support.leadingWhitespace);
+    if (!context.newdatepicker || islegacy) {
 		createDatePickerJQuery(targetid, options);
 	}
 	else {
 		var url = context.jsroot + 'js/pickadate/source/pickadate.min.js';
 		var cssurl = context.jsroot + 'js/pickadate/themes/pickadate.01.default.css';
 		$("<link/>", { rel: "stylesheet", type: "text/css", href: cssurl }).appendTo("head");
-		$.getScript(url, function(data, textStatus, jqxhr) {
-			createDatePickerPickadate(targetid, options);
-		});
+		createDatePickerPickadate(targetid, options);
+		//$.ajax({url: url, dataType: 'script', cache: true, success: function() {});  
+		//$.getScript(url, function(data, textStatus, jqxhr) { createDatePickerPickadate(targetid, options); });
 	}
 }
 
@@ -819,22 +818,13 @@ context.nonsecureurl = function(path) {
 	return "http://" + BAPI.site.url + path;
 }
 
+var curbooking = null;
 function bookingHelper_getFormData(options, booking) {
-	/*var reqdata = {};
-	$('.' + selname).each(function() {
-		var k = $(this).attr('data-field');
-		if (k != null && k.length>0) {		
-			reqdata[k] = $(this).val();
-		}
-	});
-	return reqdata;*/
 	var treqdata = {};
-	treqdata.AltID = BAPI.isempty(booking.AltID) ? null : booking.AltID;
 	treqdata.CheckIn = BAPI.isempty(booking.CheckIn) ? null : booking.CheckIn;
 	treqdata.CheckOut = BAPI.isempty(booking.CheckOut) ? null : booking.CheckOut;
 	treqdata.Coupon = BAPI.isempty(booking.Coupon) ? null : booking.Coupon;
 	treqdata.CreditCard = BAPI.isempty(booking.CreditCard) ? null : booking.CreditCard;
-	treqdata.ID = BAPI.isempty(booking.ID) ? null : booking.ID;
 	treqdata.NumAdults = BAPI.isempty(booking.NumAdults) ? null : booking.NumAdults;
 	treqdata.NumChildren = BAPI.isempty(booking.NumChildren) ? null : booking.NumChildren;
 	treqdata.PropertyID = BAPI.isempty(booking.PropertyID) ? null : booking.PropertyID;
@@ -914,7 +904,7 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 		data.site = BAPI.site;
 		data.config = BAPI.config();
 		data.textdata = BAPI.textdata;	
-		data.session = BAPI.session;		
+		data.session = BAPI.session;
 		$(targetid).html(Mustache.render(options.mastertemplate, data));	
 		$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, data));
 		$(options.targetids.statement).html(Mustache.render(options.templates.statement, data));
@@ -926,15 +916,17 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 		context.createDatePicker('.datepickercheckout', { "property": data.result[0] });		
 				
 		// show the revise your dates if quote is not valid
-		BAPI.curentity = data.result[0];		
+		BAPI.curentity = data.result[0];
+		curbooking = data.result[0].ContextData.Quote;
 		if (!data.result[0].ContextData.Quote.IsValid) { try { $('#revisedates').modal('show'); } catch(err) {} }
 		
 		function partialRender(sdata, options) {			
-			$(".modal").modal('hide');
+			$(".modal").modal('hide');			
 			sdata.site = BAPI.site;
 			sdata.config = BAPI.config();
 			sdata.textdata = BAPI.textdata;	
 			sdata.session = BAPI.session;	
+			BAPI.log(sdata);
 			$(options.targetids.statement).html(Mustache.render(options.templates.statement, sdata));
 			$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, sdata));
 			$(options.targetids.accept).html(Mustache.render(options.templates.accept, sdata));			
@@ -949,6 +941,7 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 			reqdata.quoteonly = 1;
 			$(options.targetids.stayinfo).block({ message: "<img src='" + loadingImgUrl + "' />" });
 			BAPI.get(propid, BAPI.entities.property, reqdata, function (sdata) {
+				curbooking = sdata.result[0].ContextData.Quote;
 				partialRender(sdata, options);				
 			});	
 		});
@@ -968,6 +961,8 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 			reqdata.numoptionalfees = reqdata.optionalfees.length;
 			$(options.targetids.stayinfo).block({ message: "<img src='" + loadingImgUrl + "' />" });
 			BAPI.get(propid, BAPI.entities.property, reqdata, function (sdata) {
+				curbooking = sdata.result[0].ContextData.Quote;
+				BAPI.log(curbooking);
 				partialRender(sdata, options);				
 			});
 		}
@@ -1051,25 +1046,22 @@ function BookingHelper_BookHandler(targetid, options, propid) {
 		var reqfields = $.extend([],$('.required'));
 		processing = BookingHelper_ValidateForm(reqfields);				
 		if (!processing) { $(targetid).unblock(); return; }		
+		if (BAPI.isempty(curbooking)) { $(targetid).unblock(); alert("Fatal error trying to save this booking.  The context has been lost."); return; }
 		
-		var reqdata = bookingHelper_getFormData(options, BAPI.curentity.ContextData.Quote);		
+		var reqdata = bookingHelper_getFormData(options, curbooking);	
+		
 		// add the current booking context to our request form
 		if (BAPI.isempty(reqdata.CheckIn)) { reqdata.CheckIn = BAPI.session.searchparams.checkin; }
 		if (BAPI.isempty(reqdata.CheckOut)) { reqdata.CheckOut = BAPI.session.searchparams.checkout; }
 		if (BAPI.isempty(reqdata.NumAdults)) { reqdata.NumAdults = BAPI.session.searchparams.adults.min; }
 		if (BAPI.isempty(reqdata.NumChildren)) { reqdata.NumChildren = BAPI.session.searchparams.children.min; }
 		if (BAPI.isempty(reqdata.NumRooms)) { reqdata.NumRooms = BAPI.session.searchparams.rooms.min; }
-		BAPI.log(reqdata);
 		
-		//$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
+		$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
 		if (typeof(reqdata.special)!=="undefined" && reqdata.special!==null && reqdata.special!='') {
 			window.location.href = options.responseurl + '?special=1';
 			processing = false;
 			return; // special textbox has a value, not a real person
-		}
-
-		if (BAPI.isempty(BAPI.curentity) || BAPI.isempty(BAPI.curentity.ContextData) || BAPI.isempty(BAPI.curentity.ContextData.Quote)) {
-			alert("Fatal error trying to save this booking.  The context has been lost."); return;
 		}
 		
 		var postdata = { "data": JSON.stringify(reqdata) };

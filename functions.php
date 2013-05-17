@@ -102,20 +102,27 @@
 <script type="text/javascript" src="<?= get_relative(plugins_url('/js/jquery.1.9.1.min.js', __FILE__)) ?>" ></script>
 <script type="text/javascript" src="<?= get_relative(plugins_url('/js/jquery-migrate-1.0.0.min.js', __FILE__)) ?>" ></script>		
 <script type="text/javascript" src="<?= get_relative(plugins_url('/js/jquery-ui-1.10.2.min.js', __FILE__)) ?>" ></script>
-<script type="text/javascript" src="<?= get_relative(plugins_url('/js/jquery-ui-i18n.min.js', __FILE__)) ?>" ></script>			
-
+<script type="text/javascript" src="<?= get_relative(plugins_url('/js/jquery-ui-i18n.min.js', __FILE__)) ?>" ></script>
+<!--[if gt IE 7]>
+<script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/pickadate.min.js', __FILE__)) ?>" ></script>			
+<![endif]-->
+<![if !IE]>
+<script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/pickadate.min.js', __FILE__)) ?>" ></script>			
+<![endif]>
+<!--[if lte IE 8]>
+<script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/pickadate.legacy.min.js', __FILE__)) ?>" ></script>			
+<![endif]-->
 <script type="text/javascript" src="<?= getbapijsurl($apiKey) ?>"></script>
 <script type="text/javascript" src="<?= get_relative(plugins_url('/bapi/bapi.ui.js', __FILE__)) ?>" ></script>		
 <script type="text/javascript" src="<?= get_relative(plugins_url('bapi.textdata.php', __FILE__)) ?>" ></script>		
 <script type="text/javascript" src="<?= get_relative(plugins_url('bapi.templates.php', __FILE__)) ?>" ></script>		
 <script type="text/javascript">		
-	BAPI.defaultOptions.baseURL = '<?= getbapiurl() ?>';
-	BAPI.UI.loading.setLoadingImgUrl('<?= plugins_url("/img/loading.gif", __FILE__) ?>');
+	BAPI.UI.loading.setLoadingImgUrl('<?= get_relative(plugins_url("/img/loading.gif", __FILE__)) ?>');
 	BAPI.site.url =  '<?= $siteurl ?>';
 	<?php if ($secureurl!='') { ?>
 	BAPI.site.secureurl = '<?= $secureurl ?>';
 	<?php } ?>
-	BAPI.init('<?= $apiKey ?>');
+	BAPI.init();
 	BAPI.UI.jsroot = '<?= plugins_url("/", __FILE__) ?>'
 	$(document).ready(function () {
 		BAPI.UI.init();
