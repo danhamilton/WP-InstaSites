@@ -40,6 +40,8 @@ add_action('template_redirect', 'do_ossdl_off_ob_start');
 add_action('wp_head','getconfig');
 add_action('wp_head','bapi_getmeta',1);
 add_action('init','bapi_sync_coredata',1);
+//add_action('init','bapi_sync_entity',1);
+add_action('wp', 'bapi_sync_entity', 10, 1);
 
 // create custom plugin settings menu
 add_action('admin_menu', 'bapi_create_menu');

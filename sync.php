@@ -3,25 +3,222 @@
 	require_once('bapi-php/bapi.php');
 	require_once('functions.php');
 	
-	function bapi_sync_coredata() {
-		$bapi = getBAPIObj();
+	$bapisync = null;
+	class BAPISync {
+		public $soldata = null;
+		public $textdata = null;
+		public $seodata = null;
+		public $templates = null;
+		public function init() {
+			$this->soldata = BAPISync::getSolutionData();
+			$this->textdata = BAPISync::getTextData();
+			$this->seodata = BAPISync::getSEOData();			
+		}
+		public function loadtemplates() { if (empty($this->templates)) { $this->templates = BAPISync::getTemplates(); } }
 		
-		// check if we need to refresh seo data
-		$data = get_option('bapi_keywords_array');
-		$lastmod = get_option('bapi_keywords_lastmod');
-		if(empty($data) || empty($lastmod) || ((time()-$lastmod)>3600)) {					
-			$data = $bapi->getseodata(true);
-			if (!empty($data)) {
-				$data = $data['result']; // just get the result part
-				$data = json_encode($data); // convert back to text
-				update_option('bapi_keywords_array',$data);
-				update_option('bapi_keywords_lastmod',time());
-			}					
+		public static function getSolutionDataRaw() { return get_option('bapi_solutiondata'); }
+		public static function getSolutionDataLastModRaw() { get_option('bapi_textdata_lastmod'); }
+		public static function getSolutionData() { return json_decode(BAPISync::getSolutionDataRaw(), TRUE); }
+		
+		public static function getTextDataRaw() { return get_option('bapi_textdata'); }
+		public static function getTextDataLastModRaw() { return get_option('bapi_textdata_lastmod'); }
+		public static function getTextData() { return json_decode(BAPISync::getTextDataRaw(), TRUE); }
+		
+		public static function getSEODataRaw() { return get_option('bapi_keywords_array'); }
+		public static function getSEODataLastModRaw() { return get_option('bapi_keywords_lastmod'); }
+		public static function getSEOData() { return json_decode(BAPISync::getSEODataRaw(), TRUE); }
+		
+		public static function getTemplates() { 
+			$url = "bapi/bapi.ui.mustache.tmpl";
+			$url = get_relative( plugins_url($url, __FILE__) );
+			$url = realpath('') . $url;
+			return file_get_contents($url); 
 		}
 		
+		public static function cleanurl($url) {
+			if (empty($url)) { return ""; }
+			$url = strtolower(trim($url));
+			if (strpos($url, "/") != 0) { $url = "/" . $url; }
+			if (substr($url, -1) != "/") { $url = $url . "/"; }
+			return $url;
+		}
+		
+		public static function clean_post_name($url) {
+			$url = basename($url);			
+			if (substr($url, -1) == "/") { $url = substr_replace($url ,"",-1); }
+			return $url;
+		}
+		
+		public function getSEOFromUrl($url) {
+			if (empty($url)) { return null; }			
+			$url = BAPISync::cleanurl($url);
+			foreach ($this->seodata as $seo) {												
+				$turl = BAPISync::cleanurl($seo["DetailURL"]);
+				if ($turl == $url) { return $seo; }								
+			}
+			return null;
+		}
+		
+		public static function getPageKey($entity, $pkid) { return $entity . ':' . $pkid; }
+		public static function getPageTemplate($entity) {
+			if($entity=='property') { return 'page-templates/property-detail.php'; }
+			if($entity=='development') { return 'page-templates/other-detail-page.php'; }
+			if($entity=='specials') { return 'page-templates/other-detail-page.php'; }
+			if($entity=='poi') { return 'page-templates/other-detail-page.php'; }
+			if($entity=='searches') { return 'page-templates/other-detail-page.php'; }
+			return 'page-templates/full-width.php';
+		}
+		
+		public static function getRootPath($entity) {
+			if($entity=='property') { $t=BAPISync::getSolutionData(); return $t["Site"]["BasePropertyURL"]; }
+			if($entity=='development') { $t=BAPISync::getSolutionData(); return $t["Site"]["BaseDevelopmentURL"]; }
+			if($entity=='specials') { $t=BAPISync::getSolutionData(); return $t["Site"]["BaseSpecialURL"]; }
+			if($entity=='poi') { $t=BAPISync::getSolutionData(); return $t["Site"]["BasePOIUrl"]; }
+			if($entity=='searches') { $t=BAPISync::getSolutionData(); return $t["Site"]["BasePropertyFinderURL"]; }
+			return '/rentals/';
+		}
+		
+		public function getMustacheTemplate($entity) {
+			$template_name = "";
+			if ($entity == "property") { $template_name = "tmpl-properties-detail"; }
+			else if ($entity == "development") { $template_name = "tmpl-developments-detail"; }
+			else if ($entity == "specials") { $template_name = "tmpl-specials-detail"; }
+			else if ($entity == "poi") { $template_name = "tmpl-attractions-detail"; }
+			else if ($entity = "searches") { $template_name = "tmpl-searches-detail"; }
+			if (empty($template_name)) { return ""; } // not a valid entity to get a template
+			
+			$this->loadtemplates();
+			$si = strpos($this->templates, $template_name);
+			if (!$si) { return ""; }			
+			$si = strpos($this->templates, ">", $si+1);
+			if (!si) { return ""; }
+			$ei = strpos($this->templates, "</script>", $si);
+			if (!ei) { return ""; }
+			
+			return substr($this->templates, $si+1, $ei-$si-1);			
+		}
+		
+		public static function getMustache($entity, $pkid, $template) {
+			$bapi = getBAPIObj();
+			if (!$bapi->isvalid()) { return; }
+			$pkid = array(intval($pkid));			
+			$options = $entity == "property" ? array("seo" => 1, "descrip" => 1, "avail" => 1, "rates" => 1) : null;
+			$c = $bapi->get($entity,$pkid,$options);			
+			$c["config"] = null;
+			$c["textdata"] = BAPISync::getTextData();
+			$m = new Mustache_Engine();
+			$string = $m->render($template, $c);				
+			$string = str_replace("\t", '', $string); // remove tabs
+			$string = str_replace("\n", '', $string); // remove new lines
+			$string = str_replace("\r", '', $string); // remove carriage returns
+			return $string;
+		}
+	}
+	
+	function bapi_sync_entity($wp) {
+		global $post;
+		global $bapisync;		
+		if (empty($bapisync)) { 
+			// ERROR: What should we do?
+		}
+						
+		// locate the SEO data stored in Bookt from the requested URL
+		$seo = $bapisync->getSEOFromUrl($wp->request);
+		if (!empty($seo) && (empty($seo["entity"]) || empty($seo["pkid"]))) {
+			$seo = null; // ignore seo info if it doesn't point to a valid entity
+		}		
+		// parse out the meta attributes for the current post
+		$meta = !$isnew ? get_post_custom($post->post_id) : null;
+		$last_update = !empty($meta) ? $meta['bapi_last_update'][0] : null;
+		$pagekey = !empty($meta) ? $meta['bapikey'][0] : null;
+		$meta_keywords = !empty($meta) ? $meta['bapi_meta_keywords'][0] : null;
+		$meta_description = !empty($meta) ? $meta['bapi_meta_description'][0] : null;			
+		
+		$page_exists_in_wp = !empty($post);				
+		$do_page_update = false;
+		$do_meta_update = false;
+		$changes = "";
+		// case 1: page exists in wp and is marked for syncing on wp but, it no longer exists in Bookt		
+		if ($page_exists_in_wp && empty($seo) && !empty($pagekey)) {
+			//print_r("case 1");
+			// Action: Set current page to "unpublished"
+			// $post->post_status = "unpublish";
+		}
+		// case 2: pages exists in wp and in Bookt
+		else if ($page_exists_in_wp && !empty($seo)) {
+			//print_r("case 2");
+			// Action: Cheeck if an update is needed
+			// TODO: update is needed if refresh time has elapsed			
+			
+			// check for difference in meta description
+			if ($meta['bapi_meta_description'][0] != $seo["MetaDescrip"]) { $changes = $changes."|meta_description"; $do_meta_update = true; }	
+			// check for difference in meta keywords
+			if ($meta['bapi_meta_keywords'][0] != $seo["MetaKeywords"]) { $changes = $changes."|meta_keywords"; $do_meta_update = true; }	
+			// check for different in title
+			if ($post->post_title != $seo["PageTitle"]) { $changes = $changes."|post_title"; $do_page_update = true; }
+			// check for difference in post name
+			if ($post->post_name != BAPISync::clean_post_name($seo["DetailURL"])) { $changes = $changes."|post_name"; $do_page_update = true; }
+		}
+		// case 3: page exists does not exist in wp and does not exist in Bookt
+		else if (!$page_exists_in_wp && empty($seo)) {
+			// Action: Do nothing and let wp generate a 404
+			//print_r("case 3");
+		}
+		// case 4: page does not exist in wp but exists in Bookt
+		else if (!$page_exists_in_wp && !empty($seo)) {
+			//print_r("case 4");
+			// Result-> Need to create the page
+			$post = new WP_Post();
+			$do_page_update = true;
+			$do_meta_update = true;
+		}
+		
+		// BEGIN TEST		
+		//$do_page_update = true;
+		// END TEST	
+		//print_r($seo); print_r("HERE"); print_r($post);
+		if ($do_page_update) {
+			// do page update
+			$post->comment_status = "close";		
+			$template = $bapisync->getMustacheTemplate($seo["entity"]);		
+			$post->post_content = $bapisync->getMustache($seo["entity"],$seo["pkid"],$template);
+			$post->post_title = $seo["PageTitle"];
+			$post->post_name = BAPISync::clean_post_name($seo["DetailURL"]);
+			$post->post_parent = get_page_by_path(BAPISync::getRootPath($seo["entity"]))->ID;						
+			$post->post_type = "page";
+			//print_r($post);
+			if (empty($post->ID)) {
+				$post->ID = wp_insert_post($post, $wp_error);				
+			} else {
+				wp_update_post($post);
+			}
+			//print_r($post);
+		}
+		if ($do_meta_update || $do_page_update) {
+			// update the meta tags
+			update_post_meta($post->ID, 'bapi_meta_description', $seo["MetaDescrip"]);
+			update_post_meta($post->ID, 'bapi_meta_keywords', $seo["MetaKeywords"]);
+			update_post_meta($post->ID, "_wp_page_template", BAPISync::getPageTemplate($seo["entity"]));
+			update_post_meta($post->ID, "bapikey", BAPISync::getPageKey($seo["entity"],$seo["pkid"]));
+			//update_post_meta($post->ID, "bapi_last_update", ??) // Do we really need this? Can't we use last publish time?
+		}
+		//print_r($seo);
+		//print_r($meta);
+		//print_r($post);		
+	}
+	
+	function bapi_sync_coredata() {
+		// initialize the bapisync object
+		global $bapisync;
+		$bapisync = new BAPISync();
+		$bapisync->init();
+		
+		$bapi = getBAPIObj();
+		if (!$bapi->isvalid()) { return; }
+		
 		// check if we need to refresh textdata
-		$data = get_option('bapi_textdata');
-		$lastmod = get_option('bapi_textdata_lastmod');
+		$data = BAPISync::getTextDataRaw();
+		$lastmod = BAPISync::getTextDataLastModRaw();
 		if(empty($data) || empty($lastmod) || ((time()-$lastmod)>3600)) {					
 			$data = $bapi->gettextdata(true);			
 			if (!empty($data)) {
@@ -33,8 +230,8 @@
 		}	
 		
 		// check if we need to refresh solution data
-		$data = get_option('bapi_solutiondata');
-		$lastmod = get_option('bapi_solutiondata_lastmod');
+		$data = BAPISync::getSolutionDataRaw();
+		$lastmod = BAPISync::getSolutionDataLastModRaw();
 		if(empty($data) || empty($lastmod) || ((time()-$lastmod)>3600)) {					
 			$data = $bapi->getcontext(true);
 			if (!empty($data)) {
@@ -43,5 +240,74 @@
 				update_option('bapi_solutiondata_lastmod',time());
 			}					
 		}	
+		
+		// check if we need to refresh seo data
+		$data = BAPISync::getSEODataRaw();
+		$lastmod = BAPISync::getSEODataLastModRaw();
+		if(empty($data) || empty($lastmod) || ((time()-$lastmod)>3600)) {					
+			$data = $bapi->getseodata(true);
+			if (!empty($data)) {
+				$data = $data['result']; // just get the result part
+				$data = json_encode($data); // convert back to text
+				update_option('bapi_keywords_array',$data);
+				update_option('bapi_keywords_lastmod',time());
+			}					
+		}
+		
+		/*
+		$time_start = microtime(true); 
+		$seodata = BAPISync::getSEOData();		
+		$count = 1;
+		foreach ($seodata as $seo) {
+			bapi_sync_basedetailfromseo($seo);				
+			$count++;
+			if ($count==3) break;
+		}
+		$time_end = microtime(true);
+		$execution_time = ($time_end - $time_start);
+		//echo '<br/><b>Total Execution Time:</b> '.$execution_time.' seconds';
+		*/
 	}	
+	
+	function bapi_sync_basedetailfromseo($seo) {
+		$entity = $seo["entity"];
+		$pkid = $seo["pkid"];
+		if (empty($entity) || empty($pkid)) return;
+		$pagekey = BAPISync::getPageKey($entity,$pkid);
+		
+		$args = array('meta_key' => 'bapikey', 'meta_value' => $pagekey);
+		$tst = get_pages($args);
+		//print_r($tst);
+		$thepost = array();
+		$isnew = true;		
+		foreach ($posts_array as $page) {
+			$thepost['ID'] = $page->ID;
+			$isnew = false;
+		}
+				
+		$thepost['post_title'] = wp_strip_all_tags($seo["PageTitle"]);
+		$thepost['post_name'] = wp_strip_all_tags($seo["Keyword"]);
+		$thepost['post_type'] = 'page';
+		$thepost['post_status'] = 'publish';
+		$thepost['comment_status'] = 'closed';
+		$thepost['post_parent'] = get_page_by_path(BAPISync::getRootPath($entity))->ID;				
+		/*
+		$pid = $isnew ? wp_insert_post($thepost,$wp_error) : wp_update_post($thepost,$wp_error);
+		add_post_meta($pid, 'bapi_last_update', time(), true);
+		add_post_meta($pid, 'bapikey', getPageKeyForEntity($entity, $pkid), true);
+		add_post_meta($pid, 'bapi_meta_keywords', $metak, true);
+		add_post_meta($pid, 'bapi_meta_description', $metad, true);	
+		update_post_meta($pid, "_wp_page_template", $pagetemplate);	
+		*/
+		//print_r($tst);
+		//print_r($pagekey); print_r("<br />");
+		
+		return;
+	}
+	
+	/*function getPageForEntity($entity, $pkid, $parentid) {
+		$pagekey = getPageKeyForEntity($entity, $pkid);
+		$args = array('meta_key' => 'bapikey', 'meta_value' => $pagekey, 'child_of' => $parentid);
+		return get_pages($args);		
+	}*/
 ?>

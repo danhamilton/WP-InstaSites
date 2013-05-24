@@ -72,7 +72,7 @@ class BAPI
 	public function get($entity,$ids,$options,$jsondecode) {
 		if (!$this->isvalid()) { return null; }
 		$url = $this->getBaseURL() . "/ws/?method=get&apikey=" . $this->apikey . "&entity=" . $entity . '&ids=' . implode(",", $ids);
-		if (!empty($options)) { $url = $url . "&" . http_build_query($options); }
+		if (!empty($options)) { $url = $url . "&" . http_build_query($options); }		
 		$c = file_get_contents($url);
 		if (empty($jsondecode) || $jsondecoe) { return json_decode($c,TRUE); }
 		return $c;

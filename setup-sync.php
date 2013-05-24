@@ -5,6 +5,8 @@
 		//echo '<div id="message" class="updated"><p><strong>Settings saved.</strong></p></div>';
 	}	
 	getconfig(); // need this to update detail pages
+	
+	$soldata = json_decode(get_option('bapi_solutiondata'),TRUE);
 ?> 
 
 <div class="wrap">
@@ -31,6 +33,37 @@
 		<option value="searches">Searches</option>
 	</select>
 </div>
+
+<br />
+<h3>Base URLs</h3>
+<small>These base urls define where detail pages will get synced.</small>
+<table class="form-table">
+<tr valign="top">
+	<td scope="row">Propert:</td>
+	<td><?php echo $soldata["Site"]["BasePropertyURL"]; ?></td>
+</tr>
+<tr valign="top">
+	<td scope="row">Developments:</td>
+	<td><?php echo $soldata["Site"]["BaseDevelopmentURL"]; ?></td>
+</tr>
+<tr valign="top">
+	<td scope="row">Attractions:</td>
+	<td><?php echo $soldata["Site"]["BasePOIUrl"]; ?></td>
+</tr>
+<tr valign="top">
+	<td scope="row">Specials:</td>
+	<td><?php echo $soldata["Site"]["BaseSpecialURL"]; ?></td>
+</tr>
+<tr valign="top">
+	<td scope="row">Search Buckets:</td>
+	<td><?php echo $soldata["Site"]["BasePropertyFinderURL"]; ?></td>
+</tr>
+<tr valign="top" style="display:none">
+	<td scope="row">Market Areas:</td>
+	<td><?php echo $soldata["Site"]["BaseMarketAreaURL"]; ?></td>
+</tr>
+</table>
+<small>Note: Base urls need to be modified in the control panel.</small>
 
 </div>
 

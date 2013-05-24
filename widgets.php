@@ -165,8 +165,10 @@ class BAPI_HP_LogoWithTagline extends WP_Widget {
 		$wrapper = getbapisolutiondata();
 		$logo = str_replace("http:", "https:", $wrapper["site"]["SolutionLogo"]);
 		$tagline = $wrapper["site"]["SolutionTagline"];
+		$url = ($_SERVER['SERVER_PORT']==443 ? get_option('bapi_site_cdn_domain') : "/");
+		if (empty($url)) { $url = "/"; }		
 		?>
-		<a href="/"><img src="<?= $logo ?>" alt="" /></a>
+		<a href="<?= $url ?>"><img src="<?= $logo ?>" alt="" /></a>
 		<h2><?= $logo ?></h2>
         <?php
 	}
@@ -213,9 +215,11 @@ class BAPI_HP_Logo extends WP_Widget {
 
 	public function widget( $args, $instance ) {
 		$wrapper = getbapisolutiondata();
-		$logo = $wrapper["site"]["SolutionLogo"];				
+		$logo = $wrapper["site"]["SolutionLogo"];
+		$url = ($_SERVER['SERVER_PORT']==443 ? get_option('bapi_site_cdn_domain') : "/");
+		if (empty($url)) { $url = "/"; }		
 		?>
-        <div class="bapi-logo"><a href="/" ><img src="<?= $logo ?>" alt="" /></a></div>
+        <div class="bapi-logo"><a href="<?= $url ?>" ><img src="<?= $logo ?>" alt="" /></a></div>
 		<?php
 	}
 

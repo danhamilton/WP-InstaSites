@@ -6,10 +6,10 @@ function bapi_create_menu() {
 	add_menu_page('InstaSite Plugin Settings', 'InstaSite', 'administrator', __FILE__, 'bapi_settings_page', plugins_url('/img/icon.png', __FILE__));	
 	
 	add_submenu_page($parent, 'General','General', 'administrator', get_adminurl('admin.php'));	
-	add_submenu_page($parent, 'Slideshow','Slideshow', 'administrator', get_adminurl('slideshow.php'));
-	add_submenu_page($parent, 'Take me Live','Take me Live', 'administrator', get_adminurl('golive.php'));
-	add_submenu_page($parent, 'Data Sync','Data Sync', 'administrator', get_adminurl('syncsetup.php'));	
-	add_submenu_page($parent, 'Initial Setup','Initial Setup', 'administrator', get_adminurl('initialsetup.php'));	
+	add_submenu_page($parent, 'Slideshow','Slideshow', 'administrator', get_adminurl('setup-slideshow.php'));
+	add_submenu_page($parent, 'Take me Live','Take me Live', 'administrator', get_adminurl('setup-golive.php'));
+	add_submenu_page($parent, 'Data Sync','Data Sync', 'administrator', get_adminurl('setup-sync.php'));	
+	add_submenu_page($parent, 'Initial Setup','Initial Setup', 'administrator', get_adminurl('setup-initial.php'));	
 	
 	//call register settings function
 	add_action('admin_init','bapi_options_init');

@@ -517,20 +517,20 @@ context.createAvailabilityWidget = function (targetid, data, options) {
 		maxDate: "+" + options.maxbookingdays + "D",
 		createButton: false,
 		beforeShowDay: function (date) {
-			if (BAPI.isempty(p) || !BAPI.isempty(p.ContextData) || !BAPI.isempty(p.ContextData.Availability)) {
-				return [true, "avail", ''];
+			if (p===null || p.ContextData===null || p.ContextData.Availability===null) {
+				return [true, "avail"];
 			}
-			var taken = false;
-			$.each(p.ContextData.Availability, function (index, item) {
-				if (date >= BAPI.utils.jsondate(item.CheckIn) && date < BAPI.utils.jsondate(item.CheckOut) - 1)
-					taken = true;
-			});
-			if (!taken) {
-				return [true, "avail", ''];
-			}
-			else {
-				return [false, 'unavail', ''];
-			}
+			var tdate = moment(date);
+			var bavail = true;
+			$.each(p.ContextData.Availability, function (index, item) {	
+				var cin = moment(item.CheckIn);
+				var cout = moment(item.CheckOut);
+				if ((tdate.isSame(cin) || tdate.isAfter(cin)) && tdate.isBefore(cout)) {				
+					bavail = false;				
+				}
+			});				
+			if (bavail) { return [true, "avail", "Available"]; }
+			else { return [false, "datepicker-notavailable", "Unavailable"]; }				
 		}
 	})
 }
@@ -718,15 +718,16 @@ function createDatePickerPickadate(targetid, options) {
 	ctl.addClass("no-disabled");
 	var checkinpickers = $('.datepickercheckin');
 	var checkoutpickers = $('.datepickercheckout');
-	var mind = true; if (BAPI.config().minbookingdays>0) { mind = BAPI.config().minbookingdays; }
-	
+	var mind = true; if (BAPI.config().minbookingdays>0) { mind = BAPI.config().minbookingdays; }	
 	var blockouts = [];
 	if (!BAPI.isempty(p) && !BAPI.isempty(p.ContextData) && !BAPI.isempty(p.ContextData.Availability)) {
-		$.each(p.ContextData.Availability, function (index, item) {	
+		$.each(p.ContextData.Availability, function (index, item) {				
 			var cin = moment(item.CheckIn);
 			var cout = moment(item.CheckOut);
+			//BAPI.log(cin.format() + "-" + cout.format());			
 			while (cin.isSame(cout) || cin.isBefore(cout)) {
-				blockouts.push([cin.years(), cin.months(), cin.days()]);
+				blockouts.push([cin.year(), cin.month()+1, cin.date()]);
+				//BAPI.log(cin.year() + "-" + cin.month()+1 + "-" + cin.date());
 				cin = cin.add('days',1);
 			}
 		});				
@@ -740,6 +741,11 @@ function createDatePickerPickadate(targetid, options) {
 			datesDisabled: blockouts,
 			format: BAPI.defaultOptions.dateFormat.toLowerCase(),
 			formatSubmit: BAPI.defaultOptions.dateFormat.toLowerCase(),
+			klass: {
+				dayDisabled: 'datepicker-notavailable',
+				dayToday: 'datepicker-today',
+				daySelected: 'datepicker-selected'
+			},
 			onSelect: function() {
 				if (checkoutpickers!==null && checkoutpickers.length>0) {
 					var fromDate = createDateArray(this.getDate( 'yyyy-mm-dd'));
@@ -762,13 +768,18 @@ function createDatePickerPickadate(targetid, options) {
 			datesDisabled: blockouts,
 			format: BAPI.defaultOptions.dateFormat.toLowerCase(),
 			formatSubmit: BAPI.defaultOptions.dateFormat.toLowerCase(),
+			klass: {
+				dayDisabled: 'datepicker-notavailable',
+				dayToday: 'datepicker-today',
+				daySelected: 'datepicker-selected'
+			},
 			onSelect: function() {
 				if (checkinpickers!==null && checkinpickers.length>0) {
 					var toDate = createDateArray(this.getDate( 'yyyy-mm-dd'))
 					checkinpickers.data( 'pickadate' ).setDateLimit(toDate, 1);
 				}
 			}
-		}
+		}	
 	}
 	//BAPI.log(poptions);
 	var input = $(targetid).pickadate(poptions);

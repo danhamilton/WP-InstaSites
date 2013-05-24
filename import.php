@@ -1,6 +1,7 @@
 
 <?php
 	require_once ('../../../wp-load.php');	
+	require_once ('sync.php');	
 	// get all the post parameters
 	$entity = $_POST['entity'];
 	$pkid = $_POST['pkid'];
