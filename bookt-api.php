@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Bookt API Wordpress Plugin
-Plugin URI: http://bookt.com
+Plugin URI: http://www.bookt.com
 Description: This plugin is intended for use by Bookt and Instamanager customers to display property and booking tools on their WP-hosted sites on any platform.
 Version: 0.1
 Author: Bookt LLC
@@ -29,19 +29,19 @@ include_once(dirname( __FILE__ ).'/functions.php');
 include_once(dirname( __FILE__ ).'/admin.php');
 include_once(dirname( __FILE__ ).'/widgets.php');
 include_once(dirname( __FILE__ ).'/sync.php');
+include_once(dirname( __FILE__ ).'/google-xml-sitemap.php');
 include_once(dirname( __FILE__ ).'/cdn-linker/wp-cdn-linker.php');
 
-//add_filter('save_post','update_post_bapi');
 add_filter('home_url','home_url_cdn',1,2);
 add_filter('wp_head','add_server_name_meta',1);
 add_filter('redirect_canonical','bapi_redirect_fix',10,2);
-add_filter('language_attributes','bapi_language_attributes',10);
+add_filter('language_attributes','bapi_language_attributes',10);	// ensure output of proper language
 add_action('template_redirect', 'do_ossdl_off_ob_start');
 add_action('wp_head','getconfig');
 add_action('wp_head','bapi_getmeta',1);
-add_action('init','bapi_sync_coredata',1);
-//add_action('init','bapi_sync_entity',1);
-add_action('wp', 'bapi_sync_entity', 10, 1);
+add_action('init','bapi_sync_coredata',1); 	// syncing BAPI core data
+add_action('init','bapi_sync_entity',1);	// syncing BAPI entities (such as properties, developments, etc...)
+add_action('template_redirect', 'google_sitemap'); // sitemap handler
 
 // create custom plugin settings menu
 add_action('admin_menu', 'bapi_create_menu');

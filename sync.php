@@ -51,9 +51,9 @@
 		
 		public function getSEOFromUrl($url) {
 			if (empty($url)) { return null; }			
-			$url = BAPISync::cleanurl($url);
+			$url = BAPISync::cleanurl($url);			
 			foreach ($this->seodata as $seo) {												
-				$turl = BAPISync::cleanurl($seo["DetailURL"]);
+				$turl = BAPISync::cleanurl($seo["DetailURL"]);				
 				if ($turl == $url) { return $seo; }								
 			}
 			return null;
@@ -115,26 +115,27 @@
 		}
 	}
 	
-	function bapi_sync_entity($wp) {
-		global $post;
+	function bapi_sync_entity($wp) {	
+		//global $post;
 		global $bapisync;		
 		if (empty($bapisync)) { 
 			// ERROR: What should we do?
 		}
-						
+		$post = get_page_by_path($_SERVER['REQUEST_URI']);
+		
 		// locate the SEO data stored in Bookt from the requested URL
-		$seo = $bapisync->getSEOFromUrl($wp->request);
+		$seo = $bapisync->getSEOFromUrl($_SERVER['REQUEST_URI']);
 		if (!empty($seo) && (empty($seo["entity"]) || empty($seo["pkid"]))) {
 			$seo = null; // ignore seo info if it doesn't point to a valid entity
 		}		
 		// parse out the meta attributes for the current post
-		$meta = !$isnew ? get_post_custom($post->post_id) : null;
+		$page_exists_in_wp = !empty($post);				
+		$meta = $page_exists_in_wp ? get_post_custom($post->post_id) : null;
 		$last_update = !empty($meta) ? $meta['bapi_last_update'][0] : null;
 		$pagekey = !empty($meta) ? $meta['bapikey'][0] : null;
 		$meta_keywords = !empty($meta) ? $meta['bapi_meta_keywords'][0] : null;
 		$meta_description = !empty($meta) ? $meta['bapi_meta_description'][0] : null;			
-		
-		$page_exists_in_wp = !empty($post);				
+			
 		$do_page_update = false;
 		$do_meta_update = false;
 		$changes = "";
@@ -168,15 +169,16 @@
 		else if (!$page_exists_in_wp && !empty($seo)) {
 			//print_r("case 4");
 			// Result-> Need to create the page
+			$changes = "create new page";
 			$post = new WP_Post();
 			$do_page_update = true;
 			$do_meta_update = true;
 		}
-		
+				
 		// BEGIN TEST		
 		//$do_page_update = true;
 		// END TEST	
-		//print_r($seo); print_r("HERE"); print_r($post);
+		//print_r($seo); print_r("HERE"); print_r($post);		
 		if ($do_page_update) {
 			// do page update
 			$post->comment_status = "close";		
@@ -188,7 +190,7 @@
 			$post->post_type = "page";
 			//print_r($post);
 			if (empty($post->ID)) {
-				$post->ID = wp_insert_post($post, $wp_error);				
+				$post->ID = wp_insert_post($post, $wp_error);
 			} else {
 				wp_update_post($post);
 			}
