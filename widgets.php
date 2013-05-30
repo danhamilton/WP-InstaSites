@@ -32,11 +32,11 @@ class BAPI_Header extends WP_Widget {
 				echo $string;			
 			}
 			else {
-				echo '<div id="poweredby"><a rel="nofollow" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';
+				echo '<div id="poweredby"><a rel="nofollow" target="_blank" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';
 			}
 		}
 		else {
-			echo '<div id="poweredby"><a rel="nofollow" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';
+			echo '<div id="poweredby"><a rel="nofollow" target="_blank" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';
 		}
 		echo $after_widget;
 	}
@@ -83,11 +83,11 @@ class BAPI_Footer extends WP_Widget {
 				echo $string;			
 			}
 			else {
-				echo '<div id="poweredby"><a rel="nofollow" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';
+				echo '<div id="poweredby"><a rel="nofollow" target="_blank" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';
 			}
 		}
 		else {
-			echo '<div id="poweredby"><a rel="nofollow" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';
+			echo '<div id="poweredby"><a rel="nofollow" target="_blank" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';
 		}
 		echo $after_widget;
 	}
