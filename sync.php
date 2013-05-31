@@ -177,13 +177,7 @@
 			$do_page_update = true;
 			$do_meta_update = true;
 		}
-		//print_r($post);
-		//print_r($meta);
-		//print_r($changes); exit();
-		// BEGIN TEST		
-		//$do_page_update = true;
-		// END TEST	
-		//print_r($seo); print_r("HERE"); print_r($post);		
+		
 		if ($do_page_update) {
 			// do page update
 			$post->comment_status = "close";		
@@ -193,13 +187,13 @@
 			$post->post_name = BAPISync::clean_post_name($seo["DetailURL"]);
 			$post->post_parent = get_page_by_path(BAPISync::getRootPath($seo["entity"]))->ID;						
 			$post->post_type = "page";
-			//print_r($post);
+			remove_filter('content_save_pre', 'wp_filter_post_kses');
 			if (empty($post->ID)) {
 				$post->ID = wp_insert_post($post, $wp_error);
 			} else {
 				wp_update_post($post);
-			}
-			//print_r($post);
+			}						
+			add_filter('content_save_pre', 'wp_filter_post_kses');
 		}
 		if ($do_meta_update || $do_page_update) {
 			// update the meta tags					
@@ -208,10 +202,7 @@
 			does_meta_exist("bapi_meta_keywords", $meta) ? update_post_meta($post->ID, 'bapi_meta_keywords', $seo["MetaKeywords"]) : add_post_meta($post->ID, 'bapi_meta_keywords', $seo["MetaKeywords"], true);
 			does_meta_exist("_wp_page_template", $meta) ? update_post_meta($post->ID, "_wp_page_template", BAPISync::getPageTemplate($seo["entity"])) : add_post_meta($post->ID, "_wp_page_template", BAPISync::getPageTemplate($seo["entity"]), true);
 			does_meta_exist("bapikey", $meta) ? update_post_meta($post->ID, "bapikey", BAPISync::getPageKey($seo["entity"],$seo["pkid"])) : add_post_meta($post->ID, "bapikey", BAPISync::getPageKey($seo["entity"],$seo["pkid"]), true);			
-		}
-		//print_r($seo);
-		//print_r($meta);
-		//print_r($post);		
+		}		
 	}
 	
 	function does_meta_exist($name, $meta) {
