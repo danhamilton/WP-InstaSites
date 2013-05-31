@@ -243,7 +243,10 @@
 		$metad = str_replace('"', "", $metad);
 		$metad = str_replace("'", "", $metad);
 		
-		?><meta name="KEYWORDS" content="<?= $metak ?>" /><?= "\n" ?><meta name="DESCRIPTION" content="<?= $metad ?>" /><?= "\n" ?><?php
+		$lastu = (int) get_post_meta($pid,'bapi_last_update',true);
+		$lastu = date('r',$lastu);
+		
+		?><meta name="LASTMOD" content="<?= $lastu ?>" /><?= "\n" ?><meta name="KEYWORDS" content="<?= $metak ?>" /><?= "\n" ?><meta name="DESCRIPTION" content="<?= $metad ?>" /><?= "\n" ?><?php
 	}
 	
 	function getBAPIObj() {

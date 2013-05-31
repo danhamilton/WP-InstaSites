@@ -45,7 +45,7 @@ function google_sitemap() {
 		continue;
 	if ( ! empty( $post->post_title ) ) {
 		// prevent outputing detail screens which can be determined by seeing if the post has a meta bapikey
-		$bapikey = get_post_meta($post-ID, "bapikey", true);
+		$bapikey = get_post_meta($post->ID, "bapikey", true);
 		if (empty($bapikey)) {
 			$xml .= "\t<url>\n";
 			$xml .= "\t\t<loc>" . get_permalink( $post->ID ) . "</loc>\n";

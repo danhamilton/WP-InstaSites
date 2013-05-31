@@ -149,8 +149,11 @@
 		else if ($page_exists_in_wp && !empty($seo)) {
 			//print_r("case 2");
 			// Action: Cheeck if an update is needed
-			// TODO: update is needed if refresh time has elapsed			
+			// TODO: update is needed if refresh time has elapsed
 			
+			if(empty($meta['bapi_last_update'])||((time()-$meta['bapi_last_update'][0])>3600)){		
+				$changes = $changes."|bapi_last_update"; $do_page_update = true;
+			}
 			// check for difference in meta description
 			if ($meta['bapi_meta_description'][0] != $seo["MetaDescrip"]) { $changes = $changes."|meta_description"; $do_meta_update = true; }	
 			// check for difference in meta keywords
@@ -170,7 +173,7 @@
 			//print_r("case 4");
 			// Result-> Need to create the page
 			$changes = "create new page";
-			$post = new WP_Post();
+			$post = new WP_Post(null);
 			$do_page_update = true;
 			$do_meta_update = true;
 		}
@@ -198,6 +201,7 @@
 		}
 		if ($do_meta_update || $do_page_update) {
 			// update the meta tags
+			update_post_meta($post->ID, 'bapi_last_update', time());
 			update_post_meta($post->ID, 'bapi_meta_description', $seo["MetaDescrip"]);
 			update_post_meta($post->ID, 'bapi_meta_keywords', $seo["MetaKeywords"]);
 			update_post_meta($post->ID, "_wp_page_template", BAPISync::getPageTemplate($seo["entity"]));
