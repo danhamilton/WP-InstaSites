@@ -5,9 +5,9 @@ class BAPI
 	public $apikey;
 	public $language = 'en-US';
     public $currency = 'USD';
-    public $baseURL = 'https://connect.bookt.com';
+    public $baseURL = 'connect.bookt.com';
 	
-	public function __construct($apikey, $language, $baseURL) {
+	public function __construct($apikey, $language="en-US", $baseURL='connect.bookt.com') {
 		$this->apikey = $apikey;
 		$this->language = $language;
 		$this->baseURL = $baseURL;
@@ -41,7 +41,7 @@ class BAPI
 		return $c;
 	}
 	
-	public function getseodata($jsondecode) {
+	public function getseodata($jsondecode=true) {
 		if (!$this->isvalid()) { return null; }
 		$c = file_get_contents($this->getBaseURL() . '/ws/?method=get&entity=seo&apikey=' . $this->apikey . '&language=' . $this->language);
 		if ($jsondecode) {return json_decode($c,TRUE); }
@@ -60,25 +60,25 @@ class BAPI
 		}
 	}
 	
-	public function search($entity,$options,$jsondecode) {
+	public function search($entity,$options=null,$jsondecode=true) {
 		if (!$this->isvalid()) { return null; }
 		$url = $this->getBaseURL() . "/ws/?method=search&apikey=" . $this->apikey . "&entity=" . $entity;
 		if (!empty($options)) { $url = $url . "&" . http_build_query($options); }		
 		$c = file_get_contents($url);		
-		if (empty($jsondecode) || $jsondecoe) { return json_decode($c,TRUE); }
+		if (empty($jsondecode) || $jsondecode) { return json_decode($c,TRUE); }
 		return $c;
 	}
 	
-	public function get($entity,$ids,$options,$jsondecode=false) {
+	public function get($entity,$ids,$options=null,$jsondecode=true) {
 		if (!$this->isvalid()) { return null; }
 		$url = $this->getBaseURL() . "/ws/?method=get&apikey=" . $this->apikey . "&entity=" . $entity . '&ids=' . implode(",", $ids);
 		if (!empty($options)) { $url = $url . "&" . http_build_query($options); }		
 		$c = file_get_contents($url);
-		if (empty($jsondecode) || $jsondecoe) { return json_decode($c,TRUE); }
+		if (empty($jsondecode) || $jsondecode) { return json_decode($c,TRUE); }
 		return $c;
 	}	
 	
-	public function del($entity,$ids,$options,$jsondecode) {
+	public function del($entity,$ids,$options,$jsondecode=true) {
 		if (!$this->isvalid()) { return null; }
 		$optionsURL = implode("&", $options);
 		//$url = $this->getBaseURL . "/ws/?method=get&apikey=" . $this->apikey . "&entity=" . $entity . '&ids' . implode(",", $ids);
@@ -89,7 +89,7 @@ class BAPI
 		return null;
 	}
 	
-	public function save($entity,$postdata,$jsondecode) {
+	public function save($entity,$postdata,$jsondecode=true) {
 		if (!$this->isvalid()) { return null; }
 		$optionsURL = implode("&", $options);
 		//$url = $this->baseURL . "/ws/?method=get&apikey=" . $this->apikey . "&entity=" . $entity . '&ids' . implode(",", $ids);

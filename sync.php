@@ -130,7 +130,7 @@
 		}		
 		// parse out the meta attributes for the current post
 		$page_exists_in_wp = !empty($post);				
-		$meta = $page_exists_in_wp ? get_post_custom($post->post_id) : null;
+		$meta = $page_exists_in_wp ? get_post_custom($post->ID) : null;
 		$last_update = !empty($meta) ? $meta['bapi_last_update'][0] : null;
 		$pagekey = !empty($meta) ? $meta['bapikey'][0] : null;
 		$meta_keywords = !empty($meta) ? $meta['bapi_meta_keywords'][0] : null;
@@ -177,7 +177,9 @@
 			$do_page_update = true;
 			$do_meta_update = true;
 		}
-				
+		//print_r($post);
+		//print_r($meta);
+		//print_r($changes); exit();
 		// BEGIN TEST		
 		//$do_page_update = true;
 		// END TEST	
@@ -200,17 +202,22 @@
 			//print_r($post);
 		}
 		if ($do_meta_update || $do_page_update) {
-			// update the meta tags
-			update_post_meta($post->ID, 'bapi_last_update', time());
-			update_post_meta($post->ID, 'bapi_meta_description', $seo["MetaDescrip"]);
-			update_post_meta($post->ID, 'bapi_meta_keywords', $seo["MetaKeywords"]);
-			update_post_meta($post->ID, "_wp_page_template", BAPISync::getPageTemplate($seo["entity"]));
-			update_post_meta($post->ID, "bapikey", BAPISync::getPageKey($seo["entity"],$seo["pkid"]));
-			//update_post_meta($post->ID, "bapi_last_update", ??) // Do we really need this? Can't we use last publish time?
+			// update the meta tags					
+			does_meta_exist("bapi_last_update", $meta) ? update_post_meta($post->ID, 'bapi_last_update', time()) : add_post_meta($post->ID, 'bapi_last_update', time(), true);
+			does_meta_exist("bapi_meta_description", $meta) ? update_post_meta($post->ID, 'bapi_meta_description', $seo["MetaDescrip"]) : add_post_meta($post->ID, 'bapi_meta_description', $seo["MetaDescrip"], true);
+			does_meta_exist("bapi_meta_keywords", $meta) ? update_post_meta($post->ID, 'bapi_meta_keywords', $seo["MetaKeywords"]) : add_post_meta($post->ID, 'bapi_meta_keywords', $seo["MetaKeywords"], true);
+			does_meta_exist("_wp_page_template", $meta) ? update_post_meta($post->ID, "_wp_page_template", BAPISync::getPageTemplate($seo["entity"])) : add_post_meta($post->ID, "_wp_page_template", BAPISync::getPageTemplate($seo["entity"]), true);
+			does_meta_exist("bapikey", $meta) ? update_post_meta($post->ID, "bapikey", BAPISync::getPageKey($seo["entity"],$seo["pkid"])) : add_post_meta($post->ID, "bapikey", BAPISync::getPageKey($seo["entity"],$seo["pkid"]), true);			
 		}
 		//print_r($seo);
 		//print_r($meta);
 		//print_r($post);		
+	}
+	
+	function does_meta_exist($name, $meta) {
+		if (empty($meta)) { return false; }
+		if (empty($meta[$name])) { return false; }
+		return true;
 	}
 	
 	function bapi_sync_coredata() {
@@ -258,62 +265,6 @@
 				update_option('bapi_keywords_array',$data);
 				update_option('bapi_keywords_lastmod',time());
 			}					
-		}
-		
-		/*
-		$time_start = microtime(true); 
-		$seodata = BAPISync::getSEOData();		
-		$count = 1;
-		foreach ($seodata as $seo) {
-			bapi_sync_basedetailfromseo($seo);				
-			$count++;
-			if ($count==3) break;
-		}
-		$time_end = microtime(true);
-		$execution_time = ($time_end - $time_start);
-		//echo '<br/><b>Total Execution Time:</b> '.$execution_time.' seconds';
-		*/
+		}	
 	}	
-	
-	function bapi_sync_basedetailfromseo($seo) {
-		$entity = $seo["entity"];
-		$pkid = $seo["pkid"];
-		if (empty($entity) || empty($pkid)) return;
-		$pagekey = BAPISync::getPageKey($entity,$pkid);
-		
-		$args = array('meta_key' => 'bapikey', 'meta_value' => $pagekey);
-		$tst = get_pages($args);
-		//print_r($tst);
-		$thepost = array();
-		$isnew = true;		
-		foreach ($posts_array as $page) {
-			$thepost['ID'] = $page->ID;
-			$isnew = false;
-		}
-				
-		$thepost['post_title'] = wp_strip_all_tags($seo["PageTitle"]);
-		$thepost['post_name'] = wp_strip_all_tags($seo["Keyword"]);
-		$thepost['post_type'] = 'page';
-		$thepost['post_status'] = 'publish';
-		$thepost['comment_status'] = 'closed';
-		$thepost['post_parent'] = get_page_by_path(BAPISync::getRootPath($entity))->ID;				
-		/*
-		$pid = $isnew ? wp_insert_post($thepost,$wp_error) : wp_update_post($thepost,$wp_error);
-		add_post_meta($pid, 'bapi_last_update', time(), true);
-		add_post_meta($pid, 'bapikey', getPageKeyForEntity($entity, $pkid), true);
-		add_post_meta($pid, 'bapi_meta_keywords', $metak, true);
-		add_post_meta($pid, 'bapi_meta_description', $metad, true);	
-		update_post_meta($pid, "_wp_page_template", $pagetemplate);	
-		*/
-		//print_r($tst);
-		//print_r($pagekey); print_r("<br />");
-		
-		return;
-	}
-	
-	/*function getPageForEntity($entity, $pkid, $parentid) {
-		$pagekey = getPageKeyForEntity($entity, $pkid);
-		$args = array('meta_key' => 'bapikey', 'meta_value' => $pagekey, 'child_of' => $parentid);
-		return get_pages($args);		
-	}*/
 ?>
