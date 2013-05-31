@@ -103,8 +103,9 @@
 			if (!$bapi->isvalid()) { return; }
 			$pkid = array(intval($pkid));			
 			$options = $entity == "property" ? array("seo" => 1, "descrip" => 1, "avail" => 1, "rates" => 1) : null;
-			$c = $bapi->get($entity,$pkid,$options);			
-			$c["config"] = null;
+			$c = $bapi->get($entity,$pkid,$options);						
+			$c["config"] = BAPISync::getSolutionData();
+			$c["config"] = $c["config"]["ConfigObj"];
 			$c["textdata"] = BAPISync::getTextData();
 			$m = new Mustache_Engine();
 			$string = $m->render($template, $c);				
@@ -148,12 +149,7 @@
 		// case 2: pages exists in wp and in Bookt
 		else if ($page_exists_in_wp && !empty($seo)) {
 			//print_r("case 2");
-			// Action: Cheeck if an update is needed
-			// TODO: update is needed if refresh time has elapsed
-			
-			if(empty($meta['bapi_last_update'])||((time()-$meta['bapi_last_update'][0])>3600)){		
-				$changes = $changes."|bapi_last_update"; $do_page_update = true;
-			}
+			if(empty($meta['bapi_last_update'])||((time()-$meta['bapi_last_update'][0])>3600)){	$changes = $changes."|bapi_last_update"; $do_page_update = true; }
 			// check for difference in meta description
 			if ($meta['bapi_meta_description'][0] != $seo["MetaDescrip"]) { $changes = $changes."|meta_description"; $do_meta_update = true; }	
 			// check for difference in meta keywords
@@ -177,7 +173,7 @@
 			$do_page_update = true;
 			$do_meta_update = true;
 		}
-		
+
 		if ($do_page_update) {
 			// do page update
 			$post->comment_status = "close";		

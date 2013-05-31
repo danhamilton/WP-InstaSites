@@ -151,8 +151,8 @@ context.inithelpers = {
 				BAPI.get(pkid, BAPI.entities.property, { "avail": 1 }, function(data) {
 					var selector = '#' + ctl.attr('id');
 					var options = {};
-					try { options = $.parseJSON(ctl.attr('data-options')); } catch(err) {}
-					BAPI.log("Creating availability calendar for " + selector);	
+					try { options = $.parseJSON(ctl.attr('data-options')); } catch(err) { }
+					BAPI.log("Creating availability calendar for " + selector);						
 					context.createAvailabilityWidget(selector, data, options);
 				});		
 			}
@@ -359,7 +359,7 @@ context.createRateBlockWidget = function (targetid, options) {
 		data.config = BAPI.config();
 		data.textdata = BAPI.textdata;
 		data.session = BAPI.session;
-		if (options.log) { BAPI.log("--createSearchWidget.res--"); BAPI.log(data); }
+		//if (options.log) { BAPI.log("--createSearchWidget.res--"); BAPI.log(data); }
 		$(targetid).html(Mustache.render(options.template, data));
 		
 		context.createDatePicker('.datepickercheckin', { "property": p, "checkoutID": '.datepickercheckout' });
@@ -503,6 +503,7 @@ context.createAvailabilityWidget = function (targetid, data, options) {
 	if (typeof (options.languageISO) === "undefined" || options.languageISO === null) { options.languageISO = ''; }
 	if (typeof(options.numinrow)==="undefined" || options.numinrow===null || options.numinrows<=0) { options.numinrow = 1; }
 	options.numberOfMonths = [ Math.ceil(options.availcalendarmonths / options.numinrow), options.numinrow ];
+	
 	var p = data.result[0];		
 	if (options.languageISO=='en' && options.language!='en-AU' && options.language!='en-GB' && options.language!='en-NZ') {
 		$.datepicker.setDefaults( $.datepicker.regional[''] );
@@ -732,7 +733,7 @@ function createDatePickerPickadate(targetid, options) {
 			}
 		});				
 	}
-	BAPI.log(blockouts);
+	//BAPI.log(blockouts);
 	var poptions = {};	
 	if (ctl.hasClass("datepickercheckin")) {
 		poptions = {
