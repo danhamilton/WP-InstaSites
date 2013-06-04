@@ -42,6 +42,7 @@ add_action('wp_head','bapi_getmeta',1);
 add_action('init','bapi_sync_coredata',1); 	// syncing BAPI core data
 add_action('init','bapi_sync_entity',1);	// syncing BAPI entities (such as properties, developments, etc...)
 add_action('template_redirect', 'google_sitemap'); // sitemap handler
+add_action('init','disable_kses_content',20);
 
 // create custom plugin settings menu
 add_action('admin_menu', 'bapi_create_menu');

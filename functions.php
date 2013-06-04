@@ -252,4 +252,10 @@
 	function getBAPIObj() {
 		return new BAPI(get_option('api_key'), get_option('bapi_language'), get_option('bapi_baseurl'));
 	}		
+	
+	function disable_kses_content() {
+		if(is_admin()||is_super_admin()){
+			remove_filter('content_save_pre', 'wp_filter_post_kses');
+		}
+	}
 ?>
