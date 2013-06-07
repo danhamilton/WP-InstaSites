@@ -79,9 +79,13 @@ context.inithelpers = {
 			var ctl = $(item);		
 			var dologging = (ctl.attr('data-log') == '1');
 			var searchoptions = null;
-			try { searchoptions = $.parseJSON(ctl.attr('data-searchoptions')); } catch(err) {}
+			try { 
+				searchoptions = $.parseJSON(ctl.attr('data-searchoptions')); 
+				if (searchoptions.similarto) { searchoptions.similarto = BAPI.curentity.ID; }
+			} catch(err) {}
 			var selector = '#' + ctl.attr('id');
-			BAPI.log("Creating summary widget for " + selector);
+			BAPI.log("Creating summary widget for " + selector);			
+			BAPI.log(searchoptions);
 			context.createSummaryWidget(selector, { 
 					"searchoptions": searchoptions, 
 					"entity": ctl.attr('data-entity'), 

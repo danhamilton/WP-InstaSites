@@ -1,6 +1,6 @@
 WP-InstaSites
 ===================================
-The InstaSite plugin provides direct integration into the InstaManager application
+The InstaSite plugin provides direct integration into the InstaManager application.  InstaManager is cloud based vacation rental software which powers vacation rental property managers around the world.
 
 Features
 - Responsive themes
