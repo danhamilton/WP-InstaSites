@@ -1071,7 +1071,7 @@ function BookingHelper_BookHandler(targetid, options, propid) {
 		if (BAPI.isempty(reqdata.CheckOut)) { reqdata.CheckOut = BAPI.session.searchparams.checkout; }
 		if (BAPI.isempty(reqdata.NumAdults)) { reqdata.NumAdults = BAPI.session.searchparams.adults.min; }
 		if (BAPI.isempty(reqdata.NumChildren)) { reqdata.NumChildren = BAPI.session.searchparams.children.min; }
-		if (BAPI.isempty(reqdata.NumRooms)) { reqdata.NumRooms = BAPI.session.searchparams.rooms.min; }
+		if (BAPI.isempty(reqdata.NumRooms)) { reqdata.NumRooms = BAPI.session.searchparams.rooms.min; }		
 		
 		$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
 		if (typeof(reqdata.special)!=="undefined" && reqdata.special!==null && reqdata.special!='') {
@@ -1080,6 +1080,9 @@ function BookingHelper_BookHandler(targetid, options, propid) {
 			return; // special textbox has a value, not a real person
 		}
 		
+		// do extra cleanup on checkin/checkout
+		try { reqdata.CheckIn = moment(reqdata.CheckIn).format(BAPI.defaultOptions.dateFormatBAPI); } catch(err) {}
+		try { reqdata.CheckOut = moment(reqdata.CheckOut).format(BAPI.defaultOptions.dateFormatBAPI); } catch(err) {}
 		var postdata = { "data": JSON.stringify(reqdata) };
 		BAPI.save(BAPI.entities.booking, postdata, function(bres) {		
 			BAPI.log(bres);
