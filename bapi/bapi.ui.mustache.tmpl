@@ -130,10 +130,7 @@
 		{{#ContextData.Quote.QuoteDisplay.suffix}}<span classs="input-small">/{{ContextData.Quote.QuoteDisplay.suffix}}</span>{{/ContextData.Quote.QuoteDisplay.suffix}}
 		{{/ContextData.Quote.IsValid}}			
 	</div>       
-	{{#ContextData.Quote.IsValid}}	
-		{{^IsBookable}}
-		<button class="book-btn btn btn-large btn-warning bapi-inquirynow" type="button">{{textdata.Inquire Now}}</button>
-		{{/IsBookable}}
+	{{#ContextData.Quote.IsValid}}
 		{{#IsBookable}}
 		<button class="book-btn btn btn-large btn-warning bapi-booknow" type="button">{{textdata.Book Now}}</button>
 		{{/IsBookable}}
