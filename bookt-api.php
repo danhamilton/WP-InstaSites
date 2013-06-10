@@ -31,6 +31,7 @@ include_once(dirname( __FILE__ ).'/widgets.php');
 include_once(dirname( __FILE__ ).'/sync.php');
 include_once(dirname( __FILE__ ).'/google-xml-sitemap.php');
 include_once(dirname( __FILE__ ).'/cdn-linker/wp-cdn-linker.php');
+require_once('bapi-php/bapi.php');
 
 add_filter('home_url','home_url_cdn',1,2);
 add_filter('wp_head','add_server_name_meta',1);
@@ -40,9 +41,11 @@ add_action('template_redirect', 'do_ossdl_off_ob_start');
 add_action('wp_head','getconfig');
 add_action('wp_head','bapi_getmeta',1);
 add_action('init','bapi_sync_coredata',1); 	// syncing BAPI core data
-add_action('init','bapi_sync_entity',1);	// syncing BAPI entities (such as properties, developments, etc...)
-add_action('template_redirect', 'google_sitemap'); // sitemap handler
+add_action('init','bapi_sync_entity',2);	// syncing BAPI entities (such as properties, developments, etc...)
+add_action('init','urlHandler_bapitextdata',3);	// handler for /bapi.textdata.js
+add_action('init','urlHandler_bapitemplates',3);	// handler for /bapi.templates.js
 add_action('init','disable_kses_content',20);
+add_action('template_redirect', 'google_sitemap'); // sitemap handler
 
 // create custom plugin settings menu
 add_action('admin_menu', 'bapi_create_menu');

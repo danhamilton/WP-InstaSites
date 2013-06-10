@@ -1,4 +1,4 @@
-<?php		
+<?php				
 	// handle if this is a post
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		update_option('bapi_site_cdn_domain', $_POST['bapi_site_cdn_domain']);
@@ -25,7 +25,7 @@
 	$sitelive = get_option('bapi_sitelive');		
 	$sitelive = empty($sitelive) ? '' : 'checked';
 	
-	$cloudfronturl = get_option('bapi_cloudfronturl');
+	$cloudfronturl = get_option('bapi_cloudfronturl');		
 ?> 
 <script type="text/javascript" src="<?= plugins_url('/js/jquery.1.9.1.min.js', __FILE__) ?>" ></script>
 <script type="text/javascript">

@@ -1,6 +1,48 @@
-<?php
+<?php	
+	
+	/* BAPI url handlers */
+	function urlHandler_bapitextdata() {
+		$url = get_relative($_SERVER['REQUEST_URI']);
+		if (strtolower($url) != "/bapi.textdata.js")
+			return; // not our handler
+		
+		header('Content-Type: application/javascript');	
+		header('Cache-Control: public');
 
-	require_once('bapi-php/bapi.php');
+		$expires = round((60*10 + $lastupdatetime), 2); // expires every 10 mins
+		$expires = gmdate('D, d M Y H:i:s \G\M\T', $expires);
+		header( 'Expires: ' . $expires );
+		
+		$js = get_option('bapi_textdata'); // core data should have been synced prior to this
+		echo "/*\r\n";
+		echo "	BAPI TextData\r\n";
+		echo "	Last updated: " . date('r',$lastupdatetime) . "\r\n";	
+		echo "	Language: " . getbapilanguage() . "\r\n";
+		echo "*/\r\n\r\n";
+		echo "BAPI.textdata = " . $js . ";\r\n";
+		exit();
+	}
+	
+	function urlHandler_bapitemplates() {
+		$url = get_relative($_SERVER['REQUEST_URI']);
+		if (strtolower($url) != "/bapi.templates.js")
+			return; // not our handler
+		
+		header('Content-Type: application/javascript');	
+		header('Cache-Control: public');
+		//header( 'Expires: Sat, 26 Jul 1997 05:00:00 GMT' );
+				 
+		$path = plugins_url('bapi/bapi.ui.mustache.tmpl', __FILE__);
+		$path = get_relative($path);
+		$path = realpath(substr($path,1));
+		$c = file_get_contents($path);
+		$j2 = rawurlencode($c); //addslashes($c);	
+		echo "var t = '" . $j2 . "';\r\n";	
+		echo "t = decodeURIComponent(t);\r\n";
+		echo "BAPI.templates.set(t);\r\n";	
+		exit();
+	}
+	
 	
 	/* Converted a url to a physical file path */
 	function get_local($url) {
@@ -114,8 +156,8 @@
 <![endif]-->
 <script type="text/javascript" src="<?= getbapijsurl($apiKey) ?>"></script>
 <script type="text/javascript" src="<?= get_relative(plugins_url('/bapi/bapi.ui.js', __FILE__)) ?>" ></script>		
-<script type="text/javascript" src="<?= get_relative(plugins_url('bapi.textdata.php', __FILE__)) ?>" ></script>		
-<script type="text/javascript" src="<?= get_relative(plugins_url('bapi.templates.php', __FILE__)) ?>" ></script>		
+<script type="text/javascript" src="/bapi.textdata.js" ></script>		
+<script type="text/javascript" src="/bapi.templates.js" ></script>		
 <script type="text/javascript">		
 	BAPI.UI.loading.setLoadingImgUrl('<?= get_relative(plugins_url("/img/loading.gif", __FILE__)) ?>');
 	BAPI.site.url =  '<?= $siteurl ?>';

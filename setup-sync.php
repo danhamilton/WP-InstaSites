@@ -19,20 +19,7 @@
 </div>	
 <div class="clear"></div>				
 <small>Note: Permalink Settings should be set to Post name for the menu structure to function correctly.</small>
-
 <div class="clear"></div>
-<br />
-<h3>Bulk Update Actions</h3>
-<div style="margin-top:-5px;">			
-	<input class="button-primary import" value="Import All" data-entity="property" data-template="tmpl-properties-detail" data-parentmenu="bapi_search"> 			
-	<select id="importtype">
-		<option value="property">Property</option>
-		<option value="development">Development</option>
-		<option value="specials">Specials</option>
-		<option value="poi">Attractions</option>
-		<option value="searches">Searches</option>
-	</select>
-</div>
 
 <br />
 <h3>Base URLs</h3>
@@ -91,47 +78,7 @@
 	}
 	$(document).ready(function($){
 	
-		$("#tabs").tabs();  
-		
-		$(".import").on("click", function () {			
-			var entity = $('#importtype').val();
-			var params = getImportParams(entity);
-			var template = BAPI.templates.get(params.template);			
-			if (typeof(template)==="undefined") {
-				return alert('Unable to find the template: ' + params.template);
-			}
-			
-			if (confirm("Are you sure you want to import this data?")) {				
-				$('#dlg-result').dialog({width:700});
-				var txtresult = $('#dlg-txtresult');
-				txtresult.html('<h5>Importing Data</h5>');
-				txtresult.append('<div>Requesting ids from BAPI...</div>');
-				BAPI.search(entity, null, function (data) { 
-					txtresult.append('<div>BAPI returned ' + data.result.length + ' results.</div>');
-					$.each(data.result, function (i, pkid) {
-//if (i==0) {
-						BAPI.get(pkid, entity, { "nearbyprops": 1, "avail": 1, "reviews": 1, "seo": 1, "descrip": 1, "rates": 1, "poi": 1 }, function(pdata) {
-							pdata.config = BAPI.config();
-							pdata.textdata = BAPI.textdata;
-							var url = '<?= plugins_url('/import.php?p=1', __FILE__) ?>';
-							params.pkid = pkid;
-							params.PrimaryImage = pdata.result[0].PrimaryImage.MediumURL;
-							params.BookingURL = pdata.result[0].ContextData.SEO.BookingURL;
-							params.DetailURL = pdata.result[0].ContextData.SEO.DetailURL;
-							params.Keyword = pdata.result[0].ContextData.SEO.Keyword;
-							params.MetaDescrip = pdata.result[0].ContextData.SEO.MetaDescrip;
-							params.PageTitle = pdata.result[0].ContextData.SEO.PageTitle;
-							if (BAPI.isempty(params.PageTitle) || params.PageTitle=='') { params.PageTitle = pdata.result[0].Name; }
-							params.content = Mustache.to_html(template, pdata);							
-							BAPI.utils.dopost(url, params, function(res) {
-								txtresult.append(res);
-							});
-						});														
-//}
-					});					
-				});						
-			}
-		});
+		$("#tabs").tabs();  			
 		
 		var pagedefs = [
 			{ "title": "Home", "url": "", "intid": "bapi_home", "parent": "", "order": 1, "template": "page-templates/front-page.php", "content": '/default-content/home.php', "addtomenu": false },
