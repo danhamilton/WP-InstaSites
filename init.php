@@ -1,17 +1,22 @@
-<?php
-	require_once ('../../../wp-load.php');
-	
-	$menuname = "Main Navigation Menu";
-	$menu_id = initmenu($menuname);
-	
-	$pagedefs = $_POST['pagedefs'];
-	$navmap = array();
-	foreach ($pagedefs as $pagedef) {
-		addpage($pagedef, $menu_id);
-		//print_r($pagedef);
-		//print_r("<br />");
+<?php	
+	function urlHandler_bapidefaultpages() {
+		$url = get_relative($_SERVER['REQUEST_URI']);
+		//echo $url; exit();
+		if (strtolower($url) != "/bapi.init")
+			return;
+		$menuname = "Main Navigation Menu";
+		$menu_id = initmenu($menuname);
+		
+		$pagedefs = $_POST['pagedefs'];
+		$navmap = array();
+		foreach ($pagedefs as $pagedef) {
+			addpage($pagedef, $menu_id);
+			//print_r($pagedef);
+			//print_r("<br />");
+		}
+		//return;
+		exit();
 	}
-	return;
 	
 	
 	function addpage($pagedef, $menu_id) {
