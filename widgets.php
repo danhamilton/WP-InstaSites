@@ -368,7 +368,7 @@ class BAPI_Inquiry_Form extends WP_Widget {
 
 		echo $before_widget;
 		if ( ! empty( $title ) )
-			//echo $before_title . $title . $after_title;
+			echo $before_title . $title . $after_title;
 		?>
 		<div id="bapi-inquiryform" class="bapi-inquiryform" data-templatename="tmpl-leadrequestform-propertyinquiry" data-log="0"></div>        
         <?php
@@ -607,7 +607,6 @@ class BAPI_Similar_Properties extends WP_Widget {
 		extract($args);
 		$title = apply_filters('widget_title',$instance['title']);
 		$pagesize = esc_textarea($instance['text']);
-		if(empty($pagesize)) { $pagesize = 3; }
 		$rowsize = intval($instance['rowsize']);
 		if($rowsize<=0) { $rowsize=1; }
 		
@@ -615,7 +614,7 @@ class BAPI_Similar_Properties extends WP_Widget {
 		if(!empty($title))
 			echo $before_title.$title.$after_title;
 		?>
-        <div id="featuredproperties" class="bapi-summary" data-log="0" data-templatename="tmpl-featuredproperties-quickview" data-entity="property" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random", "similarto": true }' data-rowfixselector=".fp-featured" data-rowfixcount="<?= $rowsize ?>"></div>
+        <div id="featuredproperties" class="bapi-summary" data-log="0" data-templatename="tmpl-featuredproperties-quickview" data-entity="property" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }' data-rowfixselector=".fp-featured" data-rowfixcount="<?= $rowsize ?>"></div>
 		<?php
 		echo $after_widget;
 	}
