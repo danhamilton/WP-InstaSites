@@ -824,10 +824,26 @@
 */
 <script id="tmpl-attractions-summary-list" type="text/html">
 <div id="poi-map-prop" class="bapi-map" data-loc-selector='.poi-map-location' data-link-selector='.poi-map-item' style="width:100%; height:350px; float:left;"></div>
-<ul id="map-locations">
+<section class="row-fluid search-result-controls attraction-result-controls">
+<div class="span6">
+	<p class="showing"></p>    
+</div>
+<div class="span6 form-horizontal">
+	<div class="control-group control-group-attraction">
+			&nbsp;
+		</div>
+	</div>
+</div>
+</section>
+<div id="map-locations">
 {{#result}}
-<li class="poi-map-location" data-id="{{ContextData.ItemIndex}}" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}} }, "category": "poi"}'>
-	<div class="info-html">
+<div class="rowfix">
+  <div class="item-result">
+	<div class="item-inner">
+	  <div class="item-images">	  
+	  <div class="poi-map-location" data-id="{{ContextData.ItemIndex}}" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}} }, "category": "poi"}'>
+	  <a href="#" class="poi-map-item"><div class="number-tag">{{&ContextData.ItemIndex}}</div></a>
+	  <div class="info-html">
 	<div class="marker-infowindow"> 		
 		<span class="prop-image pull-left"><img style="max-height:175px; max-width:175px" src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>
 		<span class="prop-location pull-left">
@@ -841,28 +857,7 @@
 		</span>
 	</div>
 	</div>	
-</li>
-{{/result}}
-</ul>
-
-<section class="row-fluid search-result-controls attraction-result-controls">
-<div class="span6">
-	<p class="showing"></p>    
-</div>
-<div class="span6 form-horizontal">
-	<div class="control-group control-group-attraction">
-			&nbsp;
-		</div>
-	</div>
-</div>
-</section>
-
-{{#result}}
-<div class="rowfix">
-  <div class="item-result">
-	<div class="item-inner">
-	  <div class="item-images">
-	  <div class="number-tag">{{&ContextData.ItemIndex}}</div>
+	  </div>	  
 	  {{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
 	  <img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" />
 	  {{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
@@ -877,7 +872,8 @@
 	</div>
   </div>
 </div>
-{{/result}}  
+{{/result}}
+</div>
 <div class="clearfix"></div>
 {{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalcount}})</a></span></div>{{/islastpage}}
 {{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
