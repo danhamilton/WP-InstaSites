@@ -32,6 +32,7 @@ include_once(dirname( __FILE__ ).'/sync.php');
 include_once(dirname( __FILE__ ).'/google-xml-sitemap.php');
 include_once(dirname( __FILE__ ).'/cdn-linker/wp-cdn-linker.php');
 require_once('bapi-php/bapi.php');
+require_once('init.php');
 
 add_filter('home_url','home_url_cdn',1,2);
 add_filter('wp_head','add_server_name_meta',1);
@@ -44,6 +45,7 @@ add_action('init','bapi_sync_coredata',1); 	// syncing BAPI core data
 add_action('init','bapi_sync_entity',2);	// syncing BAPI entities (such as properties, developments, etc...)
 add_action('init','urlHandler_bapitextdata',3);	// handler for /bapi.textdata.js
 add_action('init','urlHandler_bapitemplates',3);	// handler for /bapi.templates.js
+add_action('init','urlHandler_bapidefaultpages',3);	// handler for /bapi.init
 add_action('init','disable_kses_content',20);
 add_action('template_redirect', 'google_sitemap'); // sitemap handler
 

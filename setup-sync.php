@@ -109,7 +109,7 @@
 				$('#dlg-result').dialog({width:700});
 				var txtresult = $('#dlg-txtresult');
 				txtresult.html('<h5>Setting up menu system</h5>');
-				var url = '<?= plugins_url('/init.php?p=1', __FILE__) ?>';
+				var url = '/bapi.init?p=1';
 				BAPI.utils.dopost(url, { "pagedefs": pagedefs }, function(res) {
 					txtresult.append(res);
 				});
