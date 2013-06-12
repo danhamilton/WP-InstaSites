@@ -654,7 +654,7 @@
 		{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 	</div>
 	<div class="fp-outer"> 
-	<div class="fp-title"><a href='{{ContextData.SEO.DetailURL}}'>{{Headline}}</a></div>
+	<div class="fp-title">{{#ContextData.SEO.Keyword}}<a href='{{ContextData.SEO.DetailURL}}'>{{/ContextData.SEO.Keyword}}{{Headline}}{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}</div>
 	{{#NumReviews}}<div class="fpstar{{AvgReview}}"></div>{{/NumReviews}}
 	<div class="fp-details">
 		<b class="hidden-phone">{{Type}}</b>
