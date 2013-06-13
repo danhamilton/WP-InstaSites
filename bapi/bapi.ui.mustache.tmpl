@@ -654,7 +654,7 @@
 		{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 	</div>
 	<div class="fp-outer"> 
-	<div class="fp-title"><a href='{{ContextData.SEO.DetailURL}}'>{{Headline}}</a></div>
+	<div class="fp-title">{{#ContextData.SEO.Keyword}}<a href='{{ContextData.SEO.DetailURL}}'>{{/ContextData.SEO.Keyword}}{{Headline}}{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}</div>
 	{{#NumReviews}}<div class="fpstar{{AvgReview}}"></div>{{/NumReviews}}
 	<div class="fp-details">
 		<b class="hidden-phone">{{Type}}</b>
@@ -1255,7 +1255,7 @@
 		</li>
 		<li id="lsform">
 			<select class="span12 leadrequestfield required email" data-field="ls">
-				<option value="">{{config.leadsources.prompt}}</option>
+				<option value="0">{{config.leadsources.prompt}}</option>
 				{{#config.leadsources.values}}<option value="{{Data}}">{{Label}}</option>{{/config.leadsources.values}}
 			</select>					
 		</li>
@@ -1554,7 +1554,7 @@
 	<div class="controls controls-row">
 		<div class="btn-group span10">
 		<select id="renterls" class="span12 bookingfield" data-field="Renter[LeadSourceID]">
-			<option value="">-{{config.leadsources.prompt}}-</option>		
+			<option value="0">-{{config.leadsources.prompt}}-</option>		
 			{{#config.leadsources.values}}<option value="{{Data}}">{{Label}}</option>{{/config.leadsources.values}}
 		</select>					
 		</div>
