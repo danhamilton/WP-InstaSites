@@ -411,9 +411,11 @@
 		<li><a href="#tab2" data-toggle="tab">{{textdata.Rates & Availability}}</a></li>
 		<li><a href="#tab3" data-toggle="tab">{{textdata.Amenities}}</a></li>
 		<li><a href="#tab4" id="tabs4" data-toggle="tab">{{textdata.Attractions}}</a></li>
-		{{#ContextData.Reviews.length}}
+		{{#config.hasreviews}}
+		{{#ContextData.Reviews}}
 		<li><a href="#tab5" data-toggle="tab">{{textdata.Reviews}}</a></li>
-		{{/ContextData.Reviews.length}}
+		{{/ContextData.Reviews}}
+		{{/config.hasreviews}}
 	</ul>			
 	<div class="tab-content">
 		<div class="tab-pane active" id="tab1">
@@ -578,7 +580,7 @@
 		</div>
 		</div>
 		</div>
-		{{#ContextData.Reviews.length}}
+		{{#config.hasreviews}}
 		<div class="tab-pane" id="tab5">
 		<div class="row-fluid">
 		<div class="span12 box-sides">
@@ -610,7 +612,7 @@
 		</div>
 		</div>					
 		</div>
-		{{/ContextData.Reviews.length}}
+		{{/config.hasreviews}}
 	</div>
 	</div>
 </div>
