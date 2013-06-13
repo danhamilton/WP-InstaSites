@@ -102,7 +102,7 @@
 			$bapi = getBAPIObj();
 			if (!$bapi->isvalid()) { return; }
 			$pkid = array(intval($pkid));			
-			$options = $entity == "property" ? array("seo" => 1, "descrip" => 1, "avail" => 1, "rates" => 1) : null;
+			$options = $entity == "property" ? array("seo" => 1, "descrip" => 1, "avail" => 1, "rates" => 1, "reviews" => 1) : null;
 			$c = $bapi->get($entity,$pkid,$options);						
 			$c["config"] = BAPISync::getSolutionData();
 			$c["config"] = $c["config"]["ConfigObj"];
