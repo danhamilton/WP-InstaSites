@@ -51,10 +51,12 @@
 		
 		public function getSEOFromUrl($url) {
 			if (empty($url)) { return null; }			
-			$url = BAPISync::cleanurl($url);			
-			foreach ($this->seodata as $seo) {												
-				$turl = BAPISync::cleanurl($seo["DetailURL"]);				
-				if ($turl == $url) { return $seo; }								
+			$url = BAPISync::cleanurl($url);
+			if(!empty($this->seodata)){
+				foreach ($this->seodata as $seo) {												
+					$turl = BAPISync::cleanurl($seo["DetailURL"]);				
+					if ($turl == $url) { return $seo; }								
+				}
 			}
 			return null;
 		}

@@ -39,8 +39,8 @@
 			}
 			var url = baseURL + "/js/bapi.js?apikey=" + apikey;
 			$.ajax({ 
-				"url": 'ur, 
-				"success": function(data, textStatus, jqXHR) { alert("This is a valid api key"); }
+				"url": url, 
+				"success": function(data, textStatus, jqXHR) { alert("This is a valid api key"); },
 				"error": function(a,b,c) { alert("This is not a valid api key"); } 
 			});			
 		});
