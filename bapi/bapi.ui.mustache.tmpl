@@ -1574,7 +1574,23 @@
 <legend>
 	<div class="control controls-row">
 		<span class="span8">2. {{textdata.Credit Card Information}}</span>
-		<div class="credit-icon span4"><span class="credit-card-icon"></span></div>
+		<div class="credit-icon span4">
+		{{#config.ccconfig.visa}}
+		<span class="creditcard-visa"></span>
+		{{/config.ccconfig.visa}}
+		{{#config.ccconfig.mastercard}}
+		<span class="creditcard-mastercard"></span>
+		{{/config.ccconfig.mastercard}}
+		{{#config.ccconfig.discover}}
+		<span class="creditcard-discover"></span>
+		{{/config.ccconfig.discover}}
+		{{#config.ccconfig.amex}}
+		<span class="creditcard-amex"></span>
+		{{/config.ccconfig.amex}}
+		{{#config.ccconfig.dinersclub}}
+		<span class="creditcard-dinersclub"></span>
+		{{/config.ccconfig.dinersclub}}
+		</div>
 	</div>
 </legend>
 <div class="control-group">
