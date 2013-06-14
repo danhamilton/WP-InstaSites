@@ -300,4 +300,11 @@
 			remove_filter('content_save_pre', 'wp_filter_post_kses');
 		}
 	}
+	
+	function custom_upload_mimes ( $existing_mimes=array() ) {
+		// add the file extension to the array
+		$existing_mimes['ico'] = 'image/x-icon';
+		// call the modified list of extensions
+		return $existing_mimes;
+	}
 ?>
