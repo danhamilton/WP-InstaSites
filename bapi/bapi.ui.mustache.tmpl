@@ -84,6 +84,14 @@
 	<input type="text" class="span12 property-search-input quicksearch sessionlocation bapi-locationsearch" data-field="location" placeholder="{{config.location.prompt}}" />
 </div>
 {{/config.location.enabled}}
+{{#config.city.enabled}}
+<div class="category-block">
+	<select class="span12 property-search-input quicksearch sessionlocation" data-field="location">
+		<option value="">{{config.city.prompt}}</option>		
+		{{#config.city.values}}<option value="{{Data}}">{{Label}}</option>{{/config.city.values}}
+	</select>
+</div>
+{{/config.city.enabled}}
 {{#config.rate.enabled}}
 <div class="category-block">
 	<select class="span12 property-search-input quicksearch sessionratemin" data-field="rate[min]">
