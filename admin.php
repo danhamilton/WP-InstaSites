@@ -69,11 +69,8 @@ function bapi_settings_page() {
 ?>
 
 <link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/jquery.ui/jquery-ui-1.10.2.min.css', __FILE__) ?>" />
-<script type="text/javascript" src="<?= plugins_url('/js/jquery.1.9.1.min.js', __FILE__) ?>" ></script>
-<script type="text/javascript" src="<?= plugins_url('/js/jquery-migrate-1.0.0.min.js', __FILE__) ?>" ></script>		
-<script type="text/javascript" src="<?= plugins_url('/js/jquery-ui-1.10.2.min.js', __FILE__) ?>" ></script>
 <script type="text/javascript">
-	$(document).ready(function($){
+	jQuery(document).ready(function($){
 		$('#viewraw-soldata').click(function() { $("#dlg-soldata").dialog({ width: 540});});	
 		$('#viewraw-textdata').click(function() { $("#dlg-textdata").dialog({ width: 540 });});	
 		$('#viewraw-seodata').click(function() { $("#dlg-seodata").dialog({ width: 540 });});	

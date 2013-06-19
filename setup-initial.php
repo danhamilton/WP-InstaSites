@@ -27,10 +27,9 @@
 	
 	$cloudfronturl = get_option('bapi_cloudfronturl');		
 ?> 
-<script type="text/javascript" src="<?= plugins_url('/js/jquery.1.9.1.min.js', __FILE__) ?>" ></script>
 <script type="text/javascript">
 	var baseURL = 'https://connect.bookt.com'; // TODO: (JACOB) set this to bapi_baseurl
-	$(document).ready(function(){
+	jQuery(document).ready(function($){
 		$('#validate-apikey').click(function() {
 			var apikey = $('#apikey').val();
 			if (apikey===null || apikey=='') {
@@ -40,8 +39,8 @@
 			var url = baseURL + "/js/bapi.js?apikey=" + apikey;
 			$.ajax({ 
 				"url": url, 
-				"success": function(data, textStatus, jqXHR) { alert("This is a valid api key"); },
-				"error": function(a,b,c) { alert("This is not a valid api key"); } 
+				"success": function() { alert("This is a valid api key"); },
+				"error": function() { alert("This is not a valid api key"); } 
 			});			
 		});
 	});

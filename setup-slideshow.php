@@ -18,9 +18,8 @@
 		echo '<div id="message" class="updated"><p><strong>Settings saved.</strong></p></div>';
 	}	
 ?> 
-<script type="text/javascript" src="<?= plugins_url('/js/jquery.1.9.1.min.js', __FILE__) ?>" ></script>
 <script type="text/javascript">
-	$(document).ready(function(){
+	jQuery(document).ready(function($){
 		$('input#bapi_slideshow_image1,input#image-pick1').click(function(){
 			//alert('test');
 			wp.media.editor.send.attachment = function(props, attachment){

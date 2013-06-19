@@ -76,7 +76,7 @@
 			return { "entity": entity, "template": "tmpl-searches-detail", "parent": "bapi_search" }
 		}
 	}
-	$(document).ready(function($){
+	jQuery(document).ready(function($){
 	
 		$("#tabs").tabs();  			
 		
