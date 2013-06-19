@@ -33,14 +33,14 @@
 		$('#validate-apikey').click(function() {
 			var apikey = $('#apikey').val();
 			if (apikey===null || apikey=='') {
-				alert("This is not a valid api key");
+				alert("API key must not be blank");
 				return;
 			}
 			var url = baseURL + "/js/bapi.js?apikey=" + apikey;
 			$.ajax({ 
 				"url": url, 
-				"success": function() { alert("This is a valid api key"); },
-				"error": function() { alert("This is not a valid api key"); } 
+				"success": function(data, textStatus, jqXHR) { alert("This is a valid api key"); },
+				"error": function(a,b,c) { alert("This is not a valid api key"); } 
 			});			
 		});
 	});
