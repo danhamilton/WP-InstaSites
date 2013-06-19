@@ -1,13 +1,4 @@
-//-----Bookt Wordpress Plugin-----//
-
-This plugin is intended for use by Bookt and Instamanager customers to display property and booking tools on their WP-hosted sites on any platform.
-
-For assistance, please contact support@bookt.com
-
-http://Bookt.com
-http://Instamanager.com
-
-=== Plugin Name ===
+=== Bookt Wordpress Plugin ===
 Contributors: bookt
 Tags: vacation rental, lodging, online booking, crm
 Requires at least: 3.5
