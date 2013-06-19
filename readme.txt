@@ -1,5 +1,6 @@
 === Bookt Wordpress Plugin ===
 Contributors: bookt
+Donate Link: http://www.bookt.com
 Tags: vacation rental, lodging, online booking, crm
 Requires at least: 3.5
 Tested up to: 3.5.1
@@ -40,3 +41,13 @@ If you are an InstaSites client and we are hosting our site for you, then you wi
 == Screenshots ==
 
 1. This screenshot show a finished working site powered by our plugin.  Availability search, and property finders all load dynamically.
+
+== Changelog ==
+
+= 0.1 =
+* Initial Public Release Version.
+
+== Upgrade Notice ==
+
+= 0.1 =
+This is the original version.  No need to upgrade at this time.
