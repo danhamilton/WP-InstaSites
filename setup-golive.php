@@ -8,7 +8,7 @@
 	$cdn_url = get_option('home');
 	if(get_option('bapi_site_cdn_domain')){ $cdn_url = get_option('bapi_site_cdn_domain'); }
 	$cdn_url = parse_url($cdn_url);
-	print_r($cdn_url);
+	//print_r($cdn_url);
 ?> 
 <style type="text/css">
 .bapi_expand{
