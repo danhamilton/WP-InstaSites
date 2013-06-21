@@ -28,7 +28,7 @@
 	$cloudfronturl = get_option('bapi_cloudfronturl');		
 ?> 
 <script type="text/javascript">
-	var baseURL = 'https://connect.bookt.com'; // TODO: (JACOB) set this to bapi_baseurl
+	var baseURL = '<?= getbapiurl() ?>'; // TODO: (JACOB) set this to bapi_baseurl
 	jQuery(document).ready(function($){
 		$('#validate-apikey').click(function() {
 			var apikey = $('#apikey').val();

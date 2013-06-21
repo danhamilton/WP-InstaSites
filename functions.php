@@ -63,6 +63,10 @@
 	/* BAPI Helpers */	
 	function getbapiurl() {
 		$bapi_baseurl = 'connect.bookt.com';
+		//Check if there is a globally defined baseurl constant.  This should be set in wp-config.php like so: define('BAPI_BASEURL', 'connect.bookt.com');
+		if(defined(BAPI_BASEURL)){ 
+			$bapi_baseurl = BAPI_BASEURL;
+		}
 		if(get_option('bapi_baseurl')){
 			$bapi_baseurl = get_option('bapi_baseurl');
 		}
