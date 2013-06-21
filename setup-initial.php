@@ -36,10 +36,18 @@
 				alert("API key must not be blank");
 				return;
 			}
-			var url = baseURL + "/js/bapi.js?apikey=" + apikey;
+			var url = baseURL + "/ws/?method=search&entity=property&pagesize=10&page=1&apikey=" + apikey;
 			$.ajax({ 
 				"url": url, 
-				"success": function(data, textStatus, jqXHR) { alert("This is a valid api key"); },
+				"success": function(data, textStatus, jqXHR) { 
+					//console.log(data);
+					if(data.status !== undefined && data.error === undefined){
+						alert("This is a valid api key"); 
+					}
+					else{
+						alert(data.error.message);
+					}
+				},
 				"error": function(a,b,c) { alert("This is not a valid api key"); } 
 			});			
 		});
