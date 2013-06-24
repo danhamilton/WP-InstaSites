@@ -68,7 +68,7 @@ To go live, you must make changes with your DNS provider.  If you are unable to 
 </form>
 </div>
 <br/>
-<div id="gdsetup" class="bapi_expand"><h4>GoDaddy DNS Setup Instructions</h4>
+<div id="gdsetup" class="bapi_expand"><h4 title="Click Here to Show Instructions">GoDaddy DNS Setup Instructions</h4>
 	<div class="bapi_expand_hidden">
 	<em>Please note that these instructions are generated based on the current version of GoDaddy's website and DNS management tools. Please contact support@bookt.com to report any discrepancies.</em>
 	<ol>
