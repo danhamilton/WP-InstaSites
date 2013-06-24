@@ -34,6 +34,8 @@
 		});
 		var nip = $('#bapi_wildcard_ip').html();
 		$('#bapi_wildcard_ip_inst').html(nip);
+		var atesturl = $('#arecordtest').attr('href');
+		$('#arecordtest').attr('href',atesturl+nip)
 	});	
 </script>
 <div class="wrap">
@@ -64,7 +66,9 @@ To go live, you must make changes with your DNS provider.  If you are unable to 
 </table>
 </p>
 <div class="clear"></div>
-<?php submit_button(); ?>
+<p>Click here to check DNS propagation for your domain: <a id="arecordtest" class="button" href="http://www.whatsmydns.net/#A/<?= str_replace('www.','',$cdn_url['host']) ?>/" target="_blank">Test <strong>A Record</strong></a> 
+<?php if(get_option('bapi_cloudfronturl')&&(get_option('bapi_cloudfronturl')!='')){ ?><a class="button" href="http://www.whatsmydns.net/#CNAME/<?= $cdn_url['host'] ?>/<?= get_option('bapi_cloudfronturl') ?>" target="_blank">Test <strong>CNAME</strong></a><?php } ?></p>
+<?php //submit_button(); ?>
 </form>
 </div>
 <br/>
@@ -86,6 +90,5 @@ To go live, you must make changes with your DNS provider.  If you are unable to 
 			<img src="<?= plugins_url('/img/dns/godaddy-zone-editor3.png', __FILE__) ?>"/></li>
 	</ol>
 	<p>Please note that after saving your changes it will take as long as 48 hours for complete global DNS propagation.  In most cases, your live site URL will begin working within just a few minutes.</p>
-	<p>Click here to check DNS propagation for your domain: <a class="button" href="http://www.whatsmydns.net/#CNAME/<?= $cdn_url['host'] ?>" target="_blank">DNS Test</a></p>
 	</div>
 </div>
