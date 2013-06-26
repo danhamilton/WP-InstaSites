@@ -79,9 +79,13 @@ context.inithelpers = {
 			var ctl = $(item);		
 			var dologging = (ctl.attr('data-log') == '1');
 			var searchoptions = null;
-			try { searchoptions = $.parseJSON(ctl.attr('data-searchoptions')); } catch(err) {}
+			try { 
+				searchoptions = $.parseJSON(ctl.attr('data-searchoptions')); 
+				if (searchoptions.similarto) { searchoptions.similarto = BAPI.curentity.ID; }
+			} catch(err) {}
 			var selector = '#' + ctl.attr('id');
-			BAPI.log("Creating summary widget for " + selector);
+			BAPI.log("Creating summary widget for " + selector);			
+			BAPI.log(searchoptions);
 			context.createSummaryWidget(selector, { 
 					"searchoptions": searchoptions, 
 					"entity": ctl.attr('data-entity'), 
@@ -151,8 +155,8 @@ context.inithelpers = {
 				BAPI.get(pkid, BAPI.entities.property, { "avail": 1 }, function(data) {
 					var selector = '#' + ctl.attr('id');
 					var options = {};
-					try { options = $.parseJSON(ctl.attr('data-options')); } catch(err) {}
-					BAPI.log("Creating availability calendar for " + selector);	
+					try { options = $.parseJSON(ctl.attr('data-options')); } catch(err) { }
+					BAPI.log("Creating availability calendar for " + selector);						
 					context.createAvailabilityWidget(selector, data, options);
 				});		
 			}
@@ -184,8 +188,8 @@ context.inithelpers = {
 		});
 	},
 	applyflexsliders: function(options) {
-		$.each($('.bapi-flexslider'), function (i, item) {
-			var ctl = $(item);		
+		$('.bapi-flexslider').each(function (i) {
+			var ctl = $(this);		
 			var options = null;
 			try { options = $.parseJSON(ctl.attr('data-options')); } catch(err) {}
 			var selector = '#' + ctl.attr('id');
@@ -359,7 +363,7 @@ context.createRateBlockWidget = function (targetid, options) {
 		data.config = BAPI.config();
 		data.textdata = BAPI.textdata;
 		data.session = BAPI.session;
-		if (options.log) { BAPI.log("--createSearchWidget.res--"); BAPI.log(data); }
+		//if (options.log) { BAPI.log("--createSearchWidget.res--"); BAPI.log(data); }
 		$(targetid).html(Mustache.render(options.template, data));
 		
 		context.createDatePicker('.datepickercheckin', { "property": p, "checkoutID": '.datepickercheckout' });
@@ -381,13 +385,13 @@ context.createRateBlockWidget = function (targetid, options) {
 			$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
 			var reqdata = saveFormToSession(this, options);
 			BAPI.log(BAPI.session.searchparams);
-			var url = "/makebooking?redir=1&keyid=" + cur.ID + 
+			var url = "/makebooking/?redir=1&keyid=" + cur.ID + 
 						"&checkin=" + BAPI.session.searchparams.checkin +
 						"&checkout=" + BAPI.session.searchparams.checkout +
 						"&adults=" + BAPI.session.searchparams.adults.min +
 						"&children=" + BAPI.session.searchparams.children.min +
 						"&rooms=" + BAPI.session.searchparams.rooms.min;
-			url = context.secureurl(url);
+			url = context.secureurl(url);			
 			window.location.href = url;
 		});
 	});	
@@ -436,9 +440,16 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 	
 	// handle user clicking Clear
 	$(".quicksearch-doclear").on("click", function() {
+		$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });		
 		BAPI.clearsession();
 		if (doSearchCallback) { doSearchCallback(); }
-		$('.' + options.dataselector).val('');		
+		$('.' + options.dataselector).val('');
+		if (!BAPI.isempty(options.searchurl)) {
+			BAPI.savesession();
+			var rurl = options.searchurl;
+			if (rurl[rurl.length-1]!='/') { rurl = rurl + '/'; }
+			window.location.href = rurl; 
+		}		
 	});
 	
 	$(".quicksearch-doadvanced").on("click", function() {
@@ -496,6 +507,7 @@ context.createAvailabilityWidget = function (targetid, data, options) {
 	if (typeof (options.languageISO) === "undefined" || options.languageISO === null) { options.languageISO = ''; }
 	if (typeof(options.numinrow)==="undefined" || options.numinrow===null || options.numinrows<=0) { options.numinrow = 1; }
 	options.numberOfMonths = [ Math.ceil(options.availcalendarmonths / options.numinrow), options.numinrow ];
+	
 	var p = data.result[0];		
 	if (options.languageISO=='en' && options.language!='en-AU' && options.language!='en-GB' && options.language!='en-NZ') {
 		$.datepicker.setDefaults( $.datepicker.regional[''] );
@@ -510,17 +522,20 @@ context.createAvailabilityWidget = function (targetid, data, options) {
 		maxDate: "+" + options.maxbookingdays + "D",
 		createButton: false,
 		beforeShowDay: function (date) {
-			var taken = false;
-			$.each(p.ContextData.Availability, function (index, item) {
-				if (date >= BAPI.utils.jsondate(item.CheckIn) && date < BAPI.utils.jsondate(item.CheckOut) - 1)
-					taken = true;
-			});
-			if (!taken) {
-				return [true, "avail", ''];
+			if (p===null || p.ContextData===null || p.ContextData.Availability===null) {
+				return [true, "avail"];
 			}
-			else {
-				return [false, 'unavail', ''];
-			}
+			var tdate = moment(date);
+			var bavail = true;
+			$.each(p.ContextData.Availability, function (index, item) {	
+				var cin = moment(item.CheckIn);
+				var cout = moment(item.CheckOut);
+				if ((tdate.isSame(cin) || tdate.isAfter(cin)) && tdate.isBefore(cout)) {				
+					bavail = false;				
+				}
+			});				
+			if (bavail) { return [true, "avail", "Available"]; }
+			else { return [false, "datepicker-notavailable", "Unavailable"]; }				
 		}
 	})
 }
@@ -708,31 +723,37 @@ function createDatePickerPickadate(targetid, options) {
 	ctl.addClass("no-disabled");
 	var checkinpickers = $('.datepickercheckin');
 	var checkoutpickers = $('.datepickercheckout');
-	var mind = true; if (BAPI.config().minbookingdays>0) { mind = BAPI.config().minbookingdays; }
-	
+	var mind = true; if (BAPI.config().minbookingdays>0) { mind = BAPI.config().minbookingdays; }	
 	var blockouts = [];
-	if (p!==null) {
-		$.each(p.ContextData.Availability, function (index, item) {	
+	if (!BAPI.isempty(p) && !BAPI.isempty(p.ContextData) && !BAPI.isempty(p.ContextData.Availability)) {
+		$.each(p.ContextData.Availability, function (index, item) {				
 			var cin = moment(item.CheckIn);
 			var cout = moment(item.CheckOut);
-			while (cin.isSame(cout) || cin.isBefore(cout)) {				
-				blockouts.push([cin.years(), cin.months(), cin.days()]);
+			//BAPI.log(cin.format() + "-" + cout.format());			
+			while (cin.isSame(cout) || cin.isBefore(cout)) {
+				blockouts.push([cin.year(), cin.month()+1, cin.date()]);
+				//BAPI.log(cin.year() + "-" + cin.month()+1 + "-" + cin.date());
 				cin = cin.add('days',1);
 			}
 		});				
 	}
 	//BAPI.log(blockouts);
-	
 	var poptions = {};	
 	if (ctl.hasClass("datepickercheckin")) {
 		poptions = {
 			dateMin: mind,
 			dateMax: BAPI.config().maxbookingdays,
+			datesDisabled: blockouts,
 			format: BAPI.defaultOptions.dateFormat.toLowerCase(),
 			formatSubmit: BAPI.defaultOptions.dateFormat.toLowerCase(),
+			klass: {
+				dayDisabled: 'datepicker-notavailable',
+				dayToday: 'datepicker-today',
+				daySelected: 'datepicker-selected'
+			},
 			onSelect: function() {
 				if (checkoutpickers!==null && checkoutpickers.length>0) {
-					var fromDate = createDateArray(this.getDate( 'yyyy-mm-dd'));				
+					var fromDate = createDateArray(this.getDate( 'yyyy-mm-dd'));
 					checkoutpickers.data('pickadate').setDateLimit(fromDate);
 				}				
 				// if los is enabled and it doesn't have a value, set it to the default
@@ -749,15 +770,21 @@ function createDatePickerPickadate(targetid, options) {
 		poptions = {
 			dateMin: mind,
 			dateMax: BAPI.config().maxbookingdays,
+			datesDisabled: blockouts,
 			format: BAPI.defaultOptions.dateFormat.toLowerCase(),
 			formatSubmit: BAPI.defaultOptions.dateFormat.toLowerCase(),
+			klass: {
+				dayDisabled: 'datepicker-notavailable',
+				dayToday: 'datepicker-today',
+				daySelected: 'datepicker-selected'
+			},
 			onSelect: function() {
 				if (checkinpickers!==null && checkinpickers.length>0) {
 					var toDate = createDateArray(this.getDate( 'yyyy-mm-dd'))
 					checkinpickers.data( 'pickadate' ).setDateLimit(toDate, 1);
 				}
 			}
-		}
+		}	
 	}
 	//BAPI.log(poptions);
 	var input = $(targetid).pickadate(poptions);
@@ -768,10 +795,7 @@ function createDatePickerPickadate(targetid, options) {
 	$(targetid).after(trigger);	
 	trigger.click(function() {
 		BAPI.log("datepicker trigger");
-		//BAPI.log(calendar.isOpen());
-		input.click();
-		//calendar.open();
-		//BAPI.log(calendar.isOpen());
+		input.click();		
 	});
 	
 	// Create an array from the date while parsing each date unit as an integer
@@ -779,16 +803,17 @@ function createDatePickerPickadate(targetid, options) {
 }
 
 context.createDatePicker = function (targetid, options) {
-	if (!context.newdatepicker) {
+	var islegacy = (!$.support.leadingWhitespace);
+    if (!context.newdatepicker || islegacy) {
 		createDatePickerJQuery(targetid, options);
 	}
 	else {
 		var url = context.jsroot + 'js/pickadate/source/pickadate.min.js';
 		var cssurl = context.jsroot + 'js/pickadate/themes/pickadate.01.default.css';
 		$("<link/>", { rel: "stylesheet", type: "text/css", href: cssurl }).appendTo("head");
-		$.getScript(url, function(data, textStatus, jqxhr) {
-			createDatePickerPickadate(targetid, options);
-		});
+		createDatePickerPickadate(targetid, options);
+		//$.ajax({url: url, dataType: 'script', cache: true, success: function() {});  
+		//$.getScript(url, function(data, textStatus, jqxhr) { createDatePickerPickadate(targetid, options); });
 	}
 }
 
@@ -807,6 +832,57 @@ context.nonsecureurl = function(path) {
 		return path;
 	}
 	return "http://" + BAPI.site.url + path;
+}
+
+var curbooking = null;
+function bookingHelper_getFormData(options, booking) {
+	var treqdata = {};
+	treqdata.CheckIn = BAPI.isempty(booking.CheckIn) ? null : booking.CheckIn;
+	treqdata.CheckOut = BAPI.isempty(booking.CheckOut) ? null : booking.CheckOut;
+	treqdata.Coupon = BAPI.isempty(booking.Coupon) ? null : booking.Coupon;
+	treqdata.CreditCard = BAPI.isempty(booking.CreditCard) ? null : booking.CreditCard;
+	treqdata.NumAdults = BAPI.isempty(booking.NumAdults) ? null : booking.NumAdults;
+	treqdata.NumChildren = BAPI.isempty(booking.NumChildren) ? null : booking.NumChildren;
+	treqdata.PropertyID = BAPI.isempty(booking.PropertyID) ? null : booking.PropertyID;
+	treqdata.Renter = BAPI.isempty(booking.Renter) ? null : booking.Renter;
+	treqdata.Statement = {};
+	treqdata.Statement.DueOn = booking.Statement.DueOn;
+	treqdata.Statement.Details = booking.Statement.Details;	
+	treqdata.Statement.Total = booking.Statement.Total;
+	treqdata.Statement.Notes = booking.Statement.Notes;
+	treqdata.Statement.Currency = booking.Statement.Currency;
+	treqdata.Statement.CheckSum = booking.Statement.CheckSum;
+	treqdata.TotalDueNow = BAPI.isempty(booking.TotalDueNow) ? null : booking.TotalDueNow;
+	var reqdata = treqdata;
+	
+	var dfparse = BAPI.defaultOptions.dateFormatMoment();
+	var df = BAPI.defaultOptions.dateFormatBAPI;
+	$('.' + options.dataselector).each(function () {			
+		var k = $(this).attr('data-field');
+		var v = $(this).attr('data-value');
+		if (v == null | v == '') v = $(this).val();
+		if (k != null && k.length > 0) { 
+			if (k=="checkin") {		
+				v = (v===null || v=='') ? null : moment(v, dfparse).format(df);								
+			}
+			else if (k=="checkout") {
+				v = (v===null || v=='') ? null : moment(v, dfparse).format(df);				
+			}
+						
+			// assign to the req and the session
+			var i = k.indexOf('[');
+			if (i==-1) {
+				reqdata[k] = v;				
+			} else {
+				// special case when the data-attribute value has nested brackets (such as adults[min])
+				var k1 = k.substring(0,i);
+				var k2 = k.substring(i+1,k.length-1);
+				reqdata[k1] = reqdata[k1] || {};
+				reqdata[k1][k2] = v;				
+			}
+		}
+	});	
+	return reqdata;
 }
 
 function bookingHelper_DoRedirect(u) {
@@ -844,7 +920,7 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 		data.site = BAPI.site;
 		data.config = BAPI.config();
 		data.textdata = BAPI.textdata;	
-		data.session = BAPI.session;		
+		data.session = BAPI.session;
 		$(targetid).html(Mustache.render(options.mastertemplate, data));	
 		$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, data));
 		$(options.targetids.statement).html(Mustache.render(options.templates.statement, data));
@@ -853,37 +929,66 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 		$(options.targetids.accept).html(Mustache.render(options.templates.accept, data));
 		$('.specialform').hide(); // hide the spam control
 		context.createDatePicker('.datepickercheckin', { "property": data.result[0], "checkoutID": '.datepickercheckout' });
-		context.createDatePicker('.datepickercheckout', { "property": data.result[0] });
+		context.createDatePicker('.datepickercheckout', { "property": data.result[0] });		
 				
 		// show the revise your dates if quote is not valid
+		BAPI.curentity = data.result[0];
+		curbooking = data.result[0].ContextData.Quote;
 		if (!data.result[0].ContextData.Quote.IsValid) { try { $('#revisedates').modal('show'); } catch(err) {} }
 		
+		function partialRender(sdata, options) {			
+			$(".modal").modal('hide');			
+			sdata.site = BAPI.site;
+			sdata.config = BAPI.config();
+			sdata.textdata = BAPI.textdata;	
+			sdata.session = BAPI.session;	
+			BAPI.log(sdata);
+			$(options.targetids.statement).html(Mustache.render(options.templates.statement, sdata));
+			$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, sdata));
+			$(options.targetids.accept).html(Mustache.render(options.templates.accept, sdata));			
+			$(options.targetids.stayinfo).unblock();
+			context.createDatePicker('.datepickercheckin', { "property": BAPI.curentity, "checkoutID": '.datepickercheckout' });
+			context.createDatePicker('.datepickercheckout', { "property": BAPI.curentity });	
+		}
+		
 		$(".bapi-revisedates").live("click", function () {
-			var reqdata = getFormData("revisedates");			
+			var reqdata = saveFormToSession($('.revisedates'), { dataselector: "revisedates" });
 			reqdata.pid = propid;
-			reqdata.quoteonly = 1;			
-			if (typeof(reqdata.checkin)!=="undefined") { BAPI.session.searchparams.scheckin = reqdata.checkin; }
-			if (typeof(reqdata.checkout)!=="undefined") { BAPI.session.searchparams.scheckout = reqdata.checkout; }
-			if (typeof(reqdata.adults)!=="undefined") { BAPI.session.searchparams.adults.min = reqdata.adults; }
-			if (typeof(reqdata.children)!=="undefined") { BAPI.session.searchparams.children.min = reqdata.children; }
-			BAPI.savesession();
-			reqdata.checkin = BAPI.session.searchparams.checkin;
-			reqdata.checkout = BAPI.session.searchparams.checkout;
-			
+			reqdata.quoteonly = 1;
 			$(options.targetids.stayinfo).block({ message: "<img src='" + loadingImgUrl + "' />" });
-			BAPI.get(propid, BAPI.entities.property, reqdata, function (sdata) {			
-				$(".modal").modal('hide');
-				sdata.site = BAPI.site;
-				sdata.config = BAPI.config();
-				sdata.textdata = BAPI.textdata;	
-				sdata.session = BAPI.session;				
-				$(options.targetids.statement).html(Mustache.render(options.templates.statement, sdata));
-				$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, sdata));
-				$(options.targetids.accept).html(Mustache.render(options.templates.accept, sdata));
-				context.createDatePicker('.datepickercheckin', { "property": data.result[0], "checkoutID": '.datepickercheckout' });
-				context.createDatePicker('.datepickercheckout', { "property": data.result[0] });	
-				$(options.targetids.stayinfo).unblock();									
+			BAPI.get(propid, BAPI.entities.property, reqdata, function (sdata) {
+				curbooking = sdata.result[0].ContextData.Quote;
+				partialRender(sdata, options);				
 			});	
+		});
+		
+		function modifyStatement() {
+			var reqdata = saveFormToSession($('.revisedates'), { dataselector: "revisedates" });
+			reqdata.pid = propid;
+			reqdata.quoteonly = 1;
+			// get the optional fees
+			reqdata.optionalfees = [];
+			$('.bapi-optionalfee').each(function(i) {
+				var c = $(this);
+				var qty = (c.is(':checkbox') ? (c.is(":checked")?1:0) : c.val());				
+				var ofee = { "RelatedToID": c.attr('data-rid'), "RelatedToEntityID": c.attr('data-reid'), "Quantity": qty };				
+				reqdata.optionalfees.push(ofee);
+			});
+			reqdata.numoptionalfees = reqdata.optionalfees.length;
+			$(options.targetids.stayinfo).block({ message: "<img src='" + loadingImgUrl + "' />" });
+			BAPI.get(propid, BAPI.entities.property, reqdata, function (sdata) {
+				curbooking = sdata.result[0].ContextData.Quote;
+				BAPI.log(curbooking);
+				partialRender(sdata, options);				
+			});
+		}
+		
+		$('.bapi-optionalfee').live('change', function() {
+			modifyStatement();
+		});
+		
+		$('.bapi-applyspecial').live('click', function() {
+			modifyStatement();
 		});
 	});
 }
@@ -915,7 +1020,7 @@ function BookingHelper_SetupFormHandlers() {
 		if (c.val()===null || c.val()=='') {
 			c.val($('#renterfirstname').val() + ' ' + $('#renterlastname').val());
 		}
-	});
+	});		
 }
 
 function BookingHelper_ValidateForm(reqfields) {
@@ -946,6 +1051,7 @@ function BookingHelper_ValidateForm(reqfields) {
 	}
 	return true;
 }
+
 function BookingHelper_BookHandler(targetid, options, propid) {
 	var processing = false;	
 	$(".makebooking").live("click", function () { 		
@@ -956,25 +1062,29 @@ function BookingHelper_BookHandler(targetid, options, propid) {
 		var reqfields = $.extend([],$('.required'));
 		processing = BookingHelper_ValidateForm(reqfields);				
 		if (!processing) { $(targetid).unblock(); return; }		
+		if (BAPI.isempty(curbooking)) { $(targetid).unblock(); alert("Fatal error trying to save this booking.  The context has been lost."); return; }
 		
-		var reqdata = getFormData(options.dataselector);		
+		var reqdata = bookingHelper_getFormData(options, curbooking);	
+		
 		// add the current booking context to our request form
-		if (typeof(reqdata.checkin)==="undefined" || reqdata.checkin==null) { reqdata.checkin = BAPI.session.searchparams.checkin; }
-		if (typeof(reqdata.checkout)==="undefined" || reqdata.checkout==null) { reqdata.checkout = BAPI.session.searchparams.checkout; }
-		if (typeof(reqdata.numadults)==="undefined" || reqdata.numadults==null) { reqdata.numadults = BAPI.session.searchparams.adults.min; }
-		if (typeof(reqdata.numchildren)==="undefined" || reqdata.numchildren==null) { reqdata.numchildren = BAPI.session.searchparams.children.min; }
-		if (typeof(reqdata.numrooms)==="undefined" || reqdata.numrooms==null) { reqdata.numrooms = BAPI.session.searchparams.rooms.min; }
-		BAPI.log(reqdata);
+		if (BAPI.isempty(reqdata.CheckIn)) { reqdata.CheckIn = BAPI.session.searchparams.checkin; }
+		if (BAPI.isempty(reqdata.CheckOut)) { reqdata.CheckOut = BAPI.session.searchparams.checkout; }
+		if (BAPI.isempty(reqdata.NumAdults)) { reqdata.NumAdults = BAPI.session.searchparams.adults.min; }
+		if (BAPI.isempty(reqdata.NumChildren)) { reqdata.NumChildren = BAPI.session.searchparams.children.min; }
+		if (BAPI.isempty(reqdata.NumRooms)) { reqdata.NumRooms = BAPI.session.searchparams.rooms.min; }		
 		
 		$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
-		reqdata.pid = propid;						
 		if (typeof(reqdata.special)!=="undefined" && reqdata.special!==null && reqdata.special!='') {
 			window.location.href = options.responseurl + '?special=1';
 			processing = false;
 			return; // special textbox has a value, not a real person
 		}
-
-		BAPI.save(BAPI.entities.booking, reqdata, function(bres) {
+		
+		// do extra cleanup on checkin/checkout
+		try { reqdata.CheckIn = moment(reqdata.CheckIn).format(BAPI.defaultOptions.dateFormatBAPI); } catch(err) {}
+		try { reqdata.CheckOut = moment(reqdata.CheckOut).format(BAPI.defaultOptions.dateFormatBAPI); } catch(err) {}
+		var postdata = { "data": JSON.stringify(reqdata) };
+		BAPI.save(BAPI.entities.booking, postdata, function(bres) {		
 			BAPI.log(bres);
 			$(targetid).unblock();
 			processing = false;
@@ -1000,7 +1110,7 @@ context.createMakeBookingWidget = function (targetid, options) {
 		window.location = "/"; //TODO: need to redirect back to the correct place
 		return;
 	}
-	
+
 	bookingHelper_FullLoad(targetid, options, propid);	
 	BookingHelper_SetupFormHandlers();
 	BookingHelper_BookHandler(targetid, options, propid);		
@@ -1036,7 +1146,7 @@ context.createCurrencySelectorWidget = function (id, options) {
 	var html = Mustache.render(template, wrapper);
 	c.html(html);
 	$('.dropdown-toggle').dropdown();
-	$(".changecurrency").on("click", function () {                
+	$(".changecurrency").live("click", function () {                
 		var newcurrency = $(this).attr('data-currency');
 		$('#currencypopup').dialog("close");
 		BAPI.session.currency = newcurrency;
@@ -1097,67 +1207,60 @@ function applyMyList(result,entity) {
 	return result;
 }
 
-function doSearch(targetid, ids, entity, options, alldata, callback) {
-	//BAPI.log("Showing page: " + options.searchoptions.page);
-	BAPI.get(ids, entity, options.searchoptions, function (data) {
-		context.loading.hide(); // hide any loading indicator
-		$.each(data.result, function (index, item) { alldata.push(item); }); // update the alldata array
-		if (options.log) { BAPI.log("--data result--"); BAPI.log(data); }		
-		// package up the data to bind to the mustache template
-		data.result = applyMyList(alldata,entity);
-		data.totalcount = ids.length;
-		data.isfirstpage = (options.searchoptions.page == 1);
-		data.islastpage = (options.searchoptions.page*options.searchoptions.pagesize) > data.totalcount;		
-		data.curpage = options.searchoptions.page - 1;
-		data.config = BAPI.config(); 						
-		data.session = BAPI.session.searchparams;
-		data.textdata = options.textdata;		
-		var html = Mustache.render(options.template, data); // do the mustache call
-		$(targetid).html(html); // update the target				
-
-		// apply rowfix
-		var rowfixselector = $(targetid).attr('data-rowfixselector');
-		var rowfixcount = parseInt($(targetid).attr('data-rowfixcount'));
-		if (typeof(rowfixselector)!=="undefined" && rowfixselector!='' && rowfixcount>0) {
-			rowfixselector = decodeURIComponent(rowfixselector)
-			BAPI.log("Applying row fix to " + rowfixselector + " on every " + rowfixcount + " row.");
-			context.rowfix(rowfixselector, rowfixcount);
-		}
-		
-		if (options.applyfixers==1) {
-			BAPI.log("Applying fixers.");
-			context.inithelpers.applytruncate();	
-			context.inithelpers.applydotdotdot();
-			context.inithelpers.applyflexsliders(options);
-			context.inithelpers.setupmapwidgets(options);
-		}
-		
-		if (callback) { callback(data); }
-		$(".showmore").on("click", function () { 				
-			options.searchoptions.page++; 
-			$(this).block({ message: "<img src='" + loadingImgUrl + "' />" });
-			doSearch(targetid, ids, entity, options, alldata, callback); 
-		});
-		
-		$('.changeview').on('click', function() {
-			context.loading.show();
-			options.template = BAPI.templates.get($(this).attr('data-template'));
-			$(targetid).attr('data-rowfixselector',$(this).attr('data-rowfixselector'));
-			$(targetid).attr('data-rowfixcount',$(this).attr('data-rowfixcount'));			
-			doSearch(targetid, ids, entity, options, alldata, callback);
-		});
-	});
+function doSearchRender(targetid, ids, entity, options, data, alldata, callback) {	
+	// package up the data to bind to the mustache template
+	data.result = applyMyList(alldata,entity);
+	data.totalcount = ids.length;
+	data.isfirstpage = (options.searchoptions.page == 1);
+	data.islastpage = (options.searchoptions.page*options.searchoptions.pagesize) > data.totalcount;		
+	data.curpage = options.searchoptions.page - 1;
+	data.config = BAPI.config(); 						
+	data.session = BAPI.session.searchparams;
+	data.textdata = options.textdata;		
+	var html = Mustache.render(options.template, data); // do the mustache call
+	$(targetid).html(html); // update the target				
+	
+	// apply rowfix
+	var rowfixselector = $(targetid).attr('data-rowfixselector');
+	var rowfixcount = parseInt($(targetid).attr('data-rowfixcount'));
+	if (typeof(rowfixselector)!=="undefined" && rowfixselector!='' && rowfixcount>0) {
+		rowfixselector = decodeURIComponent(rowfixselector)
+		BAPI.log("Applying row fix to " + rowfixselector + " on every " + rowfixcount + " row.");
+		context.rowfix(rowfixselector, rowfixcount);
+	}
+	
+	if (options.applyfixers==1) {
+		BAPI.log("Applying fixers.");
+		context.inithelpers.applytruncate();	
+		context.inithelpers.applydotdotdot();
+		context.inithelpers.applyflexsliders(options);
+		context.inithelpers.setupmapwidgets(options);
+	}
+	
+	if (callback) { callback(data); }
 }
 
-function getFormData(selname) {
-	var reqdata = {};
-	$('.' + selname).each(function() {
-		var k = $(this).attr('data-field');
-		if (k != null && k.length>0) {		
-			reqdata[k] = $(this).val();
-		}
+function doSearch(targetid, ids, entity, options, alldata, callback) {
+	//BAPI.log("Showing page: " + options.searchoptions.page);	
+	BAPI.get(ids, entity, options.searchoptions, function (data) {
+		context.loading.hide(); // hide any loading indicator		
+		$.each(data.result, function (index, item) { alldata.push(item); }); // update the alldata array
+		if (options.log) { BAPI.log("--data result--"); BAPI.log(data); }		
+		doSearchRender(targetid, ids, entity, options, data, alldata);					
 	});
-	return reqdata;
+	
+	$(".showmore").live("click", function () { 				
+		options.searchoptions.page++; 
+		$(this).block({ message: "<img src='" + loadingImgUrl + "' />" });
+		doSearch(targetid, ids, entity, options, alldata, callback); 
+	});
+	
+	$('.changeview').live('click', function() {
+		options.template = BAPI.templates.get($(this).attr('data-template'));
+		$(targetid).attr('data-rowfixselector',$(this).attr('data-rowfixselector'));
+		$(targetid).attr('data-rowfixcount',$(this).attr('data-rowfixcount'));						
+		doSearchRender(targetid, ids, entity, options, {}, alldata);		
+	});
 }
 
 function loadFormFromSession(s) {
@@ -1196,13 +1299,26 @@ function saveFormToSession(ctl, options) {
 				BAPI.session.searchparams.checkout = null;
 				BAPI.session.searchparams.scheckout = v; // need to ensure that the display search param gets set
 				v = (v===null || v=='') ? null : moment(v, dfparse).format(df);				
-			}			
-			reqdata[k] = v;
-			BAPI.session.searchparams[k] = v;
+			}
+						
+			// assign to the req and the session
+			var i = k.indexOf('[');
+			if (i==-1) {
+				reqdata[k] = v;
+				BAPI.session.searchparams[k] = v;
+			} else {
+				// special case when the data-attribute value has nested brackets (such as adults[min])
+				var k1 = k.substring(0,i);
+				var k2 = k.substring(i+1,k.length-1);
+				reqdata[k1] = reqdata[k1] || {};
+				reqdata[k1][k2] = v;
+				BAPI.session.searchparams[k1] = BAPI.session.searchparams[k1] || {};
+				BAPI.session.searchparams[k1][k2] = v;
+			}
 		}
 	});	
-	//BAPI.log(reqdata);
-	BAPI.savesession();
+	if (BAPI.isempty(reqdata.los)) { BAPI.session.searchparams.los = null } // clear out the los if not supplied
+	BAPI.savesession();	
 	return reqdata;
 }
 

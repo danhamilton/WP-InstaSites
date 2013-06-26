@@ -26,18 +26,17 @@ class BAPI_Header extends WP_Widget {
 			}
 			if (file_exists($fname)) {
 				$t = file_get_contents($fname);					
-				$m = new Mustache_Engine();
-				$wrapper = getbapisolutiondata();
-				//print_r($wrapper);
+				$m = new Mustache_Engine();				
+				$wrapper = getbapisolutiondata();				
 				$string = $m->render($t, $wrapper);
 				echo $string;			
 			}
 			else {
-				echo '<div id="poweredby"><a rel="nofollow" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';
+				echo '<div id="poweredby"><a rel="nofollow" target="_blank" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';
 			}
 		}
 		else {
-			echo '<div id="poweredby"><a rel="nofollow" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';
+			echo '<div id="poweredby"><a rel="nofollow" target="_blank" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';
 		}
 		echo $after_widget;
 	}
@@ -84,11 +83,11 @@ class BAPI_Footer extends WP_Widget {
 				echo $string;			
 			}
 			else {
-				echo '<div id="poweredby"><a rel="nofollow" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';
+				echo '<div id="poweredby"><a rel="nofollow" target="_blank" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';
 			}
 		}
 		else {
-			echo '<div id="poweredby"><a rel="nofollow" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';
+			echo '<div id="poweredby"><a rel="nofollow" target="_blank" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';
 		}
 		echo $after_widget;
 	}
@@ -118,29 +117,7 @@ class BAPI_HP_Slideshow extends WP_Widget {
 
 	public function widget( $args, $instance ) {
 		?>
-        <div id="bapi-hp-slideshow"></div>		
-        <script type="text/javascript">
-			$(document).ready(function () {
-				var imgurl = ''; //BAPI.site().slideshowimages[0].imgurl;
-				var logourl = BAPI.site.logo;
-				var tagline = BAPI.site.tagline;
-				$('#bapi-hp-slideshow').parent().css('min-height','350px');
-				$('#bapi-hp-slideshow').parent().css('background-image','url(\''+imgurl+'\') ');
-				$('#bapi-hp-slideshow').parent().css('background-repeat','no-repeat');
-				$('#bapi-hp-slideshow').parent().css('background-position','center');
-				$('#bapi-hp-slideshow').parent().css('background-size','auto 100%');
-				
-				(function slidesLoop (i,t) {   
-					setTimeout(function () {
-						var imgurl = BAPI.site().slideshowimages[t].imgurl;
-						$('#bapi-hp-slideshow').parent().css('background-image','url(\''+imgurl+'\') ');
-						t++;
-						if(t>=i){t=0};
-				    	slidesLoop(i,t);
-				   	}, 8000)
-				})(BAPI.site.slideshowimages.length,1); 
-			});
-        </script>
+        <div id="bapi-hp-slideshow"></div>		        
         <?php
 	}
 
@@ -186,10 +163,12 @@ class BAPI_HP_LogoWithTagline extends WP_Widget {
 
 	public function widget( $args, $instance ) {
 		$wrapper = getbapisolutiondata();
-		$logo = $wrapper["site"]["SolutionLogo"];
+		$logo = str_replace("http:", "https:", $wrapper["site"]["SolutionLogo"]);
 		$tagline = $wrapper["site"]["SolutionTagline"];
+		$url = ($_SERVER['SERVER_PORT']==443 ? get_option('bapi_site_cdn_domain') : "/");
+		if (empty($url)) { $url = "/"; }		
 		?>
-		<a href="/"><img src="<?= $logo ?>" alt="" /></a>
+		<a href="<?= $url ?>"><img src="<?= $logo ?>" alt="" /></a>
 		<h2><?= $logo ?></h2>
         <?php
 	}
@@ -236,9 +215,22 @@ class BAPI_HP_Logo extends WP_Widget {
 
 	public function widget( $args, $instance ) {
 		$wrapper = getbapisolutiondata();
-		$logo = $wrapper["site"]["SolutionLogo"];				
+		$logo = $wrapper["site"]["SolutionLogo"];
+		$currdomain = $_SERVER['SERVER_NAME']; //echo $currdomain;
+		$cdndomain = parse_url(get_option('bapi_site_cdn_domain')); //echo $cdndomain['host']; exit();
+		//$url = ($_SERVER['SERVER_PORT']==443 ? get_option('bapi_site_cdn_domain') : "/");
+		//if (empty($url)) { $url = "/"; }
+		if(($currdomain==$cdndomain['host'])||is_admin()||is_super_admin()){ //Always link to subdomain if logged in as admin [Jacob]
+			$url = '/';
+			if($_SERVER['SERVER_PORT']==443){
+				$url = 'http://'.$currdomain.'/';
+			}
+		}
+		else{
+			$url = get_option('bapi_site_cdn_domain');
+		}
 		?>
-        <div class="bapi-logo"><a href="/" ><img src="<?= $logo ?>" alt="" /></a></div>
+        <div class="bapi-logo"><a href="<?= $url ?>" ><img src="<?= $logo ?>" alt="" /></a></div>
 		<?php
 	}
 
@@ -387,7 +379,7 @@ class BAPI_Inquiry_Form extends WP_Widget {
 
 		echo $before_widget;
 		if ( ! empty( $title ) )
-			//echo $before_title . $title . $after_title;
+			echo $before_title . $title . $after_title;
 		?>
 		<div id="bapi-inquiryform" class="bapi-inquiryform" data-templatename="tmpl-leadrequestform-propertyinquiry" data-log="0"></div>        
         <?php
@@ -443,7 +435,7 @@ class BAPI_Featured_Properties extends WP_Widget {
 		if(!empty($title))
 			echo $before_title.$title.$after_title;
 		?>
-		<div id="featuredproperties" class="bapi-summary featuredproperties row-fluid" data-log="0" data-templatename="tmpl-featuredproperties-quickview"  data-entity="property" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }' data-rowfixselector=".fp-featured" data-rowfixcount="<?= $rowsize ?>"></div>
+		<div id="featuredproperties" class="bapi-summary featuredproperties row-fluid" data-log="0" data-templatename="tmpl-featuredproperties-quickview" data-ignoresession="1" data-entity="property" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }' data-rowfixselector=".fp-featured" data-rowfixcount="<?= $rowsize ?>"></div>
         <?php
 		echo $after_widget;
 	}
@@ -626,6 +618,7 @@ class BAPI_Similar_Properties extends WP_Widget {
 		extract($args);
 		$title = apply_filters('widget_title',$instance['title']);
 		$pagesize = esc_textarea($instance['text']);
+		if(empty($pagesize)) { $pagesize = 3; }
 		$rowsize = intval($instance['rowsize']);
 		if($rowsize<=0) { $rowsize=1; }
 		
@@ -633,7 +626,7 @@ class BAPI_Similar_Properties extends WP_Widget {
 		if(!empty($title))
 			echo $before_title.$title.$after_title;
 		?>
-        <div id="featuredproperties" class="bapi-summary" data-log="0" data-templatename="tmpl-featuredproperties-quickview"  data-entity="property" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }' data-rowfixselector=".fp-featured" data-rowfixcount="<?= $rowsize ?>"></div>
+        <div id="featuredproperties" class="bapi-summary" data-log="0" data-templatename="tmpl-featuredproperties-quickview" data-entity="property" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random", "similarto": true }' data-rowfixselector=".fp-featured" data-rowfixcount="<?= $rowsize ?>"></div>
 		<?php
 		echo $after_widget;
 	}

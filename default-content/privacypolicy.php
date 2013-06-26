@@ -1,3 +1,4 @@
+<h1>Privacy Policy</h1>
 <p>We've provided this Privacy Policy, which sets forth our terms regarding the collection, use and protection of the personal information of those using the {{SolutionName}} website. Personal information means information that can be linked to a specific individual, such as name, address, ip address, telephone number, e-mail address and credit card number.&nbsp;</p>
 <p>We encourage you to review our Privacy Policy, and become familiar with it, but you should know that we do not sell or rent our customers' personal information to any&nbsp;third parties.</p>
 <p>Please note that we review our Privacy Policy from time to time, and we may make periodic changes to the policy in connection with that review. Therefore, you may wish to bookmark this page and/or periodically review this page to make sure that you have the current version.</p>

@@ -1,3 +1,4 @@
+<h1>Terms of Use</h1>
 <p>{{SolutionName}} requires that all persons or entities visiting any {{SolutionName}} Sites on the World Wide Web (&quot;Sites&quot;) agree to the following terms and conditions.&nbsp; By accessing a Site, you confirm your agreement to and acceptance of these terms.</p>
 <p><b>Use of Information</b><br />
 Unless otherwise specified, copyright in all copyrightable subject matter on any Site is owned by {{SolutionName}}. To the extent that {{SolutionName}} have the right to do so without compensation to third parties, and except for materials or information specifically provided under other terms, {{SolutionName}} grants you permission to copy or otherwise download from any Site, information and materials (including related graphics), provided: 1. The materials are for internal, non-commercial use only, and 2. Any copies of materials or portions thereof must include the copyright notice specified on the Site.</p>

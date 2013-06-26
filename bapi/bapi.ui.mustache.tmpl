@@ -8,6 +8,7 @@
 	<input type="text" class="span12 txtb quicksearch sessioncheckin datepickercheckin" data-field="checkin" placeholder="{{textdata.Check-In}}" />
 </div>
 {{/config.checkin.enabled}}
+{{#config.checkin.enabled}}
 {{#config.checkout.enabled}}
 <div class="category-block">
 	<input type="text" class="span12 txtb quicksearch sessioncheckout datepickercheckout" data-field="checkout" placeholder="{{textdata.Check-Out}}" />
@@ -21,6 +22,7 @@
 	</select>
 </div>
 {{/config.los.enabled}}
+{{/config.checkin.enabled}}
 {{#config.adults.enabled}}
 <div class="category-block">
 	<select class="span12 property-search-input quicksearch sessionadultsmin" data-field="adults[min]">
@@ -47,7 +49,7 @@
 {{/config.category.enabled}}
 {{#config.dev.enabled}}
 <div class="category-block">
-	<select class="span12 property-search-input quicksearch sessiondevid" data-field="devid">
+	<select class="span12 property-search-input quicksearch sessiondevid" data-field="dev">
 		<option value="">{{config.dev.prompt}}</option>		
 		{{#config.dev.values}}<option value="{{Data}}">{{Label}}</option>{{/config.dev.values}}
 	</select>
@@ -82,6 +84,14 @@
 	<input type="text" class="span12 property-search-input quicksearch sessionlocation bapi-locationsearch" data-field="location" placeholder="{{config.location.prompt}}" />
 </div>
 {{/config.location.enabled}}
+{{#config.city.enabled}}
+<div class="category-block">
+	<select class="span12 property-search-input quicksearch sessionlocation" data-field="location">
+		<option value="">{{config.city.prompt}}</option>		
+		{{#config.city.values}}<option value="{{Data}}">{{Label}}</option>{{/config.city.values}}
+	</select>
+</div>
+{{/config.city.enabled}}
 {{#config.rate.enabled}}
 <div class="category-block">
 	<select class="span12 property-search-input quicksearch sessionratemin" data-field="rate[min]">
@@ -131,7 +141,9 @@
 		{{/ContextData.Quote.IsValid}}			
 	</div>       
 	{{#ContextData.Quote.IsValid}}
-	<button class="book-btn btn btn-large btn-warning bapi-booknow" type="button">{{textdata.Book Now}}</button>
+		{{#IsBookable}}
+		<button class="book-btn btn btn-large btn-warning bapi-booknow" type="button">{{textdata.Book Now}}</button>
+		{{/IsBookable}}
 	{{/ContextData.Quote.IsValid}}			
 	<hr />  
 	<div class="row-fluid">
@@ -315,6 +327,7 @@
 <table class="table table-bordered table-striped">
 <thead>
 <tr>
+	<th></th>
 	<th>{{textdata.Property Name}}</th>
 	<th>{{textdata.Category}}</th>
 	<th>{{textdata.Beds}}</th>
@@ -328,6 +341,11 @@
 <tbody>
 {{#result}}
 <tr>
+	<td>
+		<button class="btn btn-mini add-wishlist bapi-wishlisttracker{{#inmylist}} active{{/inmylist}}" data-pkid="{{ID}}" type="button" data-toggle="button">
+			<span class="halflings heart-empty"><i></i>{{^inmylist}}{{textdata.WishList}}{{/inmylist}}{{#inmylist}}{{textdata.WishListed}}{{/inmylist}}</span>
+		</button>		
+	</td>
     <td>
 		{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
 		{{Headline}}
@@ -341,13 +359,11 @@
     <td>{{ContextData.Quote.PublicNotes}}</td> 
     <td>
 		{{^IsBookable}}
-		<a class="btn btn-small btn-primary" href='{{ContextData.SEO.DetailURL}}'>{{textdata.Select}}</a>
+		<a class="btn btn-small btn-primary" href='{{ContextData.SEO.DetailURL}}'>{{textdata.Inquire Now}}</a>
 		{{/IsBookable}}
 		{{#IsBookable}}
-		<a class="btn btn-small btn-primary" href='{{ContextData.SEO.BookingURL}}'>{{textdata.Select}}</a>
-		{{/IsBookable}}
-		<button class="btn btn-mini add-wishlist bapi-wishlisttracker{{#inmylist}} active{{/inmylist}}" data-pkid="{{ID}}" type="button" data-toggle="button">
-		<span class="halflings heart-empty"><i></i>{{^inmylist}}{{textdata.WishList}}{{/inmylist}}{{#inmylist}}{{textdata.WishListed}}{{/inmylist}}</span></button>		
+		<a class="btn btn-small btn-primary" href='{{ContextData.SEO.BookingURL}}'>{{textdata.Book Now}}</a>
+		{{/IsBookable}}		
 	</td>   
 </tr>
 {{/result}}
@@ -356,7 +372,7 @@
 <div class="clearfix"></div>
 {{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalcount}})</a></span></div>{{/islastpage}}
 {{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
-</script> 
+</script>
 
 <script id="tmpl-properties-detail" type="text/html">
 {{#result}}
@@ -403,9 +419,11 @@
 		<li><a href="#tab2" data-toggle="tab">{{textdata.Rates & Availability}}</a></li>
 		<li><a href="#tab3" data-toggle="tab">{{textdata.Amenities}}</a></li>
 		<li><a href="#tab4" id="tabs4" data-toggle="tab">{{textdata.Attractions}}</a></li>
-		{{#ContextData.Reviews.length}}
+		{{#config.hasreviews}}
+		{{#ContextData.Reviews}}
 		<li><a href="#tab5" data-toggle="tab">{{textdata.Reviews}}</a></li>
-		{{/ContextData.Reviews.length}}
+		{{/ContextData.Reviews}}
+		{{/config.hasreviews}}
 	</ul>			
 	<div class="tab-content">
 		<div class="tab-pane active" id="tab1">
@@ -414,13 +432,15 @@
 			<div class="row-fluid">	
 				<div class="span4 property-detail module shadow-border2">
 					<div class="pd">
-					<h4>Property Details</h4>
+					<h4>{{textdata.Property Details}}</h4>
 					<ul class="unstyled">
-						<li>Development: <span>{{Development}}</span></li>
-						<li>{{textdata.Beds}}: <span>{{Bedrooms}}</span></li>
-						<li>{{textdata.Baths}}: <span>{{Bathrooms}}</span></li>
-						<li>{{textdata.Sleeps}}: <span>{{Sleeps}}</span></li>
-						<li>Floor: <span>{{Floor}}</span></li>
+						{{#Development}}<li>{{textdata.Development}}: <span>{{Development}}</span></li>{{/Development}}
+						{{#Type}}<li>{{textdata.Category}}: <span>{{Type}}</span></li>{{/Type}}
+						{{#Bedrooms}}<li>{{textdata.Beds}}: <span>{{Bedrooms}}</span></li>{{/Bedrooms}}
+						{{#Bathrooms}}<li>{{textdata.Baths}}: <span>{{Bathrooms}}</span></li>{{/Bathrooms}}
+						{{#Sleeps}}<li>{{textdata.Sleeps}}: <span>{{Sleeps}}</span></li>{{/Sleeps}}
+						{{#Stories}}<li>{{textdata.Stories}}: <span>{{Stories}}</span></li>{{/Stories}}
+						{{#Floor}}<li>{{textdata.Floor}}: <span>{{Floor}}</span></li>{{/Floor}}
 					</ul>
 					</div>
 				</div>
@@ -436,7 +456,7 @@
 		<div class="row-fluid">
 		<div class="span12 box-sides">		
 		<h3>{{textdata.Rates & Availability}}</h3>
-		<div id="avail" class="bapi-availcalendar" data-options='{ "availcalendarmonths":{{config.availcalendarmonths}}, "numinrow": 3 }' data-pkid="{{ID}}" />
+		<div id="avail" class="bapi-availcalendar" data-options='{ "availcalendarmonths": {{config.availcalendarmonths}}, "numinrow": 3 }' data-pkid="{{ID}}"></div>
 		<hr/>
 		<table class="table table-bordered table-striped">
 		<thead>
@@ -480,22 +500,25 @@
 		<div class="tab-pane" id="tab3">			
 		<div class="row-fluid">
 		<div class="span12 box-sides">
+		
 		<h3>{{textdata.Amenities}}</h3>
+		{{#Amenities2}}		
 		<ul class="amenities-list unstyled clearfix">
-		{{#Amenities2}}
+		<li class="category-title">{{Key}}</li> 	
 		{{#Values}}
 			<li><span class="halflings ok-sign"><i></i>{{Label}}</span></li>
-		{{/Values}}
-		{{/Amenities2}}
+		{{/Values}}		
 		</ul>
 		<div class="clearfix"></div>
+		{{/Amenities2}}
+		
 		</div>
 		</div>
 		</div>		
 		<div class="tab-pane" id="tab4">			
 		<div class="row-fluid">
 		<div class="span12 box-sides">
-			<div id="poi-map-prop" class="bapi-map" data-loc-selector='.poi-map-location' data-refresh-selector='#tabs4' data-refresh-selector-event='shown' data-link-selector='.poi-map-item' data-category-icons='{ "starred": { "color": "#E8413A" }, "poi": { "color": "#465AE0" } }' style="width:100%; height:400px;"></div>			
+			<div id="poi-map-prop" class="bapi-map" data-loc-selector='.poi-map-location' data-refresh-selector='#tabs4' data-refresh-selector-event='shown' data-link-selector='.poi-map-item' style="width:100%; height:400px;"></div>			
 			<div id="map-side-bar">
 			<table class="table table-bordered table-striped poi-map-locations">
 			<thead>
@@ -506,26 +529,29 @@
 				<th>{{textdata.Distance}}</th>
 			</tr>
 			</thead>
-			<tbody>
+			<tbody id="map-locations">
 			<tr>
-				<td class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}}}, "category": "starred"}'>					
+				<td>
+				<div class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}} } }'>
 					<a class="poi-map-item halflings map-marker" href="#"><i></i></a>
 					<div class="info-html">
-						<div class="marker-infowindow"> 
-							<a target="_blank" href="/rentalsearch/house-breckenridge-busroute-580">
-								<div class="prop-image"> <img src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"> </div>
-								<h3 class="prop-title">{{Headline}}</h3>
-							</a>
-							<div class="prop-location">
+						<div class="marker-infowindow"> 		
+							<span class="prop-image pull-left"><img src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>
+							<span class="prop-location pull-left">
 								<span>
-								<b>{{textdata.City}}: </b>{{City}} 
-								{{#Bedrooms}}<b>{{textdata.Beds}}: </b>{{Bedrooms}}&nbsp;{{/Bedrooms}}
-								{{#Bathrooms}}<b>{{textdata.Baths}}: </b>{{Bathrooms}}&nbsp;{{/Bathrooms}}
-								{{#Sleeps}}<b>{{textdata.Sleeps}}: </b>{{Sleeps}}&nbsp;{{/Sleeps}}
+								{{#ContextData.SEO.Keyword}}<a target="_blank" href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
+								<b>{{Headline}}</b>
+								{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}<br/>			
+								{{#Type}}<b>{{textdata.Category}}:</b>{{Type}}<br/>{{/Type}}
+								{{#City}}<b>{{textdata.City}}: </b>{{City}}<br/>{{/City}}
+								{{#Bedrooms}}<b>{{textdata.Beds}}: </b>{{Bedrooms}}<br/>{{/Bedrooms}}
+								{{#Bathrooms}}<b>{{textdata.Baths}}: </b>{{Bathrooms}}<br/>{{/Bathrooms}}
+								{{#Sleeps}}<b>{{textdata.Sleeps}}: </b>{{Sleeps}}{{/Sleeps}}
 								</span>
-							</div>							
-						</div>
+							</span>
+						</div>					
 					</div>
+				</div>
 				</td>
 				<td>{{Headline}}</td>
 				<td>{{Type}}</td>
@@ -533,22 +559,21 @@
 			</tr>
 			{{#ContextData.Attractions}}
 			<tr>
-				<td class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}}}, "category": "poi"}'>
+				<td>
+				<div class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}} } }'>
 					<a class="poi-map-item halflings map-marker" href="#"><i></i></a>
 					<div class="info-html">
 						<div class="marker-infowindow"> 
-							{{#ContextData.SEO.Keyword}}<a target="_blank" href="{{ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
-								<div class="prop-image"> <img src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"> </div>
-								<h3 class="prop-title">{{Name}}</h3>
-							{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
-							<div class="prop-location">
+							<span class="prop-image pull-left"><img src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>					
+							<span class="prop-location pull-left">
 								<span>
-								<b>{{textdata.Category}}:</b>{{Type}}<br/> 
-								<b>{{textdata.Address}}: </b>{{&Location}} 								
+								{{#ContextData.SEO.Keyword}}<a target="_blank" href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
+								<b>{{Name}}</b>
+								{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}<br/>			
+								{{#Type}}<b>{{textdata.Category}}:</b>{{Type}}<br/>{{/Type}}
+								{{#Location}}<b>{{textdata.Address}}: </b>{{&Location}}{{/Location}}
 								</span>
-							</div>
-							<div class="portal-rates">								
-							</div>
+							</span>						
 					  </div>					
 					</div>
 				</td>
@@ -563,15 +588,17 @@
 		</div>
 		</div>
 		</div>
-		{{#ContextData.Reviews.length}}
+		{{#config.hasreviews}}
 		<div class="tab-pane" id="tab5">
 		<div class="row-fluid">
 		<div class="span12 box-sides">
+		<a class="flipkeyPowered" rel="nofollow" target="_blank" href="www.flipkey.com"><span></span></a>
+		<div class="clearfix"></div>
 		{{#ContextData.Reviews}}
 		<div class="row-fluid review">
 			<div class="span2 left-side">
 				<span class="glyphicons chat" href=""><i></i></span>
-				<h5 class="username">Username</h5>
+				<h5 class="username">{{ReviewedBy.FirstName}}&nbsp;{{ReviewedBy.LastName}}</h5>
 			</div>
 			<div class="span10">
 				<h5 class="title">{{Title}}</h5>
@@ -581,11 +608,11 @@
 				</div>
 				{{#Response}}
 				<div class="response-block">
-				<span class="postdate"><strong>{{ReviewedBy.FirstName}} {{ReviewedBy.LastName}}</strong></span>
+				<h5 class="response-title">Response</h5>
 				<div class="response">{{&Response}}</div>
 				</div>
 				{{/Response}}				
-				<a class="full-rev-link" href="" target="_blank">See full review on Flipkey</a>
+				<a class="full-rev-link" href="{{ExternalLink}}" target="_blank">See full review on Flipkey</a>
 			</div>
 		</div>
 		<hr/>
@@ -593,7 +620,7 @@
 		</div>
 		</div>					
 		</div>
-		{{/ContextData.Reviews.length}}
+		{{/config.hasreviews}}
 	</div>
 	</div>
 </div>
@@ -601,29 +628,8 @@
 {{/result}}
 <span class="end"></span>
 <div id="bapi-rateblock" class="bapi-rateblock" data-templatename="tmpl-search-rateblock" data-log="1"></div>
-<div class="bapi-moveme" data-from="#bapi-rateblock" data-to=".detail-overview-target" data-method="append">
+<div class="bapi-moveme" data-from="#bapi-rateblock" data-to=".detail-overview-target" data-method="append"></div>
 </script>
-
-<script id="tmpl-propertyrates-grid" type="text/html">
-{{#result.ContextData.Rates}}
-<table>
-	<tr>
-{{#Keys}}
-		<th>{{.}}</th>		
-{{/Keys}}
-	</tr>
-{{#Values}}
-	<tr>
-		<td>{{.}}</td>
-	</tr>
-{{/Values}}	
-</table>
-{{/result.ContextData.Rates}}
-{{^result.ContextData.Rates}}
-<div>{{textdata.No rates available}}</div>
-{{/result.ContextData.Rates}}
-</script>
-
 
 <script id="tmpl-attractionsforproperty-grid" type="text/html">
 {{#result}}
@@ -658,7 +664,7 @@
 		{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 	</div>
 	<div class="fp-outer"> 
-	<div class="fp-title"><a href='{{ContextData.SEO.DetailURL}}'>{{Headline}}</a></div>
+	<div class="fp-title">{{#ContextData.SEO.Keyword}}<a href='{{ContextData.SEO.DetailURL}}'>{{/ContextData.SEO.Keyword}}{{Headline}}{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}</div>
 	{{#NumReviews}}<div class="fpstar{{AvgReview}}"></div>{{/NumReviews}}
 	<div class="fp-details">
 		<b class="hidden-phone">{{Type}}</b>
@@ -720,11 +726,14 @@
   {{/Images.0.MediumURL}}                
   </div>
   <div class="portal-info span8">                
-	  <h2 class="title"><a href="{{&ContextData.SEO.DetailURL}}">{{Name}}</a></h2>
-	  <div class="location"><span class="type">{{Type}},</span> {{Region}}, {{State}}</div>
+	  <h2 class="title">{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}{{Name}}{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}</h2>
+	  <div class="location"><span class="type">{{Type}}</span>{{#Region}}, {{Region}}{{/Region}}{{#State}}, {{State}}{{/State}}</div>
 	  <div class="brick-wrap">
-		<strong>{{textdata.Amenities}}:</strong> <span>{{TopAmenities}}</span>                 
+		<strong>{{textdata.Amenities}}:</strong> <span>{{TopAmenities}}</span>
+		<hr/>        
+		<div class="description bapi-truncate" data-trunclen="200">{{&Summary}}</div>         
 	  </div>
+	  
 	  <a class="detail-link pull-right" href="{{&ContextData.SEO.DetailURL}}">Details <span>&rarr;</span></a>                                   
   </div>             
 </div>
@@ -736,7 +745,7 @@
 {{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
 </script>
 
-<script id="tmpl-developments-detail" type="text/html">
+ <script id="tmpl-developments-detail" type="text/html">
 {{#result}}
 <div class="bapi-entityadvisor" data-pkid="{{ID}}" data-entity="development"></div>
 <section class="row-fluid">
@@ -788,7 +797,7 @@
 </div>
 {{/Description}}
 
-<h3>{{textdata.Applies To}}</h3>
+<h3>{{textdata.Available Properties}}</h3>
 <div id="propresults" class="bapi-summary" data-log="0" data-templatename="tmpl-allproperties"  data-entity="property" data-searchoptions='{ "devid": {{ID}}, "seo": 1, "pagesize": 10 }'></div>
 
 <div class="bapi-moveme" data-from=".development-details" data-to=".detail-overview-target" data-method="append">
@@ -824,28 +833,7 @@
 	Group: Attractions
 */
 <script id="tmpl-attractions-summary-list" type="text/html">
-<div id="poi-map-prop" class="bapi-map" data-loc-selector='.poi-map-location' data-link-selector='.poi-map-item' data-category-icons='{ "starred": { "color": "#E8413A" }, "poi": { "color": "#465AE0" } }' style="width:100%; height:350px; float:left;"></div>
-<ul id="map-locations">
-{{#result}}
-<li class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}} }, "category": "poi"}'>
-	<div class="info-html">
-	<div class="marker-infowindow"> 		
-		<span class="prop-image pull-left"><img style="max-height:175px" src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>					
-		<span class="prop-location pull-right" style="float:left; padding-left:10px">
-			<span>
-			{{#ContextData.SEO.Keyword}}<a target="_blank" href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
-			<b>{{Name}}</b>
-			{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}<br/>			
-			<b>{{textdata.Category}}:</b>{{Type}}<br/> 
-			<b>{{textdata.Address}}: </b>{{&Location}} 								
-			</span>
-		</span>
-	</div>
-	</div>	
-</li>
-{{/result}}
-</ul>
-
+<div id="poi-map-prop" class="bapi-map" data-loc-selector='.poi-map-location' data-link-selector='.poi-map-item' style="width:100%; height:350px; float:left;"></div>
 <section class="row-fluid search-result-controls attraction-result-controls">
 <div class="span6">
 	<p class="showing"></p>    
@@ -857,26 +845,45 @@
 	</div>
 </div>
 </section>
-
+<div id="map-locations">
 {{#result}}
 <div class="rowfix">
   <div class="item-result">
 	<div class="item-inner">
-	  <div class="item-images">
-	  <div class="number-tag">{{&ContextData.ItemIndex}}</div>
+	  <div class="item-images">	  
+	  <div class="poi-map-location" data-id="{{ContextData.ItemIndex}}" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}} }, "category": "poi"}'>
+	  <a href="#" class="poi-map-item"><div class="number-tag">{{&ContextData.ItemIndex}}</div></a>
+	  <div class="info-html">
+	<div class="marker-infowindow"> 		
+		<span class="prop-image pull-left"><img style="max-height:175px; max-width:175px" src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>
+		<span class="prop-location pull-left">
+			<span>
+			{{#ContextData.SEO.Keyword}}<a target="_blank" href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
+			<b>{{Name}}</b>
+			{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}<br/>
+			<b>{{textdata.Category}}:</b>{{Type}}<br/>
+			<b>{{textdata.Address}}: </b>{{&Location}}
+			</span>
+		</span>
+	</div>
+	</div>	
+	  </div>	  
 	  {{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
 	  <img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" />
 	  {{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 	  </div>
-	  <div class="item-info shadow">		
+	  <div class="item-info shadow">
+	  {{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}		
 			<h2 class="title">{{Name}}</h2>
+			{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 			<div class="description bapi-truncate" data-trunclen="100">{{&Summary}}</div>
 			{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}" class="btn">{{textdata.See Details}}</a>{{/ContextData.SEO.Keyword}}
 			</div>
 	</div>
   </div>
 </div>
-{{/result}}  
+{{/result}}
+</div>
 <div class="clearfix"></div>
 {{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalcount}})</a></span></div>{{/islastpage}}
 {{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
@@ -1006,16 +1013,26 @@
 <div class="span4">
   <div class="item-result">
 	<div class="item-inner">
-	  <div class="item-images"><a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}"><img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" /></a></div>
+	  <div class="item-images">
+	  {{#ContextData.SEO.Keyword}}
+	  <a href="{{&ContextData.SEO.DetailURL}}">
+	  {{/ContextData.SEO.Keyword}}
+	  <img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" />
+	  {{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
+	  </div>
 	  <div class="item-info shadow">		
-			<h2 class="title">{{Name}}</h2>
+			{{#ContextData.SEO.Keyword}}
+	  <a href="{{&ContextData.SEO.DetailURL}}">
+	  {{/ContextData.SEO.Keyword}}
+	  <h2 class="title">{{Name}}</h2>
+	  {{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 			<div class="description">{{&Summary}}</div>
 			{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}" class="btn">{{textdata.See Details}}</a>{{/ContextData.SEO.Keyword}}
-		</div>		
+		</div>
 	</div>
   </div>
 </div>
-{{/result}}  
+{{/result}}
 <div class="clearfix"></div>
 {{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalcount}})</a></span></div>{{/islastpage}}
 {{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
@@ -1072,8 +1089,9 @@
 	{{#CouponCode}}<dt>{{textdata.Coupon Code}}</dt><dd>{{CouponCode}}</dd>{{/CouponCode}}
 	</dl>
 	<hr/>
+	<div style="display:none">
 	<h5>Select your desired travel dates:</h5>
-	<div class="row-fluid travel-dates">
+	<div class="row-fluid travel-dates">	
 	<div class="span6">
 	<input type="text" placeholder="{{textdata.Check-In}}" class="span12">
 	</div>
@@ -1084,6 +1102,7 @@
 	<div class="clearfix"></div>
 	<button class="btn btn-success btn-block" type="button">Activate this Special</button>
 	<hr/>
+	</div>
 	<dl>
 	{{#Description}}<dt>{{textdata.Description}}</dt><dd>{{&Description}}</dd>{{/Description}}
 	</dl>
@@ -1127,9 +1146,19 @@
 <div class="pfrowfix span4">
   <div class="item-result">
 	<div class="item-inner">
-	  <div class="item-images"><a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}"><img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" /></a></div>
+	  <div class="item-images">
+	  {{#ContextData.SEO.Keyword}}
+	  <a href="{{&ContextData.SEO.DetailURL}}">
+	  {{/ContextData.SEO.Keyword}}
+	  	<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" />
+	  {{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
+	  </div>
 	  <div class="item-info shadow">					
-			<h2 class="title">{{Name}}</h2>
+			{{#ContextData.SEO.Keyword}}
+	  <a href="{{&ContextData.SEO.DetailURL}}">
+	  {{/ContextData.SEO.Keyword}}
+	  <h2 class="title">{{Name}}</h2>
+	  {{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 			<div class="description bapi-dotdotdot" style="max-height:100px" data-trunclen="100">{{&Summary}}</div>
 			{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}" class="btn">{{textdata.See Details}}</a>{{/ContextData.SEO.Keyword}}
 		</div>		
@@ -1194,7 +1223,7 @@
 {{/result}}
 <span class="end"></span>
 {{#result}}
-<div id="propresults" class="bapi-summary" data-log="0" data-templatename="tmpl-allproperties"  data-entity="property" data-searchoptions='{ "searchid": {{ID}}, "seo": 1, "pagesize": 10 }'></div>
+<div id="propresults" class="bapi-summary" data-log="0" data-templatename="tmpl-allproperties" data-ignoresession="1" data-entity="property" data-searchoptions='{ "searchid": {{ID}}, "seo": 1, "pagesize": 10 }'></div>
 {{/result}}
 </script>
 
@@ -1221,9 +1250,8 @@
 	Group: Lead Request Forms
 */
 <script id="tmpl-leadrequestform-propertyinquiry" type="text/html">
-<div id="questions-block" class="module shadow">	
-	<div id="questions-block-inner" class="pd">		
-		<h3>{{textdata.Have a Question?}}</h3>
+<div id="questions-block">	
+	<div id="questions-block-inner">
 		<fieldset id="have-question" class="leadrequest">
 		<ul class="unstyled">
 		<li id="phoneform">
@@ -1237,7 +1265,7 @@
 		</li>
 		<li id="lsform">
 			<select class="span12 leadrequestfield required email" data-field="ls">
-				<option value="">{{config.leadsources.prompt}}</option>
+				<option value="0">{{config.leadsources.prompt}}</option>
 				{{#config.leadsources.values}}<option value="{{Data}}">{{Label}}</option>{{/config.leadsources.values}}
 			</select>					
 		</li>
@@ -1263,12 +1291,12 @@
 <div class="module shadow-border">
 <div class="row-fluid">
 	<header class="pagination-centered pd">
-		<h1>{{Headline}}</h1>
+		<h1>{{textdata.Fast Secure Online Booking}}</h1>
 		<p>
-			{{Type}}
+			<strong>{{Headline}}</strong><span class="hidden-phone">&nbsp;-&nbsp;{{Type}}
 			{{#Bedrooms}}&nbsp;/&nbsp;{{textdata.Beds}}&nbsp;{{Bedrooms}}{{/Bedrooms}}
 			{{#Bathrooms}}&nbsp;/&nbsp;{{textdata.Baths}}&nbsp;{{Bathrooms}}{{/Bathrooms}}
-			{{#Sleeps}}&nbsp;/&nbsp;{{textdata.Sleeps}}&nbsp;{{Sleeps}}{{/Sleeps}}
+			{{#Sleeps}}&nbsp;/&nbsp;{{textdata.Sleeps}}&nbsp;{{Sleeps}}{{/Sleeps}}</span>
 		</p>
 		<div class="booking-prop-img">
 			<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.OriginalURL}}" caption="{{PrimaryImage.Captions}}" />		
@@ -1335,11 +1363,11 @@
 	<div class="row-fluid">
 		<div class="span6">
 			<label>{{textdata.Adults}}</label>
-			<input class="span12 revisedates" type="text" placeholder="{{textdata.Adults}}" value="{{session.searchparams.adults.min}}" data-field="adults" required>
+			<input class="span12 revisedates" type="text" placeholder="{{textdata.Adults}}" value="{{#session.searchparams.adults.min}}{{session.searchparams.adults.min}}{{/session.searchparams.adults.min}}{{^session.searchparams.adults.min}}2{{/session.searchparams.adults.min}}" data-field="adults[min]" required>
 		</div>
 		<div class="span6">
 			<label>{{textdata.Children}}</label>
-			<input class="span12 revisedates" type="text" placeholder="{{textdata.Adults}}" value="{{session.searchparams.children.min}}" data-field="children" required>	  
+			<input class="span12 revisedates" type="text" placeholder="{{textdata.Children}}" value="{{#session.searchparams.children.min}}{{session.searchparams.children.min}}{{/session.searchparams.children.min}}{{^session.searchparams.children.min}}0{{/session.searchparams.children.min}}" data-field="children[min]" required>	  
 		</div>
 	</div>
   </div>
@@ -1357,6 +1385,77 @@
 {{#ContextData.Quote.IsValid}}
 {{#ContextData.Quote.Statement}}
 
+<div id="charges" class="item row-fluid">
+<h5>{{textdata.Charges}}<span class="glyphicons circle_question_mark"><a href="#statement-details" data-toggle="modal"><i></i></a></span></h5>
+<p>
+	{{textdata.Rent}}<span class="pull-right">{{ServicesTotal.CurrencySymbol}}{{ServicesTotal.SValue2}}</span>
+	<span class="glyphicons circle_question_mark" style="display:none"><a><i></i></a></span>
+</p>
+<p>
+	{{textdata.Taxes & Fees}}<span class="pull-right">{{TaxesAndFeesTotal.CurrencySymbol}}{{TaxesAndFeesTotal.SValue2}}</span>
+	<span class="glyphicons circle_question_mark" style="display:none"><a><i></i></a></span>
+</p>
+{{#DepositsTotal.Value}}
+<p>
+	{{textdata.Refundable Security Deposit}}<span class="pull-right">{{DepositsTotal.CurrencySymbol}}{{DepositsTotal.SValue2}}</span>
+	<span class="glyphicons circle_question_mark" style="display:none"><a><i></i></a></span>
+</p>
+{{/DepositsTotal.Value}}
+
+{{#OptionalFees.length}}
+<hr />
+<div id="ofees" class="item row-fluid">
+<h5>{{textdata.Optional Fees & Services}}</h5>
+{{/OptionalFees.length}}
+{{#OptionalFees}}
+	<p>
+	{{#BoolField}}<input type="checkbox" class="bapi-optionalfee" {{#Quantity}}checked{{/Quantity}} data-rid="{{RelatedToID}}" data-reid="{{RelatedToEntityID}}" />{{/BoolField}}
+	{{^BoolField}}<input type="number" class="span2 bapi-optionalfee" min="{{MinQty}}" max="{{MaxQty}}" value="{{Quantity}}" data-rid="{{RelatedToID}}" data-reid="{{RelatedToEntityID}}" />{{/BoolField}}
+	{{{Notes}}}
+	<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span>
+	</p>
+{{/OptionalFees}}
+{{#OptionalFees.length}}
+</div>
+{{/OptionalFees.length}}
+
+<div id="discount" class="item row-fluid">
+<hr />
+{{#Discounts}}
+<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
+{{/Discounts}}
+{{#Discounts.length}}
+</div>
+{{/Discounts.length}}
+<label>
+	<input type="text" placeholder="{{textdata.Coupon Code}}" class="span6 revisedates" value="{{session.searchparams.coupon}}" data-field="Coupon" />
+	<small><a href"javascript:void(0)" class="bapi-applyspecial">{{textdata.Apply}}</a></small>
+	<span class="pull-right">----</span>
+</label>
+</div>
+<div id="msgs" class="item row-fluid">
+	<div class="msg-yellow">
+	  <p><i class="halflings-icon star"></i> <strong>{{textdata.Total}}</strong><span class="pull-right"><strong>{{Total2.CurrencySymbol}}{{Total2.SValue2}}</strong></span></p>
+	  {{#DiscountsTotal.Value}}<p><strong>You saved<span class="pull-right">{{DiscountsTotal.CurrencySymbol}}{{DiscountsTotal.SValue2}}{{/DiscountsTotal.Value}}</strong></span></p>
+	  <p><strong>Amount Due Now:</strong><span class="pull-right">{{TotalDueNow.CurrencySymbol}} {{TotalDueNow.SValue2}}</span></p>	  
+	</div>
+	{{#ContextData.Quote.PaymentTerms}}
+	<div class="msg-gray msg-center"><p class="text-center">{{&ContextData.Quote.PaymentTerms}}</p></div>
+	{{/ContextData.Quote.PaymentTerms}}
+</div>
+
+{{/ContextData.Quote.Statement}}
+{{/ContextData.Quote.IsValid}}
+{{/result}}
+
+{{#result}}
+{{#ContextData.Quote.Statement}}
+<div id="statement-details" class="modal hide fade" role="dialog" aria-hidden="true">
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	<h3>{{textdata.Charges}}</h3>
+</div>
+<div class="modal-body">
 {{#Services.length}}
 <div id="charges" class="item row-fluid">
 <h5>{{textdata.Rent}}</h5>
@@ -1397,14 +1496,7 @@
 <div id="ofees" class="item row-fluid">
 <h5>{{textdata.Optional Fees & Services}}</h5>
 {{/OptionalFees.length}}
-{{#OptionalFees}}
-	<p>
-	{{#BoolField}}<input type="checkbox" class=" bapi-monitorstatement" data-rid="{{RelatedToID}}" data-reid="{{RelatedToEntityID}}" />{{/BoolField}}
-	{{^BoolField}}<input type="text" class="span2 bapi-monitorstatement" value="{{Quantity}}" data-rid="{{RelatedToID}}" data-reid="{{RelatedToEntityID}}" />{{/BoolField}}
-	{{{Notes}}}
-	<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span>
-	</p>
-{{/OptionalFees}}
+{{#OptionalFees}}<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>{{/OptionalFees}}
 {{#OptionalFees.length}}
 </div>
 {{/OptionalFees.length}}
@@ -1417,26 +1509,28 @@
 {{#Discounts.length}}
 </div>
 {{/Discounts.length}}
-<label>
-	<input type="text" value="" placeholder="{{textdata.Coupon Code}}" class="span6" />
-	<small><a href"#">Apply</a></small>
-	<span class="pull-right">----</span>
-</label>
 </div>
-<div id="msgs" class="item row-fluid">
-	<div class="msg-yellow">
-	  <p><i class="halflings-icon star"></i> <strong>{{textdata.Total}}</strong><span class="pull-right"><strong>$6,622.38</strong></span></p>
-	  <p><strong>{{textdata.Amount to be charged now}}:</strong><span class="pull-right">{{TotalDueNow.CurrencySymbol}} {{TotalDueNow.SValue}} {{TotalDueNow.Currency}}</span></p>
-	  <p><strong>&nbsp;</strong><span class="pull-right"><small>{{TotalDueNow.LocalCurrencySymbol}} {{TotalDueNow.LocalSValue}} {{TotalDueNow.LocalCurrency}}</small></span></p>
-	</div>
-	{{#ContextData.Quote.PaymentTerms}}
-	<div class="msg-gray msg-center"><p class="text-center">{{&ContextData.Quote.PaymentTerms}}</p></div>
-	{{/ContextData.Quote.PaymentTerms}}
 </div>
-
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">{{textdata.Close}}</button>                        
+</div>
+</div>
 {{/ContextData.Quote.Statement}}
-{{/ContextData.Quote.IsValid}}
 {{/result}}
+</script>
+
+<script id="tmpl-booking-makebooking-statementdetail" type="text/html">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h3 id="sta">Taxes</h3>
+</div>
+<div class="modal-body">
+<h5>Tax Lorem Ipsum</h5> 
+<p>One fine body…</p>
+</div>
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">{{textdata.Close}}</button>                        
+</div>
 </script>
 
 <script id="tmpl-booking-makebooking-renter" type="text/html">
@@ -1444,33 +1538,33 @@
 <div class="control-group">
 	<label class="control-label" for="renterfirstname">{{textdata.First Name}}:*</label>
 	<div class="controls">
-		<input type="text" id="renterfirstname" class="span10 bookingfield required" data-field="renterfirstname" required />
+		<input type="text" id="renterfirstname" class="span10 bookingfield required" data-field="Renter[FirstName]" required />
 	</div>
 </div>
 <div class="control-group">
 	<label class="control-label" for="renterlastname">{{textdata.Last Name}}:*</label>
 	<div class="controls">
-		<input type="text" id="renterlastname" class="span10 bookingfield required" data-field="renterlastname" required />
+		<input type="text" id="renterlastname" class="span10 bookingfield required" data-field="Renter[LastName]" required />
 	</div>
 </div>
 <div class="control-group">
 	<label class="control-label" for="renteremail">{{textdata.Email}}:*</label>
 	<div class="controls">
-		<input type="text" id="renteremail" class="span10 bookingfield required" data-validity="email" data-field="renteremail" required />
+		<input type="text" id="renteremail" class="span10 bookingfield required" data-validity="email" data-field="Renter[PrimaryEmail]" required />
 	</div>
 </div>
 <div class="control-group">
 	<label class="control-label" for="renterphone">{{textdata.Phone}}:*</label>
 	<div class="controls">
-		<input type="text" id="renterphone" class="span10 bookingfield required" data-field="renterphone" required />
+		<input type="text" id="renterphone" class="span10 bookingfield required" data-field="Renter[HomePhone]" required />
 	</div>
 </div>
 <div class="control-group">
 	<label class="control-label" for="renterls">{{config.leadsources.prompt}}:</label>
 	<div class="controls controls-row">
 		<div class="btn-group span10">
-		<select id="renterls" class="span12 bookingfield" data-field="leadsource">
-			<option value="">-{{config.leadsources.prompt}}-</option>		
+		<select id="renterls" class="span12 bookingfield" data-field="Renter[LeadSourceID]">
+			<option value="0">-{{config.leadsources.prompt}}-</option>		
 			{{#config.leadsources.values}}<option value="{{Data}}">{{Label}}</option>{{/config.leadsources.values}}
 		</select>					
 		</div>
@@ -1479,7 +1573,7 @@
 <div class="control-group">
 	<label class="control-label" for="publicnotes">{{textdata.Special Requests}}:</label>
 	<div class="controls">
-		<textarea id="publicnotes" rows="3" class="span10 bookingfield" data-field="publicnotes" />
+		<textarea id="publicnotes" rows="3" class="span10 bookingfield" data-field="PublicNotes" />
 	</div>
 </div>
 </script>
@@ -1488,42 +1582,58 @@
 <legend>
 	<div class="control controls-row">
 		<span class="span8">2. {{textdata.Credit Card Information}}</span>
-		<div class="credit-icon span4"><span class="credit-card-icon"></span></div>
+		<div class="credit-icon span4">
+		{{#config.ccconfig.visa}}
+		<span class="creditcard-visa"></span>
+		{{/config.ccconfig.visa}}
+		{{#config.ccconfig.mastercard}}
+		<span class="creditcard-mastercard"></span>
+		{{/config.ccconfig.mastercard}}
+		{{#config.ccconfig.discover}}
+		<span class="creditcard-discover"></span>
+		{{/config.ccconfig.discover}}
+		{{#config.ccconfig.amex}}
+		<span class="creditcard-amex"></span>
+		{{/config.ccconfig.amex}}
+		{{#config.ccconfig.dinersclub}}
+		<span class="creditcard-dinersclub"></span>
+		{{/config.ccconfig.dinersclub}}
+		</div>
 	</div>
 </legend>
 <div class="control-group">
 	<label class="control-label" for="noc">{{textdata.Name on Card}}:</label>
 	<div class="controls">
-		<input type="text" id="noc" class="span10 bookingfield required autofullname" data-field="ccnameoncard" required />
+		<input type="text" id="noc" class="span10 bookingfield required autofullname" data-field="CreditCard[NameOnCard]" required />
 	</div>
 </div>
 <div class="control-group">
 	<label class="control-label" for="ccnum">{{textdata.Card Number}}:</label>
 	<div class="controls">
-		<input type="text" id="ccnum" class="span10 bookingfield required ccverify" data-isvalid="0" data-field="cccardnum" required />
+		<input type="text" id="ccnum" class="span10 bookingfield required ccverify" data-isvalid="0" data-field="CreditCard[CardNumber]" required />
 	</div>
 </div>
 <div class="control-group">
 	<label class="control-label inline" for="ccexpr">{{textdata.Expiration}}:</label>
 	<div class="controls controls-row">
-		<select class="span5 bookingfield required" required>
+		<select class="span5 bookingfield required" data-field="CreditCard[ExpiryMonth]" required>
 			<option value="">-{{textdata.Month}}-</option>
 			{{#config.ccmonths.values}}
 			<option value="{{Data}}">{{Label}}</option>
 			{{/config.ccmonths.values}}
 		</select>
-		<select class="span5 bookingfield required" required>
+		<select class="span5 bookingfield required"  data-field="CreditCard[ExpiryYear]" required>
 			<option value="">-{{textdata.Year}}-</option>
 			{{#config.ccyears.values}}
 			<option value="{{Data}}">{{Label}}</option>
 			{{/config.ccyears.values}}
-		</select>
+		</select>		
 	</div>
 </div>
 <div class="control-group">
 	<label class="control-label" for="cccvv">{{textdata.Security Code}}:</label>
 	<div class="controls controls-row">
-		<input type="text" id="cccvv" class="span5 bookingfield required" data-field="cccvv" required />
+		<input type="text" id="cccvv" class="span5 bookingfield required" data-field="CreditCard[SecurityCode]" required />
 	</div>
 </div>
 <hr />
@@ -1532,33 +1642,33 @@
 <div class="control-group">
 	<label class="control-label" for="cccvv">{{textdata.Country}}:</label>
 	<div class="controls">
-		<input type="text" id="billingcountry" class="span10 bookingfield required bapi-country" data-field="billingcountry" required />						
+		<input type="text" id="billingcountry" class="span10 bookingfield required bapi-country" data-field="CreditCard[Country]" required />						
 	</div>
 </div>
 <div class="control-group">
 	<label class="control-label" for="billingaddress">{{textdata.Street Line 1}}:</label>
 	<div class="controls">
-		<input type="text" id="billingaddress" class="span10 bookingfield required" data-field="billingaddress" required />
+		<input type="text" id="billingaddress" class="span10 bookingfield required" data-field="CreditCard[Address]" required />
 	</div>
 </div>
 <div class="control-group">
 	<label class="control-label" for="billingaddress2">{{textdata.Street Line 2}}:</label>
 	<div class="controls">
-		<input type="text" id="billingaddress2" class="span10 bookingfield" data-field="billingaddress2" />
+		<input type="text" id="billingaddress2" class="span10 bookingfield" data-field="CreditCard[Address2]" />
 	</div>
 </div>
 <div class="control-group">
 	<label class="control-label" for="billingcity">{{textdata.City}}/{{textdata.Town}}:</label>
 	<div class="controls">
-		<input type="text" id="billingcity" class="span10 bookingfield bapi-city" data-field="billingcity" />
+		<input type="text" id="billingcity" class="span10 bookingfield bapi-city" data-field="CreditCard[City]" />
 	</div>
 </div>
 <div class="control-group">
 	<label class="control-label inline" for="billingstate">{{textdata.State}}/{{textdata.Province}}:</label>
 	<div class="controls controls-row">
-		<input type="text" id="billingstate" class="span4 bookingfield bapi-state" data-field="billingstate" />
+		<input type="text" id="billingstate" class="span4 bookingfield bapi-state" data-field="CreditCard[State]" />
 		<label class="control-label span3 row-fluid">{{textdata.Postal Code}}:</label>
-		<input type="text" class="span3 row-fluid" data-field="billingpostalcode" />
+		<input type="text" class="span3 row-fluid bookingfield" data-field="CreditCard[PostalCode]" />
 	</div>
 </div>
 <hr />
@@ -1569,7 +1679,7 @@
 {{#ContextData.Quote.IsValid}}
 <legend>4. {{textdata.Accept Terms and Conditions}}</legend>
 <div class="control-group">
-	<p>{{config.rentalpolicysummary}}</p>
+	<p style="display:none">{{config.rentalpolicysummary}}</p>
 	<div class="controls-rows">
 		<label class="checkbox span6">	
 			<small>
@@ -1589,14 +1699,15 @@
 				<a href="javascript:void(0);" class="btn btn-large btn-primary span12 makebooking" data-field-selector="bookingfield">{{textdata.Reserve Now}}</a>
 			</span>
 			<span class="line2">
-				This page is secure - <a href="#">check here</a>
+				{{#result}}{{#ContextData.Quote.Statement.ValidUntil}}Quote is valid until: {{LongDateTime}}<br />{{/ContextData.Quote.Statement.ValidUntil}}{{/result}}
+				{{textdata.This page is secure}} - <a href="#">{{textdata.check here}}</a>
 			</span>
 		</div>
 		{{#result}}
 		<div class="amount-bk span4">
-			<h5>Amount to be charged now:</h5>
+			<h5>{{textdata.Amount to be charged now}}:</h5>
 			{{#ContextData.Quote.Statement}}
-			<h3>{{TotalDueNow.CurrencySymbol}}&nbsp;{{TotalDueNow.SValue}}&nbsp;{{TotalDueNow.Currency}}</h3>
+			<h3>{{TotalDueNow.CurrencySymbol}}&nbsp;{{TotalDueNow.SValue2}}</h3>
 			{{/ContextData.Quote.Statement}}
 		</div>
 		{{/result}}

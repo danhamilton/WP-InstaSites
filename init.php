@@ -1,17 +1,22 @@
-<?php
-	require_once ('../../../wp-load.php');
-	
-	$menuname = "Main Navigation Menu";
-	$menu_id = initmenu($menuname);
-	
-	$pagedefs = $_POST['pagedefs'];
-	$navmap = array();
-	foreach ($pagedefs as $pagedef) {
-		addpage($pagedef, $menu_id);
-		//print_r($pagedef);
-		//print_r("<br />");
+<?php	
+	function urlHandler_bapidefaultpages() {
+		$url = get_relative($_SERVER['REQUEST_URI']);
+		//echo $url; exit();
+		if (strtolower($url) != "/bapi.init")
+			return;
+		$menuname = "Main Navigation Menu";
+		$menu_id = initmenu($menuname);
+		
+		$pagedefs = $_POST['pagedefs'];
+		$navmap = array();
+		foreach ($pagedefs as $pagedef) {
+			addpage($pagedef, $menu_id);
+			//print_r($pagedef);
+			//print_r("<br />");
+		}
+		//return;
+		exit();
 	}
-	return;
 	
 	
 	function addpage($pagedef, $menu_id) {
@@ -43,12 +48,14 @@
 		$content = $pagedef['content'];	
 		if($content!=''){				
 			$cpath = get_local(plugins_url($content,__FILE__));
-			echo '<div>'.$cpath.'</div>';
 			$t = file_get_contents($cpath);
 			$m = new Mustache_Engine();
 		
 			$wrapper = getbapisolutiondata();			
-			$string = $m->render($t, $wrapper);			
+			$string = $m->render($t, $wrapper);	
+			$string = str_replace("\t", '', $string); // remove tabs
+			$string = str_replace("\n", '', $string); // remove new lines
+			$string = str_replace("\r", '', $string); // remove carriage returns			
 			$post['post_content'] = $string; //utf8_encode($string);				
 		}
 		$post['post_type'] = 'page';			
