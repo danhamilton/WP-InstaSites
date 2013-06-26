@@ -1757,6 +1757,54 @@
 {{/result}}
 </script>
 
+<script id="tmpl-booking-makebooking-renter" type="text/html">
+{{#result}}
+<legend>1. {{textdata.Guest Information}}</legend>
+<div class="control-group">
+	<label class="control-label" for="renterfirstname">{{textdata.First Name}}:*</label>
+	<div class="controls">
+		<input value="{{Renter.FirstName}}" type="text" id="renterfirstname" class="span10 bookingfield required" data-field="Renter[FirstName]" required />
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label" for="renterlastname">{{textdata.Last Name}}:*</label>
+	<div class="controls">
+		<input type="text" value={{Renter.LastName}} id="renterlastname" class="span10 bookingfield required" data-field="Renter[LastName]" required />
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label" for="renteremail">{{textdata.Email}}:*</label>
+	<div class="controls">
+		<input type="text" value={{Renter.PrimaryEmail}} id="renteremail" class="span10 bookingfield required" data-validity="email" data-field="Renter[PrimaryEmail]" required />
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label" for="renterphone">{{textdata.Phone}}:*</label>
+	<div class="controls">
+		<input type="text" value={{Renter.HomePhone}} id="renterphone" class="span10 bookingfield required" data-field="Renter[HomePhone]" required />
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label" for="renterls">{{config.leadsources.prompt}}:</label>
+	<div class="controls controls-row">
+		<div class="btn-group span10">
+		<select id="renterls" class="span12 bookingfield" data-field="Renter[LeadSourceID]">
+			<option value="0">-{{config.leadsources.prompt}}-</option>		
+			{{#config.leadsources.values}}<option value="{{Data}}">{{Label}}</option>{{/config.leadsources.values}}
+		</select>					
+		</div>
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label" for="publicnotes">{{textdata.Special Requests}}:</label>
+	<div class="controls">
+		<textarea id="publicnotes" rows="3" class="span10 bookingfield" data-field="PublicNotes" />
+	</div>
+</div>
+{{/result}}
+</script>
+
+
 
 
 
