@@ -178,7 +178,7 @@ context.inithelpers = {
 	        "templates": {
 	            "stayinfo": BAPI.templates.get('tmpl-booking-makebooking-stayinfo'),
 	            "statement": BAPI.templates.get('tmpl-booking-makebooking-statement'),
-	            "renter": BAPI.templates.get('tmpl-booking-makebooking-renter'),
+	            "renter": BAPI.templates.get('tmpl-booking-makepayment-renter'),
 	            "creditcard": BAPI.templates.get('tmpl-booking-makebooking-creditcard'),
 	            "accept": BAPI.templates.get('tmpl-booking-makebooking-accept')
 	        }
