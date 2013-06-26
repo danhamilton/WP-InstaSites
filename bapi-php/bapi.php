@@ -71,8 +71,8 @@ class BAPI
 	
 	public function get($entity,$ids,$options=null,$jsondecode=true) {
 		if (!$this->isvalid()) { return null; }
-		$url = $this->getBaseURL() . "/ws/?method=get&apikey=" . $this->apikey . "&entity=" . $entity . '&ids=' . implode(",", $ids);
-		if (!empty($options)) { $url = $url . "&" . http_build_query($options); }		
+		$url = $this->getBaseURL() . "/ws/?method=get&apikey=" . $this->apikey . "&entity=" . $entity . '&ids=' . implode(",", $ids) . '&language=' . get_option('bapi_language');
+		if (!empty($options)) { $url = $url . "&" . http_build_query($options); }	
 		$c = file_get_contents($url);
 		if (empty($jsondecode) || $jsondecode) { return json_decode($c,TRUE); }
 		return $c;
