@@ -184,7 +184,7 @@ context.inithelpers = {
 	        }
 	    };
 	    $.getScript(context.jsroot + "bapi/bapi.ui.cchelper.js", function (data, ts, jqxhr) {
-	        BAPI.UI.createMakeBookingWidget('#bookingform', options);
+	        BAPI.UI.createMakePaymentWidget('#bookingform', options);
 	    });
 	},
 	setupbookingform: function (options) {
