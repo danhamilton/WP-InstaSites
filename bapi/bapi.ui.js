@@ -1160,11 +1160,6 @@ function PaymentHelper_FullLoad(targetid, options, bid) {
         context.createDatePicker('.datepickercheckin', { "property": data.result[0], "checkoutID": '.datepickercheckout' });
         context.createDatePicker('.datepickercheckout', { "property": data.result[0] });
 
-        // show the revise your dates if quote is not valid
-        BAPI.curentity = data.result[0];
-        curbooking = data.result[0].ContextData.Quote;
-        if (!data.result[0].ContextData.Quote.IsValid) { try { $('#revisedates').modal('show'); } catch (err) { } }
-
         function partialRender(sdata, options) {
             $(".modal").modal('hide');
             sdata.site = BAPI.site;
@@ -1289,7 +1284,7 @@ function PaymentHelper_BookHandler(targetid, options, propid) {
 
         // get the list of required fields and validate them
         var reqfields = $.extend([], $('.required'));
-        processing = BookingHelper_ValidateForm(reqfields);
+        processing = PaymentHelper_ValidateForm(reqfields);
         if (!processing) { $(targetid).unblock(); return; }
         if (BAPI.isempty(curbooking)) { $(targetid).unblock(); alert("Fatal error trying to save this booking.  The context has been lost."); return; }
 
