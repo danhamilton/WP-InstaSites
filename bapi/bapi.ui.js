@@ -1145,6 +1145,7 @@ function PaymentHelper_FullLoad(targetid, options, bid) {
     var propoptions = { avail: 1, seo: 1 }
     propoptions = $.extend({}, propoptions, BAPI.session.searchparams);
     BAPI.get(bid, BAPI.entities.booking, propoptions, function (data) {
+        BAPI.log(data);
         data.site = BAPI.site;
         data.config = BAPI.config();
         data.textdata = BAPI.textdata;
@@ -1333,7 +1334,7 @@ context.createMakePaymentWidget = function (targetid, options) {
     var u = $.url(window.location.href);
     if (bookingHelper_DoRedirect(u)) { return; }
     var bid = u.param('bid');
-    if (typeof (propid) === "undefined" || propid === null) {
+    if (typeof (bid) === "undefined" || bid === null) {
         alert("You have reached this page in error.  You will be redirected back to the home page.");
         window.location = "/"; //TODO: need to redirect back to the correct place
         return;
@@ -1341,7 +1342,7 @@ context.createMakePaymentWidget = function (targetid, options) {
 
     PaymentHelper_FullLoad(targetid, options, bid);
     PaymentHelper_SetupFormHandlers();
-    PaymentHelper_BookHandler(targetid, options, propid);
+    PaymentHelper_BookHandler(targetid, options, bid);
 }
 
 
