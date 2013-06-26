@@ -162,7 +162,8 @@ context.inithelpers = {
 			}
 		});	
 	},
-	setupbookingform: function(options) {
+	setupbookingform: function (options) {
+	    alert('test');
 		var ctl = $('.bapi-bookingform');
 		if (typeof(ctl)==="undefined" || ctl===null || ctl.length==0) { return; }
 		
