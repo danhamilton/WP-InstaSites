@@ -1151,11 +1151,11 @@ function PaymentHelper_FullLoad(targetid, options, bid) {
         data.textdata = BAPI.textdata;
         data.session = BAPI.session;
         $(targetid).html(Mustache.render(options.mastertemplate, data));
-        //$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, data));
-        //$(options.targetids.statement).html(Mustache.render(options.templates.statement, data));
-        //$(options.targetids.renter).html(Mustache.render(options.templates.renter, data));
-        //$(options.targetids.creditcard).html(Mustache.render(options.templates.creditcard, data));
-        //$(options.targetids.accept).html(Mustache.render(options.templates.accept, data));
+        $(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, data));
+        $(options.targetids.statement).html(Mustache.render(options.templates.statement, data));
+        $(options.targetids.renter).html(Mustache.render(options.templates.renter, data));
+        $(options.targetids.creditcard).html(Mustache.render(options.templates.creditcard, data));
+        $(options.targetids.accept).html(Mustache.render(options.templates.accept, data));
         $('.specialform').hide(); // hide the spam control
         context.createDatePicker('.datepickercheckin', { "property": data.result[0], "checkoutID": '.datepickercheckout' });
         context.createDatePicker('.datepickercheckout', { "property": data.result[0] });
