@@ -1720,6 +1720,71 @@
 {{/result}}
 </script>
 
+
+<script id="tmpl-booking-makepayment-masterlayout" type="text/html">
+{{#result}}
+<div class="module shadow-border">
+<div class="row-fluid">
+	<header class="pagination-centered pd">
+		<h1>{{textdata.Fast Secure Online Booking}}</h1>
+		<p>
+			<strong>{{Property.Headline}}</strong><span class="hidden-phone">&nbsp;-&nbsp;{{Property.Type}}
+			{{#Property.Bedrooms}}&nbsp;/&nbsp;{{textdata.Beds}}&nbsp;{{Property.Bedrooms}}{{/Property.Bedrooms}}
+			{{#Property.Bathrooms}}&nbsp;/&nbsp;{{textdata.Baths}}&nbsp;{{Property.Bathrooms}}{{/Property.Bathrooms}}
+			{{#Property.Sleeps}}&nbsp;/&nbsp;{{textdata.Sleeps}}&nbsp;{{Property.Sleeps}}{{/Property.Sleeps}}</span>
+		</p>
+		<div class="booking-prop-img">
+			<img alt="{{Proeprty.PrimaryImage.Caption}}" src="{{&Property.PrimaryImage.OriginalURL}}" caption="{{Proeprty.PrimaryImage.Captions}}" />		
+		</div>
+	</header>	
+	<div class="booking-page bordersolid">
+		<article class="span8 booking-form">
+		<div class="form-horizontal pd">
+			<div id="renter"></div>
+			<hr />
+			<div id="creditcard"></div>
+			<hr />
+			<div id="accept"></div>
+		</div>
+		</article>
+		
+		<aside class="property-info span4 pd">
+		<div class="row-fluid">
+			<div class="span12 pd">
+				<div id="stayinfo"></div>		
+				<div id="statement"></div>	
+				<div id="question-support" class="item row-fluid">
+					<span class="glyphicons module headset"><i></i>{{textdata.Have a Question?}}</span>
+					<p>{{textdata.Phone}}: <span class="pull-right">{{site.phone}}</span></p>
+					<p>{{textdata.Email}}: <span class="pull-right">{{site.email}}</span></p>					
+				</div>				
+			</div>
+		</div>
+		</aside>
+		<div class="clearfix"></div>
+	</div>				
+</div>
+</div>
+</div>
+{{/result}}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <script id="tmpl-booking-rentalpolicy" type="text/html">
 <div style="padding:10px;">
 {{{config.rentalpolicy}}}

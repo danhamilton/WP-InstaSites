@@ -52,6 +52,7 @@ context.init = function(options) {
 	context.inithelpers.setupsummarywidgets(options);
 	context.inithelpers.setupsearchformwidgets(options);
 	context.inithelpers.setupbookingform(options);
+	context.inithelpers.setupmakepaymentform(options);
 	context.inithelpers.setupinquiryformwidgets(options);
 	context.inithelpers.setuppopupinquiryformwidgets(options);
 	context.inithelpers.setupavailcalendarwidgets(options);
@@ -162,8 +163,31 @@ context.inithelpers = {
 			}
 		});	
 	},
+	setupmakepaymentform: function (options) {
+	    var ctl = $('.bapi-makepaymentform');
+	    if (typeof (ctl) === "undefined" || ctl === null || ctl.length == 0) { return; }
+	    var options = {
+	        "mastertemplate": BAPI.templates.get('tmpl-booking-makepayment-masterlayout'),
+	        "targetids": {
+	            "stayinfo": "#stayinfo",
+	            "statement": "#statement",
+	            "renter": "#renter",
+	            "creditcard": "#creditcard",
+	            "accept": "#accept"
+	        },
+	        "templates": {
+	            "stayinfo": BAPI.templates.get('tmpl-booking-makebooking-stayinfo'),
+	            "statement": BAPI.templates.get('tmpl-booking-makebooking-statement'),
+	            "renter": BAPI.templates.get('tmpl-booking-makebooking-renter'),
+	            "creditcard": BAPI.templates.get('tmpl-booking-makebooking-creditcard'),
+	            "accept": BAPI.templates.get('tmpl-booking-makebooking-accept')
+	        }
+	    };
+	    $.getScript(context.jsroot + "bapi/bapi.ui.cchelper.js", function (data, ts, jqxhr) {
+	        BAPI.UI.createMakeBookingWidget('#bookingform', options);
+	    });
+	},
 	setupbookingform: function (options) {
-	    alert('test');
 		var ctl = $('.bapi-bookingform');
 		if (typeof(ctl)==="undefined" || ctl===null || ctl.length==0) { return; }
 		
@@ -1115,6 +1139,209 @@ context.createMakeBookingWidget = function (targetid, options) {
 	bookingHelper_FullLoad(targetid, options, propid);	
 	BookingHelper_SetupFormHandlers();
 	BookingHelper_BookHandler(targetid, options, propid);		
+}
+
+function PaymentHelper_FullLoad(targetid, options, bid) {
+    var propoptions = { avail: 1, seo: 1 }
+    propoptions = $.extend({}, propoptions, BAPI.session.searchparams);
+    BAPI.get(bid, BAPI.entities.booking, propoptions, function (data) {
+        data.site = BAPI.site;
+        data.config = BAPI.config();
+        data.textdata = BAPI.textdata;
+        data.session = BAPI.session;
+        $(targetid).html(Mustache.render(options.mastertemplate, data));
+        //$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, data));
+        //$(options.targetids.statement).html(Mustache.render(options.templates.statement, data));
+        //$(options.targetids.renter).html(Mustache.render(options.templates.renter, data));
+        //$(options.targetids.creditcard).html(Mustache.render(options.templates.creditcard, data));
+        //$(options.targetids.accept).html(Mustache.render(options.templates.accept, data));
+        $('.specialform').hide(); // hide the spam control
+        context.createDatePicker('.datepickercheckin', { "property": data.result[0], "checkoutID": '.datepickercheckout' });
+        context.createDatePicker('.datepickercheckout', { "property": data.result[0] });
+
+        // show the revise your dates if quote is not valid
+        BAPI.curentity = data.result[0];
+        curbooking = data.result[0].ContextData.Quote;
+        if (!data.result[0].ContextData.Quote.IsValid) { try { $('#revisedates').modal('show'); } catch (err) { } }
+
+        function partialRender(sdata, options) {
+            $(".modal").modal('hide');
+            sdata.site = BAPI.site;
+            sdata.config = BAPI.config();
+            sdata.textdata = BAPI.textdata;
+            sdata.session = BAPI.session;
+            BAPI.log(sdata);
+            $(options.targetids.statement).html(Mustache.render(options.templates.statement, sdata));
+            $(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, sdata));
+            $(options.targetids.accept).html(Mustache.render(options.templates.accept, sdata));
+            $(options.targetids.stayinfo).unblock();
+            context.createDatePicker('.datepickercheckin', { "property": BAPI.curentity, "checkoutID": '.datepickercheckout' });
+            context.createDatePicker('.datepickercheckout', { "property": BAPI.curentity });
+        }
+
+        $(".bapi-revisedates").live("click", function () {
+            var reqdata = saveFormToSession($('.revisedates'), { dataselector: "revisedates" });
+            reqdata.pid = propid;
+            reqdata.quoteonly = 1;
+            $(options.targetids.stayinfo).block({ message: "<img src='" + loadingImgUrl + "' />" });
+            BAPI.get(propid, BAPI.entities.property, reqdata, function (sdata) {
+                curbooking = sdata.result[0].ContextData.Quote;
+                partialRender(sdata, options);
+            });
+        });
+
+        function modifyStatement() {
+            var reqdata = saveFormToSession($('.revisedates'), { dataselector: "revisedates" });
+            reqdata.pid = propid;
+            reqdata.quoteonly = 1;
+            // get the optional fees
+            reqdata.optionalfees = [];
+            $('.bapi-optionalfee').each(function (i) {
+                var c = $(this);
+                var qty = (c.is(':checkbox') ? (c.is(":checked") ? 1 : 0) : c.val());
+                var ofee = { "RelatedToID": c.attr('data-rid'), "RelatedToEntityID": c.attr('data-reid'), "Quantity": qty };
+                reqdata.optionalfees.push(ofee);
+            });
+            reqdata.numoptionalfees = reqdata.optionalfees.length;
+            $(options.targetids.stayinfo).block({ message: "<img src='" + loadingImgUrl + "' />" });
+            BAPI.get(propid, BAPI.entities.property, reqdata, function (sdata) {
+                curbooking = sdata.result[0].ContextData.Quote;
+                BAPI.log(curbooking);
+                partialRender(sdata, options);
+            });
+        }
+
+        $('.bapi-optionalfee').live('change', function () {
+            modifyStatement();
+        });
+
+        $('.bapi-applyspecial').live('click', function () {
+            modifyStatement();
+        });
+    });
+}
+
+function PaymentHelper_SetupFormHandlers() {
+    $('.bapi-country').live('focus', function () {
+        $(this).typeaheadmap({ "source": BAPI.UI.countries, "key": "name", "value": "name", "displayer": function (that, item, highlighted) { return highlighted; } });
+    });
+    /*$('.bapi-state').live('focus', function() {
+		new google.maps.places.Autocomplete(this, cco);
+	});
+	$('.bapi-city').live('focus', function() {		
+		var cco = { types: ['(cities)'], componentRestrictions: {country: $('.bapi-country').val()} };
+		new google.maps.places.Autocomplete(this, cco);
+	});*/
+
+    // do credit card validtion
+    $(".ccverify").live('keyup', function () {
+        var ctl = $(this);
+        ctl.validateCreditCard(function (e) {
+            if (e.luhn_valid && e.length_valid) { ctl.attr('data-isvalid', '1'); }
+            else { ctl.attr('data-isvalid', '0'); }
+        })
+    });
+
+    // try to auto set the name on card
+    $('.autofullname').live('focus', function () {
+        var c = $(this);
+        if (c.val() === null || c.val() == '') {
+            c.val($('#renterfirstname').val() + ' ' + $('#renterlastname').val());
+        }
+    });
+}
+
+function PaymentHelper_ValidateForm(reqfields) {
+    for (i = 0; i < reqfields.length; ++i) {
+        var rf = $(reqfields[i]);
+        $.validity.clear();
+        $.validity.start();
+        var match = rf.attr('data-validity');
+        if (typeof (match) === "undefined" || match === null) {
+            rf.require();
+        } else {
+            rf.require().match(match);
+        }
+        var result = $.validity.end();
+        if (!result.valid) {
+            alert(BAPI.textdata['Please fill out all required fields']); rf.focus(); return false;
+        }
+        // special case for credit card field
+        if (rf.hasClass('ccverify') && rf.attr('data-isvalid') != '1') {
+            alert(BAPI.textdata['The entered credit card is invalid']); rf.focus(); return false;
+        }
+        if (rf.hasClass('checkbox')) {
+            BAPI.log(rf.attr('checked'));
+            if (!rf.attr('checked')) {
+                alert(BAPI.textdata['Please accept the terms and conditions']); rf.focus(); return false;
+            }
+        }
+    }
+    return true;
+}
+
+function PaymentHelper_BookHandler(targetid, options, propid) {
+    var processing = false;
+    $(".makepayment").live("click", function () {
+        if (processing) { return; } // already in here
+        processing = true; // make sure we do not reenter
+
+        // get the list of required fields and validate them
+        var reqfields = $.extend([], $('.required'));
+        processing = BookingHelper_ValidateForm(reqfields);
+        if (!processing) { $(targetid).unblock(); return; }
+        if (BAPI.isempty(curbooking)) { $(targetid).unblock(); alert("Fatal error trying to save this booking.  The context has been lost."); return; }
+
+        var reqdata = bookingHelper_getFormData(options, curbooking);
+
+        // add the current booking context to our request form
+        if (BAPI.isempty(reqdata.CheckIn)) { reqdata.CheckIn = BAPI.session.searchparams.checkin; }
+        if (BAPI.isempty(reqdata.CheckOut)) { reqdata.CheckOut = BAPI.session.searchparams.checkout; }
+        if (BAPI.isempty(reqdata.NumAdults)) { reqdata.NumAdults = BAPI.session.searchparams.adults.min; }
+        if (BAPI.isempty(reqdata.NumChildren)) { reqdata.NumChildren = BAPI.session.searchparams.children.min; }
+        if (BAPI.isempty(reqdata.NumRooms)) { reqdata.NumRooms = BAPI.session.searchparams.rooms.min; }
+
+        $(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
+        if (typeof (reqdata.special) !== "undefined" && reqdata.special !== null && reqdata.special != '') {
+            window.location.href = options.responseurl + '?special=1';
+            processing = false;
+            return; // special textbox has a value, not a real person
+        }
+
+        // do extra cleanup on checkin/checkout
+        try { reqdata.CheckIn = moment(reqdata.CheckIn).format(BAPI.defaultOptions.dateFormatBAPI); } catch (err) { }
+        try { reqdata.CheckOut = moment(reqdata.CheckOut).format(BAPI.defaultOptions.dateFormatBAPI); } catch (err) { }
+        var postdata = { "data": JSON.stringify(reqdata) };
+        BAPI.save(BAPI.entities.booking, postdata, function (bres) {
+            BAPI.log(bres);
+            $(targetid).unblock();
+            processing = false;
+            if (!bres.result.IsValid) {
+                alert(bres.result.ValidationMessage);
+            } else {
+                options.responseurl = "/bookingconfirmation";
+                window.location.href = context.nonsecureurl(options.responseurl + '?bid=' + bres.result.ID + '&pid=' + bres.result.PersonID);
+            }
+        });
+    });
+}
+
+context.createMakePaymentWidget = function (targetid, options) {
+    if (typeof (options.dataselector) === "undefined") { options.dataselector = "bookingfield"; }
+
+    // check if we need to redirect
+    var u = $.url(window.location.href);
+    if (bookingHelper_DoRedirect(u)) { return; }
+    var bid = u.param('bid');
+    if (typeof (propid) === "undefined" || propid === null) {
+        alert("You have reached this page in error.  You will be redirected back to the home page.");
+        window.location = "/"; //TODO: need to redirect back to the correct place
+        return;
+    }
+
+    PaymentHelper_FullLoad(targetid, options, bid);
+    PaymentHelper_SetupFormHandlers();
+    PaymentHelper_BookHandler(targetid, options, propid);
 }
 
 
