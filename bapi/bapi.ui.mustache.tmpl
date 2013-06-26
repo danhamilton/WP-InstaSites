@@ -1909,3 +1909,141 @@
 </div>
 </div>
 </script>
+
+<script id="tmpl-booking-makepayment-statement" type="text/html">
+<hr />
+{{#result}}
+{{#Statement}}
+
+<div id="charges" class="item row-fluid">
+<h5>{{textdata.Charges}}<span class="glyphicons circle_question_mark"><a href="#statement-details" data-toggle="modal"><i></i></a></span></h5>
+<p>
+	{{textdata.Rent}}<span class="pull-right">{{ServicesTotal.CurrencySymbol}}{{ServicesTotal.SValue2}}</span>
+	<span class="glyphicons circle_question_mark" style="display:none"><a><i></i></a></span>
+</p>
+<p>
+	{{textdata.Taxes & Fees}}<span class="pull-right">{{TaxesAndFeesTotal.CurrencySymbol}}{{TaxesAndFeesTotal.SValue2}}</span>
+	<span class="glyphicons circle_question_mark" style="display:none"><a><i></i></a></span>
+</p>
+{{#DepositsTotal.Value}}
+<p>
+	{{textdata.Refundable Security Deposit}}<span class="pull-right">{{DepositsTotal.CurrencySymbol}}{{DepositsTotal.SValue2}}</span>
+	<span class="glyphicons circle_question_mark" style="display:none"><a><i></i></a></span>
+</p>
+{{/DepositsTotal.Value}}
+
+{{#OptionalFees.length}}
+<hr />
+<div id="ofees" class="item row-fluid">
+<h5>{{textdata.Optional Fees & Services}}</h5>
+{{/OptionalFees.length}}
+{{#OptionalFees}}
+	<p>
+	{{#BoolField}}<input type="checkbox" class="bapi-optionalfee" {{#Quantity}}checked{{/Quantity}} data-rid="{{RelatedToID}}" data-reid="{{RelatedToEntityID}}" />{{/BoolField}}
+	{{^BoolField}}<input type="number" class="span2 bapi-optionalfee" min="{{MinQty}}" max="{{MaxQty}}" value="{{Quantity}}" data-rid="{{RelatedToID}}" data-reid="{{RelatedToEntityID}}" />{{/BoolField}}
+	{{{Notes}}}
+	<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span>
+	</p>
+{{/OptionalFees}}
+{{#OptionalFees.length}}
+</div>
+{{/OptionalFees.length}}
+
+<div id="discount" class="item row-fluid">
+<hr />
+{{#Discounts}}
+<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
+{{/Discounts}}
+{{#Discounts.length}}
+</div>
+{{/Discounts.length}}
+<label>
+	<input type="text" placeholder="{{textdata.Coupon Code}}" class="span6 revisedates" value="{{session.searchparams.coupon}}" data-field="Coupon" />
+	<small><a href"javascript:void(0)" class="bapi-applyspecial">{{textdata.Apply}}</a></small>
+	<span class="pull-right">----</span>
+</label>
+</div>
+<div id="msgs" class="item row-fluid">
+	<div class="msg-yellow">
+	  <p><i class="halflings-icon star"></i> <strong>{{textdata.Total}}</strong><span class="pull-right"><strong>{{Total2.CurrencySymbol}}{{Total2.SValue2}}</strong></span></p>
+	  {{#DiscountsTotal.Value}}<p><strong>You saved<span class="pull-right">{{DiscountsTotal.CurrencySymbol}}{{DiscountsTotal.SValue2}}{{/DiscountsTotal.Value}}</strong></span></p>
+	  <p><strong>Amount Due Now:</strong><span class="pull-right">{{TotalDueNow.CurrencySymbol}} {{TotalDueNow.SValue2}}</span></p>	  
+	</div>
+	{{#ContextData.Quote.PaymentTerms}}
+	<div class="msg-gray msg-center"><p class="text-center">{{&ContextData.Quote.PaymentTerms}}</p></div>
+	{{/ContextData.Quote.PaymentTerms}}
+</div>
+
+{{/Statement}}
+{{/result}}
+
+{{#result}}
+{{Statement}}
+<div id="statement-details" class="modal hide fade" role="dialog" aria-hidden="true">
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	<h3>{{textdata.Charges}}</h3>
+</div>
+<div class="modal-body">
+{{#Services.length}}
+<div id="charges" class="item row-fluid">
+<h5>{{textdata.Rent}}</h5>
+{{/Services.length}}
+{{#Services}}
+<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
+{{/Services}}
+{{#Services.length}}
+</div>
+{{/Services.length}}
+<hr />
+
+{{#Fees.length}}
+<div id="fees" class="item row-fluid">
+<h5>{{textdata.Fees}}</h5>
+{{/Fees.length}}
+{{#Fees}}
+<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
+{{/Fees}}
+{{#Fees.length}}
+</div>
+{{/Fees.length}}
+<hr />
+
+{{#Taxes.length}}
+<div id="taxes" class="item row-fluid">
+<h5>{{textdata.Taxes}}</h5>
+{{/Taxes.length}}
+{{#Taxes}}
+<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
+{{/Taxes}}
+{{#Taxes.length}}
+</div>
+{{/Taxes.length}}
+<hr />
+
+{{#OptionalFees.length}}
+<div id="ofees" class="item row-fluid">
+<h5>{{textdata.Optional Fees & Services}}</h5>
+{{/OptionalFees.length}}
+{{#OptionalFees}}<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>{{/OptionalFees}}
+{{#OptionalFees.length}}
+</div>
+{{/OptionalFees.length}}
+<hr />
+
+<div id="taxes" class="item row-fluid">
+{{#Discounts}}
+<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
+{{/Discounts}}
+{{#Discounts.length}}
+</div>
+{{/Discounts.length}}
+</div>
+</div>
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">{{textdata.Close}}</button>                        
+</div>
+</div>
+{{/Statement}}
+{{/result}}
+</script>
