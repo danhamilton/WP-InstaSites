@@ -1145,6 +1145,13 @@ function PaymentHelper_FullLoad(targetid, options, bid) {
     var propoptions = { avail: 1, seo: 1 }
     propoptions = $.extend({}, propoptions, BAPI.session.searchparams);
     BAPI.get(bid, BAPI.entities.booking, propoptions, function (data) {
+        if (data.result.length = 0) {
+            alert('Could not load booking');
+            return;
+        }
+        data.result[0].DCheckIn = parseDate(data.result[0].CheckIn)
+        data.result[0].DCheckOut = parseDate(data.result[0].CheckOut)
+
         BAPI.log(data);
         data.site = BAPI.site;
         data.config = BAPI.config();
@@ -1584,7 +1591,10 @@ function setRows(findThis,wrapthis,needFlex,needWrapRows,howManyWrap){
 			}
 		}, 200);
 	}
-}	
+}
+function parseDate(jsonDateString) {
+    return new Date(parseInt(jsonDateString.replace('/Date(', '')));
+}
 	
 
 })(BAPI.UI); 

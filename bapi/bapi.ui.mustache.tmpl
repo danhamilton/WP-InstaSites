@@ -1969,7 +1969,7 @@
 	  {{#DiscountsTotal.Value}}<p><strong>You saved<span class="pull-right">{{DiscountsTotal.CurrencySymbol}}{{DiscountsTotal.SValue2}}{{/DiscountsTotal.Value}}</strong></span></p>
 	   <p><strong>Amount Due Now:</strong><span class="pull-right">{{TotalDueNow.CurrencySymbol}} {{TotalDueNow.SValue2}}</span></p>	  
 	  <p><strong>Amount Paid:</strong><span class="pull-right">{{AmountPaid.CurrencySymbol}} {{AmountPaid.SValue2}}</span></p>	
-	<p><strong>Total to Pay Now:</strong><span class="pull-right span6"><input type="text" value="{{TotalDueNow.SValue2}}" /></span></p>	  
+	<p><strong>Total to Pay Now:</strong><span class="pull-right span6">{{TotalDueNow.CurrencySymbol}}<input type="text" style='width:75px !important' value="{{TotalDueNow.SValue2}}" /></span></p>	  
 	</div>
 	{{#ContextData.Quote.PaymentTerms}}
 	<div class="msg-gray msg-center"><p class="text-center">{{&ContextData.Quote.PaymentTerms}}</p></div>
@@ -2049,8 +2049,8 @@
 {{#result}}
 <span class="glyphicons module notes_2"><i></i>{{textdata.Booking Details}}</span>
 <div id="details" class="item row-fluid">                  
-	<p><span class="glyphicons calendar"><i></i>Your {{textdata.Check-In}}</span> <span class="pull-right">{{CheckIn}}</span></p>
-	<p><span class="glyphicons calendar"><i></i>Your {{textdata.Check-Out}}</span> <span class="pull-right">{{CheckOut}}</span></p>
+	<p><span class="glyphicons calendar"><i></i>{{textdata.Check-In}}</span> <span class="pull-right">{{CheckIn}}</span></p>
+	<p><span class="glyphicons calendar"><i></i>{{textdata.Check-Out}}</span> <span class="pull-right">{{CheckOut}}</span></p>
 	<p><span class="glyphicons group"><i></i>{{textdata.Adults}}</span><span class="pull-right">{{NumAdults}}</span></p>
 	<p><span class="glyphicons group"><i></i>{{textdata.Children}}</span><span class="pull-right">{{NumChildren}}</span></p>
 </div>
