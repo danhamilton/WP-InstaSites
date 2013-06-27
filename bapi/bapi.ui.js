@@ -1145,7 +1145,7 @@ function PaymentHelper_FullLoad(targetid, options, bid) {
     var propoptions = { avail: 1, seo: 1 }
     propoptions = $.extend({}, propoptions, BAPI.session.searchparams);
     BAPI.get(bid, BAPI.entities.booking, propoptions, function (data) {
-        if (data.result.length = 0) {
+        if (data.result.length == 0) {
             alert('Could not load booking');
             return;
         }
