@@ -1969,11 +1969,10 @@
 	  {{#DiscountsTotal.Value}}<p><strong>You saved<span class="pull-right">{{DiscountsTotal.CurrencySymbol}}{{DiscountsTotal.SValue2}}{{/DiscountsTotal.Value}}</strong></span></p>
 	   <p><strong>Amount Due Now:</strong><span class="pull-right">{{TotalDueNow.CurrencySymbol}} {{TotalDueNow.SValue2}}</span></p>	  
 	  <p><strong>Amount Paid:</strong><span class="pull-right">{{AmountPaid.CurrencySymbol}} {{AmountPaid.SValue2}}</span></p>	
-	<p><strong>Total to Pay Now:</strong><span class="pull-right span6">{{TotalDueNow.CurrencySymbol}}<input type="text" style='width:75px !important' value="{{TotalDueNow.SValue2}}" /></span></p>	  
 	</div>
-	{{#ContextData.Quote.PaymentTerms}}
+	{{#PaymentTerms}}
 	<div class="msg-gray msg-center"><p class="text-center">{{&ContextData.Quote.PaymentTerms}}</p></div>
-	{{/ContextData.Quote.PaymentTerms}}
+	{{/PaymentTerms}}
 </div>
 
 <div id="statement-details" class="modal hide fade" role="dialog" aria-hidden="true">
@@ -2055,4 +2054,26 @@
 	<p><span class="glyphicons group"><i></i>{{textdata.Children}}</span><span class="pull-right">{{NumChildren}}</span></p>
 </div>
 {{/result}}
+
+<script id="tmpl-booking-makepayment-pay" type="text/html">
+{{#result}}
+<div class="control-group">
+	<div class="controls-rows">
+		<div class="btn-book-header span6">
+			<span class="line1">
+				<a href="javascript:void(0);" class="btn btn-large btn-primary span12 makebooking" data-field-selector="bookingfield">{{textdata.Make Payment}}</a>
+			</span>
+		</div>
+		{{#result}}
+		<div class="amount-bk span4">
+			<h5>{{textdata.Amount to be charged now}}:</h5>
+			{{#Statement}}
+			<h3>{{TotalDueNow.CurrencySymbol}}&nbsp;<input type="text" value="{{TotalDueNow.SValue2}}"/></h3>
+			{{/Statement}}
+		</div>
+		{{/result}}
+	</div>
+</div>
+{{/result}}
+</script>
 </script>

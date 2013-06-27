@@ -180,7 +180,7 @@ context.inithelpers = {
 	            "statement": BAPI.templates.get('tmpl-booking-makepayment-statement'),
 	            "renter": BAPI.templates.get('tmpl-booking-makepayment-renter'),
 	            "creditcard": BAPI.templates.get('tmpl-booking-makebooking-creditcard'),
-	            "accept": BAPI.templates.get('tmpl-booking-makebooking-accept')
+	            "accept": BAPI.templates.get('tmpl-booking-makepayment-pay')
 	        }
 	    };
 	    $.getScript(context.jsroot + "bapi/bapi.ui.cchelper.js", function (data, ts, jqxhr) {
