@@ -419,8 +419,10 @@
 		<li><a href="#tab2" data-toggle="tab">{{textdata.Rates & Availability}}</a></li>
 		<li><a href="#tab3" data-toggle="tab">{{textdata.Amenities}}</a></li>
 		<li><a href="#tab4" id="tabs4" data-toggle="tab">{{textdata.Attractions}}</a></li>
-		{{#config.hasreviews}}		
-		<li><a href="#tab5" data-toggle="tab">{{textdata.Reviews}}</a></li>		
+		{{#config.hasreviews}}
+		{{#ContextData.Reviews}}
+		<li><a href="#tab5" data-toggle="tab">{{textdata.Reviews}}</a></li>
+		{{/ContextData.Reviews}}
 		{{/config.hasreviews}}
 	</ul>			
 	<div class="tab-content">
@@ -590,7 +592,7 @@
 		<div class="tab-pane" id="tab5">
 		<div class="row-fluid">
 		<div class="span12 box-sides">
-		<a class="flipkeyPowered" rel="nofollow" target="_blank" href="//www.flipkey.com"><span></span></a>
+		<a class="flipkeyPowered" rel="nofollow" target="_blank" href="www.flipkey.com"><span></span></a>
 		<div class="clearfix"></div>
 		{{#ContextData.Reviews}}
 		<div class="row-fluid review">
@@ -609,10 +611,8 @@
 				<h5 class="response-title">Response</h5>
 				<div class="response">{{&Response}}</div>
 				</div>
-				{{/Response}}	
-				{{#ExternalLink}}			
-				<a class="full-rev-link" href="{{&ExternalLink}}" target="_blank">See full review on Flipkey</a>
-				{{/ExternalLink}}
+				{{/Response}}				
+				<a class="full-rev-link" href="{{ExternalLink}}" target="_blank">See full review on Flipkey</a>
 			</div>
 		</div>
 		<hr/>
@@ -1966,7 +1966,8 @@
 <div id="msgs" class="item row-fluid">
 	<div class="msg-yellow">
 	  <p><i class="halflings-icon star"></i> <strong>{{textdata.Total}}</strong><span class="pull-right"><strong>{{Total2.CurrencySymbol}}{{Total2.SValue2}}</strong></span></p>
-	  {{#DiscountsTotal.Value}}<p><strong>You saved<span class="pull-right">{{DiscountsTotal.CurrencySymbol}}{{DiscountsTotal.SValue2}}{{/DiscountsTotal.Value}}</strong></span></p>	
+	  {{#DiscountsTotal.Value}}<p><strong>You saved<span class="pull-right">{{DiscountsTotal.CurrencySymbol}}{{DiscountsTotal.SValue2}}{{/DiscountsTotal.Value}}</strong></span></p>
+	    <p><strong>Amount Paid:</strong><span class="pull-right">{{AmountPaid.CurrencySymbol}} {{AmountPaid.SValue2}}</span></p>	
 	  <p><strong>Amount Due Now:</strong><span class="pull-right">{{TotalDueNow.CurrencySymbol}} {{TotalDueNow.SValue2}}</span></p>	  
 	<p><strong>Total to Pay Now:</strong><span class="pull-right">{{TotalDueNow.CurrencySymbol}} {{TotalDueNow.SValue2}}</span></p>	  
 	</div>
