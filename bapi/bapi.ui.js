@@ -1149,9 +1149,6 @@ function PaymentHelper_FullLoad(targetid, options, bid) {
             alert('Could not load booking');
             return;
         }
-        data.result[0].DCheckIn = parseDate(data.result[0].CheckIn)
-        data.result[0].DCheckOut = parseDate(data.result[0].CheckOut)
-
         BAPI.log(data);
         data.site = BAPI.site;
         data.config = BAPI.config();
