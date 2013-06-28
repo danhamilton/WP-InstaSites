@@ -1298,7 +1298,7 @@ function PaymentHelper_PayHandler(targetid, options, propid) {
             BAPI.log(bres);
             $(targetid).unblock();
             processing = false;
-            if (!bres.result.IsValid) {
+            if (!bres.result[0].IsValid) {
                 alert(bres.result.ValidationMessage);
             } else {
                 options.responseurl = "/bookingconfirmation";
