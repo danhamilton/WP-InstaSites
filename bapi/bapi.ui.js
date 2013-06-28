@@ -1280,12 +1280,11 @@ function PaymentHelper_ValidateForm(reqfields) {
     }
     return true;
 }
+var processing = false;
 function PaymentHelper_PayHandler(targetid, options, propid) {
-    var processing = false;
     $(".makepayment").live("click", function () {
         if (processing) { return; } // already in here
         processing = true; // make sure we do not reenter
-        
         // get the list of required fields and validate them
         var reqfields = $.extend([], $('.required'));
         processing = BookingHelper_ValidateForm(reqfields);
