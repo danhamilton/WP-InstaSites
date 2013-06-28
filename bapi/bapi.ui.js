@@ -1149,6 +1149,7 @@ function PaymentHelper_FullLoad(targetid, options, bid) {
             alert('Could not load booking');
             return;
         }
+        curbooking = data.result[0];
         BAPI.log(data);
         data.site = BAPI.site;
         data.config = BAPI.config();
@@ -1279,7 +1280,6 @@ function PaymentHelper_ValidateForm(reqfields) {
     }
     return true;
 }
-
 function PaymentHelper_PayHandler(targetid, options, propid) {
     var processing = false;
     $(".makepayment").live("click", function () {
@@ -1297,15 +1297,24 @@ function PaymentHelper_PayHandler(targetid, options, propid) {
             processing = false;
             return; // special textbox has a value, not a real person
         }
-        var u = $.url(window.location.href);
-        var bid = u.param('bid');
-        var reqdata;
-        reqdata.AmountToPay =$('#txtAmountToPay').val();
-        reqdata.AmountToPayCurrency = $('#spanCurrSymbol').val();
-        reqdata.BookingID = bid;
+        
+        var reqdata = bookingHelper_getFormData(options, curbooking);
+        curbooking.AmountToCharge = $('#txtAmountToCharge').val()
+        var postdata = { "data": JSON.stringify(reqdata) };
+        BAPI.save(BAPI.entities.booking, postdata, function (bres) {
+            BAPI.log(bres);
+            $(targetid).unblock();
+            processing = false;
+            if (!bres.result.IsValid) {
+                alert(bres.result.ValidationMessage);
+            } else {
+                options.responseurl = "/bookingconfirmation";
+                window.location.href = context.nonsecureurl(options.responseurl + '?bid=' + bres.result.ID + '&pid=' + bres.result.PersonID);
+            }
+        });
         
         var postdata = { "data": JSON.stringify(reqdata) };
-        BAPI.save(BAPI.entities.transaction, postdata, function (bres) {
+        BAPI.save(BAPI.entities.booking, postdata, function (bres) {
             BAPI.log(bres);
             $(targetid).unblock();
             processing = false;
