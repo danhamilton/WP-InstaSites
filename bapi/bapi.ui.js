@@ -1294,7 +1294,7 @@ function PaymentHelper_PayHandler(targetid, options, propid) {
         BAPI.log("before")
         BAPI.log(curbooking)
         var reqdata = bookingHelper_getFormData(options, curbooking);
-        BAPI.log(reqData)
+        BAPI.log(reqdata)
         reqdata.AmountToCharge = +$('#txtAmountToCharge').val();
         var postdata = { "data":JSON.stringify(reqdata) };
         BAPI.save(BAPI.entities.booking, postdata, function (bres) {
