@@ -1286,7 +1286,7 @@ function PaymentHelper_PayHandler(targetid, options, propid) {
         processing = true; // make sure we do not reenter
         // get the list of required fields and validate them
         var reqfields = $.extend([], $('.required'));
-        processing = BookingHelper_ValidateForm(reqfields);
+        BookingHelper_ValidateForm(reqfields);
         if (!processing) { $(targetid).unblock(); return; }
         if (BAPI.isempty(curbooking)) { $(targetid).unblock(); alert("Fatal error trying to save this booking.  The context has been lost."); return; }
         var reqdata = bookingHelper_getFormData(options, curbooking);
