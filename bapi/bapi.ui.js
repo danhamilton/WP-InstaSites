@@ -617,8 +617,8 @@ context.createInquiryForm = function (targetid, options) {
 		if (processing) { return; } // already in here
 		
 		var reqfields = $.extend([],$('.required'));
-		processing = BookingHelper_ValidateForm(reqfields);				
-		if (!processing) { $(targetid).unblock(); return; }		
+		BookingHelper_ValidateForm(reqfields);				
+		//if (!processing) { $(targetid).unblock(); return; }		
 		/*
 		$.validity.start();
 		$('.required').require();
