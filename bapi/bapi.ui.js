@@ -1288,7 +1288,7 @@ function PaymentHelper_PayHandler(targetid, options, propid) {
         
         // get the list of required fields and validate them
         var reqfields = $.extend([], $('.required'));
-        processing = PaymentHelper_ValidateForm(reqfields);
+        //processing = PaymentHelper_ValidateForm(reqfields);
         if (!processing) { $(targetid).unblock(); return; }
         curbooking.AmountToCharge = $('#txtAmountToCharge').val();
       
