@@ -1291,10 +1291,9 @@ function PaymentHelper_PayHandler(targetid, options, propid) {
         processing = BookingHelper_ValidateForm(reqfields);
         if (!processing) { $(targetid).unblock(); return; }
         if (BAPI.isempty(curbooking)) { $(targetid).unblock(); alert("Fatal error trying to save this booking.  The context has been lost."); return; }
-        BAPI.log("before")
-        BAPI.log(curbooking)
         var reqdata = bookingHelper_getFormData(options, curbooking);
         reqdata.AltID = curbooking.AltID;
+        reqdata.ID = curbooking.ID;
         reqdata.AmountToCharge = +$('#txtAmountToCharge').val();
         var postdata = { "data":JSON.stringify(reqdata) };
         BAPI.save(BAPI.entities.booking, postdata, function (bres) {
