@@ -1285,14 +1285,14 @@ function PaymentHelper_PayHandler(targetid, options, propid) {
     $(".makepayment").live("click", function () {
         if (processing) { return; } // already in here
         processing = true; // make sure we do not reenter
-        alert('hola');
+        
         // get the list of required fields and validate them
-        //var reqfields = $.extend([], $('.required'));
-        //processing = PaymentHelper_ValidateForm(reqfields);
-        //if (!processing) { $(targetid).unblock(); return; }
+        var reqfields = $.extend([], $('.required'));
+        processing = PaymentHelper_ValidateForm(reqfields);
+        if (!processing) { $(targetid).unblock(); return; }
         curbooking.AmountToCharge = $('#txtAmountToCharge').val();
       
-        var postdata = { "data": JSON.stringify(reqdata) };
+        var postdata = { "data": JSON.stringify(curbooking) };
         BAPI.save(BAPI.entities.booking, postdata, function (bres) {
             BAPI.log(bres);
             $(targetid).unblock();
