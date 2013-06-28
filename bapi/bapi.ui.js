@@ -615,7 +615,6 @@ context.createInquiryForm = function (targetid, options) {
 	$(".doleadrequest").on("click", function () { 		
 		BAPI.log("Processing lead request");
 		if (processing) { return; } // already in here
-		
 		var reqfields = $.extend([],$('.required'));
 		BookingHelper_ValidateForm(reqfields);				
 		//if (!processing) { $(targetid).unblock(); return; }		
