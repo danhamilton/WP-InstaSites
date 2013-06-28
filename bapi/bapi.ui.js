@@ -1288,16 +1288,21 @@ function PaymentHelper_PayHandler(targetid, options, propid) {
         
         // get the list of required fields and validate them
         var reqfields = $.extend([], $('.required'));
-        //processing = PaymentHelper_ValidateForm(reqfields);
+        processing = BookingHelper_ValidateForm(reqfields);
         if (!processing) { $(targetid).unblock(); return; }
-        curbooking.AmountToCharge = +$('#txtAmountToCharge').val();
-        curbooking.CheckIn = curbooking.SCheckIn;
-        curbooking.CheckOut = curbooking.SCheckOut;
-        var str = JSON.stringify(curbooking);
-        var toDateRe = new RegExp("^/Date\\((\\d+)\\)/$");
-        var constructor = str.replace(toDateRe, "new Date($1)");
-        str = eval(constructor);
-        var postdata = { "data":str };
+        if (BAPI.isempty(curbooking)) { $(targetid).unblock(); alert("Fatal error trying to save this booking.  The context has been lost."); return; }
+
+        var reqdata = bookingHelper_getFormData(options, curbooking);
+
+        // add the current booking context to our request form
+        if (BAPI.isempty(reqdata.CheckIn)) { reqdata.CheckIn = BAPI.session.searchparams.checkin; }
+        if (BAPI.isempty(reqdata.CheckOut)) { reqdata.CheckOut = BAPI.session.searchparams.checkout; }
+        if (BAPI.isempty(reqdata.NumAdults)) { reqdata.NumAdults = BAPI.session.searchparams.adults.min; }
+        if (BAPI.isempty(reqdata.NumChildren)) { reqdata.NumChildren = BAPI.session.searchparams.children.min; }
+        if (BAPI.isempty(reqdata.NumRooms)) { reqdata.NumRooms = BAPI.session.searchparams.rooms.min; }
+
+        reqdata.AmountToCharge = +$('#txtAmountToCharge').val();
+        var postdata = { "data":JSON.stringify(reqdata) };
         BAPI.save(BAPI.entities.booking, postdata, function (bres) {
             BAPI.log(bres);
             $(targetid).unblock();
