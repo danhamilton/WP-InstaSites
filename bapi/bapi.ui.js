@@ -1290,7 +1290,8 @@ function PaymentHelper_PayHandler(targetid, options, propid) {
         var reqfields = $.extend([], $('.required'));
         processing = PaymentHelper_ValidateForm(reqfields);
         if (!processing) { $(targetid).unblock(); return; }
-        curbooking.AmountToCharge = $('#txtAmountToCharge').val()
+        curbooking.AmountToCharge = $('#txtAmountToCharge').val();
+      
         var postdata = { "data": JSON.stringify(reqdata) };
         BAPI.save(BAPI.entities.booking, postdata, function (bres) {
             BAPI.log(bres);
