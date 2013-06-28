@@ -1295,29 +1295,19 @@ function PaymentHelper_PayHandler(targetid, options, propid) {
         reqdata.AmountToCharge = +$('#txtAmountToCharge').val();
         var postdata = { "data":JSON.stringify(reqdata) };
         BAPI.save(BAPI.entities.booking, postdata, function (bres) {
-            BAPI.log(bres);
-            $(targetid).unblock();
-            processing = false;
-            if (!bres.result[0].IsValid) {
-                alert(bres.result.ValidationMessage);
-            } else {
-                options.responseurl = "/bookingconfirmation";
-                window.location.href = context.nonsecureurl(options.responseurl + '?bid=' + bres.result.ID + '&pid=' + bres.result.PersonID);
+            if (bres) {
+                BAPI.log(bres);
+                $(targetid).unblock();
+                processing = false;
+                if (!bres.result[0].IsValid) {
+                    alert(bres.result[0].ValidationMessage);
+                } else {
+                    options.responseurl = "/bookingconfirmation";
+                    window.location.href = context.nonsecureurl(options.responseurl + '?bid=' + bres.result.ID + '&pid=' + bres.result.PersonID);
+                }
             }
         });
         
-        var postdata = { "data": JSON.stringify(reqdata) };
-        BAPI.save(BAPI.entities.booking, postdata, function (bres) {
-            BAPI.log(bres);
-            $(targetid).unblock();
-            processing = false;
-            if (!bres.result.IsValid) {
-                alert(bres.result.ValidationMessage);
-            } else {
-                options.responseurl = "/bookingconfirmation";
-                window.location.href = context.nonsecureurl(options.responseurl + '?bid=' + bres.result.ID + '&pid=' + bres.result.PersonID);
-            }
-        });
     });
 }
 
