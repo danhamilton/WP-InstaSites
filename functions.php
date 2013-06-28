@@ -159,7 +159,7 @@
 <script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/pickadate.legacy.min.js', __FILE__)) ?>" ></script>			
 <![endif]-->
 <script type="text/javascript" src="<?= getbapijsurl($apiKey) ?>"></script>
-<script type="text/javascript" src="<?= get_relative(plugins_url('/bapi/bapi.ui.js&n=1', __FILE__)) ?>" ></script>		
+<script type="text/javascript" src="<?= get_relative(plugins_url('/bapi/bapi.ui.js?n=1', __FILE__)) ?>" ></script>		
 <script type="text/javascript" src="/bapi.textdata.js" ></script>		
 <script type="text/javascript" src="/bapi.templates.js" ></script>		
 <script type="text/javascript">		
