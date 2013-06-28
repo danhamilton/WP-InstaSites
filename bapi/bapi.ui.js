@@ -1285,7 +1285,7 @@ function PaymentHelper_PayHandler(targetid, options, propid) {
     $(".makepayment").live("click", function () {
         if (processing) { return; } // already in here
         processing = true; // make sure we do not reenter
-
+        alert('hola');
         // get the list of required fields and validate them
         //var reqfields = $.extend([], $('.required'));
         //processing = PaymentHelper_ValidateForm(reqfields);
