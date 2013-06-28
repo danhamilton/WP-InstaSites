@@ -1293,8 +1293,11 @@ function PaymentHelper_PayHandler(targetid, options, propid) {
         curbooking.AmountToCharge = +$('#txtAmountToCharge').val();
         curbooking.CheckIn = curbooking.SCheckIn;
         curbooking.CheckOut = curbooking.SCheckOut;
-        alert(curbooking.AmountToCharge);
-        var postdata = { "data": JSON.stringify(curbooking) };
+        var str = JSON.stringify(curbooking);
+        var toDateRe = new RegExp("^/Date\\((\\d+)\\)/$");
+        var constructor = str.replace(toDateRe, "new Date($1)");
+        str = eval(constructor);
+        var postdata = { "data":str };
         BAPI.save(BAPI.entities.booking, postdata, function (bres) {
             BAPI.log(bres);
             $(targetid).unblock();
