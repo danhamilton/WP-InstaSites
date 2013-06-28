@@ -1290,15 +1290,6 @@ function PaymentHelper_PayHandler(targetid, options, propid) {
         var reqfields = $.extend([], $('.required'));
         processing = PaymentHelper_ValidateForm(reqfields);
         if (!processing) { $(targetid).unblock(); return; }
-        
-        $(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
-        if (typeof (reqdata.special) !== "undefined" && reqdata.special !== null && reqdata.special != '') {
-            window.location.href = options.responseurl + '?special=1';
-            processing = false;
-            return; // special textbox has a value, not a real person
-        }
-        
-        var reqdata = bookingHelper_getFormData(options, curbooking);
         curbooking.AmountToCharge = $('#txtAmountToCharge').val()
         var postdata = { "data": JSON.stringify(reqdata) };
         BAPI.save(BAPI.entities.booking, postdata, function (bres) {
