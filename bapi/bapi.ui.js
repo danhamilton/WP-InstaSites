@@ -1291,16 +1291,10 @@ function PaymentHelper_PayHandler(targetid, options, propid) {
         processing = BookingHelper_ValidateForm(reqfields);
         if (!processing) { $(targetid).unblock(); return; }
         if (BAPI.isempty(curbooking)) { $(targetid).unblock(); alert("Fatal error trying to save this booking.  The context has been lost."); return; }
-
+        BAPI.log("before")
+        BAPI.log(curbooking)
         var reqdata = bookingHelper_getFormData(options, curbooking);
-
-        // add the current booking context to our request form
-        if (BAPI.isempty(reqdata.CheckIn)) { reqdata.CheckIn = BAPI.session.searchparams.checkin; }
-        if (BAPI.isempty(reqdata.CheckOut)) { reqdata.CheckOut = BAPI.session.searchparams.checkout; }
-        if (BAPI.isempty(reqdata.NumAdults)) { reqdata.NumAdults = BAPI.session.searchparams.adults.min; }
-        if (BAPI.isempty(reqdata.NumChildren)) { reqdata.NumChildren = BAPI.session.searchparams.children.min; }
-        if (BAPI.isempty(reqdata.NumRooms)) { reqdata.NumRooms = BAPI.session.searchparams.rooms.min; }
-
+        BAPI.log(reqData)
         reqdata.AmountToCharge = +$('#txtAmountToCharge').val();
         var postdata = { "data":JSON.stringify(reqdata) };
         BAPI.save(BAPI.entities.booking, postdata, function (bres) {
