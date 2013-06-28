@@ -1287,9 +1287,9 @@ function PaymentHelper_PayHandler(targetid, options, propid) {
         processing = true; // make sure we do not reenter
 
         // get the list of required fields and validate them
-        var reqfields = $.extend([], $('.required'));
-        processing = PaymentHelper_ValidateForm(reqfields);
-        if (!processing) { $(targetid).unblock(); return; }
+        //var reqfields = $.extend([], $('.required'));
+        //processing = PaymentHelper_ValidateForm(reqfields);
+        //if (!processing) { $(targetid).unblock(); return; }
         curbooking.AmountToCharge = $('#txtAmountToCharge').val();
       
         var postdata = { "data": JSON.stringify(reqdata) };
