@@ -2063,14 +2063,14 @@
 	<div class="controls-rows">
 		<div class="btn-book-header span6">
 			<span class="line1">
-				<a href="javascript:void(0);" class="btn btn-large btn-primary span12 makepayment" data-field-selector="bookingfield">{{textdata.Make Payment}}</a>
+				<a href="javascript:void(0);" class="btn btn-large btn-primary span12 makepayment" data-field-selector="bookingfield">{{textdata.Make Payment}}Make Payment</a>
 			</span>
 		</div>
 		{{#result}}
 		<div class="amount-bk span4">
-			<h5>{{textdata.Amount to be charged now}}:</h5>
+			<h5>{{textdata.Amount to Pay Now}}:</h5>
 			{{#Statement}}
-			<h3 style='whitespace:no-wrap'><span id='spanCurrSymbol'>{{AmountPaid.CurrencySymbol}}</span>&nbsp;<input id="txtAmountToCharge" type="text" value="{{TotalDueNow.SValue2}}"/></h3>
+			<h3 ><span id='spanCurrSymbol'>{{AmountPaid.CurrencySymbol}}</span>&nbsp;<input id="txtAmountToCharge" type="text" class="span3 row-fluid bookingfield" value="{{TotalDueNow.SValue2}}"/></h3>
 			{{/Statement}}
 		</div>
 		{{/result}}
