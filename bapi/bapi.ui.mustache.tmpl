@@ -938,10 +938,22 @@
 		</ul>                
 		<div class="tab-content">
 			<div class="tab-pane active" id="tab1">
-				<div class="row-fluid">				
+				<div class="row-fluid wrap-boxes">				
 					<div class="span6 box-left">                
 						<h3>{{textdata.Nearby Rentals}}</h3>						
 						<div id="map-locations">
+						<div class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}}}, "category": "poi"}'>
+						- &nbsp;<a href="#" class="poi-map-item">{{Name}}</a>
+							<div class="info-html">
+								<div>
+									<img src='{{&PrimaryImage.ThumbnailURL}}' alt='{{PrimaryImage.Caption' title='{{PrimaryImage.Caption}}' width="195"/>
+								</div>
+								<div>
+									<p><b>{{Name}}</b></p>
+									<p>{{&Summary}}</p>
+								</div>
+							</div>
+						</div>
 						{{#ContextData.NearbyProperties}}
 						<div class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}}}, "category": "starred"}'>
 						{{ItemIndex}}&nbsp;<a href="#" class="poi-map-item">{{Headline}}</a> - {{ContextData.Distance}}
