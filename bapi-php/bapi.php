@@ -29,28 +29,28 @@ class BAPI
 		
 	public function getcontext($jsondecode) {
 		if (!$this->isvalid()) { return null; }
-		$c = file_get_contents($this->getBaseURL() . '/js/bapi.context?apikey=' . $this->apikey . '&language=' . $this->language);
+		$c = file_get_contents($this->getBaseURL() . '/js/bapi.context?apikey=' . $this->apikey . '&language=' . $this->language) or wp_die('Error Retrieving Context','Oops!');
 		$res = json_decode($c,TRUE);
 		return $res;
 	}
 	
 	public function gettextdata($jsondecode) {
 		if (!$this->isvalid()) { return null; }
-		$c = file_get_contents($this->getBaseURL() . '/ws/?method=get&entity=textdata&apikey=' . $this->apikey . '&language=' . $this->language);
+		$c = file_get_contents($this->getBaseURL() . '/ws/?method=get&entity=textdata&apikey=' . $this->apikey . '&language=' . $this->language) or wp_die('Error Retrieving TextData','Oops!');
 		if ($jsondecode) {return json_decode($c,TRUE); }
 		return $c;
 	}
 	
 	public function getseodata($jsondecode=true) {
 		if (!$this->isvalid()) { return null; }
-		$c = file_get_contents($this->getBaseURL() . '/ws/?method=get&entity=seo&apikey=' . $this->apikey . '&language=' . $this->language);
+		$c = file_get_contents($this->getBaseURL() . '/ws/?method=get&entity=seo&apikey=' . $this->apikey . '&language=' . $this->language) or wp_die('Error Retrieving Keywords','Oops!');
 		if ($jsondecode) {return json_decode($c,TRUE); }
 		return $c;
 	}
 	
 	public function getSolutionConfig($apikey){
 		$url = $this->getBaseURL() . "/ws/?method=getconfig&apikey=".$apikey;
-		$json = file_get_contents($url);
+		$json = file_get_contents($url) or wp_die('Error Retrieving Solution Config','Oops!');
 		$data = json_decode($json, TRUE);
 		if($data['status']==1){
 			return($data['result']);
@@ -64,7 +64,7 @@ class BAPI
 		if (!$this->isvalid()) { return null; }
 		$url = $this->getBaseURL() . "/ws/?method=search&apikey=" . $this->apikey . "&entity=" . $entity;
 		if (!empty($options)) { $url = $url . "&" . http_build_query($options); }		
-		$c = file_get_contents($url);		
+		$c = file_get_contents($url) or wp_die('Error Retrieving Search Results','Oops!');		
 		if (empty($jsondecode) || $jsondecode) { return json_decode($c,TRUE); }
 		return $c;
 	}
@@ -73,7 +73,7 @@ class BAPI
 		if (!$this->isvalid()) { return null; }
 		$url = $this->getBaseURL() . "/ws/?method=get&apikey=" . $this->apikey . "&entity=" . $entity . '&ids=' . implode(",", $ids) . '&language=' . $this->language;
 		if (!empty($options)) { $url = $url . "&" . http_build_query($options); }	
-		$c = file_get_contents($url);
+		$c = file_get_contents($url) or wp_die('Error Retrieving Entity Data','Oops!');
 		if (empty($jsondecode) || $jsondecode) { return json_decode($c,TRUE); }
 		return $c;
 	}	
