@@ -119,6 +119,9 @@
 	}
 	
 	function bapi_sync_entity($wp) {	
+		if(!(strpos($_SERVER['PATH_INFO'],'wp-admin')===false)&&!(strpos($_SERVER['PATH_INFO'],'wp-login')===false)){
+			return false;
+		}
 		//global $post;
 		if(!(strpos($_SERVER['PATH_INFO'],'wp-admin')===false)){
 			return false;
@@ -213,6 +216,9 @@
 	}
 	
 	function bapi_sync_coredata() {
+		if(!(strpos($_SERVER['PATH_INFO'],'wp-admin')===false)&&!(strpos($_SERVER['PATH_INFO'],'wp-login')===false)){
+			return false;
+		}
 		// initialize the bapisync object
 		if(!(strpos($_SERVER['PATH_INFO'],'wp-admin')===false)){
 			return false;

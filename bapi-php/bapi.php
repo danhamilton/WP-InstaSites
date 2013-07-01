@@ -5,7 +5,7 @@ class BAPI
 	public $apikey;
 	public $language = 'en-US';
     public $currency = 'USD';
-    public $baseURL = 'connect.bookt.com';
+    public $baseURL = 'd2kqqk9digjl80.cloudfront.net';
 	
 	public function __construct($apikey, $language="en-US", $baseURL='connect.bookt.com') {
 		$this->apikey = $apikey;
