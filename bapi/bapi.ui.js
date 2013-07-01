@@ -52,6 +52,7 @@ context.init = function(options) {
 	context.inithelpers.setupsummarywidgets(options);
 	context.inithelpers.setupsearchformwidgets(options);
 	context.inithelpers.setupbookingform(options);
+	context.inithelpers.setupmakepaymentform(options);
 	context.inithelpers.setupinquiryformwidgets(options);
 	context.inithelpers.setuppopupinquiryformwidgets(options);
 	context.inithelpers.setupavailcalendarwidgets(options);
@@ -162,7 +163,31 @@ context.inithelpers = {
 			}
 		});	
 	},
-	setupbookingform: function(options) {
+	setupmakepaymentform: function (options) {
+	    var ctl = $('.bapi-makepaymentform');
+	    if (typeof (ctl) === "undefined" || ctl === null || ctl.length == 0) { return; }
+	    var options = {
+	        "mastertemplate": BAPI.templates.get('tmpl-booking-makepayment-masterlayout'),
+	        "targetids": {
+	            "stayinfo": "#stayinfo",
+	            "statement": "#statement",
+	            "renter": "#renter",
+	            "creditcard": "#creditcard",
+	            "accept": "#accept"
+	        },
+	        "templates": {
+	            "stayinfo": BAPI.templates.get('tmpl-booking-makepayment-stayinfo'),
+	            "statement": BAPI.templates.get('tmpl-booking-makepayment-statement'),
+	            "renter": BAPI.templates.get('tmpl-booking-makepayment-renter'),
+	            "creditcard": BAPI.templates.get('tmpl-booking-makebooking-creditcard'),
+	            "accept": BAPI.templates.get('tmpl-booking-makepayment-pay')
+	        }
+	    };
+	    $.getScript(context.jsroot + "bapi/bapi.ui.cchelper.js", function (data, ts, jqxhr) {
+	        BAPI.UI.createMakePaymentWidget('#paymentform', options);
+	    });
+	},
+	setupbookingform: function (options) {
 		var ctl = $('.bapi-bookingform');
 		if (typeof(ctl)==="undefined" || ctl===null || ctl.length==0) { return; }
 		
@@ -590,10 +615,9 @@ context.createInquiryForm = function (targetid, options) {
 	$(".doleadrequest").on("click", function () { 		
 		BAPI.log("Processing lead request");
 		if (processing) { return; } // already in here
-		
 		var reqfields = $.extend([],$('.required'));
-		processing = BookingHelper_ValidateForm(reqfields);				
-		if (!processing) { $(targetid).unblock(); return; }		
+		BookingHelper_ValidateForm(reqfields);				
+		//if (!processing) { $(targetid).unblock(); return; }		
 		/*
 		$.validity.start();
 		$('.required').require();
@@ -1116,6 +1140,195 @@ context.createMakeBookingWidget = function (targetid, options) {
 	BookingHelper_BookHandler(targetid, options, propid);		
 }
 
+function PaymentHelper_FullLoad(targetid, options, bid) {
+    var propoptions = { avail: 1, seo: 1 }
+    propoptions = $.extend({}, propoptions, BAPI.session.searchparams);
+    BAPI.get(bid, BAPI.entities.booking, propoptions, function (data) {
+        if (data.result.length == 0) {
+            alert('Could not load booking');
+            return;
+        }
+        curbooking = data.result[0];
+        BAPI.log(data);
+        data.site = BAPI.site;
+        data.config = BAPI.config();
+        data.textdata = BAPI.textdata;
+        data.session = BAPI.session;
+        $(targetid).html(Mustache.render(options.mastertemplate, data));
+        $(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, data));
+        $(options.targetids.statement).html(Mustache.render(options.templates.statement, data));
+        $(options.targetids.renter).html(Mustache.render(options.templates.renter, data));
+        $(options.targetids.creditcard).html(Mustache.render(options.templates.creditcard, data));
+        $(options.targetids.accept).html(Mustache.render(options.templates.accept, data));
+        $('.specialform').hide(); // hide the spam control
+        context.createDatePicker('.datepickercheckin', { "property": data.result[0], "checkoutID": '.datepickercheckout' });
+        context.createDatePicker('.datepickercheckout', { "property": data.result[0] });
+
+        function partialRender(sdata, options) {
+            $(".modal").modal('hide');
+            sdata.site = BAPI.site;
+            sdata.config = BAPI.config();
+            sdata.textdata = BAPI.textdata;
+            sdata.session = BAPI.session;
+            BAPI.log(sdata);
+            $(options.targetids.statement).html(Mustache.render(options.templates.statement, sdata));
+            $(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, sdata));
+            $(options.targetids.accept).html(Mustache.render(options.templates.accept, sdata));
+            $(options.targetids.stayinfo).unblock();
+            context.createDatePicker('.datepickercheckin', { "property": BAPI.curentity, "checkoutID": '.datepickercheckout' });
+            context.createDatePicker('.datepickercheckout', { "property": BAPI.curentity });
+        }
+
+        $(".bapi-revisedates").live("click", function () {
+            var reqdata = saveFormToSession($('.revisedates'), { dataselector: "revisedates" });
+            reqdata.pid = propid;
+            reqdata.quoteonly = 1;
+            $(options.targetids.stayinfo).block({ message: "<img src='" + loadingImgUrl + "' />" });
+            BAPI.get(propid, BAPI.entities.property, reqdata, function (sdata) {
+                curbooking = sdata.result[0].ContextData.Quote;
+                partialRender(sdata, options);
+            });
+        });
+
+        function modifyStatement() {
+            var reqdata = saveFormToSession($('.revisedates'), { dataselector: "revisedates" });
+            reqdata.pid = propid;
+            reqdata.quoteonly = 1;
+            // get the optional fees
+            reqdata.optionalfees = [];
+            $('.bapi-optionalfee').each(function (i) {
+                var c = $(this);
+                var qty = (c.is(':checkbox') ? (c.is(":checked") ? 1 : 0) : c.val());
+                var ofee = { "RelatedToID": c.attr('data-rid'), "RelatedToEntityID": c.attr('data-reid'), "Quantity": qty };
+                reqdata.optionalfees.push(ofee);
+            });
+            reqdata.numoptionalfees = reqdata.optionalfees.length;
+            $(options.targetids.stayinfo).block({ message: "<img src='" + loadingImgUrl + "' />" });
+            BAPI.get(propid, BAPI.entities.property, reqdata, function (sdata) {
+                curbooking = sdata.result[0].ContextData.Quote;
+                BAPI.log(curbooking);
+                partialRender(sdata, options);
+            });
+        }
+
+        $('.bapi-optionalfee').live('change', function () {
+            modifyStatement();
+        });
+
+        $('.bapi-applyspecial').live('click', function () {
+            modifyStatement();
+        });
+    });
+}
+
+function PaymentHelper_SetupFormHandlers() {
+    $('.bapi-country').live('focus', function () {
+        $(this).typeaheadmap({ "source": BAPI.UI.countries, "key": "name", "value": "name", "displayer": function (that, item, highlighted) { return highlighted; } });
+    });
+    /*$('.bapi-state').live('focus', function() {
+		new google.maps.places.Autocomplete(this, cco);
+	});
+	$('.bapi-city').live('focus', function() {		
+		var cco = { types: ['(cities)'], componentRestrictions: {country: $('.bapi-country').val()} };
+		new google.maps.places.Autocomplete(this, cco);
+	});*/
+
+    // do credit card validtion
+    $(".ccverify").live('keyup', function () {
+        var ctl = $(this);
+        ctl.validateCreditCard(function (e) {
+            if (e.luhn_valid && e.length_valid) { ctl.attr('data-isvalid', '1'); }
+            else { ctl.attr('data-isvalid', '0'); }
+        })
+    });
+
+    // try to auto set the name on card
+    $('.autofullname').live('focus', function () {
+        var c = $(this);
+        if (c.val() === null || c.val() == '') {
+            c.val($('#renterfirstname').val() + ' ' + $('#renterlastname').val());
+        }
+    });
+}
+
+function PaymentHelper_ValidateForm(reqfields) {
+    for (i = 0; i < reqfields.length; ++i) {
+        var rf = $(reqfields[i]);
+        $.validity.clear();
+        $.validity.start();
+        var match = rf.attr('data-validity');
+        if (typeof (match) === "undefined" || match === null) {
+            rf.require();
+        } else {
+            rf.require().match(match);
+        }
+        var result = $.validity.end();
+        if (!result.valid) {
+            alert(BAPI.textdata['Please fill out all required fields']); rf.focus(); return false;
+        }
+        // special case for credit card field
+        if (rf.hasClass('ccverify') && rf.attr('data-isvalid') != '1') {
+            alert(BAPI.textdata['The entered credit card is invalid']); rf.focus(); return false;
+        }
+        if (rf.hasClass('checkbox')) {
+            BAPI.log(rf.attr('checked'));
+            if (!rf.attr('checked')) {
+                alert(BAPI.textdata['Please accept the terms and conditions']); rf.focus(); return false;
+            }
+        }
+    }
+    return true;
+}
+var processing = false;
+function PaymentHelper_PayHandler(targetid, options, propid) {
+    $(".makepayment").live("click", function () {
+        if (processing) { return; } // already in here
+        processing = true; // make sure we do not reenter
+        // get the list of required fields and validate them
+        var reqfields = $.extend([], $('.required'));
+        BookingHelper_ValidateForm(reqfields);
+        if (!processing) { $(targetid).unblock(); return; }
+        if (BAPI.isempty(curbooking)) { $(targetid).unblock(); alert("Fatal error trying to save this booking.  The context has been lost."); return; }
+        var reqdata = bookingHelper_getFormData(options, curbooking);
+        reqdata.AltID = curbooking.AltID;
+        reqdata.ID = curbooking.ID;
+        reqdata.AmountToCharge = +$('#txtAmountToCharge').val();
+        var postdata = { "data":JSON.stringify(reqdata) };
+        BAPI.save(BAPI.entities.booking, postdata, function (bres) {
+            if (bres) {
+                BAPI.log(bres);
+                $(targetid).unblock();
+                processing = false;
+                if (!bres.result.IsValid) {
+                    alert(bres.result.ValidationMessage);
+                } else {
+                    options.responseurl = "/bookingconfirmation";
+                    window.location.href = context.nonsecureurl(options.responseurl + '?bid=' + bres.result.ID + '&pid=' + bres.result.PersonID);
+                }
+            }
+        });
+        
+    });
+}
+
+context.createMakePaymentWidget = function (targetid, options) {
+    if (typeof (options.dataselector) === "undefined") { options.dataselector = "bookingfield"; }
+
+    // check if we need to redirect
+    var u = $.url(window.location.href);
+    if (bookingHelper_DoRedirect(u)) { return; }
+    var bid = u.param('bid');
+    if (typeof (bid) === "undefined" || bid === null) {
+        alert("You have reached this page in error.  You will be redirected back to the home page.");
+        window.location = "/"; //TODO: need to redirect back to the correct place
+        return;
+    }
+
+    PaymentHelper_FullLoad(targetid, options, bid);
+    PaymentHelper_SetupFormHandlers();
+    PaymentHelper_PayHandler(targetid, options, bid);
+}
+
 
 /*
 	Group: Misc
@@ -1360,7 +1573,10 @@ function setRows(findThis,wrapthis,needFlex,needWrapRows,howManyWrap){
 			}
 		}, 200);
 	}
-}	
+}
+function parseDate(jsonDateString) {
+    return new Date(parseInt(jsonDateString.replace('/Date(', '')));
+}
 	
 
 })(BAPI.UI); 

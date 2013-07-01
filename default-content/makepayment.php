@@ -1,1 +1,1 @@
-<div id="bookingform" class="bapi-bookingform"></div>
+<div id="paymentform" class="bapi-makepaymentform"></div>

@@ -938,10 +938,22 @@
 		</ul>                
 		<div class="tab-content">
 			<div class="tab-pane active" id="tab1">
-				<div class="row-fluid">				
+				<div class="row-fluid wrap-boxes">				
 					<div class="span6 box-left">                
 						<h3>{{textdata.Nearby Rentals}}</h3>						
 						<div id="map-locations">
+						<div class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}}}, "category": "poi"}'>
+						- &nbsp;<a href="#" class="poi-map-item">{{Name}}</a>
+							<div class="info-html">
+								<div>
+									<img src='{{&PrimaryImage.ThumbnailURL}}' alt='{{PrimaryImage.Caption' title='{{PrimaryImage.Caption}}' width="195"/>
+								</div>
+								<div>
+									<p><b>{{Name}}</b></p>
+									<p>{{&Summary}}</p>
+								</div>
+							</div>
+						</div>
 						{{#ContextData.NearbyProperties}}
 						<div class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}}}, "category": "starred"}'>
 						{{ItemIndex}}&nbsp;<a href="#" class="poi-map-item">{{Headline}}</a> - {{ContextData.Distance}}
@@ -1720,6 +1732,107 @@
 {{/result}}
 </script>
 
+
+<script id="tmpl-booking-makepayment-masterlayout" type="text/html">
+{{#result}}
+<div class="module shadow-border">
+<div class="row-fluid">
+	<div class="booking-page bordersolid">
+		<article class="span8 booking-form">
+		<div class="form-horizontal pd">
+			<div id="renter"></div>
+			<hr />
+			<div id="creditcard"></div>
+			<hr />
+			<div id="accept"></div>
+		</div>
+		</article>
+		
+		<aside class="property-info span4 pd">
+		<div class="row-fluid">
+			<div class="span12 pd">
+				<div id="stayinfo"></div>		
+				<div id="statement"></div>	
+				<div id="question-support" class="item row-fluid">
+					<span class="glyphicons module headset"><i></i>{{textdata.Have a Question?}}</span>
+					<p>{{textdata.Phone}}: <span class="pull-right">{{site.phone}}</span></p>
+					<p>{{textdata.Email}}: <span class="pull-right">{{site.email}}</span></p>					
+				</div>				
+			</div>
+		</div>
+		</aside>
+		<div class="clearfix"></div>
+	</div>				
+</div>
+</div>
+</div>
+{{/result}}
+</script>
+
+<script id="tmpl-booking-makepayment-renter" type="text/html">
+{{#result}}
+<legend>1. {{textdata.Guest Information}}</legend>
+<div class="control-group">
+	<label class="control-label" for="renterfirstname">{{textdata.First Name}}:*</label>
+	<div class="controls">
+		<input value="{{Renter.FirstName}}" type="text" id="renterfirstname" class="span10 bookingfield required" data-field="Renter[FirstName]" required />
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label" for="renterlastname">{{textdata.Last Name}}:*</label>
+	<div class="controls">
+		<input type="text" value={{Renter.LastName}} id="renterlastname" class="span10 bookingfield required" data-field="Renter[LastName]" required />
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label" for="renteremail">{{textdata.Email}}:*</label>
+	<div class="controls">
+		<input type="text" value="{{{Renter.PrimaryEmail}}}" id="renteremail" class="span10 bookingfield required" data-validity="email" data-field="Renter[PrimaryEmail]" required />
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label" for="renterphone">{{textdata.Phone}}:*</label>
+	<div class="controls">
+		<input type="text" value={{Renter.HomePhone}} id="renterphone" class="span10 bookingfield required" data-field="Renter[HomePhone]" required />
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label" for="renterls">{{config.leadsources.prompt}}:</label>
+	<div class="controls controls-row">
+		<div class="btn-group span10">
+		<select id="renterls" class="span12 bookingfield" data-field="Renter[LeadSourceID]">
+			<option value="0">-{{config.leadsources.prompt}}-</option>		
+			{{#config.leadsources.values}}<option value="{{Data}}">{{Label}}</option>{{/config.leadsources.values}}
+		</select>					
+		</div>
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label" for="publicnotes">{{textdata.Special Requests}}:</label>
+	<div class="controls">
+		<textarea id="publicnotes" rows="3" class="span10 bookingfield" data-field="PublicNotes" />
+	</div>
+</div>
+{{/result}}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <script id="tmpl-booking-rentalpolicy" type="text/html">
 <div style="padding:10px;">
 {{{config.rentalpolicy}}}
@@ -1807,4 +1920,170 @@
 </dl>
 </div>
 </div>
+</script>
+
+<script id="tmpl-booking-makepayment-statement" type="text/html">
+<hr />
+{{#result}}
+{{#Statement}}
+
+<div id="charges" class="item row-fluid">
+<h5>{{textdata.Charges}}<span class="glyphicons circle_question_mark"><a href="#statement-details" data-toggle="modal"><i></i></a></span></h5>
+<p>
+	{{textdata.Rent}}<span class="pull-right">{{ServicesTotal.CurrencySymbol}}{{ServicesTotal.SValue2}}</span>
+	<span class="glyphicons circle_question_mark" style="display:none"><a><i></i></a></span>
+</p>
+<p>
+	{{textdata.Taxes & Fees}}<span class="pull-right">{{TaxesAndFeesTotal.CurrencySymbol}}{{TaxesAndFeesTotal.SValue2}}</span>
+	<span class="glyphicons circle_question_mark" style="display:none"><a><i></i></a></span>
+</p>
+{{#DepositsTotal.Value}}
+<p>
+	{{textdata.Refundable Security Deposit}}<span class="pull-right">{{DepositsTotal.CurrencySymbol}}{{DepositsTotal.SValue2}}</span>
+	<span class="glyphicons circle_question_mark" style="display:none"><a><i></i></a></span>
+</p>
+{{/DepositsTotal.Value}}
+
+{{#OptionalFees.length}}
+<hr />
+<div id="ofees" class="item row-fluid">
+<h5>{{textdata.Optional Fees & Services}}</h5>
+{{/OptionalFees.length}}
+{{#OptionalFees}}
+	<p>
+	{{#BoolField}}<input type="checkbox" class="bapi-optionalfee" {{#Quantity}}checked{{/Quantity}} data-rid="{{RelatedToID}}" data-reid="{{RelatedToEntityID}}" />{{/BoolField}}
+	{{^BoolField}}<input type="number" class="span2 bapi-optionalfee" min="{{MinQty}}" max="{{MaxQty}}" value="{{Quantity}}" data-rid="{{RelatedToID}}" data-reid="{{RelatedToEntityID}}" />{{/BoolField}}
+	{{{Notes}}}
+	<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span>
+	</p>
+{{/OptionalFees}}
+{{#OptionalFees.length}}
+</div>
+{{/OptionalFees.length}}
+
+<div id="discount" class="item row-fluid">
+<hr />
+{{#Discounts}}
+<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
+{{/Discounts}}
+{{#Discounts.length}}
+</div>
+{{/Discounts.length}}
+<label>
+	<input type="text" placeholder="{{textdata.Coupon Code}}" class="span6 revisedates" value="{{session.searchparams.coupon}}" data-field="Coupon" />
+	<small><a href"javascript:void(0)" class="bapi-applyspecial">{{textdata.Apply}}</a></small>
+	<span class="pull-right">----</span>
+</label>
+</div>
+<div id="msgs" class="item row-fluid">
+	<div class="msg-yellow">
+	  <p><i class="halflings-icon star"></i> <strong>{{textdata.Total}}</strong><span class="pull-right"><strong>{{Total2.CurrencySymbol}}{{Total2.SValue2}}</strong></span></p>
+	  {{#DiscountsTotal.Value}}<p><strong>You saved<span class="pull-right">{{DiscountsTotal.CurrencySymbol}}{{DiscountsTotal.SValue2}}{{/DiscountsTotal.Value}}</strong></span></p>
+	    <p><strong>Amount Paid:</strong><span class="pull-right">{{AmountPaid.CurrencySymbol}} {{AmountPaid.SValue2}}</span></p>	
+	<p><strong>Amount Due Now:</strong><span class="pull-right">{{AmountPaid.CurrencySymbol}} {{TotalDueNow}}</span></p>	  
+	 </div>
+	{{#PaymentTerms}}
+	<div class="msg-gray msg-center"><p class="text-center">{{&ContextData.Quote.PaymentTerms}}</p></div>
+	{{/PaymentTerms}}
+</div>
+
+<div id="statement-details" class="modal hide fade" role="dialog" aria-hidden="true">
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	<h3>{{textdata.Charges}}</h3>
+</div>
+<div class="modal-body">
+{{#Services.length}}
+<div id="charges" class="item row-fluid">
+<h5>{{textdata.Rent}}</h5>
+{{/Services.length}}
+{{#Services}}
+<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
+{{/Services}}
+{{#Services.length}}
+</div>
+{{/Services.length}}
+<hr />
+
+{{#Fees.length}}
+<div id="fees" class="item row-fluid">
+<h5>{{textdata.Fees}}</h5>
+{{/Fees.length}}
+{{#Fees}}
+<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
+{{/Fees}}
+{{#Fees.length}}
+</div>
+{{/Fees.length}}
+<hr />
+
+{{#Taxes.length}}
+<div id="taxes" class="item row-fluid">
+<h5>{{textdata.Taxes}}</h5>
+{{/Taxes.length}}
+{{#Taxes}}
+<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
+{{/Taxes}}
+{{#Taxes.length}}
+</div>
+{{/Taxes.length}}
+<hr />
+
+{{#OptionalFees.length}}
+<div id="ofees" class="item row-fluid">
+<h5>{{textdata.Optional Fees & Services}}</h5>
+{{/OptionalFees.length}}
+{{#OptionalFees}}<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>{{/OptionalFees}}
+{{#OptionalFees.length}}
+</div>
+{{/OptionalFees.length}}
+<hr />
+
+<div id="taxes" class="item row-fluid">
+{{#Discounts}}
+<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
+{{/Discounts}}
+{{#Discounts.length}}
+</div>
+{{/Discounts.length}}
+</div>
+</div>
+</div>
+{{/Statement}}
+{{/result}}
+</script>
+
+<script id="tmpl-booking-makepayment-stayinfo" type="text/html">
+{{#result}}
+<span class="glyphicons module notes_2"><i></i>{{textdata.Booking Details}}</span>
+<div id="details" class="item row-fluid">                  
+	<p><span class="glyphicons calendar"><i></i>{{textdata.Check-In}}</span> <span class="pull-right">{{SCheckIn}}</span></p>
+	<p><span class="glyphicons calendar"><i></i>{{textdata.Check-Out}}</span> <span class="pull-right">{{SCheckOut}}</span></p>
+	<p><span class="glyphicons group"><i></i>{{textdata.Adults}}</span><span class="pull-right">{{NumAdults}}</span></p>
+	<p><span class="glyphicons group"><i></i>{{textdata.Children}}</span><span class="pull-right">{{NumChildren}}</span></p>
+</div>
+{{/result}}
+
+
+</script>
+<script id="tmpl-booking-makepayment-pay" type="text/html">
+{{#result}}
+<div class="control-group">
+	<div class="controls-rows">
+		<div class="btn-book-header span6">
+			<span class="line1">
+				<a href="javascript:void(0);" class="btn btn-large btn-primary span12 makepayment" data-field-selector="bookingfield">{{textdata.Pay Now}}Pay Now</a>
+			</span>
+		</div>
+		{{#result}}
+		<div class="amount-bk span4">
+			<h5>{{textdata.Amount to Pay Now}}:</h5>
+			{{#Statement}}
+			<h3 style='white-space:nowrap' >{{AmountPaid.CurrencySymbol}}&nbsp;<input id="txtAmountToCharge" type="text" class="row-fluid bookingfield span5" value="{{TotalDueNow}}"/></h3>
+			{{/Statement}}
+		</div>
+		{{/result}}
+	</div>
+</div>
+{{/result}}
 </script>
