@@ -211,7 +211,7 @@
 	
 	function bapi_sync_coredata() {
 		// initialize the bapisync object
-		if(strpos($_SERVER['PATH_INFO'],'wp-admin')===false){			
+		if((strpos($_SERVER['PATH_INFO'],'wp-admin')===false)&&(get_post_meta($post->ID,'bapikey',TRUE)!=''){			
 			global $bapisync;
 			$bapisync = new BAPISync();
 			$bapisync->init();
