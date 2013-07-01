@@ -123,9 +123,6 @@
 			return false;
 		}
 		//global $post;
-		if(!(strpos($_SERVER['PATH_INFO'],'wp-admin')===false)){
-			return false;
-		}
 		global $bapisync;		
 		if (empty($bapisync)) { 
 			// ERROR: What should we do?
@@ -220,9 +217,6 @@
 			return false;
 		}
 		// initialize the bapisync object
-		if(!(strpos($_SERVER['PATH_INFO'],'wp-admin')===false)){
-			return false;
-		}
 	
 		global $bapisync;
 		$bapisync = new BAPISync();
