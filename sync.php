@@ -101,6 +101,9 @@
 		}
 		
 		public static function getMustache($entity, $pkid, $template) {
+			if(!(strpos($_SERVER['PATH_INFO'],'wp-admin')===false)&&!(strpos($_SERVER['PATH_INFO'],'wp-login')===false)){
+				return false;
+			}
 			$bapi = getBAPIObj();
 			if (!$bapi->isvalid()) { return; }
 			$pkid = array(intval($pkid));			
@@ -213,6 +216,7 @@
 	}
 	
 	function bapi_sync_coredata() {
+		echo $_SERVER['PATH_INFO']; exit();
 		if(!(strpos($_SERVER['PATH_INFO'],'wp-admin')===false)&&!(strpos($_SERVER['PATH_INFO'],'wp-login')===false)){
 			return false;
 		}
