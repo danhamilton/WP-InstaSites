@@ -101,7 +101,7 @@
 		}
 		
 		public static function getMustache($entity, $pkid, $template) {
-			if(!(strpos($_SERVER['PATH_INFO'],'wp-admin')===false)&&!(strpos($_SERVER['PATH_INFO'],'wp-login')===false)){
+			if(!(strpos($_SERVER['REQUEST_URI'],'wp-admin')===false)&&!(strpos($_SERVER['REQUEST_URI'],'wp-login')===false)){
 				return false;
 			}
 			$bapi = getBAPIObj();
@@ -122,7 +122,7 @@
 	}
 	
 	function bapi_sync_entity($wp) {	
-		if(!(strpos($_SERVER['PATH_INFO'],'wp-admin')===false)&&!(strpos($_SERVER['PATH_INFO'],'wp-login')===false)){
+		if(!(strpos($_SERVER['REQUEST_URI'],'wp-admin')===false)&&!(strpos($_SERVER['REQUEST_URI'],'wp-login')===false)){
 			return false;
 		}
 		//global $post;
@@ -216,8 +216,7 @@
 	}
 	
 	function bapi_sync_coredata() {
-		echo $_SERVER['PATH_INFO']; exit();
-		if(!(strpos($_SERVER['PATH_INFO'],'wp-admin')===false)&&!(strpos($_SERVER['PATH_INFO'],'wp-login')===false)){
+		if(!(strpos($_SERVER['REQUEST_URI'],'wp-admin')===false)&&!(strpos($_SERVER['REQUEST_URI'],'wp-login')===false)){
 			return false;
 		}
 		// initialize the bapisync object
