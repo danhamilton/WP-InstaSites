@@ -1,5 +1,18 @@
 <?php
 
+if(isset($_POST['reset-data'])){
+	$ent = $_POST['reset-data'];
+	if($ent=='soldata'){
+		update_option( 'bapi_solutiondata_lastmod', 0 );
+	}
+	if($ent=='seodata'){
+		update_option( 'bapi_keywords_lastmod', 0 );
+	}
+	if($ent=='textdata'){
+		update_option( 'bapi_textdata_lastmod', 0 );
+	}
+}
+
 function bapi_create_menu() {
 	//create new top-level menu
 	$parent = get_adminurl('admin.php');
@@ -69,11 +82,15 @@ function bapi_settings_page() {
 ?>
 
 <link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/jquery.ui/jquery-ui-1.10.2.min.css', __FILE__) ?>" />
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
 <script type="text/javascript">
 	jQuery(document).ready(function($){
 		$('#viewraw-soldata').click(function() { $("#dlg-soldata").dialog({ width: 540});});	
 		$('#viewraw-textdata').click(function() { $("#dlg-textdata").dialog({ width: 540 });});	
-		$('#viewraw-seodata').click(function() { $("#dlg-seodata").dialog({ width: 540 });});	
+		$('#viewraw-seodata').click(function() { $("#dlg-seodata").dialog({ width: 540 });});
+		$('#reset-soldata').click(function() { $("#reset-soldata-form").submit(); });	
+		$('#reset-textdata').click(function() { $("#reset-textdata-form").submit(); });	
+		$('#reset-seodata').click(function() { $("#reset-seodata-form").submit(); });	
 	});
 </script>
 
@@ -97,18 +114,21 @@ function bapi_settings_page() {
 	<td scope="row">Solution Data Last Sync:</td>
 	<td><?php echo $lastmod_soldata; ?>
 		<a href="javascript:void(0)" id="viewraw-soldata" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">View Raw</a>
+		<a href="javascript:void(0)" id="reset-soldata" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">Reset</a>
 	</td>
 </tr>
 <tr valign="top">
 	<td scope="row">SEO Last Sync:</td>
 	<td><?php echo $lastmod_seodata; ?>
 		<a href="javascript:void(0)" id="viewraw-seodata" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">View Raw</a>
+		<a href="javascript:void(0)" id="reset-seodata" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">Reset</a>
 	</td>
 </tr>
 <tr valign="top">
 	<th scope="row">Text Data Last Sync:</th>
 	<td><?php echo $lastmod_textdata; ?>
 		<a href="javascript:void(0)" id="viewraw-textdata" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">View Raw</a>
+		<a href="javascript:void(0)" id="reset-textdata" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">Reset</a>
 	</td>
 </tr>
 <tr>
@@ -127,6 +147,24 @@ function bapi_settings_page() {
 
 <div id="dlg-seodata" title="SEO Data" style="display:none">
 <textarea style="width:500px;height:300px"><?php echo htmlentities($seodata); ?></textarea>
+</div>
+
+<div id="hidden-reset-forms" style="display:none">
+	<form id="reset-soldata-form" method="post">
+		<input type="hidden" name="reset-data" value="soldata" />
+		<input type="hidden" name="bapi_solutiondata" value="" />
+		<input type="hidden" name="bapi_solutiondata_lastmod" value="0" />
+	</form>
+	<form id="reset-seodata-form" method="post">
+		<input type="hidden" name="reset-data" value="seodata" />
+		<input type="hidden" name="bapi_keywords_array" value="" />
+		<input type="hidden" name="bapi_keywords_lastmod" value="0" />
+	</form>
+	<form id="reset-textdata-form" method="post">
+		<input type="hidden" name="reset-data" value="textdata" />
+		<input type="hidden" name="bapi_textdata" value="" />
+		<input type="hidden" name="bapi_textdata_lastmod" value="0" />
+	</form>
 </div>
 
 <?php 
