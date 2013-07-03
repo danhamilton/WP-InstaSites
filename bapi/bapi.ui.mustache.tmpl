@@ -447,10 +447,8 @@
 		<li><a href="#tab2" data-toggle="tab">{{textdata.Rates & Availability}}</a></li>
 		<li><a href="#tab3" data-toggle="tab">{{textdata.Amenities}}</a></li>
 		<li><a href="#tab4" id="tabs4" data-toggle="tab">{{textdata.Attractions}}</a></li>
-		{{#config.hasreviews}}
-		{{#ContextData.Reviews}}
-		<li><a href="#tab5" data-toggle="tab">{{textdata.Reviews}}</a></li>
-		{{/ContextData.Reviews}}
+		{{#config.hasreviews}}		
+		<li><a href="#tab5" data-toggle="tab">{{textdata.Reviews}}</a></li>		
 		{{/config.hasreviews}}
 	</ul>			
 	<div class="tab-content">
@@ -620,7 +618,7 @@
 		<div class="tab-pane" id="tab5">
 		<div class="row-fluid">
 		<div class="span12 box-sides">
-		<a class="flipkeyPowered" rel="nofollow" target="_blank" href="www.flipkey.com"><span></span></a>
+		<a class="flipkeyPowered" rel="nofollow" target="_blank" href="//www.flipkey.com"><span></span></a>
 		<div class="clearfix"></div>
 		{{#ContextData.Reviews}}
 		<div class="row-fluid review">
@@ -639,8 +637,10 @@
 				<h5 class="response-title">Response</h5>
 				<div class="response">{{&Response}}</div>
 				</div>
-				{{/Response}}				
+				{{/Response}}
+				{{#ExternalLink}}				
 				<a class="full-rev-link" href="{{ExternalLink}}" target="_blank">See full review on Flipkey</a>
+				{{/ExternalLink}}
 			</div>
 		</div>
 		<hr/>
