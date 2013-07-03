@@ -1294,7 +1294,7 @@
 	<div id="questions-block-inner">
 		<fieldset id="have-question" class="leadrequest">
 		<ul class="unstyled">
-		<li id="phoneform">
+		<li id="nameform">
 			<input type="text" id="txtName" class="span12 leadrequestfield required input-text" minlength="2" data-field="name" placeholder="{{textdata.Name}}*" required />
 		</li>			
 		<li id="emailform">
@@ -1302,6 +1302,24 @@
 		</li>
 		<li id="phoneform">
 			<input type="text" id="txtPhone" class="span12 leadrequestfield required email input-text" data-field="homephone" placeholder="{{textdata.Phone}}*" required />				
+		</li>
+		{{#config.hasdatesoninquiryform}}
+		<li id="datesform" class="row-fluid">
+		<div class="span6">
+			<input type="text" id="txtCheckIn" class="span12 leadrequestfield required input-text" data-field="checkin" placeholder="{{textdata.Check-In}}*" required />
+		</div>
+		<div class="span6">
+			<input type="text" id="txtCheckOut" class="span12 leadrequestfield required input-text" data-field="checkout" placeholder="{{textdata.Check-Out}}*" required />	
+		</div>					
+		</li>
+		{{/config.hasdatesoninquiryform}}
+		<li id="numberGuestsform" class="row-fluid">
+		<div class="span6">
+			<input type="text" id="txtAdults" class="span12 leadrequestfield required input-text" data-field="adults" placeholder="{{textdata.Adults}}*" required />
+		</div>
+		<div class="span6">
+			<input type="text" id="txtChildren" class="span12 leadrequestfield required input-text" data-field="children" placeholder="{{textdata.Children}}*" required />	
+		</div>					
 		</li>
 		<li id="lsform">
 			<select class="span12 leadrequestfield required email" data-field="ls">
