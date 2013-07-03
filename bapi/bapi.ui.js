@@ -509,6 +509,11 @@ context.createSummaryWidget = function (targetid, options, callback) {
 		if (options.entity == BAPI.entities.property && options.ignoresession!='1') {
 			options.searchoptions = $.extend({}, options.searchoptions, BAPI.session.searchparams);
 		}
+		if (BAPI.isempty(options.entity) {
+			BAPI.log("Invalid entityid specified for " + targetid);
+			$(targetid).text("Invalid configuration");
+			return;
+		}
 		BAPI.search(options.entity, options.searchoptions, function (data) { 
 			if (options.log) { BAPI.log("--search result--"); BAPI.log(data); }
 			ids = data.result; 
@@ -589,12 +594,7 @@ context.createFeaturedPropertiesWidget = function (targetid, options) {
 		var pids = data.result;
 		BAPI.get(pids, BAPI.entities.property, { pagesize: options.pagesize, seo: true }, function (res) {			
 			res.textdata = options.textdata;
-			$(targetid).html(Mustache.render(options.template, res));
-			//$('.fpstar1').raty({ readOnly: true, score: 1 });
-			//$('.fpstar2').raty({ readOnly: true, score: 2 });
-			//$('.fpstar3').raty({ readOnly: true, score: 3 });
-			//$('.fpstar5').raty({ readOnly: true, score: 4 });
-			//$('.fpstar5').raty({ readOnly: true, score: 5 });
+			$(targetid).html(Mustache.render(options.template, res));		
 		});
 	});
 }
