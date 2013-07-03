@@ -509,7 +509,7 @@ context.createSummaryWidget = function (targetid, options, callback) {
 		if (options.entity == BAPI.entities.property && options.ignoresession!='1') {
 			options.searchoptions = $.extend({}, options.searchoptions, BAPI.session.searchparams);
 		}
-		if (BAPI.isempty(options.entity) {
+		if (BAPI.isempty(options.entity)) {
 			BAPI.log("Invalid entityid specified for " + targetid);
 			$(targetid).text("Invalid configuration");
 			return;
