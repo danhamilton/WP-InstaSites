@@ -101,6 +101,9 @@
 		}
 		
 		public static function getMustache($entity, $pkid, $template) {
+			if(!(strpos($_SERVER['REQUEST_URI'],'wp-admin')===false)||!(strpos($_SERVER['REQUEST_URI'],'wp-login')===false)){
+				return false;
+			}
 			$bapi = getBAPIObj();
 			if (!$bapi->isvalid()) { return; }
 			$pkid = array(intval($pkid));			
@@ -119,6 +122,9 @@
 	}
 	
 	function bapi_sync_entity($wp) {	
+		if(!(strpos($_SERVER['REQUEST_URI'],'wp-admin')===false)||!(strpos($_SERVER['REQUEST_URI'],'wp-login')===false)){
+			return false;
+		}
 		//global $post;
 		global $bapisync;		
 		if (empty($bapisync)) { 
@@ -210,7 +216,11 @@
 	}
 	
 	function bapi_sync_coredata() {
+		if(!(strpos($_SERVER['REQUEST_URI'],'wp-admin')===false)||!(strpos($_SERVER['REQUEST_URI'],'wp-login')===false)){
+			return false;
+		}
 		// initialize the bapisync object
+	
 		global $bapisync;
 		$bapisync = new BAPISync();
 		$bapisync->init();
@@ -254,6 +264,6 @@
 				update_option('bapi_keywords_array',$data);
 				update_option('bapi_keywords_lastmod',time());
 			}					
-		}	
+		}
 	}	
 ?>
