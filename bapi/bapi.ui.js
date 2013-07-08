@@ -748,14 +748,18 @@ function createDatePickerPickadate(targetid, options) {
 	var checkinpickers = $('.datepickercheckin');
 	var checkoutpickers = $('.datepickercheckout');
 	var mind = true; if (BAPI.config().minbookingdays>0) { mind = BAPI.config().minbookingdays; }	
-	var blockouts = [];
+	var cinblockouts = [];
+	var coutblockouts=[];
 	if (!BAPI.isempty(p) && !BAPI.isempty(p.ContextData) && !BAPI.isempty(p.ContextData.Availability)) {
 		$.each(p.ContextData.Availability, function (index, item) {				
 			var cin = moment(item.CheckIn);
 			var cout = moment(item.CheckOut);
 			//BAPI.log(cin.format() + "-" + cout.format());			
-			while (cin.isSame(cout) || cin.isBefore(cout)) {
-				blockouts.push([cin.year(), cin.month()+1, cin.date()]);
+			while (cin.isSame(cout) || cin.isBefore(cout)) { 
+                if(!cin.isSame(cout)) //don't include the checkout as block out for checking in, people can check in on a day of check out
+                    cinblockouts.push([cin.year(), cin.month() + 1, cin.date()]);
+                if(!cin.isSame(moment(item.CheckIn))) //don't include the checkin as block out for checking out, people can check out on a day of check in
+                    coutblockouts.push([cin.year(), cin.month() + 1, cin.date()]);
 				//BAPI.log(cin.year() + "-" + cin.month()+1 + "-" + cin.date());
 				cin = cin.add('days',1);
 			}
@@ -767,7 +771,7 @@ function createDatePickerPickadate(targetid, options) {
 		poptions = {
 			dateMin: mind,
 			dateMax: BAPI.config().maxbookingdays,
-			datesDisabled: blockouts,
+			datesDisabled: cinblockouts,
 			format: BAPI.defaultOptions.dateFormat.toLowerCase(),
 			formatSubmit: BAPI.defaultOptions.dateFormat.toLowerCase(),
 			klass: {
@@ -794,7 +798,7 @@ function createDatePickerPickadate(targetid, options) {
 		poptions = {
 			dateMin: mind,
 			dateMax: BAPI.config().maxbookingdays,
-			datesDisabled: blockouts,
+			datesDisabled: coutblockouts,
 			format: BAPI.defaultOptions.dateFormat.toLowerCase(),
 			formatSubmit: BAPI.defaultOptions.dateFormat.toLowerCase(),
 			klass: {
