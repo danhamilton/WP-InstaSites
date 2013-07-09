@@ -26,6 +26,11 @@
 	$sitelive = empty($sitelive) ? '' : 'checked';
 	
 	$cloudfronturl = get_option('bapi_cloudfronturl');		
+	
+	$lang = get_option('bapi_language');
+	if((get_option('bapi_language')=='')&&(get_option('api_key')=='')){
+		$lang = 'en-US';
+	}
 ?> 
 <script type="text/javascript">
 	var baseURL = '<?= getbapiurl() ?>'; // TODO: (JACOB) set this to bapi_baseurl
@@ -52,6 +57,18 @@
 			});			
 		});
 	});
+	function validateURL(val){
+		if(val.indexOf("www")==-1){
+			var c = confirm('The Site URL you have entered does not contain "www".\n\nCloudFront CDN and Redirection not supported in this configuration.\n\nAre you sure you wish to proceed?');
+			if(c){
+				return true;
+			}
+			else{
+				jQuery('#site_url_input').focus();
+				return false;
+			}
+		}
+	}
 </script>
 <div class="wrap">
 <h1><a href="http://www.bookt.com" target="_blank"><img src="<?= plugins_url('/img/logo.png', __FILE__) ?>" /></a></h1>
@@ -60,7 +77,7 @@
 <table class="form-table">
 <tr valign="top">
 	<td scope="row">Site URL</td>
-	<td><input type="text" name="bapi_site_cdn_domain" size="60" value="<?php echo $cdn_url; ?>" /></td>
+	<td><input type="text" name="bapi_site_cdn_domain" id="site_url_input" size="60" value="<?php echo $cdn_url; ?>" onBlur="validateURL(this.value)"/></td>
 </tr>
 <tr valign="top">
 	<td scope="row">Site Live?</td>
@@ -74,7 +91,7 @@
 </tr>
 <tr valign="top">
 	<td scope="row">Language:</td>
-	<td><input type="text" name="bapi_language" size="60" value="<?php echo get_option('bapi_language'); ?>" /></td>
+	<td><input type="text" name="bapi_language" size="60" value="<?php echo $lang; ?>" /></td>
 </tr>
 <tr valign="top" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">
 	<td scope="row">BAPI Base URL:</td>
