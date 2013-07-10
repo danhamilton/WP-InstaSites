@@ -1,12 +1,17 @@
 <?php				
 	// handle if this is a post
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+		if(!empty($_POST['bapi_secureurl'])){ //In case client-side validation is not triggered, prevent protocol from being included in secure url.
+			$securl = $_POST['bapi_secureurl'];
+			$securl = str_replace("http://","",$securl);
+			$securl = str_replace("https://","",$securl);
+		}
 		update_option('bapi_site_cdn_domain', $_POST['bapi_site_cdn_domain']);
 		update_option('api_key', $_POST['api_key']);
 		update_option('bapi_sitelive', $_POST['bapi_sitelive']=='on');
 		update_option('bapi_language', $_POST['bapi_language']);
 		update_option('bapi_baseurl', $_POST['bapi_baseurl']);
-		update_option('bapi_secureurl', $_POST['bapi_secureurl']);
+		update_option('bapi_secureurl', $securl);
 		update_option('bapi_cloudfronturl', $_POST['bapi_cloudfronturl']);
 		
 		echo '<div id="message" class="updated"><p><strong>Settings saved.</strong></p></div>';
@@ -26,6 +31,11 @@
 	$sitelive = empty($sitelive) ? '' : 'checked';
 	
 	$cloudfronturl = get_option('bapi_cloudfronturl');		
+	
+	$lang = get_option('bapi_language');
+	if((get_option('bapi_language')=='')&&(get_option('api_key')=='')){
+		$lang = 'en-US';
+	}
 ?> 
 <script type="text/javascript">
 	var baseURL = '<?= getbapiurl() ?>'; // TODO: (JACOB) set this to bapi_baseurl
@@ -52,6 +62,23 @@
 			});			
 		});
 	});
+	function validateURL(val){
+		if(val.indexOf("www")==-1){
+			var c = confirm('The Site URL you have entered does not contain "www".\n\nCloudFront CDN and Redirection not supported in this configuration.\n\nAre you sure you wish to proceed?');
+			if(c){
+				return true;
+			}
+			else{
+				jQuery('#site_url_input').focus();
+				return false;
+			}
+		}
+	}
+	function cleanSecureURL(val){
+		var n = val.replace("https://","");
+		var n = n.replace("http://","");
+		jQuery('#site_secure_url_input').val(n);
+	}
 </script>
 <div class="wrap">
 <h1><a href="http://www.bookt.com" target="_blank"><img src="<?= plugins_url('/img/logo.png', __FILE__) ?>" /></a></h1>
@@ -60,7 +87,7 @@
 <table class="form-table">
 <tr valign="top">
 	<td scope="row">Site URL</td>
-	<td><input type="text" name="bapi_site_cdn_domain" size="60" value="<?php echo $cdn_url; ?>" /></td>
+	<td><input type="text" name="bapi_site_cdn_domain" id="site_url_input" size="60" value="<?php echo $cdn_url; ?>" onBlur="validateURL(this.value)"/></td>
 </tr>
 <tr valign="top">
 	<td scope="row">Site Live?</td>
@@ -74,7 +101,7 @@
 </tr>
 <tr valign="top">
 	<td scope="row">Language:</td>
-	<td><input type="text" name="bapi_language" size="60" value="<?php echo get_option('bapi_language'); ?>" /></td>
+	<td><input type="text" name="bapi_language" size="60" value="<?php echo $lang; ?>" /></td>
 </tr>
 <tr valign="top" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">
 	<td scope="row">BAPI Base URL:</td>
@@ -82,7 +109,7 @@
 </tr>
 <tr valign="top" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">
 	<td scope="row">Secure Site URL:</td>
-	<td><input type="text" name="bapi_secureurl" size="60" value="<?php echo $surl; ?>" /></td>
+	<td><input type="text" id="site_secure_url_input" name="bapi_secureurl" size="60" value="<?php echo $surl; ?>" onBlur="cleanSecureURL(this.value)" /></td>
 </tr>
 <tr valign="top" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">
 	<td scope="row">Cloudfront URL:</td>
