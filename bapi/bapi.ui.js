@@ -1323,6 +1323,9 @@ context.createMakePaymentWidget = function (targetid, options) {
     if (bookingHelper_DoRedirect(u)) { return; }
     var bid = u.param('bid');
     if (typeof (bid) === "undefined" || bid === null) {
+        bid = u.param('ebid');
+    }
+    if (typeof (bid) === "undefined" || bid === null) {
         alert("You have reached this page in error.  You will be redirected back to the home page.");
         window.location = "/"; //TODO: need to redirect back to the correct place
         return;
