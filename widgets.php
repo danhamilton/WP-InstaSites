@@ -687,11 +687,10 @@ class BAPI_Weather_Widget extends WP_Widget {
 				// weather widget uses code found here: http://www.zazar.net/developers/jquery/zweatherfeed/
 				// lookup woid here: http://woeid.rosselliot.co.nz/
 				var woid = '<?= $woid ?>';
-				var unit = '<?= $unit ?>';
+				var sTemperatureUnit = '<?= $unit ?>';
 				if (woid!='') {
-					var unit = 'c';
-					if (BAPI.defaultOptions.language=="en-US") { unit = 'f'; }
-					BAPI.UI.createWeatherWidget('#weather-widget', ['<?= $woid ?>'], { "link": false, "woeid": true, "unit": unit });
+					if (sTemperatureUnit == null || sTemperatureUnit == '' && BAPI.defaultOptions.language=="en-US") { sTemperatureUnit = 'f'; }
+					BAPI.UI.createWeatherWidget('#weather-widget', ['<?= $woid ?>'], { "link": false, "woeid": true, "unit": sTemperatureUnit });
 				}
 			});
         </script>
