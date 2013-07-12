@@ -1375,6 +1375,7 @@
 </div>
 </script> 
 
+
 /*
 	Group: Booking
 */
@@ -1476,7 +1477,6 @@
 {{#result}}
 {{#ContextData.Quote.IsValid}}
 {{#ContextData.Quote.Statement}}
-
 <div id="charges" class="item row-fluid">
 <h5>{{textdata.Charges}}<span class="glyphicons circle_question_mark"><a href="#statement-details" data-toggle="modal"><i></i></a></span></h5>
 <p>
@@ -1493,7 +1493,6 @@
 	<span class="glyphicons circle_question_mark" style="display:none"><a><i></i></a></span>
 </p>
 {{/DepositsTotal.Value}}
-
 {{#OptionalFees.length}}
 <hr />
 <div id="ofees" class="item row-fluid">
@@ -1510,9 +1509,10 @@
 {{#OptionalFees.length}}
 </div>
 {{/OptionalFees.length}}
-
+{{#Discounts.length}}
 <div id="discount" class="item row-fluid">
 <hr />
+{{/Discounts.length}}
 {{#Discounts}}
 <p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
 {{/Discounts}}
@@ -1528,14 +1528,13 @@
 <div id="msgs" class="item row-fluid">
 	<div class="msg-yellow">
 	  <p><i class="halflings-icon star"></i> <strong>{{textdata.Total}}</strong><span class="pull-right"><strong>{{Total2.CurrencySymbol}}{{Total2.SValue2}}</strong></span></p>
-	  {{#DiscountsTotal.Value}}<p><strong>You saved<span class="pull-right">{{DiscountsTotal.CurrencySymbol}}{{DiscountsTotal.SValue2}}{{/DiscountsTotal.Value}}</strong></span></p>
+	  {{#DiscountsTotal.Value}}<p><strong>You saved<span class="pull-right">{{DiscountsTotal.CurrencySymbol}}{{DiscountsTotal.SValue2}}</span></strong></p>{{/DiscountsTotal.Value}}
 	  <p><strong>Amount Due Now:</strong><span class="pull-right">{{TotalDueNow.CurrencySymbol}} {{TotalDueNow.SValue2}}</span></p>	  
 	</div>
 	{{#ContextData.Quote.PaymentTerms}}
 	<div class="msg-gray msg-center"><p class="text-center">{{&ContextData.Quote.PaymentTerms}}</p></div>
 	{{/ContextData.Quote.PaymentTerms}}
 </div>
-
 {{/ContextData.Quote.Statement}}
 {{/ContextData.Quote.IsValid}}
 {{/result}}
@@ -1549,7 +1548,7 @@
 </div>
 <div class="modal-body">
 {{#Services.length}}
-<div id="charges" class="item row-fluid">
+<div id="charges-modal" class="item row-fluid">
 <h5>{{textdata.Rent}}</h5>
 {{/Services.length}}
 {{#Services}}
@@ -1557,11 +1556,10 @@
 {{/Services}}
 {{#Services.length}}
 </div>
-{{/Services.length}}
 <hr />
-
+{{/Services.length}}
 {{#Fees.length}}
-<div id="fees" class="item row-fluid">
+<div id="fees-modal" class="item row-fluid">
 <h5>{{textdata.Fees}}</h5>
 {{/Fees.length}}
 {{#Fees}}
@@ -1569,11 +1567,10 @@
 {{/Fees}}
 {{#Fees.length}}
 </div>
-{{/Fees.length}}
 <hr />
-
+{{/Fees.length}}
 {{#Taxes.length}}
-<div id="taxes" class="item row-fluid">
+<div id="taxes-modal" class="item row-fluid">
 <h5>{{textdata.Taxes}}</h5>
 {{/Taxes.length}}
 {{#Taxes}}
@@ -1581,27 +1578,26 @@
 {{/Taxes}}
 {{#Taxes.length}}
 </div>
-{{/Taxes.length}}
 <hr />
-
+{{/Taxes.length}}
 {{#OptionalFees.length}}
-<div id="ofees" class="item row-fluid">
+<div id="ofees-modal" class="item row-fluid">
 <h5>{{textdata.Optional Fees & Services}}</h5>
 {{/OptionalFees.length}}
 {{#OptionalFees}}<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>{{/OptionalFees}}
 {{#OptionalFees.length}}
 </div>
-{{/OptionalFees.length}}
 <hr />
-
-<div id="taxes" class="item row-fluid">
+{{/OptionalFees.length}}
+{{#Discounts.length}}
+<div id="discounts-modal" class="item row-fluid">
+{{/Discounts.length}}
 {{#Discounts}}
 <p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
 {{/Discounts}}
 {{#Discounts.length}}
 </div>
 {{/Discounts.length}}
-</div>
 </div>
 <div class="modal-footer">
 <button class="btn" data-dismiss="modal" aria-hidden="true">{{textdata.Close}}</button>                        
