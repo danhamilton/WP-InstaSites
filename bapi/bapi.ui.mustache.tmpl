@@ -1342,6 +1342,41 @@
 </script> 
 
 /*
+	Group: Contact Us Forms
+*/
+<script id="tmpl-contactus-form" type="text/html">
+<div id="questions-block">	
+	<div id="questions-block-inner">
+		<fieldset id="have-question" class="leadrequest">
+		<ul class="unstyled">
+		<li id="nameform">
+			<input type="text" id="txtName" class="span12 leadrequestfield required input-text" minlength="2" data-field="name" placeholder="{{textdata.Name}}*" required />
+		</li>			
+		<li id="emailform">
+			<input type="text" id="txtEmail" class="span12 leadrequestfield required input-text" size="25" data-field="email" type="email" placeholder="{{textdata.Email}}*" required />
+		</li>
+		<li id="phoneform">
+			<input type="text" id="txtPhone" class="span12 leadrequestfield required email input-text" data-field="homephone" placeholder="{{textdata.Phone}}*" required />				
+		</li>				
+		<li id="lsform">
+			<select class="span12 leadrequestfield required email" data-field="ls">
+				<option value="0">{{config.leadsources.prompt}}</option>
+				{{#config.leadsources.values}}<option value="{{Data}}">{{Label}}</option>{{/config.leadsources.values}}
+			</select>					
+		</li>
+		<li id="commentsform">				
+			<textarea id="txtComments" rows="2" cols="20" class="span12 leadrequestfield" data-field="msg" placeholder="{{textdata.Comments}}" ></textarea>
+		</li>		
+		</ul>
+		<div class="clearfix"></div>			
+		<input type="button" id="btn-leadrequest" class="btn btn-primary pull-right doleadrequest" value='{{textdata.Submit}}' data-field-selector="leadrequestfield" />			
+		</fieldset>
+	</div>
+</div>
+</script> 
+
+
+/*
 	Group: Booking
 */
 <script id="tmpl-booking-makebooking-masterlayout" type="text/html">
@@ -1442,7 +1477,6 @@
 {{#result}}
 {{#ContextData.Quote.IsValid}}
 {{#ContextData.Quote.Statement}}
-
 <div id="charges" class="item row-fluid">
 <h5>{{textdata.Charges}}<span class="glyphicons circle_question_mark"><a href="#statement-details" data-toggle="modal"><i></i></a></span></h5>
 <p>
@@ -1459,7 +1493,6 @@
 	<span class="glyphicons circle_question_mark" style="display:none"><a><i></i></a></span>
 </p>
 {{/DepositsTotal.Value}}
-
 {{#OptionalFees.length}}
 <hr />
 <div id="ofees" class="item row-fluid">
@@ -1476,9 +1509,10 @@
 {{#OptionalFees.length}}
 </div>
 {{/OptionalFees.length}}
-
+{{#Discounts.length}}
 <div id="discount" class="item row-fluid">
 <hr />
+{{/Discounts.length}}
 {{#Discounts}}
 <p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
 {{/Discounts}}
@@ -1494,14 +1528,13 @@
 <div id="msgs" class="item row-fluid">
 	<div class="msg-yellow">
 	  <p><i class="halflings-icon star"></i> <strong>{{textdata.Total}}</strong><span class="pull-right"><strong>{{Total2.CurrencySymbol}}{{Total2.SValue2}}</strong></span></p>
-	  {{#DiscountsTotal.Value}}<p><strong>You saved<span class="pull-right">{{DiscountsTotal.CurrencySymbol}}{{DiscountsTotal.SValue2}}{{/DiscountsTotal.Value}}</strong></span></p>
+	  {{#DiscountsTotal.Value}}<p><strong>You saved<span class="pull-right">{{DiscountsTotal.CurrencySymbol}}{{DiscountsTotal.SValue2}}</span></strong></p>{{/DiscountsTotal.Value}}
 	  <p><strong>Amount Due Now:</strong><span class="pull-right">{{TotalDueNow.CurrencySymbol}} {{TotalDueNow.SValue2}}</span></p>	  
 	</div>
 	{{#ContextData.Quote.PaymentTerms}}
 	<div class="msg-gray msg-center"><p class="text-center">{{&ContextData.Quote.PaymentTerms}}</p></div>
 	{{/ContextData.Quote.PaymentTerms}}
 </div>
-
 {{/ContextData.Quote.Statement}}
 {{/ContextData.Quote.IsValid}}
 {{/result}}
@@ -1515,7 +1548,7 @@
 </div>
 <div class="modal-body">
 {{#Services.length}}
-<div id="charges" class="item row-fluid">
+<div id="charges-modal" class="item row-fluid">
 <h5>{{textdata.Rent}}</h5>
 {{/Services.length}}
 {{#Services}}
@@ -1523,11 +1556,10 @@
 {{/Services}}
 {{#Services.length}}
 </div>
-{{/Services.length}}
 <hr />
-
+{{/Services.length}}
 {{#Fees.length}}
-<div id="fees" class="item row-fluid">
+<div id="fees-modal" class="item row-fluid">
 <h5>{{textdata.Fees}}</h5>
 {{/Fees.length}}
 {{#Fees}}
@@ -1535,11 +1567,10 @@
 {{/Fees}}
 {{#Fees.length}}
 </div>
-{{/Fees.length}}
 <hr />
-
+{{/Fees.length}}
 {{#Taxes.length}}
-<div id="taxes" class="item row-fluid">
+<div id="taxes-modal" class="item row-fluid">
 <h5>{{textdata.Taxes}}</h5>
 {{/Taxes.length}}
 {{#Taxes}}
@@ -1547,27 +1578,26 @@
 {{/Taxes}}
 {{#Taxes.length}}
 </div>
-{{/Taxes.length}}
 <hr />
-
+{{/Taxes.length}}
 {{#OptionalFees.length}}
-<div id="ofees" class="item row-fluid">
+<div id="ofees-modal" class="item row-fluid">
 <h5>{{textdata.Optional Fees & Services}}</h5>
 {{/OptionalFees.length}}
 {{#OptionalFees}}<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>{{/OptionalFees}}
 {{#OptionalFees.length}}
 </div>
-{{/OptionalFees.length}}
 <hr />
-
-<div id="taxes" class="item row-fluid">
+{{/OptionalFees.length}}
+{{#Discounts.length}}
+<div id="discounts-modal" class="item row-fluid">
+{{/Discounts.length}}
 {{#Discounts}}
 <p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
 {{/Discounts}}
 {{#Discounts.length}}
 </div>
 {{/Discounts.length}}
-</div>
 </div>
 <div class="modal-footer">
 <button class="btn" data-dismiss="modal" aria-hidden="true">{{textdata.Close}}</button>                        
