@@ -151,9 +151,11 @@
 		$changes = "";
 		// case 1: page exists in wp and is marked for syncing on wp but, it no longer exists in Bookt		
 		if ($page_exists_in_wp && empty($seo) && !empty($pagekey)) {
+			//echo $post->ID; exit();
 			//print_r("case 1");
 			// Action: Set current page to "unpublished"
 			// $post->post_status = "unpublish";
+			wp_delete_post($post->ID); //optional 2nd parameter can be added -> if true then page will be deleted immediately instead of going to trash.
 		}
 		// case 2: pages exists in wp and in Bookt
 		else if ($page_exists_in_wp && !empty($seo)) {
