@@ -40,7 +40,7 @@
 			$url = strtolower(trim($url));
 			if (strpos($url, "/") != 0) { $url = "/" . $url; }
 			if (substr($url, -1) != "/") { $url = $url . "/"; }
-			return $url;
+			return $url; exit();
 		}
 		
 		public static function clean_post_name($url) {
@@ -100,7 +100,7 @@
 			return substr($this->templates, $si+1, $ei-$si-1);			
 		}
 		
-		public static function getMustache($entity, $pkid, $template) {
+		public static function getMustache($entity, $pkid, $template,$debugmode=0) {
 			if(!(strpos($_SERVER['REQUEST_URI'],'wp-admin')===false)||!(strpos($_SERVER['REQUEST_URI'],'wp-login')===false)){
 				return false;
 			}
@@ -108,7 +108,7 @@
 			if (!$bapi->isvalid()) { return; }
 			$pkid = array(intval($pkid));			
 			$options = $entity == "property" ? array("seo" => 1, "descrip" => 1, "avail" => 1, "rates" => 1, "reviews" => 1) : null;
-			$c = $bapi->get($entity,$pkid,$options);						
+			$c = $bapi->get($entity,$pkid,$options,true,$debugmode);						
 			$c["config"] = BAPISync::getSolutionData();
 			$c["config"] = $c["config"]["ConfigObj"];
 			$c["textdata"] = BAPISync::getTextData();
@@ -121,7 +121,8 @@
 		}
 	}
 	
-	function bapi_sync_entity($wp) {	
+	function bapi_sync_entity($wp) {
+		$debugmode = 0; //added by jacob for mantis #4115
 		if(!(strpos($_SERVER['REQUEST_URI'],'wp-admin')===false)||!(strpos($_SERVER['REQUEST_URI'],'wp-login')===false)){
 			return false;
 		}
@@ -130,10 +131,10 @@
 		if (empty($bapisync)) { 
 			// ERROR: What should we do?
 		}
-		$post = get_page_by_path($_SERVER['REQUEST_URI']);
+		$post = get_page_by_path($_SERVER['REDIRECT_URL']);
 		
 		// locate the SEO data stored in Bookt from the requested URL
-		$seo = $bapisync->getSEOFromUrl($_SERVER['REQUEST_URI']);
+		$seo = $bapisync->getSEOFromUrl($_SERVER['REDIRECT_URL']);
 		if (!empty($seo) && (empty($seo["entity"]) || empty($seo["pkid"]))) {
 			$seo = null; // ignore seo info if it doesn't point to a valid entity
 		}		
@@ -181,12 +182,17 @@
 			$do_page_update = true;
 			$do_meta_update = true;
 		}
+		//Check if developer is using debugmode and force entity sync
+		if (isset($_GET['debugmode'])&&$_GET['debugmode']){
+			$do_page_update = true;
+			$debugmode = 1;
+		}
 
 		if ($do_page_update) {
 			// do page update
 			$post->comment_status = "close";		
 			$template = $bapisync->getMustacheTemplate($seo["entity"]);		
-			$post->post_content = $bapisync->getMustache($seo["entity"],$seo["pkid"],$template);
+			$post->post_content = $bapisync->getMustache($seo["entity"],$seo["pkid"],$template,$debugmode);
 			$post->post_title = $seo["PageTitle"];
 			$post->post_name = BAPISync::clean_post_name($seo["DetailURL"]);
 			$post->post_parent = get_page_by_path(BAPISync::getRootPath($seo["entity"]))->ID;						
@@ -219,8 +225,8 @@
 		if(!(strpos($_SERVER['REQUEST_URI'],'wp-admin')===false)||!(strpos($_SERVER['REQUEST_URI'],'wp-login')===false)){
 			return false;
 		}
-		// initialize the bapisync object
-	
+		
+		// initialize the bapisync object		
 		global $bapisync;
 		$bapisync = new BAPISync();
 		$bapisync->init();
@@ -265,5 +271,5 @@
 				update_option('bapi_keywords_lastmod',time());
 			}					
 		}
-	}	
+	}
 ?>

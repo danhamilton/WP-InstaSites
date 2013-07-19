@@ -296,6 +296,11 @@
 		?><meta name="LASTMOD" content="<?= $lastu ?>" /><?= "\n" ?><meta name="KEYWORDS" content="<?= $metak ?>" /><?= "\n" ?><meta name="DESCRIPTION" content="<?= $metad ?>" /><?= "\n" ?><?php
 	}
 	
+	function bapi_add_entity_meta(){
+		global $entityUpdateURL;
+		?><meta name="ENTITYURL" content="<?= $entityUpdateURL ?>" /><?= "\n" ?><?php
+	}
+	
 	function getBAPIObj() {
 		return new BAPI(get_option('api_key'), get_option('bapi_language'), get_option('bapi_baseurl'));
 	}		
