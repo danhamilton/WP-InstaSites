@@ -31,6 +31,7 @@ include_once(dirname( __FILE__ ).'/widgets.php');
 include_once(dirname( __FILE__ ).'/sync.php');
 include_once(dirname( __FILE__ ).'/google-xml-sitemap.php');
 include_once(dirname( __FILE__ ).'/cdn-linker/wp-cdn-linker.php');
+include_once(dirname( __FILE__ ).'/create-site.php');
 require_once('bapi-php/bapi.php');
 require_once('init.php');
 
@@ -48,6 +49,7 @@ add_action('init','urlHandler_bapitextdata',3);	// handler for /bapi.textdata.js
 add_action('init','urlHandler_bapitemplates',3);	// handler for /bapi.templates.js
 add_action('init','urlHandler_bapidefaultpages',3);	// handler for /bapi.init
 add_action('init','disable_kses_content',20);
+add_action('template_redirect','bapi_create_site',1);  //Hook to add new sites
 add_action('template_redirect', 'google_sitemap'); // sitemap handler
 
 // create custom plugin settings menu
