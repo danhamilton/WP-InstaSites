@@ -3,12 +3,18 @@ function bapi_create_site(){
 	if ( ! preg_match( '/bapi-signup\.php$/', $_SERVER['REQUEST_URI'] ) ) {
 		return;
 	}
-	$temail = 'test'.time().'@bookt.com'; 
-	$u = wpmu_create_user($temail,'testing',$temail);
+	$prefix = $_POST['siteprefix'];
+	$sname = $_POST['sitename'];
+	$apikey = $_POST['apikey'];
+	$username = $_POST['username'];
+	$password = $_POST['password'];
+	
+	$u = wpmu_create_user($username,$password,$username);
 	if(is_numeric($u)){
-		$meta = array('api_key' => 'c336ba2a-3aab-4d12-b5f6-16809995d490');
-		$siteurl = 'wpmutest'.time().'.localhost';
-		$s = wpmu_create_blog($siteurl,'/','Test1',$u,$meta);
+		$meta = array('api_key' => $apikey);
+		$siteurl = $prefix.'.lodgingcloud.com';  //How to check which domain is used for current service
+		//$siteurl = $prefix.'.imbookingsecure.com';
+		$s = wpmu_create_blog($siteurl,'/',$sname,$u,$meta);
 		//$t = wpmu_create_blog('wpmutest.localhost','/','Test1',1);  //use this one to force a 'blog_taken' failure.
 		if(is_numeric($s)){
 			//success
