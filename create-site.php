@@ -12,7 +12,8 @@ function bapi_create_site(){
 	$u = wpmu_create_user($username,$password,$username);
 	if(is_numeric($u)){
 		$meta = array('api_key' => $apikey);
-		$siteurl = $prefix.'.lodgingcloud.com';  //How to check which domain is used for current service
+		$domain = $_SERVER['SERVER_NAME'];
+		$siteurl = $prefix.'.'.$domain;  //How to check which domain is used for current service
 		//$siteurl = $prefix.'.imbookingsecure.com';
 		$s = wpmu_create_blog($siteurl,'/',$sname,$u,$meta);
 		//$t = wpmu_create_blog('wpmutest.localhost','/','Test1',1);  //use this one to force a 'blog_taken' failure.
