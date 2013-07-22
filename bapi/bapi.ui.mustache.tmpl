@@ -1503,7 +1503,7 @@
 	{{#BoolField}}<input type="checkbox" class="bapi-optionalfee" {{#Quantity}}checked{{/Quantity}} data-rid="{{RelatedToID}}" data-reid="{{RelatedToEntityID}}" />{{/BoolField}}
 	{{^BoolField}}<input type="number" class="span2 bapi-optionalfee" min="{{MinQty}}" max="{{MaxQty}}" value="{{Quantity}}" data-rid="{{RelatedToID}}" data-reid="{{RelatedToEntityID}}" />{{/BoolField}}
 	{{{Notes}}}
-	<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span>
+	<span class="pull-right">{{#SubTotal}}{{OptionalFeesTotal.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span>
 	</p>
 {{/OptionalFees}}
 {{#OptionalFees.length}}
@@ -1514,7 +1514,7 @@
 <hr />
 {{/Discounts.length}}
 {{#Discounts}}
-<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
+<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{DiscountsTotal.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
 {{/Discounts}}
 {{#Discounts.length}}
 </div>
