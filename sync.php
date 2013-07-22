@@ -149,6 +149,18 @@
 		$do_page_update = false;
 		$do_meta_update = false;
 		$changes = "";
+		
+		//catch bad bapikey
+		if ($page_exists_in_wp && !empty($pagekey)){
+			$pktest = explode(":",$pagekey);
+			//print_r($pktest); exit();
+			if((strlen($pktest[0])==0)||(strlen($pktest[1])==0)){
+				//To Delete Meta or Page, that is the question.
+				wp_delete_post($post->ID);  //Going w/ deleting post for now - I think this will work because if page should exist it will ge recreated.
+				//delete_post_meta($post->ID,'bapikey');
+			}
+		}
+		
 		// case 1: page exists in wp and is marked for syncing on wp but, it no longer exists in Bookt		
 		if ($page_exists_in_wp && empty($seo) && !empty($pagekey)) {
 			//echo $post->ID; exit();
