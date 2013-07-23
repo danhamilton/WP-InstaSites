@@ -26,7 +26,7 @@
 <small>These base urls define where detail pages will get synced.</small>
 <table class="form-table">
 <tr valign="top">
-	<td scope="row">Propert:y</td>
+	<td scope="row">Property:</td>
 	<td><?php echo $soldata["Site"]["BasePropertyURL"]; ?></td>
 </tr>
 <tr valign="top">
