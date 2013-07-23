@@ -9,7 +9,12 @@ function bapi_create_site(){
 	$username = $_POST['username'];
 	$password = $_POST['password'];
 	
-	$u = wpmu_create_user($username,$password,$username);
+	$u = username_exists($username);
+	if(empty($u)){
+		$u = wpmu_create_user($username,$password,$username);
+	}
+	
+	//$u = wpmu_create_user($username,$password,$username);
 	if(is_numeric($u)){
 		$meta = array('api_key' => $apikey);
 		$domain = $_SERVER['SERVER_NAME'];
@@ -29,6 +34,7 @@ function bapi_create_site(){
 		}
 	}
 	else{
+		echo "debug1";
 		print_r($u);
 	}
 	exit();
