@@ -29,7 +29,7 @@ function bapi_create_site(){
 		}
 	}
 	else{
-		//Failed to create user
+		print_r($u);
 	}
 	exit();
 }
