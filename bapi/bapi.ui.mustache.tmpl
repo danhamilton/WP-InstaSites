@@ -1294,16 +1294,22 @@
 	<div id="questions-block-inner">
 		<fieldset id="have-question" class="leadrequest">
 		<ul class="unstyled">
+		{{#InquiryFormFields.Name}}
 		<li id="nameform">
 			<input type="text" id="txtName" class="span12 leadrequestfield required input-text" minlength="2" data-field="name" placeholder="{{textdata.Name}}*" required />
-		</li>			
+		</li>
+		{{/InquiryFormFields.Name}}
+		{{#InquiryFormFields.Email}}
 		<li id="emailform">
 			<input type="text" id="txtEmail" class="span12 leadrequestfield required input-text" size="25" data-field="email" type="email" placeholder="{{textdata.Email}}*" required />
 		</li>
+		{{/InquiryFormFields.Email}}
+		{{#InquiryFormFields.Phone}}
 		<li id="phoneform">
 			<input type="text" id="txtPhone" class="span12 leadrequestfield required email input-text" data-field="homephone" placeholder="{{textdata.Phone}}*" required />				
 		</li>
-		{{#config.hasdatesoninquiryform}}
+		{{/InquiryFormFields.Phone}}
+		{{#InquiryFormFields.Dates}}
 		<li id="datesform" class="row-fluid">
 		<div class="span6">
 			<input type="text" id="txtCheckIn" class="span12 leadrequestfield required input-text" data-field="checkin" placeholder="{{textdata.Check-In}}*" required />
@@ -1312,7 +1318,8 @@
 			<input type="text" id="txtCheckOut" class="span12 leadrequestfield required input-text" data-field="checkout" placeholder="{{textdata.Check-Out}}*" required />	
 		</div>					
 		</li>
-		{{/config.hasdatesoninquiryform}}
+		{{/InquiryFormFields.Dates}}
+		{{#InquiryFormFields.NumberOfGuests}}
 		<li id="numberGuestsform" class="row-fluid">
 		<div class="span6">
 			<input type="text" id="txtAdults" class="span12 leadrequestfield required input-text" data-field="adults" placeholder="{{textdata.Adults}}*" required />
@@ -1321,15 +1328,20 @@
 			<input type="text" id="txtChildren" class="span12 leadrequestfield required input-text" data-field="children" placeholder="{{textdata.Children}}*" required />	
 		</div>					
 		</li>
+		{{/InquiryFormFields.NumberOfGuests}}
+		{{#InquiryFormFields.LeadSourceDropdown}}
 		<li id="lsform">
 			<select class="span12 leadrequestfield required email" data-field="ls">
 				<option value="0">{{config.leadsources.prompt}}</option>
 				{{#config.leadsources.values}}<option value="{{Data}}">{{Label}}</option>{{/config.leadsources.values}}
 			</select>					
 		</li>
+		{{/InquiryFormFields.LeadSourceDropdown}}
+		{{#InquiryFormFields.Comments}}
 		<li id="commentsform">				
 			<textarea id="txtComments" rows="2" cols="20" class="span12 leadrequestfield" data-field="msg" placeholder="{{textdata.Comments}}" ></textarea>
 		</li>
+		{{/InquiryFormFields.Comments}}
 		<li id="specialform" class="specialform">
 			<input type="text" autocomplete="off" id="txtSpecial" class="span12 leadrequestfield input-text" data-field="special" placeholder="Special" />
 		</li>

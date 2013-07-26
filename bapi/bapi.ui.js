@@ -128,8 +128,19 @@ context.inithelpers = {
 			var pkid = ctl.attr('data-propid');
 			var selector = '#' + ctl.attr('id');
 			var hasdates = false;
+			
+			/* we get each value from the html markup created by the inquiry form widget at the same time we create an object and populate it with each value */
+			var InquiryFormFields = {};
+			InquiryFormFields["Name"] = (ctl.attr('data-shownamefield') == '1');
+			InquiryFormFields["Email"] = (ctl.attr('data-showemailfield') == '1');
+			InquiryFormFields["Phone"] = (ctl.attr('data-showphonefield') == '1');
+			InquiryFormFields["Dates"] = (ctl.attr('data-showdatefields') == '1');
+			InquiryFormFields["NumberOfGuests"] = (ctl.attr('data-shownumberguestsfields') == '1');
+			InquiryFormFields["LeadSourceDropdown"] = (ctl.attr('data-showleadsourcedropdown') == '1');
+			InquiryFormFields["Comments"] = (ctl.attr('data-showcommentsfield') == '1');
+			
 			BAPI.log("Creating inquiry form for " + selector);
-			context.createInquiryForm(selector, { "pkid": pkid, "template": BAPI.templates.get(templatename), "hasdatesoninquiryform": hasdates, "log": dologging });		
+			context.createInquiryForm(selector, { "pkid": pkid, "template": BAPI.templates.get(templatename), "hasdatesoninquiryform": hasdates, "log": dologging, "InquiryFormFields": InquiryFormFields });		
 		});	
 	},
 	setuppopupinquiryformwidgets: function(options) {
@@ -604,10 +615,13 @@ context.createInquiryForm = function (targetid, options) {
 	options = initOptions(options, 1, 'tmpl-leadrequestform-propertyinquiry');
 	if (typeof (options.submitbuttonselector) === "undefined" || options.submitbuttonselector == null) { options.submitbuttonselector = 'doleadrequest'; }	
 	if (typeof (options.responseurl) === "undefined" || options.responseurl == null) { options.responseurl = '' }
+	/* we check if we got the InquiryFormFields */
+	if (typeof (options.InquiryFormFields) === "undefined" || options.InquiryFormFields == null) { options.InquiryFormFields = '' }
 	
 	if (options.dologging==1) { BAPI.log("--- Inquiry Form---"); BAPI.log("-> Options"); BAPI.log(options); }
 	context.loading.ctlshow(targetid);
-	var data = { "config": options.config, "site": options.site, "textdata": options.textdata }	
+	/* we add the InquiryFormFields object to data so the values can get into account when rendereing the mustache template */
+	var data = { "config": options.config, "site": options.site, "textdata": options.textdata, "InquiryFormFields": options.InquiryFormFields }
 	$(targetid).html(Mustache.render(options.template, data));
 	$('.specialform').hide(); // hide the spam control
 	
@@ -874,9 +888,6 @@ function bookingHelper_getFormData(options, booking) {
 	treqdata.PropertyID = BAPI.isempty(booking.PropertyID) ? null : booking.PropertyID;
 	treqdata.Renter = BAPI.isempty(booking.Renter) ? null : booking.Renter;
 	treqdata.Statement = {};
-	treqdata.Statement.ID=booking.Statement.ID;
-	alert(treqdata.Statement.ID);
-	alert('hi');
 	treqdata.Statement.DueOn = booking.Statement.DueOn;
 	treqdata.Statement.Details = booking.Statement.Details;	
 	treqdata.Statement.Total = booking.Statement.Total;

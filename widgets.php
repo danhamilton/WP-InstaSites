@@ -376,12 +376,33 @@ class BAPI_Inquiry_Form extends WP_Widget {
 	public function widget( $args, $instance ) {
 		extract( $args );
 		$title = apply_filters( 'widget_title', $instance['title'] );
+		
+		/* Do we show the name field ? */
+		$bShowNameField =  $instance['showNameField'];
+		
+		/* Do we show the email field ? */
+		$bShowEmailField =  $instance['showEmailField'];
+		
+		/* Do we show the phone field ? */
+		$bShowPhoneField =  $instance['showPhoneField'];
+		
+		/* Do we show the date fields ? */
+		$bShowDateFields =  $instance['showDateFields'];
+		
+		/* Do we show the number of guests fields ? */
+		$bShowNumberGuestsFields =  $instance['showNumberGuestsFields'];
+		
+		/* Do we show the how did you hear about us dropdown ? */
+		$bShowLeadSourceDropdown =  $instance['showLeadSourceDropdown'];
+		
+		/* Do we show the comments field ? */
+		$bShowCommentsField =  $instance['showCommentsField'];
 
 		echo $before_widget;
 		if ( ! empty( $title ) )
 			echo $before_title . $title . $after_title;
 		?>
-		<div id="bapi-inquiryform" class="bapi-inquiryform" data-templatename="tmpl-leadrequestform-propertyinquiry" data-log="0"></div>        
+		<div id="bapi-inquiryform" class="bapi-inquiryform" data-templatename="tmpl-leadrequestform-propertyinquiry" data-log="0" data-shownamefield="<?= $bShowNameField ?>" data-showemailfield="<?= $bShowEmailField ?>" data-showphonefield="<?= $bShowPhoneField ?>" data-showdatefields="<?= $bShowDateFields ?>" data-shownumberguestsfields="<?= $bShowNumberGuestsFields ?>" data-showleadsourcedropdown="<?= $bShowLeadSourceDropdown ?>" data-showcommentsfield="<?= $bShowCommentsField ?>" ></div>        
         <?php
 		echo $after_widget;
 	}
@@ -389,6 +410,15 @@ class BAPI_Inquiry_Form extends WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 		$instance = array();
 		$instance['title'] = strip_tags( $new_instance['title'] );
+		
+		/* we sanitize the values, either 1 or nothing */
+		$instance['showNameField'] =  strip_tags($new_instance['showNameField']);
+		$instance['showEmailField'] =  strip_tags($new_instance['showEmailField']);
+		$instance['showPhoneField'] =  strip_tags($new_instance['showPhoneField']);
+		$instance['showDateFields'] =  strip_tags($new_instance['showDateFields']);
+		$instance['showNumberGuestsFields'] =  strip_tags($new_instance['showNumberGuestsFields']);
+		$instance['showLeadSourceDropdown'] =  strip_tags($new_instance['showLeadSourceDropdown']);
+		$instance['showCommentsField'] =  strip_tags($new_instance['showCommentsField']);
 
 		return $instance;
 	}
@@ -400,11 +430,89 @@ class BAPI_Inquiry_Form extends WP_Widget {
 		else {
 			$title = __( 'Contact Us', 'text_domain' );
 		}
+		
+		// Show name field checkbox
+		if ( isset( $instance[ 'showNameField' ] ) ) { $bShowNameField = esc_attr($instance[ 'showNameField' ]); }
+		else{ $bShowNameField = true;}
+		
+		// Show email field checkbox
+		if ( isset( $instance[ 'showEmailField' ] ) ) { $bShowEmailField = esc_attr($instance[ 'showEmailField' ]); }
+		else{ $bShowEmailField = true;}
+		
+		// Show phone field checkbox
+		if ( isset( $instance[ 'showPhoneField' ] ) ) { $bShowPhoneField = esc_attr($instance[ 'showPhoneField' ]); }
+		else{ $bShowPhoneField = true;}
+		
+		// Show dates fields checkbox
+		if ( isset( $instance[ 'showDateFields' ] ) ) { $bShowDateFields = esc_attr($instance[ 'showDateFields' ]); }
+		else{ $bShowDateFields = true;}
+		
+		// Show number of guests fields checkbox
+		if ( isset( $instance[ 'showNumberGuestsFields' ] ) ) { $bShowNumberGuestsFields = esc_attr($instance[ 'showNumberGuestsFields' ]); }
+		else{ $bShowNumberGuestsFields = true;}
+		
+		// Show lead source dropdown checkbox
+		if ( isset( $instance[ 'showLeadSourceDropdown' ] ) ) { $bShowLeadSourceDropdown = esc_attr($instance[ 'showLeadSourceDropdown' ]); }
+		else{ $bShowLeadSourceDropdown = true;}
+		
+		// Show comments field checkbox
+		if ( isset( $instance[ 'showCommentsField' ] ) ) { $bShowCommentsField = esc_attr($instance[ 'showCommentsField' ]); }
+		else{ $bShowCommentsField = true;}
+		
 		?>
 		<p>
 		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
 		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
 		</p>
+<p>
+<input id="<?php echo $this->get_field_id('showNameField'); ?>" name="<?php echo $this->get_field_name('showNameField'); ?>" class="checkbox" type="checkbox" value="1" <?php checked( '1', $bShowNameField ); ?>/>
+<label for="<?php echo $this->get_field_id( 'showNameField' ); ?>">
+  <?php _e( 'Display Name Field?' ); ?>
+</label>
+</p>
+
+<p>
+<input id="<?php echo $this->get_field_id('showEmailField'); ?>" name="<?php echo $this->get_field_name('showEmailField'); ?>" class="checkbox" type="checkbox" value="1" <?php checked( '1', $bShowEmailField ); ?>/>
+<label for="<?php echo $this->get_field_id( 'showEmailField' ); ?>">
+  <?php _e( 'Display Email Field?' ); ?>
+</label>
+</p>
+
+<p>
+<input id="<?php echo $this->get_field_id('showPhoneField'); ?>" name="<?php echo $this->get_field_name('showPhoneField'); ?>" class="checkbox" type="checkbox" value="1" <?php checked( '1', $bShowPhoneField ); ?>/>
+<label for="<?php echo $this->get_field_id( 'showPhoneField' ); ?>">
+  <?php _e( 'Display Phone Field?' ); ?>
+</label>
+</p>
+
+<p>
+<input id="<?php echo $this->get_field_id('showDateFields'); ?>" name="<?php echo $this->get_field_name('showDateFields'); ?>" class="checkbox" type="checkbox" value="1" <?php checked( '1', $bShowDateFields ); ?>/>
+<label for="<?php echo $this->get_field_id( 'showDateFields' ); ?>">
+  <?php _e( 'Display Dates Fields?' ); ?>
+</label>
+</p>
+
+<p>
+<input id="<?php echo $this->get_field_id('showNumberGuestsFields'); ?>" name="<?php echo $this->get_field_name('showNumberGuestsFields'); ?>" class="checkbox" type="checkbox" value="1" <?php checked( '1', $bShowNumberGuestsFields ); ?>/>
+<label for="<?php echo $this->get_field_id( 'showNumberGuestsFields' ); ?>">
+  <?php _e( 'Display Guests Fields?' ); ?>
+</label>
+</p>
+
+<p>
+<input id="<?php echo $this->get_field_id('showLeadSourceDropdown'); ?>" name="<?php echo $this->get_field_name('showLeadSourceDropdown'); ?>" class="checkbox" type="checkbox" value="1" <?php checked( '1', $bShowLeadSourceDropdown ); ?>/>
+<label for="<?php echo $this->get_field_id( 'showLeadSourceDropdown' ); ?>">
+  <?php _e( 'Display Lead Source Dropdown?' ); ?>
+</label>
+</p>
+
+<p>
+<input id="<?php echo $this->get_field_id('showCommentsField'); ?>" name="<?php echo $this->get_field_name('showCommentsField'); ?>" class="checkbox" type="checkbox" value="1" <?php checked( '1', $bShowCommentsField ); ?>/>
+<label for="<?php echo $this->get_field_id( 'showCommentsField' ); ?>">
+  <?php _e( 'Display Comments Field?' ); ?>
+</label>
+</p>
+
 		<?php 
 	}
 
