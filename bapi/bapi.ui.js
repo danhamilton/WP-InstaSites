@@ -888,6 +888,7 @@ function bookingHelper_getFormData(options, booking) {
 	treqdata.PropertyID = BAPI.isempty(booking.PropertyID) ? null : booking.PropertyID;
 	treqdata.Renter = BAPI.isempty(booking.Renter) ? null : booking.Renter;
 	treqdata.Statement = {};
+        treqdata.Statement.ID = booking.Statement.ID;
 	treqdata.Statement.DueOn = booking.Statement.DueOn;
 	treqdata.Statement.Details = booking.Statement.Details;	
 	treqdata.Statement.Total = booking.Statement.Total;
