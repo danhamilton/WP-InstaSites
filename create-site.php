@@ -3,6 +3,7 @@ function bapi_create_site(){
 	if ( ! preg_match( '/bapi-signup\.php$/', $_SERVER['REQUEST_URI'] ) ) {
 		return;
 	}
+	
 	$prefix = $_POST['siteprefix'];
 	$sname = $_POST['sitename'];
 	$apikey = $_POST['apikey'];
