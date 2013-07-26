@@ -876,6 +876,7 @@ function bookingHelper_getFormData(options, booking) {
 	treqdata.Statement = {};
 	treqdata.Statement.ID=booking.Statement.ID;
 	alert(treqdata.Statement.ID);
+	alert('hi');
 	treqdata.Statement.DueOn = booking.Statement.DueOn;
 	treqdata.Statement.Details = booking.Statement.Details;	
 	treqdata.Statement.Total = booking.Statement.Total;
