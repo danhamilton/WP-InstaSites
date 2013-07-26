@@ -888,8 +888,6 @@ function bookingHelper_getFormData(options, booking) {
 	treqdata.PropertyID = BAPI.isempty(booking.PropertyID) ? null : booking.PropertyID;
 	treqdata.Renter = BAPI.isempty(booking.Renter) ? null : booking.Renter;
 	treqdata.Statement = {};
-        treqdata.Statement.ID = booking.Statement.ID;
-	
 	treqdata.Statement.DueOn = booking.Statement.DueOn;
 	treqdata.Statement.Details = booking.Statement.Details;	
 	treqdata.Statement.Total = booking.Statement.Total;
@@ -1312,6 +1310,7 @@ function PaymentHelper_PayHandler(targetid, options, propid) {
         var reqdata = bookingHelper_getFormData(options, curbooking);
         reqdata.AltID = curbooking.AltID;
         reqdata.ID = curbooking.ID;
+	reqdata.Statement.ID=curbooking.Statement.ID
         reqdata.AmountToCharge = +$('#txtAmountToCharge').val();
         var postdata = { "data":JSON.stringify(reqdata) };
         BAPI.save(BAPI.entities.booking, postdata, function (bres) {
