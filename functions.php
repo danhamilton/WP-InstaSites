@@ -71,7 +71,8 @@
 			$bapi_baseurl = get_option('bapi_baseurl');
 		}
 		if(empty($bapi_baseurl) || $bapi_baseurl=='connect.bookt.com'){
-			$bapi_baseurl = 'd2kqqk9digjl80.cloudfront.net';
+			$bapi_baseurl = 'd2kqqk9digjl80.cloudfront.net';  
+			//$bapi_baseurl = 'connect.bookt.com';
 		}
 		if (stripos($bapi_baseurl, "localhost", 0) === 0) {			
 			return "http://" . $bapi_baseurl;
@@ -293,6 +294,11 @@
 		$lastu = date('r',$lastu);
 		
 		?><meta name="LASTMOD" content="<?= $lastu ?>" /><?= "\n" ?><meta name="KEYWORDS" content="<?= $metak ?>" /><?= "\n" ?><meta name="DESCRIPTION" content="<?= $metad ?>" /><?= "\n" ?><?php
+	}
+	
+	function bapi_add_entity_meta(){
+		global $entityUpdateURL;
+		?><meta name="ENTITYURL" content="<?= $entityUpdateURL ?>" /><?= "\n" ?><?php
 	}
 	
 	function getBAPIObj() {

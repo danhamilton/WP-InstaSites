@@ -17,7 +17,7 @@
 		public function loadtemplates() { if (empty($this->templates)) { $this->templates = BAPISync::getTemplates(); } }
 		
 		public static function getSolutionDataRaw() { return get_option('bapi_solutiondata'); }
-		public static function getSolutionDataLastModRaw() { get_option('bapi_textdata_lastmod'); }
+		public static function getSolutionDataLastModRaw() { return get_option('bapi_solutiondata_lastmod'); }
 		public static function getSolutionData() { return json_decode(BAPISync::getSolutionDataRaw(), TRUE); }
 		
 		public static function getTextDataRaw() { return get_option('bapi_textdata'); }
@@ -40,7 +40,7 @@
 			$url = strtolower(trim($url));
 			if (strpos($url, "/") != 0) { $url = "/" . $url; }
 			if (substr($url, -1) != "/") { $url = $url . "/"; }
-			return $url;
+			return $url; exit();
 		}
 		
 		public static function clean_post_name($url) {
@@ -100,7 +100,7 @@
 			return substr($this->templates, $si+1, $ei-$si-1);			
 		}
 		
-		public static function getMustache($entity, $pkid, $template) {
+		public static function getMustache($entity, $pkid, $template,$debugmode=0) {
 			if(!(strpos($_SERVER['REQUEST_URI'],'wp-admin')===false)||!(strpos($_SERVER['REQUEST_URI'],'wp-login')===false)){
 				return false;
 			}
@@ -108,7 +108,7 @@
 			if (!$bapi->isvalid()) { return; }
 			$pkid = array(intval($pkid));			
 			$options = $entity == "property" ? array("seo" => 1, "descrip" => 1, "avail" => 1, "rates" => 1, "reviews" => 1) : null;
-			$c = $bapi->get($entity,$pkid,$options);						
+			$c = $bapi->get($entity,$pkid,$options,true,$debugmode);						
 			$c["config"] = BAPISync::getSolutionData();
 			$c["config"] = $c["config"]["ConfigObj"];
 			$c["textdata"] = BAPISync::getTextData();
@@ -121,7 +121,8 @@
 		}
 	}
 	
-	function bapi_sync_entity($wp) {	
+	function bapi_sync_entity($wp) {
+		$debugmode = 0; //added by jacob for mantis #4115
 		if(!(strpos($_SERVER['REQUEST_URI'],'wp-admin')===false)||!(strpos($_SERVER['REQUEST_URI'],'wp-login')===false)){
 			return false;
 		}
@@ -130,10 +131,10 @@
 		if (empty($bapisync)) { 
 			// ERROR: What should we do?
 		}
-		$post = get_page_by_path($_SERVER['REQUEST_URI']);
+		$post = get_page_by_path($_SERVER['REDIRECT_URL']);
 		
 		// locate the SEO data stored in Bookt from the requested URL
-		$seo = $bapisync->getSEOFromUrl($_SERVER['REQUEST_URI']);
+		$seo = $bapisync->getSEOFromUrl($_SERVER['REDIRECT_URL']);
 		if (!empty($seo) && (empty($seo["entity"]) || empty($seo["pkid"]))) {
 			$seo = null; // ignore seo info if it doesn't point to a valid entity
 		}		
@@ -148,11 +149,25 @@
 		$do_page_update = false;
 		$do_meta_update = false;
 		$changes = "";
+		
+		//catch bad bapikey
+		if ($page_exists_in_wp && !empty($pagekey)){
+			$pktest = explode(":",$pagekey);
+			//print_r($pktest); exit();
+			if((strlen($pktest[0])==0)||(strlen($pktest[1])==0)){
+				//To Delete Meta or Page, that is the question.
+				wp_delete_post($post->ID);  //Going w/ deleting post for now - I think this will work because if page should exist it will ge recreated.
+				//delete_post_meta($post->ID,'bapikey');
+			}
+		}
+		
 		// case 1: page exists in wp and is marked for syncing on wp but, it no longer exists in Bookt		
 		if ($page_exists_in_wp && empty($seo) && !empty($pagekey)) {
+			//echo $post->ID; exit();
 			//print_r("case 1");
 			// Action: Set current page to "unpublished"
 			// $post->post_status = "unpublish";
+			wp_delete_post($post->ID); //optional 2nd parameter can be added -> if true then page will be deleted immediately instead of going to trash.
 		}
 		// case 2: pages exists in wp and in Bookt
 		else if ($page_exists_in_wp && !empty($seo)) {
@@ -181,12 +196,17 @@
 			$do_page_update = true;
 			$do_meta_update = true;
 		}
+		//Check if developer is using debugmode and force entity sync
+		if (isset($_GET['debugmode'])&&$_GET['debugmode']){
+			$do_page_update = true;
+			$debugmode = 1;
+		}
 
 		if ($do_page_update) {
 			// do page update
 			$post->comment_status = "close";		
 			$template = $bapisync->getMustacheTemplate($seo["entity"]);		
-			$post->post_content = $bapisync->getMustache($seo["entity"],$seo["pkid"],$template);
+			$post->post_content = $bapisync->getMustache($seo["entity"],$seo["pkid"],$template,$debugmode);
 			$post->post_title = $seo["PageTitle"];
 			$post->post_name = BAPISync::clean_post_name($seo["DetailURL"]);
 			$post->post_parent = get_page_by_path(BAPISync::getRootPath($seo["entity"]))->ID;						
@@ -219,8 +239,8 @@
 		if(!(strpos($_SERVER['REQUEST_URI'],'wp-admin')===false)||!(strpos($_SERVER['REQUEST_URI'],'wp-login')===false)){
 			return false;
 		}
-		// initialize the bapisync object
-	
+		
+		// initialize the bapisync object		
 		global $bapisync;
 		$bapisync = new BAPISync();
 		$bapisync->init();
@@ -265,5 +285,5 @@
 				update_option('bapi_keywords_lastmod',time());
 			}					
 		}
-	}	
+	}
 ?>

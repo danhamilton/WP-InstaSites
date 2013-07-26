@@ -46,13 +46,25 @@
 		
 		// set the default content
 		$content = $pagedef['content'];	
-		if($content!=''){				
+		if($content!=''){
+			/* we check if the content is pointing to a local file */
+			if(strpos($content, '/') === 0)
+			{			
 			$cpath = get_local(plugins_url($content,__FILE__));
 			$t = file_get_contents($cpath);
 			$m = new Mustache_Engine();
 		
 			$wrapper = getbapisolutiondata();			
-			$string = $m->render($t, $wrapper);	
+			$string = $m->render($t, $wrapper);
+			}else{
+				/* if not is pointing to a json object */				
+				$jsonContent = file_get_contents($content);
+				if($jsonContent != FALSE)
+				{
+				$jsonObjContent = json_decode($jsonContent);
+				$string = $jsonObjContent->result[0]->DocText;
+				}else{$string = '';}
+			}
 			$string = str_replace("\t", '', $string); // remove tabs
 			$string = str_replace("\n", '', $string); // remove new lines
 			$string = str_replace("\r", '', $string); // remove carriage returns			

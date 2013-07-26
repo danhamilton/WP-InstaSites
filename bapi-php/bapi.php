@@ -5,7 +5,7 @@ class BAPI
 	public $apikey;
 	public $language = 'en-US';
     public $currency = 'USD';
-    public $baseURL = 'd2kqqk9digjl80.cloudfront.net';
+    public $baseURL = 'connect.bookt.com';
 	public $getopts = array(
 		'http'=>array(
 			'method'=>"GET",
@@ -76,10 +76,15 @@ class BAPI
 		return $c;
 	}
 	
-	public function get($entity,$ids,$options=null,$jsondecode=true) {
+	public function get($entity,$ids,$options=null,$jsondecode=true,$debugmode=0) {
 		if (!$this->isvalid()) { return null; }
 		$url = $this->getBaseURL() . "/ws/?method=get&apikey=" . $this->apikey . "&entity=" . $entity . '&ids=' . implode(",", $ids) . '&language=' . $this->language;
-		if (!empty($options)) { $url = $url . "&" . http_build_query($options); }	
+		if (!empty($options)) { $url = $url . "&" . http_build_query($options); }
+		
+		global $entityUpdateURL;
+		$entityUpdateURL = $url;
+		add_action('wp_head','bapi_add_entity_meta',1);	
+		
 		$c = file_get_contents($url,FALSE,$this->getOptions) or wp_die('Error Retrieving Entity Data','Oops!');
 		if (empty($jsondecode) || $jsondecode) { return json_decode($c,TRUE); }
 		return $c;

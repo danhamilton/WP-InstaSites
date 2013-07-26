@@ -31,6 +31,7 @@ include_once(dirname( __FILE__ ).'/widgets.php');
 include_once(dirname( __FILE__ ).'/sync.php');
 include_once(dirname( __FILE__ ).'/google-xml-sitemap.php');
 include_once(dirname( __FILE__ ).'/cdn-linker/wp-cdn-linker.php');
+include_once(dirname( __FILE__ ).'/create-site.php');
 require_once('bapi-php/bapi.php');
 require_once('init.php');
 
@@ -42,6 +43,7 @@ add_filter('upload_mimes', 'custom_upload_mimes');
 add_action('template_redirect', 'do_ossdl_off_ob_start');
 add_action('wp_head','getconfig');
 add_action('wp_head','bapi_getmeta',1);
+add_action('init','bapi_create_site',1);  //Hook to add new sites
 add_action('init','bapi_sync_coredata',1); 	// syncing BAPI core data
 add_action('init','bapi_sync_entity',2);	// syncing BAPI entities (such as properties, developments, etc...)
 add_action('init','urlHandler_bapitextdata',3);	// handler for /bapi.textdata.js
