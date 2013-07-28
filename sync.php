@@ -16,8 +16,8 @@
 		}
 		public function loadtemplates() { if (empty($this->templates)) { $this->templates = BAPISync::getTemplates(); } }
 		
-		public static function getSolutionDataRaw() { return get_option('bapi_solutiondata'); }
-		public static function getSolutionDataLastModRaw() { return get_option('bapi_solutiondata_lastmod'); }
+		public static function getSolutionDataRaw() { return $bapi_all_options['bapi_solutiondata']; }
+		public static function getSolutionDataLastModRaw() { return $bapi_all_options['bapi_solutiondata_lastmod']; }
 		public static function getSolutionData() { return json_decode(BAPISync::getSolutionDataRaw(), TRUE); }
 		
 		public static function getTextDataRaw() { return get_option('bapi_textdata'); }

@@ -3,7 +3,7 @@
 	function bapi_wp_site_options(){
 		global $bapi_all_options;
 		$bapi_all_options = wp_load_alloptions();
-		print_r($bapi_all_options); exit();
+		//print_r($bapi_all_options); exit();
 	}
 	
 	/* BAPI url handlers */
