@@ -20,12 +20,12 @@
 		public static function getSolutionDataLastModRaw() { return $bapi_all_options['bapi_solutiondata_lastmod']; }
 		public static function getSolutionData() { return json_decode(BAPISync::getSolutionDataRaw(), TRUE); }
 		
-		public static function getTextDataRaw() { return get_option('bapi_textdata'); }
-		public static function getTextDataLastModRaw() { return get_option('bapi_textdata_lastmod'); }
+		public static function getTextDataRaw() { return $bapi_all_options['bapi_textdata']; }
+		public static function getTextDataLastModRaw() { return $bapi_all_options['bapi_textdata_lastmod']; }
 		public static function getTextData() { return json_decode(BAPISync::getTextDataRaw(), TRUE); }
 		
-		public static function getSEODataRaw() { return get_option('bapi_keywords_array'); }
-		public static function getSEODataLastModRaw() { return get_option('bapi_keywords_lastmod'); }
+		public static function getSEODataRaw() { return $bapi_all_options['bapi_keywords_array']; }
+		public static function getSEODataLastModRaw() { return $bapi_all_options['bapi_keywords_lastmod']; }
 		public static function getSEOData() { return json_decode(BAPISync::getSEODataRaw(), TRUE); }
 		
 		public static function getTemplates() { 
