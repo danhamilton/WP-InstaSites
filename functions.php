@@ -1,4 +1,10 @@
 <?php	
+	/* Pre-Load Site Options - Utilizes Built-in Cache Functions */
+	function bapi_wp_site_options(){
+		global $bapi_all_options;
+		$bapi_all_options = wp_load_alloptions();
+		print_r($bapi_all_options);
+	}
 	
 	/* BAPI url handlers */
 	function urlHandler_bapitextdata() {
