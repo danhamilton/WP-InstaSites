@@ -171,7 +171,7 @@ context.inithelpers = {
 					BAPI.log("Creating availability calendar for " + selector);						
 					context.createAvailabilityWidget(selector, data, options);
 					
-					var rateselector = 'bapi-ratetable'; // TODO: set to what is passed in the options
+					var rateselector = '.bapi-ratetable'; // TODO: set to what is passed in the options
 					var ratetemplate = BAPI.templates.get('tmpl-properties-ratetable');
 					$(rateselector).html(Mustache.render(ratetemplate, data));
 				});		
