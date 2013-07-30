@@ -44,11 +44,12 @@ add_action('template_redirect', 'do_ossdl_off_ob_start');
 add_action('wp_head','getconfig');
 add_action('wp_head','bapi_getmeta',1);
 add_action('init','bapi_create_site',1);  //Hook to add new sites
-add_action('init','bapi_sync_coredata',1); 	// syncing BAPI core data
-add_action('init','bapi_sync_entity',2);	// syncing BAPI entities (such as properties, developments, etc...)
-add_action('init','urlHandler_bapitextdata',3);	// handler for /bapi.textdata.js
-add_action('init','urlHandler_bapitemplates',3);	// handler for /bapi.templates.js
-add_action('init','urlHandler_bapidefaultpages',3);	// handler for /bapi.init
+add_action('init','bapi_wp_site_options',1);  //Preload Site Data to help reduce DB usage
+add_action('init','bapi_sync_coredata',2); 	// syncing BAPI core data
+add_action('init','bapi_sync_entity',3);	// syncing BAPI entities (such as properties, developments, etc...)
+add_action('init','urlHandler_bapitextdata',4);	// handler for /bapi.textdata.js
+add_action('init','urlHandler_bapitemplates',4);	// handler for /bapi.templates.js
+add_action('init','urlHandler_bapidefaultpages',4);	// handler for /bapi.init
 add_action('init','disable_kses_content',20);
 add_action('template_redirect', 'google_sitemap'); // sitemap handler
 

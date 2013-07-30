@@ -1,7 +1,15 @@
 <?php	
+	/* Pre-Load Site Options - Utilizes Built-in Cache Functions */
+	global $bapi_all_options; 
+	function bapi_wp_site_options(){
+		global $bapi_all_options;
+		$bapi_all_options = wp_load_alloptions();
+		//print_r($bapi_all_options); exit();
+	}
 	
 	/* BAPI url handlers */
 	function urlHandler_bapitextdata() {
+		global $bapi_all_options; 
 		$url = get_relative($_SERVER['REQUEST_URI']);
 		if (strtolower($url) != "/bapi.textdata.js")
 			return; // not our handler
@@ -13,7 +21,7 @@
 		$expires = gmdate('D, d M Y H:i:s \G\M\T', $expires);
 		header( 'Expires: ' . $expires );
 		
-		$js = get_option('bapi_textdata'); // core data should have been synced prior to this
+		$js = $bapi_all_options['bapi_textdata']; // core data should have been synced prior to this
 		echo "/*\r\n";
 		echo "	BAPI TextData\r\n";
 		echo "	Last updated: " . date('r',$lastupdatetime) . "\r\n";	
@@ -62,12 +70,13 @@
 	
 	/* BAPI Helpers */	
 	function getbapiurl() {
+		global $bapi_all_options;
 		$bapi_baseurl = 'connect.bookt.com';
 		//Check if there is a globally defined baseurl constant.  This should be set in wp-config.php like so: define('BAPI_BASEURL', 'connect.bookt.com');
 		if(defined(BAPI_BASEURL)){ 
 			$bapi_baseurl = BAPI_BASEURL;
 		}
-		if(get_option('bapi_baseurl')){
+		if($bapi_all_options['bapi_baseurl']){
 			$bapi_baseurl = get_option('bapi_baseurl');
 		}
 		if(empty($bapi_baseurl) || $bapi_baseurl=='connect.bookt.com'){
@@ -81,7 +90,8 @@
 	}
 
 	function getbapilanguage() {
-		$language = get_option('bapi_language');	
+		global $bapi_all_options;
+		$language = $bapi_all_options['bapi_language'];	
 		if(empty($language)) {
 			$language = "en-US";
 		}
@@ -97,7 +107,8 @@
 	}
 
 	function getbapiapikey() {
-		return get_option('api_key');
+		global $bapi_all_options;
+		return $bapi_all_options['api_key'];	
 	}
 	
 	function getbapisolutiondata() {
@@ -108,11 +119,13 @@
 	}	
 	
 	function getbapicontext() {	
-		return json_decode(get_option('bapi_solutiondata'),TRUE); 		
+		global $bapi_all_options;
+		return json_decode($bapi_all_options['bapi_solutiondata'],TRUE); 		
 	}
 	
 	function getbapitextdata() {
-		return json_decode(get_option('bapi_textdata'),TRUE); 		
+		global $bapi_all_options;
+		return json_decode($bapi_all_options['bapi_textdata'],TRUE); 		
 	}	
 	
 	/* Page Helpers */
@@ -127,20 +140,21 @@
 	}
 	
 	/* Common include files needed for BAPI */
-	function getconfig() {		
+	function getconfig() {	
+		global $bapi_all_options;	
 		//echo 'getconfig';
 		//echo get_option('api_key');
-		if(get_option('api_key')){
-			$apiKey = get_option('api_key');
+		if($bapi_all_options['api_key']){
+			$apiKey = $bapi_all_options['api_key'];
 			$language = getbapilanguage();			
 			
 			$secureurl = '';
-			if(get_option('bapi_secureurl')){
-				$secureurl = get_option('bapi_secureurl');
+			if($bapi_all_options['bapi_secureurl']){
+				$secureurl = $bapi_all_options['bapi_secureurl'];
 			}
-			$siteurl = get_option('home');
-			if(get_option('bapi_site_cdn_domain')){
-				$siteurl = get_option('bapi_site_cdn_domain');
+			$siteurl = $bapi_all_options['home'];
+			if($bapi_all_options['bapi_site_cdn_domain']){
+				$siteurl = $bapi_all_options['bapi_site_cdn_domain'];
 			}
 			$siteurl = str_replace("http://", "", $siteurl);
 ?>

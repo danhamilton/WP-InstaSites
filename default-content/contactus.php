@@ -2,7 +2,8 @@
   <div class="span8 module shadow contact-form">
     <div class="pd2">
     <h3 class="widget-title">{{textdata.Contact Us}}</h3>
-      <div id="bapi-inquiryform" class="bapi-inquiryform" data-templatename="tmpl-contactus-form" data-log="0"></div>      
+      <div id="bapi-inquiryform" class="bapi-inquiryform" data-templatename="tmpl-contactus-form" data-log="0"></div>
+      <div id="bapi-inquiryform" class="bapi-inquiryform" data-templatename="tmpl-leadrequestform-propertyinquiry" data-log="0" data-shownamefield="1" data-showemailfield="1" data-showphonefield="1" data-showdatefields="0" data-shownumberguestsfields="0" data-showleadsourcedropdown="1" data-showcommentsfield="1" ></div>      
     </div>
   </div>
   <aside class="span4 module shadow contact-right-side">

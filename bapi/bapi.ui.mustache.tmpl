@@ -1354,41 +1354,6 @@
 </script> 
 
 /*
-	Group: Contact Us Forms
-*/
-<script id="tmpl-contactus-form" type="text/html">
-<div id="questions-block">	
-	<div id="questions-block-inner">
-		<fieldset id="have-question" class="leadrequest">
-		<ul class="unstyled">
-		<li id="nameform">
-			<input type="text" id="txtName" class="span12 leadrequestfield required input-text" minlength="2" data-field="name" placeholder="{{textdata.Name}}*" required />
-		</li>			
-		<li id="emailform">
-			<input type="text" id="txtEmail" class="span12 leadrequestfield required input-text" size="25" data-field="email" type="email" placeholder="{{textdata.Email}}*" required />
-		</li>
-		<li id="phoneform">
-			<input type="text" id="txtPhone" class="span12 leadrequestfield required email input-text" data-field="homephone" placeholder="{{textdata.Phone}}*" required />				
-		</li>				
-		<li id="lsform">
-			<select class="span12 leadrequestfield required email" data-field="ls">
-				<option value="0">{{config.leadsources.prompt}}</option>
-				{{#config.leadsources.values}}<option value="{{Data}}">{{Label}}</option>{{/config.leadsources.values}}
-			</select>					
-		</li>
-		<li id="commentsform">				
-			<textarea id="txtComments" rows="2" cols="20" class="span12 leadrequestfield" data-field="msg" placeholder="{{textdata.Comments}}" ></textarea>
-		</li>		
-		</ul>
-		<div class="clearfix"></div>			
-		<input type="button" id="btn-leadrequest" class="btn btn-primary pull-right doleadrequest" value='{{textdata.Submit}}' data-field-selector="leadrequestfield" />			
-		</fieldset>
-	</div>
-</div>
-</script> 
-
-
-/*
 	Group: Booking
 */
 <script id="tmpl-booking-makebooking-masterlayout" type="text/html">
