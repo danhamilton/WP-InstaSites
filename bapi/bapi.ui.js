@@ -149,7 +149,7 @@ context.inithelpers = {
 			var ctl = $(this);	
 			var pkid = ctl.attr("data-pkid");
 			if (pkid!==null && pkid!='') {
-				BAPI.get(pkid, BAPI.entities.property, { "avail": 1 }, function(data) {
+				BAPI.get(pkid, BAPI.entities.property, { "avail": 1, "rates": 1 }, function(data) {
 					var selector = '#' + ctl.attr('id');
 					var options = {};
 					try { options = $.parseJSON(ctl.attr('data-options')); } catch(err) {}
@@ -164,12 +164,16 @@ context.inithelpers = {
 			var ctl = $(item);	
 			var pkid = ctl.attr("data-pkid");
 			if (pkid!==null && pkid!='') {
-				BAPI.get(pkid, BAPI.entities.property, { "avail": 1 }, function(data) {
+				BAPI.get(pkid, BAPI.entities.property, { "avail": 1, "rates": 1 }, function(data) {
 					var selector = '#' + ctl.attr('id');
 					var options = {};
 					try { options = $.parseJSON(ctl.attr('data-options')); } catch(err) { }
 					BAPI.log("Creating availability calendar for " + selector);						
 					context.createAvailabilityWidget(selector, data, options);
+					
+					var rateselector = 'bapi-ratetable'; // TODO: set to what is passed in the options
+					var ratetemplate = BAPI.templates.get('tmpl-properties-ratetable');
+					$(rateselector).html(Mustache.render(ratetemplate, data));
 				});		
 			}
 		});	
