@@ -332,6 +332,18 @@
 		global $entityUpdateURL;
 		?><meta name="ENTITYURL" content="<?= $entityUpdateURL ?>" /><?= "\n" ?><?php
 	}
+	function bapi_add_context_meta(){
+		global $getContextURL;
+		?><meta name="CONTEXTURL" content="<?= $getContextURL ?>" /><?= "\n" ?><?php
+	}
+	function bapi_add_textdata_meta(){
+		global $textDataURL;
+		?><meta name="TEXTDATAURL" content="<?= $textDataURL ?>" /><?= "\n" ?><?php
+	}
+	function bapi_add_seo_meta(){
+		global $seoDataURL;
+		?><meta name="SEOURL" content="<?= $seoDataURL ?>" /><?= "\n" ?><?php
+	}
 	
 	function getBAPIObj() {
 		return new BAPI(get_option('api_key'), get_option('bapi_language'), get_option('bapi_baseurl'));

@@ -236,8 +236,15 @@
 	}
 	
 	function bapi_sync_coredata() {
+		$syncdebugmode = 0;
+		$do_core_update = false;
 		if(!(strpos($_SERVER['REQUEST_URI'],'wp-admin')===false)||!(strpos($_SERVER['REQUEST_URI'],'wp-login')===false)){
 			return false;
+		}
+		//Check if developer is using debugmode and force entity sync
+		if (isset($_GET['syncdebugmode'])&&$_GET['syncdebugmode']){
+			$do_core_update = true;
+			$syncdebugmode = 1;
 		}
 		
 		// initialize the bapisync object		
@@ -251,8 +258,8 @@
 		// check if we need to refresh textdata
 		$data = BAPISync::getTextDataRaw();
 		$lastmod = BAPISync::getTextDataLastModRaw();
-		if(empty($data) || empty($lastmod) || ((time()-$lastmod)>3600)) {					
-			$data = $bapi->gettextdata(true);			
+		if(empty($data) || empty($lastmod) || ((time()-$lastmod)>3600) || $do_core_update) {					
+			$data = $bapi->gettextdata(true,$syncdebugmode);			
 			if (!empty($data)) {
 				$data = $data['result']; // just get the result part
 				$data = json_encode($data); // convert back to text
@@ -264,8 +271,8 @@
 		// check if we need to refresh solution data
 		$data = BAPISync::getSolutionDataRaw();
 		$lastmod = BAPISync::getSolutionDataLastModRaw();
-		if(empty($data) || empty($lastmod) || ((time()-$lastmod)>3600)) {					
-			$data = $bapi->getcontext(true);
+		if(empty($data) || empty($lastmod) || ((time()-$lastmod)>3600) || $do_core_update) {					
+			$data = $bapi->getcontext(true,$syncdebugmode);
 			if (!empty($data)) {
 				$data = json_encode($data); // convert back to text
 				update_option('bapi_solutiondata',$data);
@@ -276,8 +283,8 @@
 		// check if we need to refresh seo data
 		$data = BAPISync::getSEODataRaw();
 		$lastmod = BAPISync::getSEODataLastModRaw();
-		if(empty($data) || empty($lastmod) || ((time()-$lastmod)>3600)) {					
-			$data = $bapi->getseodata(true);
+		if(empty($data) || empty($lastmod) || ((time()-$lastmod)>3600) || $do_core_update) {					
+			$data = $bapi->getseodata(true,$syncdebugmode);
 			if (!empty($data)) {
 				$data = $data['result']; // just get the result part
 				$data = json_encode($data); // convert back to text

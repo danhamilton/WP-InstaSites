@@ -34,28 +34,46 @@ class BAPI
 		}
 	}
 		
-	public function getcontext($jsondecode) {
+	public function getcontext($jsondecode,$debugmode=0) {
 		if (!$this->isvalid()) { return null; }
-		$c = file_get_contents($this->getBaseURL() . '/js/bapi.context?apikey=' . $this->apikey . '&language=' . $this->language,FALSE,$this->getOptions) or wp_die('Error Retrieving Context','Oops!');
+		$url = $this->getBaseURL() . '/js/bapi.context?apikey=' . $this->apikey . '&language=' . $this->language;
+		$c = file_get_contents($url,FALSE,$this->getOptions) or wp_die('Error Retrieving Context','Oops!');
+		
+		global $getContextURL;
+		$getContextURL = $url;
+		add_action('wp_head','bapi_add_context_meta',1);	
+		
 		$res = json_decode($c,TRUE);
 		return $res;
 	}
 	
-	public function gettextdata($jsondecode) {
+	public function gettextdata($jsondecode,$debugmode=0) {
 		if (!$this->isvalid()) { return null; }
-		$c = file_get_contents($this->getBaseURL() . '/ws/?method=get&entity=textdata&apikey=' . $this->apikey . '&language=' . $this->language,FALSE,$this->getOptions) or wp_die('Error Retrieving TextData','Oops!');
+		$url = $this->getBaseURL() . '/ws/?method=get&entity=textdata&apikey=' . $this->apikey . '&language=' . $this->language;
+		$c = file_get_contents($url,FALSE,$this->getOptions) or wp_die('Error Retrieving TextData','Oops!');
+		
+		global $textDataURL;
+		$textDataURL = $url;
+		add_action('wp_head','bapi_add_textdata_meta',1);	
+		
 		if ($jsondecode) {return json_decode($c,TRUE); }
 		return $c;
 	}
 	
-	public function getseodata($jsondecode=true) {
+	public function getseodata($jsondecode=true,$debugmode=0) {
 		if (!$this->isvalid()) { return null; }
-		$c = file_get_contents($this->getBaseURL() . '/ws/?method=get&entity=seo&apikey=' . $this->apikey . '&language=' . $this->language,FALSE,$this->getOptions) or wp_die('Error Retrieving Keywords','Oops!');
+		$url = $this->getBaseURL() . '/ws/?method=get&entity=seo&apikey=' . $this->apikey . '&language=' . $this->language;
+		$c = file_get_contents($url,FALSE,$this->getOptions) or wp_die('Error Retrieving Keywords','Oops!');
+		
+		global $seoDataURL;
+		$seoDataURL = $url;
+		add_action('wp_head','bapi_add_seo_meta',1);	
+		
 		if ($jsondecode) {return json_decode($c,TRUE); }
 		return $c;
 	}
 	
-	public function getSolutionConfig($apikey){
+	public function getSolutionConfig($apikey,$debugmode=0){
 		$url = $this->getBaseURL() . "/ws/?method=getconfig&apikey=".$apikey;
 		$json = file_get_contents($url,FALSE,$this->getOptions) or wp_die('Error Retrieving Solution Config','Oops!');
 		$data = json_decode($json, TRUE);
