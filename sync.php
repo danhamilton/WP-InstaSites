@@ -238,13 +238,14 @@
 	function bapi_sync_coredata() {
 		$syncdebugmode = 0;
 		$do_core_update = false;
-		if(!(strpos($_SERVER['REQUEST_URI'],'wp-admin')===false)||!(strpos($_SERVER['REQUEST_URI'],'wp-login')===false)){
-			return false;
-		}
 		//Check if developer is using debugmode and force entity sync
 		if (isset($_GET['syncdebugmode'])&&$_GET['syncdebugmode']){
 			$do_core_update = true;
 			$syncdebugmode = 1;
+			echo '<!--synctest-->';
+		}
+		if(!(strpos($_SERVER['REQUEST_URI'],'wp-admin')===false)||!(strpos($_SERVER['REQUEST_URI'],'wp-login')===false)){
+			return false;
 		}
 		
 		// initialize the bapisync object		
