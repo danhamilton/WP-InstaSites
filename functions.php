@@ -4,6 +4,24 @@
 	function bapi_wp_site_options(){
 		global $bapi_all_options;
 		$bapi_all_options = wp_load_alloptions();
+		if(!isset($bapi_all_options['bapi_solutiondata'])){
+			$bapi_all_options['bapi_solutiondata'] = '';
+		}
+		if(!isset($bapi_all_options['bapi_solutiondata_lastmod'])){
+			$bapi_all_options['bapi_solutiondata_lastmod'] = 0;
+		}
+		if(!isset($bapi_all_options['bapi_textdata'])){
+			$bapi_all_options['bapi_textdata'] = '';
+		}
+		if(!isset($bapi_all_options['bapi_textdata_lastmod'])){
+			$bapi_all_options['bapi_textdata_lastmod'] = 0;
+		}
+		if(!isset($bapi_all_options['bapi_keywords_array'])){
+			$bapi_all_options['bapi_keywords_array'] = '';
+		}
+		if(!isset($bapi_all_options['bapi_keywords_lastmod'])){
+			$bapi_all_options['bapi_keywords_lastmod'] = 0;
+		}
 		//print_r($bapi_all_options); exit();
 	}
 	
