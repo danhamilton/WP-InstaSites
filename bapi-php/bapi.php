@@ -5,7 +5,7 @@ class BAPI
 	public $apikey;
 	public $language = 'en-US';
     public $currency = 'USD';
-    public $baseURL = 'connect.bookt.com';
+    public $baseURL = 'connect.bookt.com'; 
 	public $getopts = array(
 		'http'=>array(
 			'method'=>"GET",

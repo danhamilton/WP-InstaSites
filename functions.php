@@ -22,6 +22,12 @@
 		if(!isset($bapi_all_options['bapi_keywords_lastmod'])){
 			$bapi_all_options['bapi_keywords_lastmod'] = 0;
 		}
+		if(!isset($bapi_all_options['bapi_language'])){
+			$bapi_all_options['bapi_language'] = 'en-US';
+		}
+		if(!isset($bapi_all_options['bapi_baseurl'])){
+			$bapi_all_options['bapi_baseurl'] = 'connect.bookt.com';
+		}
 		//print_r($bapi_all_options); exit();
 	}
 	
@@ -346,7 +352,8 @@
 	}
 	
 	function getBAPIObj() {
-		return new BAPI(get_option('api_key'), get_option('bapi_language'), get_option('bapi_baseurl'));
+		global $bapi_all_options;
+		return new BAPI($bapi_all_options['api_key'], $bapi_all_options['bapi_language'], $bapi_all_options['bapi_baseurl']);
 	}		
 	
 	function disable_kses_content() {
