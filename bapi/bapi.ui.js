@@ -570,12 +570,12 @@ context.createAvailabilityWidget = function (targetid, data, options) {
 			if (p===null || p.ContextData===null || p.ContextData.Availability===null) {
 				return [true, "avail"];
 			}
-			var tdate = moment(date);
+			var tdate = date
 			var bavail = true;
 			$.each(p.ContextData.Availability, function (index, item) {	
-				var cin = moment(item.CheckIn);
-				var cout = moment(item.CheckOut);
-				if ((tdate.isSame(cin) || tdate.isAfter(cin)) && tdate.isBefore(cout)) {				
+				var cin = new Date(item.SCheckIn);
+				var cout = new Date(item.SCheckOut);
+				if ((tdate==cin || tdate>cin) && tdate<cout) {				
 					bavail = false;				
 				}
 			});				
