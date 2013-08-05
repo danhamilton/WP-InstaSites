@@ -571,14 +571,11 @@ context.createAvailabilityWidget = function (targetid, data, options) {
 				return [true, "avail"];
 			}
 			var tdate = date;
-            console.log("Curr date: " + tdate)
 			var bavail = true;
 			$.each(p.ContextData.Availability, function (index, item) {	
 			    var cin = new Date(item.SCheckIn);
-                console.log(cin)
                 var cout = new Date(item.SCheckOut);
-                console.log(cout)
-				if ((tdate==cin || tdate>cin) && tdate<cout) {				
+				if ((cin-tdate==0 || tdate>cin) && tdate<cout) {				
 					bavail = false;				
 				}
 			});				
