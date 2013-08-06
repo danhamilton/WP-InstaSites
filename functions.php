@@ -75,6 +75,25 @@
 		exit();
 	}
 	
+	function urlHandler_sitelist() {
+		$url = get_relative($_SERVER['REQUEST_URI']);
+		if (strtolower($url) != "/bapi.sitelist.js")
+			return; // not our handler
+		
+		header('Content-Type: application/javascript');	
+		header('Cache-Control: public');
+		$blog_list = get_blog_list( 0, 'all' );
+		$i=0;
+		echo '{';
+		foreach ($blog_list AS $blog) {
+			if ($i>0) echo ', ';
+			echo $blog['domain'].$blog['path'];
+			$i++;
+		}
+		echo '}';
+		exit();
+	}
+	
 	
 	/* Converted a url to a physical file path */
 	function get_local($url) {
