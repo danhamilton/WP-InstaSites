@@ -979,25 +979,38 @@
 						<div class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}}}, "category": "poi"}'>
 						- &nbsp;<a href="#" class="poi-map-item">{{Name}}</a>
 							<div class="info-html">
-								<div>
+<div class="gmap-poi">
+								<div class="gmap-img">
 									<img src='{{&PrimaryImage.ThumbnailURL}}' alt='{{PrimaryImage.Caption' title='{{PrimaryImage.Caption}}' width="195"/>
 								</div>
-								<div>
+								<div class="gmap-text">
 									<p><b>{{Name}}</b></p>
 									<p>{{&Summary}}</p>
+								</div>
+<div class="clearfix"></div>
 								</div>
 							</div>
 						</div>
 						{{#ContextData.NearbyProperties}}
 						<div class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}}}, "category": "starred"}'>
-						{{ItemIndex}}&nbsp;<a href="#" class="poi-map-item">{{Headline}}</a> - {{ContextData.Distance}}
+						{{ContextData.ItemIndex}}&nbsp;-&nbsp;<a href="#" class="poi-map-item">{{Headline}}</a> - {{ContextData.Distance}}
 							<div class="info-html">
-								<div style="float:left">
+								<div class="gmap-property">
+								<div class="gmap-img">
+								{{#ContextData.SEO.DetailURL}}
+								<a href="{{ContextData.SEO.DetailURL}}">
+								{{/ContextData.SEO.DetailURL}}
 									<img src='{{&PrimaryImage.ThumbnailURL}}' alt='{{PrimaryImage.Caption' title='{{PrimaryImage.Caption}}' />
+								{{#ContextData.SEO.DetailURL}}
+								</a>
+								{{/ContextData.SEO.DetailURL}}
 								</div>
-								<div>
-									<p><b>{{Headline}}</b></p>
+								<div class="gmap-text">
+								<p>{{#ContextData.SEO.DetailURL}}<a href="{{ContextData.SEO.DetailURL}}">{{/ContextData.SEO.DetailURL}}<b>{{Headline}}</b>{{#ContextData.SEO.DetailURL}}</a>{{/ContextData.SEO.DetailURL}}</p>
+
 									<p>{{&Summary}}</p>
+								</div>
+<div class="clearfix"></div>
 								</div>
 							</div>
 						</div>

@@ -106,8 +106,20 @@
 			}
 			$bapi = getBAPIObj();
 			if (!$bapi->isvalid()) { return; }
-			$pkid = array(intval($pkid));			
-			$options = $entity == "property" ? array("seo" => 1, "descrip" => 1, "avail" => 1, "rates" => 1, "reviews" => 1) : null;
+			$pkid = array(intval($pkid));
+
+			/* Its the entity a property?, if yes, lets set the options */
+			if($entity == "property"){
+				$options = array("seo" => 1, "descrip" => 1, "avail" => 1, "rates" => 1, "reviews" => 1);	
+			}else{
+				/* Its the entity a poi?, if yes, lets set the options */
+				if($entity == "poi"){
+					$options = array("nearbyprops" => 1,"seo" => 1);	
+				}else{
+					$options = null;
+				}
+			}			
+
 			$c = $bapi->get($entity,$pkid,$options,true,$debugmode);						
 			$c["config"] = BAPISync::getSolutionData();
 			$c["config"] = $c["config"]["ConfigObj"];
