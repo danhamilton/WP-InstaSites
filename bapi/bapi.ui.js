@@ -131,13 +131,54 @@ context.inithelpers = {
 			
 			/* we get each value from the html markup created by the inquiry form widget at the same time we create an object and populate it with each value */
 			var InquiryFormFields = {};
-			InquiryFormFields["Name"] = (ctl.attr('data-shownamefield') == '1');
-			InquiryFormFields["Email"] = (ctl.attr('data-showemailfield') == '1');
-			InquiryFormFields["Phone"] = (ctl.attr('data-showphonefield') == '1');
-			InquiryFormFields["Dates"] = (ctl.attr('data-showdatefields') == '1');
-			InquiryFormFields["NumberOfGuests"] = (ctl.attr('data-shownumberguestsfields') == '1');
-			InquiryFormFields["LeadSourceDropdown"] = (ctl.attr('data-showleadsourcedropdown') == '1');
-			InquiryFormFields["Comments"] = (ctl.attr('data-showcommentsfield') == '1');
+			if ( typeof (ctl.attr('data-shownamefield')) === "undefined" || ctl.attr('data-shownamefield') == '' ) { 
+				InquiryFormFields["Name"] = true;
+			 }else{
+				 InquiryFormFields["Name"] = (ctl.attr('data-shownamefield') == '1');
+			 }
+			 if ( typeof (ctl.attr('data-showemailfield')) === "undefined" || ctl.attr('data-showemailfield') == '') { 
+				InquiryFormFields["Email"] = true;
+			 }else{
+				 InquiryFormFields["Email"] = (ctl.attr('data-showemailfield') == '1');
+			 }
+			 if ( typeof (ctl.attr('data-showphonefield')) === "undefined" || ctl.attr('data-showphonefield') == '') { 
+				InquiryFormFields["Phone"] = true;
+			 }else{
+				 InquiryFormFields["Phone"] = (ctl.attr('data-showphonefield') == '1');
+			 }
+			 if ( typeof (ctl.attr('data-showdatefields')) === "undefined" || ctl.attr('data-showdatefields') == '') { 
+			 	if($('.contact-form').length > 0)
+				{
+					InquiryFormFields["Dates"] = false;
+				}else{
+					InquiryFormFields["Dates"] = true;
+				}
+				
+			 }else{
+				 InquiryFormFields["Dates"] = (ctl.attr('data-showdatefields') == '1');
+			 }
+			 if ( typeof (ctl.attr('data-shownumberguestsfields')) === "undefined" || ctl.attr('data-shownumberguestsfields') == '' ) { 
+			 
+			 	if($('.contact-form').length > 0)
+				{
+					InquiryFormFields["NumberOfGuests"] = false;
+				}else{
+					InquiryFormFields["NumberOfGuests"] = true;					
+				}
+				
+			 }else{
+				 InquiryFormFields["NumberOfGuests"] = (ctl.attr('data-shownumberguestsfields') == '1');
+			 }
+			 if ( typeof (ctl.attr('data-showleadsourcedropdown')) === "undefined" || ctl.attr('data-showleadsourcedropdown') == '' ) { 
+				InquiryFormFields["LeadSourceDropdown"] = true;
+			 }else{
+				 InquiryFormFields["LeadSourceDropdown"] = (ctl.attr('data-showleadsourcedropdown') == '1');
+			 }
+			 if ( typeof (ctl.attr('data-showcommentsfield')) === "undefined" || ctl.attr('data-showcommentsfield') == '' ) { 
+				InquiryFormFields["Comments"] = true;
+			 }else{
+				 InquiryFormFields["Comments"] = (ctl.attr('data-showcommentsfield') == '1');
+			 }
 			
 			BAPI.log("Creating inquiry form for " + selector);
 			context.createInquiryForm(selector, { "pkid": pkid, "template": BAPI.templates.get(templatename), "hasdatesoninquiryform": hasdates, "log": dologging, "InquiryFormFields": InquiryFormFields });		
