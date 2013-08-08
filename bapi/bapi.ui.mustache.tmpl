@@ -1560,6 +1560,7 @@
 {{/Fees.length}}
 {{#Fees}}
 <p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
+{{{Description}}}
 {{/Fees}}
 {{#Fees.length}}
 </div>
@@ -1570,7 +1571,7 @@
 <h5>{{textdata.Taxes}}</h5>
 {{/Taxes.length}}
 {{#Taxes}}
-<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
+<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>{{{Description}}}
 {{/Taxes}}
 {{#Taxes.length}}
 </div>
@@ -1580,7 +1581,7 @@
 <div id="ofees-modal" class="item row-fluid">
 <h5>{{textdata.Optional Fees & Services}}</h5>
 {{/OptionalFees.length}}
-{{#OptionalFees}}<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>{{/OptionalFees}}
+{{#OptionalFees}}<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>{{{Description}}}{{/OptionalFees}}
 {{#OptionalFees.length}}
 </div>
 <hr />

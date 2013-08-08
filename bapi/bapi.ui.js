@@ -1010,7 +1010,37 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 		data.session = BAPI.session;
 		$(targetid).html(Mustache.render(options.mastertemplate, data));	
 		$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, data));
+		/* we render the statements mustache */
 		$(options.targetids.statement).html(Mustache.render(options.templates.statement, data));
+		if(data.result[0].ContextData.Quote.Statement != null){
+			/* we set the descriptions for each statement that we need*/		
+			/* the optional fees */
+			var arrayOptionalFees = data.result[0].ContextData.Quote.Statement.OptionalFees;
+			getStatementsDescriptions(arrayOptionalFees,BAPI.entities.fee);
+			/* the fees */
+			var arrayFees = data.result[0].ContextData.Quote.Statement.Fees;
+			getStatementsDescriptions(arrayFees,BAPI.entities.fee);
+			/* the taxes */
+			var arrayTaxes = data.result[0].ContextData.Quote.Statement.Taxes;
+			getStatementsDescriptions(arrayTaxes,BAPI.entities.tax);
+			/* function that gets the statement data for the provided array of statements */
+			function getStatementsDescriptions(arrayStatements,bapiEntity){
+				/* we check the parameters */
+				if(typeof (arrayStatements) !== "undefined" && arrayStatements != null && arrayStatements != '' && typeof (bapiEntity) !== "undefined" && bapiEntity != ''){
+					$.each(arrayStatements, function() {
+						var oStatement = this;
+						BAPI.get(oStatement.RelatedToID, bapiEntity, null, function (statementData) {
+							/* we check if the returned data is valid */
+							if(typeof (statementData) !== "undefined" && typeof (statementData.result[0].Description) !== "undefined"){
+								oStatement.Description = statementData.result[0].Description;
+								/* we render the mustache with the new data */
+								$(options.targetids.statement).html(Mustache.render(options.templates.statement, data));
+							}
+						});
+					});
+				}
+			}
+		}
 		$(options.targetids.renter).html(Mustache.render(options.templates.renter, data));
 		$(options.targetids.creditcard).html(Mustache.render(options.templates.creditcard, data));
 		$(options.targetids.accept).html(Mustache.render(options.templates.accept, data));
@@ -1030,7 +1060,37 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 			sdata.textdata = BAPI.textdata;	
 			sdata.session = BAPI.session;	
 			BAPI.log(sdata);
+			/* we render the statements mustache */
 			$(options.targetids.statement).html(Mustache.render(options.templates.statement, sdata));
+			if(sdata.result[0].ContextData.Quote.Statement != null){				
+				/* we set the descriptions for each statement that we need */
+				/* the optional fees */
+				var arrayOptionalFees = sdata.result[0].ContextData.Quote.Statement.OptionalFees;
+				getStatementsDescriptions(arrayOptionalFees,BAPI.entities.fee);
+				/* the fees */
+				var arrayFees = sdata.result[0].ContextData.Quote.Statement.Fees;
+				getStatementsDescriptions(arrayFees,BAPI.entities.fee);
+				/* the taxes */
+				var arrayTaxes = sdata.result[0].ContextData.Quote.Statement.Taxes;
+				getStatementsDescriptions(arrayTaxes,BAPI.entities.tax);
+				/* function that gets the statement data for the provided array of statements */
+				function getStatementsDescriptions(arrayStatements,bapiEntity){
+					/* we check the parameters */
+					if(typeof (arrayStatements) !== "undefined" && arrayStatements != null && arrayStatements != '' && typeof (bapiEntity) !== "undefined" && bapiEntity != ''){
+						$.each(arrayStatements, function() {
+							var oStatement = this;
+							BAPI.get(oStatement.RelatedToID, bapiEntity, null, function (statementData) {
+								/* we check if the returned data is valid */
+								if(typeof (statementData) !== "undefined" && typeof (statementData.result[0].Description) !== "undefined"){
+									oStatement.Description = statementData.result[0].Description;
+									/* we render the mustache with the new data */
+									$(options.targetids.statement).html(Mustache.render(options.templates.statement, sdata));
+								}
+							});
+						});
+					}
+				}
+			}			
 			$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, sdata));
 			$(options.targetids.accept).html(Mustache.render(options.templates.accept, sdata));			
 			$(options.targetids.stayinfo).unblock();
@@ -1045,7 +1105,7 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 			$(options.targetids.stayinfo).block({ message: "<img src='" + loadingImgUrl + "' />" });
 			BAPI.get(propid, BAPI.entities.property, reqdata, function (sdata) {
 				curbooking = sdata.result[0].ContextData.Quote;
-				partialRender(sdata, options);				
+				partialRender(sdata, options);
 			});	
 		});
 		
