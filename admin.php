@@ -23,6 +23,7 @@ function bapi_create_menu() {
 	add_submenu_page($parent, 'Take me Live','Take me Live', 'administrator', get_adminurl('setup-golive.php'));
 	add_submenu_page($parent, 'Data Sync','Data Sync', 'administrator', get_adminurl('setup-sync.php'));	
 	add_submenu_page($parent, 'Initial Setup','Initial Setup', 'administrator', get_adminurl('setup-initial.php'));	
+	add_submenu_page($parent, 'Advanced Options','Advanced', 'administrator', get_adminurl('setup-advanced.php'));	
 	
 	//call register settings function
 	add_action('admin_init','bapi_options_init');
@@ -41,6 +42,7 @@ function bapi_options_init(){
 	register_setting('bapi_options','bapi_textdata_lastmod');
 	register_setting('bapi_options','bapi_site_cdn_domain'); 
 	register_setting('bapi_options','bapi_cloudfronturl'); 
+	register_setting('bapi_options','bapi_global_header'); 
 	
 	// register the slideshow settings
 	// register the settings
@@ -99,8 +101,8 @@ function bapi_settings_page() {
 <h2>InstaSite Plugin</h2>
 <table class="form-table">
 <tr valign="top">
-	<td scope="row">Site Status:</td>
-	<td><?php echo $sitelive; ?></td>
+	<td scope="row">Site Live:</td>
+	<td><?php $st=array(); echo $sitelive; ?></td>
 </tr>
 <tr valign="top">
 	<td scope="row">API Key:</td>

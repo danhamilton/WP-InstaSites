@@ -387,4 +387,9 @@
 		// call the modified list of extensions
 		return $existing_mimes;
 	}
+	
+	function display_global_header(){
+		global $bapi_all_options;
+		echo $bapi_all_options['bapi_global_header'];
+	}
 ?>
