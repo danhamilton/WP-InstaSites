@@ -1013,16 +1013,6 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 		/* we render the statements mustache */
 		$(options.targetids.statement).html(Mustache.render(options.templates.statement, data));
 		if(data.result[0].ContextData.Quote.Statement != null){
-			/* we set the descriptions for each statement that we need*/		
-			/* the optional fees */
-			var arrayOptionalFees = data.result[0].ContextData.Quote.Statement.OptionalFees;
-			getStatementsDescriptions(arrayOptionalFees,BAPI.entities.fee);
-			/* the fees */
-			var arrayFees = data.result[0].ContextData.Quote.Statement.Fees;
-			getStatementsDescriptions(arrayFees,BAPI.entities.fee);
-			/* the taxes */
-			var arrayTaxes = data.result[0].ContextData.Quote.Statement.Taxes;
-			getStatementsDescriptions(arrayTaxes,BAPI.entities.tax);
 			/* function that gets the statement data for the provided array of statements */
 			function getStatementsDescriptions(arrayStatements,bapiEntity){
 				/* we check the parameters */
@@ -1040,6 +1030,16 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 					});
 				}
 			}
+			/* we set the descriptions for each statement that we need*/		
+			/* the optional fees */
+			var arrayOptionalFees = data.result[0].ContextData.Quote.Statement.OptionalFees;
+			getStatementsDescriptions(arrayOptionalFees,BAPI.entities.fee);
+			/* the fees */
+			var arrayFees = data.result[0].ContextData.Quote.Statement.Fees;
+			getStatementsDescriptions(arrayFees,BAPI.entities.fee);
+			/* the taxes */
+			var arrayTaxes = data.result[0].ContextData.Quote.Statement.Taxes;
+			getStatementsDescriptions(arrayTaxes,BAPI.entities.tax);			
 		}
 		$(options.targetids.renter).html(Mustache.render(options.templates.renter, data));
 		$(options.targetids.creditcard).html(Mustache.render(options.templates.creditcard, data));
@@ -1062,17 +1062,7 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 			BAPI.log(sdata);
 			/* we render the statements mustache */
 			$(options.targetids.statement).html(Mustache.render(options.templates.statement, sdata));
-			if(sdata.result[0].ContextData.Quote.Statement != null){				
-				/* we set the descriptions for each statement that we need */
-				/* the optional fees */
-				var arrayOptionalFees = sdata.result[0].ContextData.Quote.Statement.OptionalFees;
-				getStatementsDescriptions(arrayOptionalFees,BAPI.entities.fee);
-				/* the fees */
-				var arrayFees = sdata.result[0].ContextData.Quote.Statement.Fees;
-				getStatementsDescriptions(arrayFees,BAPI.entities.fee);
-				/* the taxes */
-				var arrayTaxes = sdata.result[0].ContextData.Quote.Statement.Taxes;
-				getStatementsDescriptions(arrayTaxes,BAPI.entities.tax);
+			if(sdata.result[0].ContextData.Quote.Statement != null){
 				/* function that gets the statement data for the provided array of statements */
 				function getStatementsDescriptions(arrayStatements,bapiEntity){
 					/* we check the parameters */
@@ -1090,7 +1080,17 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 						});
 					}
 				}
-			}			
+				/* we set the descriptions for each statement that we need */
+				/* the optional fees */
+				var arrayOptionalFees = sdata.result[0].ContextData.Quote.Statement.OptionalFees;
+				getStatementsDescriptions(arrayOptionalFees,BAPI.entities.fee);
+				/* the fees */
+				var arrayFees = sdata.result[0].ContextData.Quote.Statement.Fees;
+				getStatementsDescriptions(arrayFees,BAPI.entities.fee);
+				/* the taxes */
+				var arrayTaxes = sdata.result[0].ContextData.Quote.Statement.Taxes;
+				getStatementsDescriptions(arrayTaxes,BAPI.entities.tax);
+			}
 			$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, sdata));
 			$(options.targetids.accept).html(Mustache.render(options.templates.accept, sdata));			
 			$(options.targetids.stayinfo).unblock();
