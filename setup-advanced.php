@@ -1,7 +1,7 @@
 <?php				
 	// handle if this is a post
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {		
-		update_option('bapi_global_header', $_POST['bapi_global_header']);
+		update_option('bapi_global_header', stripslashes($_POST['bapi_global_header']));
 		bapi_wp_site_options();
 		echo '<div id="message" class="updated"><p><strong>Settings saved.</strong></p></div>';
 	}
