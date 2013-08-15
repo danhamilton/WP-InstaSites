@@ -1474,7 +1474,7 @@
 {{#ContextData.Quote.IsValid}}
 {{#ContextData.Quote.Statement}}
 <div id="charges" class="item row-fluid">
-<h5>{{textdata.Charges}}<span class="glyphicons circle_question_mark"><a href="#statement-details" data-toggle="modal"><i></i></a></span></h5>
+<h5>{{textdata.Charges}} <small class="charges-detail"><a href="#statement-details" data-toggle="modal">({{textdata.Details}})</a></small></h5>
 <p>
 	{{textdata.Rent}}<span class="pull-right">{{ServicesTotal.CurrencySymbol}}{{ServicesTotal.SValue2}}</span>
 	<span class="glyphicons circle_question_mark" style="display:none"><a><i></i></a></span>
@@ -1558,10 +1558,14 @@
 <div id="fees-modal" class="item row-fluid">
 <h5>{{textdata.Fees}}</h5>
 {{/Fees.length}}
+{{#config.statementsettings.lumpfees}}
+<p>Fees Total<span class="pull-right">{{#FeesTotal}}{{FeesTotal.CurrencySymbol}}{{FeesTotal.SValue2}}{{/FeesTotal}}{{^FeesTotal}}--{{/FeesTotal}}</span></p>
+{{/config.statementsettings.lumpfees}}
+{{^config.statementsettings.lumpfees}}
 {{#Fees}}
-<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
-{{{Description}}}
+<p>{{{Notes}}} {{#Description}}<small class="charges-desc"><a data-toggle="collapse" data-target="#description{{RelatedToID}}">({{textdata.Description}})</a></small>{{/Description}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>{{#Description}}<div id="description{{RelatedToID}}" class="collapse">{{{Description}}}</div>{{/Description}}
 {{/Fees}}
+{{/config.statementsettings.lumpfees}}
 {{#Fees.length}}
 </div>
 <hr />
@@ -1570,9 +1574,14 @@
 <div id="taxes-modal" class="item row-fluid">
 <h5>{{textdata.Taxes}}</h5>
 {{/Taxes.length}}
+{{#config.statementsettings.lumptaxes}}
+<p>Taxes Total<span class="pull-right">{{#TaxesTotal}}{{TaxesTotal.CurrencySymbol}}{{TaxesTotal.SValue2}}{{/TaxesTotal}}{{^TaxesTotal}}--{{/TaxesTotal}}</span></p>
+{{/config.statementsettings.lumptaxes}}
+{{^config.statementsettings.lumptaxes}}
 {{#Taxes}}
-<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>{{{Description}}}
+<p>{{{Notes}}} {{#Description}}<small class="charges-desc"><a data-toggle="collapse" data-target="#description{{RelatedToID}}">({{textdata.Description}})</a></small>{{/Description}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>{{#Description}}<div id="description{{RelatedToID}}" class="collapse">{{{Description}}}</div>{{/Description}}
 {{/Taxes}}
+{{/config.statementsettings.lumptaxes}}
 {{#Taxes.length}}
 </div>
 <hr />
@@ -1581,7 +1590,9 @@
 <div id="ofees-modal" class="item row-fluid">
 <h5>{{textdata.Optional Fees & Services}}</h5>
 {{/OptionalFees.length}}
-{{#OptionalFees}}<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>{{{Description}}}{{/OptionalFees}}
+{{#OptionalFees}}
+<p>{{{Notes}}} {{#Description}}<small class="charges-desc"><a data-toggle="collapse" data-target="#description{{RelatedToID}}">({{textdata.Description}})</a></small>{{/Description}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>{{#Description}}<div id="description{{RelatedToID}}" class="collapse">{{{Description}}}</div>{{/Description}}
+{{/OptionalFees}}
 {{#OptionalFees.length}}
 </div>
 <hr />
