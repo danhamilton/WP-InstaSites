@@ -57,7 +57,15 @@ function bapi_options_init(){
 	register_setting('bapi_options','bapi_slideshow_caption3');
 	register_setting('bapi_options','bapi_slideshow_caption4');
 	register_setting('bapi_options','bapi_slideshow_caption5');
-	register_setting('bapi_options','bapi_slideshow_caption6');		
+	register_setting('bapi_options','bapi_slideshow_caption6');	
+	
+	// doc template specific settings
+	register_setting('bapi_options','bapi_rental_policy');
+	register_setting('bapi_options','bapi_rental_policy_lastmod');
+	register_setting('bapi_options','bapi_privacy_policy');
+	register_setting('bapi_options','bapi_privacy_policy_lastmod');
+	register_setting('bapi_options','bapi_terms_of_use');
+	register_setting('bapi_options','bapi_terms_of_use_lastmod');	
 }
 
 function bapi_settings_page() {

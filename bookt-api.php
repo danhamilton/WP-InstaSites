@@ -32,6 +32,7 @@ include_once(dirname( __FILE__ ).'/sync.php');
 include_once(dirname( __FILE__ ).'/google-xml-sitemap.php');
 include_once(dirname( __FILE__ ).'/cdn-linker/wp-cdn-linker.php');
 include_once(dirname( __FILE__ ).'/create-site.php');
+include_once(dirname( __FILE__ ).'/shortcodes.php');
 require_once('bapi-php/bapi.php');
 require_once('init.php');
 

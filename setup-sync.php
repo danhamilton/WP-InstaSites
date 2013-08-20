@@ -101,9 +101,9 @@
 			{ "title": "Make Booking", "url": "makebooking", "intid": "bapi_makebooking", "parent": "", "order": 9, "template": "page-templates/full-width.php", "content": '/default-content/makebooking.php', "addtomenu": false },
 			{ "title": "Make a Payment", "url": "makepayment", "intid": "bapi_makepayment", "parent": "", "order": 10, "template": "page-templates/full-width.php", "content": '/default-content/makepayment.php', "addtomenu": false },
 			{ "title": "Booking Confirmation", "url": "bookingconfirmation", "intid": "bapi_booking_confirm", "parent": "", "order": 11, "template": "page-templates/full-width.php", "content": '/default-content/bookingconfirmation.php', "addtomenu": false },
-			{ "title": "Rental Policy", "url": "rentalpolicy", "intid": "bapi_rental_policy", "parent": "", "order": 12, "template": "page-templates/full-width.php", "content": '<?php echo getbapiurl().'/ws/?method=get&ids=0&entity=doctemplate&docname=Rental+Policy&apikey='.getbapiapikey().'&language='.getbapilanguage(); ?>', "addtomenu": false },
-			{ "title": "Privacy Policy", "url": "privacypolicy", "intid": "bapi_privacy_policy", "parent": "", "order": 13, "template": "page-templates/full-width.php", "content": '<?php echo getbapiurl().'/ws/?method=get&ids=0&entity=doctemplate&docname=Privacy+Policy&apikey='.getbapiapikey().'&language='.getbapilanguage(); ?>', "addtomenu": false },
-			{ "title": "Terms of Use", "url": "termsofuse", "intid": "bapi_tos", "parent": "", "order": 14, "template": "page-templates/full-width.php", "content": '<?php echo getbapiurl().'/ws/?method=get&ids=0&entity=doctemplate&docname=Terms+of+Use&apikey='.getbapiapikey().'&language='.getbapilanguage(); ?>', "addtomenu": false }
+			{ "title": "Rental Policy", "url": "rentalpolicy", "intid": "bapi_rental_policy", "parent": "", "order": 12, "template": "page-templates/full-width.php", "content": '/default-content/rentalpolicy.php', "addtomenu": false },
+			{ "title": "Privacy Policy", "url": "privacypolicy", "intid": "bapi_privacy_policy", "parent": "", "order": 13, "template": "page-templates/full-width.php", "content": '/default-content/privacypolicy.php', "addtomenu": false },
+			{ "title": "Terms of Use", "url": "termsofuse", "intid": "bapi_tos", "parent": "", "order": 14, "template": "page-templates/full-width.php", "content": '/default-content/termsofuse.php', "addtomenu": false }
 		];
 		//$defpages[] = array("Title"=>"Owner Login", "URL"=>"/Owners", "IntID"=>"bapi_owners", "Parent"=>''); //TO be added to footer menu only
 
