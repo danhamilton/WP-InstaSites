@@ -75,7 +75,7 @@
 			if($entity=='property') { $t=BAPISync::getSolutionData(); return $t["Site"]["BasePropertyURL"]; }
 			if($entity=='development') { $t=BAPISync::getSolutionData(); return $t["Site"]["BaseDevelopmentURL"]; }
 			if($entity=='specials') { $t=BAPISync::getSolutionData(); return $t["Site"]["BaseSpecialURL"]; }
-			if($entity=='poi') { $t=BAPISync::getSolutionData(); return $t["Site"]["BasePOIUrl"]; }
+			if($entity=='poi') { $t=BAPISync::getSolutionData(); return $t["Site"]["BasePOIURL"]; }
 			if($entity=='searches') { $t=BAPISync::getSolutionData(); return $t["Site"]["BasePropertyFinderURL"]; }
 			return '/rentals/';
 		}
@@ -144,6 +144,7 @@
 			// ERROR: What should we do?
 		}
 		$post = get_page_by_path($_SERVER['REDIRECT_URL']);
+		//print_r($post);
 		
 		// locate the SEO data stored in Bookt from the requested URL
 		$seo = $bapisync->getSEOFromUrl($_SERVER['REDIRECT_URL']);
@@ -168,7 +169,7 @@
 			//print_r($pktest); exit();
 			if((strlen($pktest[0])==0)||(strlen($pktest[1])==0)){
 				//To Delete Meta or Page, that is the question.
-				wp_delete_post($post->ID);  //Going w/ deleting post for now - I think this will work because if page should exist it will ge recreated.
+				wp_delete_post($post->ID,true);  //Going w/ deleting post for now - I think this will work because if page should exist it will ge recreated.
 				//delete_post_meta($post->ID,'bapikey');
 			}
 		}
@@ -179,10 +180,12 @@
 			//print_r("case 1");
 			// Action: Set current page to "unpublished"
 			// $post->post_status = "unpublish";
-			wp_delete_post($post->ID); //optional 2nd parameter can be added -> if true then page will be deleted immediately instead of going to trash.
+			wp_delete_post($post->ID,true); //optional 2nd parameter can be added -> if true then page will be deleted immediately instead of going to trash.
 		}
 		// case 2: pages exists in wp and in Bookt
 		else if ($page_exists_in_wp && !empty($seo)) {
+			//Move from trashcan to publish if exists and no published
+			if($post->post_status=='trash'){ $post->post_status='publish'; $do_page_update = true; } 
 			//print_r("case 2");
 			if(empty($meta['bapi_last_update'])||((time()-$meta['bapi_last_update'][0])>3600)){	$changes = $changes."|bapi_last_update"; $do_page_update = true; }
 			// check for difference in meta description
@@ -311,12 +314,20 @@ function get_doc_template($docname,$setting){
 	global $bapi_all_options;
 	$docmod = $bapi_all_options[$setting.'_lastmod']; //settings must be registered w/ this consistent format.
 	$doctext = $bapi_all_options[$setting];
-	if((time()-$docmod)>3600){
+	if((time()-$docmod)>0){
 		$url = getbapiurl().'/ws/?method=get&ids=0&entity=doctemplate&docname='.urlencode($docname).'&apikey='.getbapiapikey().'&language='.getbapilanguage();
 		$d = file_get_contents($url);
 		$darr = json_decode($d);
-		//print_r($darr->result[0]->DocText);
-		update_option($setting,$darr->result[0]->DocText);
+		$doctext = $darr->result[0]->DocText;
+		
+		/* Temporary Hack For Tag Substitution */
+		$siteurl = parse_url($bapi_all_options['siteurl'],PHP_URL_HOST);
+		$solution = $bapi_all_options['blogname'];
+		$doctext = str_replace("#Solution.Solution#", $solution, $doctext);
+		$doctext = str_replace("#Site.PrimaryURL#", $siteurl, $doctext);
+		/* End Temporary Hack */
+		
+		update_option($setting,$doctext);
 		update_option($setting.'_lastmod',time());
 		bapi_wp_site_options();
 	}

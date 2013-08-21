@@ -35,7 +35,7 @@
 </tr>
 <tr valign="top">
 	<td scope="row">Attractions:</td>
-	<td><?php echo $soldata["Site"]["BasePOIUrl"]; ?></td>
+	<td><?php echo $soldata["Site"]["BasePOIURL"]; ?></td>
 </tr>
 <tr valign="top">
 	<td scope="row">Specials:</td>

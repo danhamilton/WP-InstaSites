@@ -8,7 +8,7 @@ add_shortcode( 'foobar', 'foobar_func' );*/
 function doc_template_sc($atts){
 	extract( shortcode_atts( array(
 		'docname' => 'none'
-	), $atts ) );
+	), $atts ) );  //Deserialize parameters in to their own variables w/ default values.
 	if($docname=='none'){
 		return 'Document Template Shortcode Not Configured.  Parameter "docname" is not specified.';
 	}
@@ -21,7 +21,7 @@ function doc_template_sc($atts){
 		return 'The specified document template is not configured for synchronization.';
 	}
 	$setting = $settings[$docname];
-	$d = get_doc_template($docname,$setting);
+	$d = get_doc_template($docname,$setting); //This function is defined in sync.php
 	return $d;
 }
 add_shortcode( 'doctemplate', 'doc_template_sc' );
