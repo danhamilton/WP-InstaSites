@@ -392,4 +392,30 @@
 		global $bapi_all_options;
 		echo $bapi_all_options['bapi_global_header'];
 	}
+	
+	add_filter('get_sample_permalink_html', 'perm', '',4);
+	function perm($return, $id, $new_title, $new_slug){
+		/* if the user is not super admin */
+		if (!is_super_admin()) {
+			/* if the post var is set this var show when editing post and pages like this /wp-admin/post.php?post=2468&action=edit */
+			if(isset($_GET['post']) && $_GET['post'] != ''){
+			/* its set we get the post ID */
+			$thePostID = $_GET['post'];
+			/* we get the meta data array for this post */
+			$metaArray = get_post_meta($thePostID);
+				/* we check if our custom fields exists */
+				if(!empty($metaArray) && array_key_exists('bapi_page_id', $metaArray) || array_key_exists('bapikey', $metaArray) || array_key_exists('bapi_last_update', $metaArray)){
+					/* this is not a super admin and the page is a BAPI page we remove the permalink edit button*/
+					$ret2 = preg_replace('/<span id="edit-slug-buttons">.*<\/span>/i', '', $return);
+					return $ret2;
+				}else{
+					/* this is a page created by the user , we do nothing */
+					return $return;
+				}
+			}
+		}else{
+			/* this is a super admin we do nothing */
+			return $return;
+		}
+	}
 ?>
