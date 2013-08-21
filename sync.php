@@ -207,7 +207,8 @@
 			//print_r("case 4");
 			// Result-> Need to create the page
 			$changes = "create new page";
-			$post = new WP_Post();
+			$tempPost = new stdClass();
+			$post = new WP_Post($tempPost);
 			$do_page_update = true;
 			$do_meta_update = true;
 		}
