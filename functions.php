@@ -393,7 +393,6 @@
 		echo $bapi_all_options['bapi_global_header'];
 	}
 	
-	add_filter('get_sample_permalink_html', 'perm', '',4);
 	function perm($return, $id, $new_title, $new_slug){
 		/* if the user is not super admin */
 		if (!is_super_admin()) {

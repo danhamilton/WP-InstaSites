@@ -41,6 +41,7 @@ add_filter('wp_head','add_server_name_meta',1);
 add_filter('redirect_canonical','bapi_redirect_fix',10,2);
 add_filter('language_attributes','bapi_language_attributes',10);	// ensure output of proper language
 add_filter('upload_mimes', 'custom_upload_mimes');
+add_filter('get_sample_permalink_html', 'perm', '',4); //Remove Edit Button for non superusers on BAPI pages
 add_action('template_redirect', 'do_ossdl_off_ob_start');
 add_action('wp_head','getconfig');
 add_action('wp_head','bapi_getmeta',1);
