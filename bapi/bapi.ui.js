@@ -131,20 +131,15 @@ context.inithelpers = {
 			
 			/* we get each value from the html markup created by the inquiry form widget at the same time we create an object and populate it with each value */
 			var InquiryFormFields = {};
-			if ( typeof (ctl.attr('data-shownamefield')) === "undefined" || ctl.attr('data-shownamefield') == '' ) { 
-				InquiryFormFields["Name"] = true;
-			 }else{
-				 InquiryFormFields["Name"] = (ctl.attr('data-shownamefield') == '1');
-			 }
-			 if ( typeof (ctl.attr('data-showemailfield')) === "undefined" || ctl.attr('data-showemailfield') == '') { 
-				InquiryFormFields["Email"] = true;
-			 }else{
-				 InquiryFormFields["Email"] = (ctl.attr('data-showemailfield') == '1');
-			 }
-			 if ( typeof (ctl.attr('data-showphonefield')) === "undefined" || ctl.attr('data-showphonefield') == '') { 
+			 if ( typeof (ctl.attr('data-showphonefield')) === "undefined" || ctl.attr('data-showphonefield') == ''){
 				InquiryFormFields["Phone"] = true;
 			 }else{
-				 InquiryFormFields["Phone"] = (ctl.attr('data-showphonefield') == '1');
+				InquiryFormFields["Phone"] = (ctl.attr('data-showphonefield') == '1');
+			 }
+			 if ( typeof (ctl.attr('data-phonefieldrequired')) === "undefined" || ctl.attr('data-phonefieldrequired') == '') {
+				InquiryFormFields["PhoneRequired"] = true;
+			 }else{
+				InquiryFormFields["PhoneRequired"] = (ctl.attr('data-phonefieldrequired') == '1');
 			 }
 			 if ( typeof (ctl.attr('data-showdatefields')) === "undefined" || ctl.attr('data-showdatefields') == '') { 
 			 	if($('.contact-form').length > 0)
@@ -157,13 +152,12 @@ context.inithelpers = {
 			 }else{
 				 InquiryFormFields["Dates"] = (ctl.attr('data-showdatefields') == '1');
 			 }
-			 if ( typeof (ctl.attr('data-shownumberguestsfields')) === "undefined" || ctl.attr('data-shownumberguestsfields') == '' ) { 
-			 
+			 if ( typeof (ctl.attr('data-shownumberguestsfields')) === "undefined" || ctl.attr('data-shownumberguestsfields') == '' ) {
 			 	if($('.contact-form').length > 0)
 				{
 					InquiryFormFields["NumberOfGuests"] = false;
 				}else{
-					InquiryFormFields["NumberOfGuests"] = true;					
+					InquiryFormFields["NumberOfGuests"] = true;
 				}
 				
 			 }else{
@@ -172,14 +166,18 @@ context.inithelpers = {
 			 if ( typeof (ctl.attr('data-showleadsourcedropdown')) === "undefined" || ctl.attr('data-showleadsourcedropdown') == '' ) { 
 				InquiryFormFields["LeadSourceDropdown"] = true;
 			 }else{
-				 InquiryFormFields["LeadSourceDropdown"] = (ctl.attr('data-showleadsourcedropdown') == '1');
+				InquiryFormFields["LeadSourceDropdown"] = (ctl.attr('data-showleadsourcedropdown') == '1');
+			 }
+			 if ( typeof (ctl.attr('data-leadsourcedropdownrequired')) === "undefined" || ctl.attr('data-leadsourcedropdownrequired') == '' ){
+				InquiryFormFields["LeadSourceRequired"] = false;
+			 }else{
+				InquiryFormFields["LeadSourceRequired"] = (ctl.attr('data-leadsourcedropdownrequired') == '1');
 			 }
 			 if ( typeof (ctl.attr('data-showcommentsfield')) === "undefined" || ctl.attr('data-showcommentsfield') == '' ) { 
 				InquiryFormFields["Comments"] = true;
 			 }else{
-				 InquiryFormFields["Comments"] = (ctl.attr('data-showcommentsfield') == '1');
+				InquiryFormFields["Comments"] = (ctl.attr('data-showcommentsfield') == '1');
 			 }
-			
 			BAPI.log("Creating inquiry form for " + selector);
 			context.createInquiryForm(selector, { "pkid": pkid, "template": BAPI.templates.get(templatename), "hasdatesoninquiryform": hasdates, "log": dologging, "InquiryFormFields": InquiryFormFields });		
 		});	
@@ -674,17 +672,20 @@ context.createInquiryForm = function (targetid, options) {
 	$(".doleadrequest").on("click", function () { 		
 		BAPI.log("Processing lead request");
 		if (processing) { return; } // already in here
-		var reqfields = $.extend([],$('.required'));
-		BookingHelper_ValidateForm(reqfields);				
-		//if (!processing) { $(targetid).unblock(); return; }		
-		/*
-		$.validity.start();
-		$('.required').require();
-		var result = $.validity.end();
-		if (!result.valid) { processing = false; alert('Please fill out all required fields.'); return; }
-		*/
+		/* block the Inquiry form */
 		$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
-		processing = true; // make sure we do not reenter				
+		/* get all the required fields */
+		var reqfields = $.extend([],$('.required'));
+		/* validate the required fields */
+		var validData = BookingHelper_ValidateForm(reqfields);
+		/* if its not valid data unblock and do nothing */
+		if(!validData){
+			/* unblock the inquiry form so the user can enter valid data*/
+			$(targetid).unblock();
+			return;
+		}
+		/* data is valid we are processing now */
+		processing = true; // make sure we do not reenter
 		
 		var cur = BAPI.curentity;
 		var pkid = (cur===null) ? null : cur.ID;
@@ -1182,7 +1183,11 @@ function BookingHelper_ValidateForm(reqfields) {
 			rf.require().match(match);
 		}								
 		var result = $.validity.end();
-		if (!result.valid) {		
+		if (!result.valid) {
+			if(rf.attr('data-validity') == 'email'){
+				/* message for email type field */
+				alert('Invalid Email Address'); rf.focus(); return false;
+			}
 			alert(BAPI.textdata['Please fill out all required fields']); rf.focus(); return false;
 		}
 		// special case for credit card field

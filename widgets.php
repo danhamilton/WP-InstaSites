@@ -377,14 +377,10 @@ class BAPI_Inquiry_Form extends WP_Widget {
 		extract( $args );
 		$title = apply_filters( 'widget_title', $instance['title'] );
 		
-		/* Do we show the name field ? */
-		$bShowNameField =  $instance['showNameField'];
-		
-		/* Do we show the email field ? */
-		$bShowEmailField =  $instance['showEmailField'];
-		
 		/* Do we show the phone field ? */
 		$bShowPhoneField =  $instance['showPhoneField'];
+		/* Its the Phone Field Required ? */
+		$bPhoneFieldRequired =  $instance['phoneFieldRequired'];
 		
 		/* Do we show the date fields ? */
 		$bShowDateFields =  $instance['showDateFields'];
@@ -394,6 +390,8 @@ class BAPI_Inquiry_Form extends WP_Widget {
 		
 		/* Do we show the how did you hear about us dropdown ? */
 		$bShowLeadSourceDropdown =  $instance['showLeadSourceDropdown'];
+		/* Its the Lead Source Dropdown Required ? */
+		$bLeadSourceDropdownRequired =  $instance['leadSourceDropdownRequired'];
 		
 		/* Do we show the comments field ? */
 		$bShowCommentsField =  $instance['showCommentsField'];
@@ -402,7 +400,7 @@ class BAPI_Inquiry_Form extends WP_Widget {
 		if ( ! empty( $title ) )
 			echo $before_title . $title . $after_title;
 		?>
-		<div id="bapi-inquiryform" class="bapi-inquiryform" data-templatename="tmpl-leadrequestform-propertyinquiry" data-log="0" data-shownamefield="<?= $bShowNameField ?>" data-showemailfield="<?= $bShowEmailField ?>" data-showphonefield="<?= $bShowPhoneField ?>" data-showdatefields="<?= $bShowDateFields ?>" data-shownumberguestsfields="<?= $bShowNumberGuestsFields ?>" data-showleadsourcedropdown="<?= $bShowLeadSourceDropdown ?>" data-showcommentsfield="<?= $bShowCommentsField ?>" ></div>        
+		<div id="bapi-inquiryform" class="bapi-inquiryform" data-templatename="tmpl-leadrequestform-propertyinquiry" data-log="0" data-showphonefield="<?= $bShowPhoneField ? 1 : 0; ?>" data-phonefieldrequired="<?= $bPhoneFieldRequired ? 1 : 0; ?>" data-showdatefields="<?= $bShowDateFields ? 1 : 0; ?>" data-shownumberguestsfields="<?= $bShowNumberGuestsFields ? 1 : 0; ?>" data-showleadsourcedropdown="<?= $bShowLeadSourceDropdown ? 1 : 0; ?>" data-leadsourcedropdownrequired="<?= $bLeadSourceDropdownRequired ? 1 : 0; ?>" data-showcommentsfield="<?= $bShowCommentsField ? 1 : 0; ?>" ></div>
         <?php
 		echo $after_widget;
 	}
@@ -412,12 +410,12 @@ class BAPI_Inquiry_Form extends WP_Widget {
 		$instance['title'] = strip_tags( $new_instance['title'] );
 		
 		/* we sanitize the values, either 1 or nothing */
-		$instance['showNameField'] =  strip_tags($new_instance['showNameField']);
-		$instance['showEmailField'] =  strip_tags($new_instance['showEmailField']);
 		$instance['showPhoneField'] =  strip_tags($new_instance['showPhoneField']);
+		$instance['phoneFieldRequired'] =  strip_tags($new_instance['phoneFieldRequired']);
 		$instance['showDateFields'] =  strip_tags($new_instance['showDateFields']);
 		$instance['showNumberGuestsFields'] =  strip_tags($new_instance['showNumberGuestsFields']);
 		$instance['showLeadSourceDropdown'] =  strip_tags($new_instance['showLeadSourceDropdown']);
+		$instance['leadSourceDropdownRequired'] =  strip_tags($new_instance['leadSourceDropdownRequired']);
 		$instance['showCommentsField'] =  strip_tags($new_instance['showCommentsField']);
 
 		return $instance;
@@ -431,17 +429,13 @@ class BAPI_Inquiry_Form extends WP_Widget {
 			$title = __( 'Contact Us', 'text_domain' );
 		}
 		
-		// Show name field checkbox
-		if ( isset( $instance[ 'showNameField' ] ) ) { $bShowNameField = esc_attr($instance[ 'showNameField' ]); }
-		else{ $bShowNameField = true;}
-		
-		// Show email field checkbox
-		if ( isset( $instance[ 'showEmailField' ] ) ) { $bShowEmailField = esc_attr($instance[ 'showEmailField' ]); }
-		else{ $bShowEmailField = true;}
-		
 		// Show phone field checkbox
 		if ( isset( $instance[ 'showPhoneField' ] ) ) { $bShowPhoneField = esc_attr($instance[ 'showPhoneField' ]); }
 		else{ $bShowPhoneField = true;}
+		
+		// phone field required checkbox
+		if ( isset( $instance[ 'phoneFieldRequired' ] ) ) { $bPhoneFieldRequired = esc_attr($instance[ 'phoneFieldRequired' ]); }
+		else{ $bPhoneFieldRequired = true;}
 		
 		// Show dates fields checkbox
 		if ( isset( $instance[ 'showDateFields' ] ) ) { $bShowDateFields = esc_attr($instance[ 'showDateFields' ]); }
@@ -455,6 +449,10 @@ class BAPI_Inquiry_Form extends WP_Widget {
 		if ( isset( $instance[ 'showLeadSourceDropdown' ] ) ) { $bShowLeadSourceDropdown = esc_attr($instance[ 'showLeadSourceDropdown' ]); }
 		else{ $bShowLeadSourceDropdown = true;}
 		
+		// lead source dropdown required checkbox
+		if ( isset( $instance[ 'leadSourceDropdownRequired' ] ) ) { $bLeadSourceDropdownRequired = esc_attr($instance[ 'leadSourceDropdownRequired' ]); }
+		else{ $bLeadSourceDropdownRequired = false;}
+		
 		// Show comments field checkbox
 		if ( isset( $instance[ 'showCommentsField' ] ) ) { $bShowCommentsField = esc_attr($instance[ 'showCommentsField' ]); }
 		else{ $bShowCommentsField = true;}
@@ -464,24 +462,17 @@ class BAPI_Inquiry_Form extends WP_Widget {
 		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
 		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
 		</p>
-<p>
-<input id="<?php echo $this->get_field_id('showNameField'); ?>" name="<?php echo $this->get_field_name('showNameField'); ?>" class="checkbox" type="checkbox" value="1" <?php checked( '1', $bShowNameField ); ?>/>
-<label for="<?php echo $this->get_field_id( 'showNameField' ); ?>">
-  <?php _e( 'Display Name Field?' ); ?>
-</label>
-</p>
-
-<p>
-<input id="<?php echo $this->get_field_id('showEmailField'); ?>" name="<?php echo $this->get_field_name('showEmailField'); ?>" class="checkbox" type="checkbox" value="1" <?php checked( '1', $bShowEmailField ); ?>/>
-<label for="<?php echo $this->get_field_id( 'showEmailField' ); ?>">
-  <?php _e( 'Display Email Field?' ); ?>
-</label>
-</p>
 
 <p>
 <input id="<?php echo $this->get_field_id('showPhoneField'); ?>" name="<?php echo $this->get_field_name('showPhoneField'); ?>" class="checkbox" type="checkbox" value="1" <?php checked( '1', $bShowPhoneField ); ?>/>
 <label for="<?php echo $this->get_field_id( 'showPhoneField' ); ?>">
   <?php _e( 'Display Phone Field?' ); ?>
+</label>
+</p>
+
+<p <?php if(!$bShowPhoneField ){echo 'style="display:none;"';} ?>>&nbsp;&nbsp;&nbsp;&nbsp;<input id="<?php echo $this->get_field_id('phoneFieldRequired'); ?>" name="<?php echo $this->get_field_name('phoneFieldRequired'); ?>" class="checkbox" type="checkbox" value="1" <?php checked( '1', $bPhoneFieldRequired ); ?>/>
+<label for="<?php echo $this->get_field_id( 'phoneFieldRequired' ); ?>">
+  <?php _e( 'Phone Field Required?' ); ?>
 </label>
 </p>
 
@@ -503,6 +494,13 @@ class BAPI_Inquiry_Form extends WP_Widget {
 <input id="<?php echo $this->get_field_id('showLeadSourceDropdown'); ?>" name="<?php echo $this->get_field_name('showLeadSourceDropdown'); ?>" class="checkbox" type="checkbox" value="1" <?php checked( '1', $bShowLeadSourceDropdown ); ?>/>
 <label for="<?php echo $this->get_field_id( 'showLeadSourceDropdown' ); ?>">
   <?php _e( 'Display Lead Source Dropdown?' ); ?>
+</label>
+</p>
+
+<p <?php if(!$bShowLeadSourceDropdown ){echo 'style="display:none;"';} ?>>&nbsp;&nbsp;&nbsp;&nbsp;
+<input id="<?php echo $this->get_field_id('leadSourceDropdownRequired'); ?>" name="<?php echo $this->get_field_name('leadSourceDropdownRequired'); ?>" class="checkbox" type="checkbox" value="1" <?php checked( '1', $bLeadSourceDropdownRequired ); ?>/>
+<label for="<?php echo $this->get_field_id( 'leadSourceDropdownRequired' ); ?>">
+  <?php _e( 'Lead Source Required?' ); ?>
 </label>
 </p>
 
