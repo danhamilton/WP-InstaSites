@@ -110,7 +110,7 @@
 
 			/* Its the entity a property?, if yes, lets set the options */
 			if($entity == "property"){
-				$options = array("seo" => 1, "descrip" => 1, "avail" => 1, "rates" => 1, "reviews" => 1);	
+				$options = array("seo" => 1, "descrip" => 1, "avail" => 1, "rates" => 1, "reviews" => 1,"poi"=>1);	
 			}else{
 				/* Its the entity a poi?, if yes, lets set the options */
 				if($entity == "poi"){
