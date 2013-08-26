@@ -378,23 +378,30 @@ class BAPI_Inquiry_Form extends WP_Widget {
 		$title = apply_filters( 'widget_title', $instance['title'] );
 		
 		/* Do we show the phone field ? */
-		$bShowPhoneField =  $instance['showPhoneField'];
+		if(isset( $instance[ 'showPhoneField' ])){$bShowPhoneField =  $instance['showPhoneField'];}
+		else{ $bShowPhoneField = true;}
 		/* Its the Phone Field Required ? */
-		$bPhoneFieldRequired =  $instance['phoneFieldRequired'];
+		if(isset( $instance[ 'phoneFieldRequired' ])){$bPhoneFieldRequired =  $instance['phoneFieldRequired'];}
+		else{ $bPhoneFieldRequired = true;}
 		
 		/* Do we show the date fields ? */
-		$bShowDateFields =  $instance['showDateFields'];
+		if(isset( $instance[ 'showDateFields' ])){$bShowDateFields =  $instance['showDateFields'];}
+		else{ $bShowDateFields = true;}
 		
 		/* Do we show the number of guests fields ? */
-		$bShowNumberGuestsFields =  $instance['showNumberGuestsFields'];
+		if(isset( $instance[ 'showNumberGuestsFields' ])){$bShowNumberGuestsFields =  $instance['showNumberGuestsFields'];}
+		else{ $bShowNumberGuestsFields = true;}
 		
 		/* Do we show the how did you hear about us dropdown ? */
-		$bShowLeadSourceDropdown =  $instance['showLeadSourceDropdown'];
+		if(isset( $instance[ 'showLeadSourceDropdown' ])){$bShowLeadSourceDropdown =  $instance['showLeadSourceDropdown'];}
+		else{ $bShowLeadSourceDropdown = true;}
 		/* Its the Lead Source Dropdown Required ? */
-		$bLeadSourceDropdownRequired =  $instance['leadSourceDropdownRequired'];
+		if(isset( $instance[ 'leadSourceDropdownRequired' ])){$bLeadSourceDropdownRequired =  $instance['leadSourceDropdownRequired'];}
+		else{ $bLeadSourceDropdownRequired = false;}
 		
 		/* Do we show the comments field ? */
-		$bShowCommentsField =  $instance['showCommentsField'];
+		if(isset( $instance[ 'showCommentsField' ])){$bShowCommentsField =  $instance['showCommentsField'];}
+		else{ $bShowCommentsField = true;}
 
 		echo $before_widget;
 		if ( ! empty( $title ) )
