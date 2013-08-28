@@ -412,9 +412,8 @@
 					return $return;
 				}
 			}
-		}else{
+		}
 			/* this is a super admin we do nothing */
 			return $return;
-		}
 	}
 ?>
