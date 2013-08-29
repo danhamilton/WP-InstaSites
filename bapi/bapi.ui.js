@@ -56,12 +56,12 @@ context.init = function(options) {
 	context.inithelpers.setupinquiryformwidgets(options);
 	context.inithelpers.setuppopupinquiryformwidgets(options);
 	context.inithelpers.setupavailcalendarwidgets(options);
+	context.inithelpers.applymovemes(options);
 	context.inithelpers.setuprateblockwidgets(options);
 	context.inithelpers.applyflexsliders(options);
 	context.inithelpers.applytruncate(options);	
 	context.inithelpers.applydotdotdot(options);
 	context.inithelpers.setupmapwidgets(options);
-	context.inithelpers.applymovemes(options);			
 	context.inithelpers.setupprintlisteners(options);
 	context.inithelpers.setupbapitracker(options);	
 	context.inithelpers.loadjsdependencies(options);
