@@ -32,6 +32,22 @@
 	}
 	
 	/* BAPI url handlers */
+	function urlHandler_emailtrackingimage() {
+		$url = get_relative($_SERVER['REQUEST_URI']);		
+		$url = strtolower($url);
+		$url = substr($url, 0, 8);
+		
+		if ($url == "/t/misc/") {
+			//header('Content-Type: application/javascript');	
+			header('Cache-Control: public');
+			//$expires = round((60*10 + $lastupdatetime), 2); // expires every 10 mins
+			//$expires = gmdate('D, d M Y H:i:s \G\M\T', $expires);
+			//header( 'Expires: ' . $expires );		
+			echo "Image Handler";
+			exit();
+		}
+	}
+	
 	function urlHandler_bapitextdata() {
 		global $bapi_all_options; 
 		$url = get_relative($_SERVER['REQUEST_URI']);
