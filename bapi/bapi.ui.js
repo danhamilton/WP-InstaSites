@@ -1418,11 +1418,8 @@ function PaymentHelper_PayHandler(targetid, options, propid) {
         if (!processing) { $(targetid).unblock(); return; }
         if (BAPI.isempty(curbooking)) { $(targetid).unblock(); alert("Fatal error trying to save this booking.  The context has been lost."); return; }
         var tempCin, tempCout;
-        tempCin = curbooking.CheckIn;
-        console.log(curbooking.Check_In);
-        al;
-        tempCout = curbooking.CheckOut;
-        BAPI.log(curbooking);
+        tempCin = curbooking.Check_In.LongDateTime;
+        tempCout = curbooking.Check_Out.LongDateTime;
         var reqdata = bookingHelper_getFormData(options, curbooking);
         reqdata.CheckIn = tempCin;
         reqdata.CheckOut = tempCout;
