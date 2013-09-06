@@ -981,11 +981,11 @@
 							<div class="info-html">
 <div class="gmap-poi">
 								<div class="gmap-img">
-									<img src='{{&PrimaryImage.ThumbnailURL}}' alt='{{PrimaryImage.Caption' title='{{PrimaryImage.Caption}}' width="195"/>
+									<img src='{{&PrimaryImage.ThumbnailURL}}' alt='{{PrimaryImage.Caption}}' title='{{PrimaryImage.Caption}}' width="195"/>
 								</div>
 								<div class="gmap-text">
 									<p><b>{{Name}}</b></p>
-									<p>{{&Summary}}</p>
+									<div class="summary bapi-truncate" data-trunclen="100">{{&Summary}}</div>
 								</div>
 <div class="clearfix"></div>
 								</div>
@@ -1000,7 +1000,7 @@
 								{{#ContextData.SEO.DetailURL}}
 								<a href="{{ContextData.SEO.DetailURL}}">
 								{{/ContextData.SEO.DetailURL}}
-									<img src='{{&PrimaryImage.ThumbnailURL}}' alt='{{PrimaryImage.Caption' title='{{PrimaryImage.Caption}}' />
+									<img src='{{&PrimaryImage.ThumbnailURL}}' alt='{{PrimaryImage.Caption}}' title='{{PrimaryImage.Caption}}' />
 								{{#ContextData.SEO.DetailURL}}
 								</a>
 								{{/ContextData.SEO.DetailURL}}
@@ -1008,7 +1008,7 @@
 								<div class="gmap-text">
 								<p>{{#ContextData.SEO.DetailURL}}<a href="{{ContextData.SEO.DetailURL}}">{{/ContextData.SEO.DetailURL}}<b>{{Headline}}</b>{{#ContextData.SEO.DetailURL}}</a>{{/ContextData.SEO.DetailURL}}</p>
 
-									<p>{{&Summary}}</p>
+									<div class="summary bapi-truncate" data-trunclen="100">{{&Summary}}</div>
 								</div>
 <div class="clearfix"></div>
 								</div>

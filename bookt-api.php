@@ -36,6 +36,7 @@ include_once(dirname( __FILE__ ).'/shortcodes.php');
 require_once('bapi-php/bapi.php');
 require_once('init.php');
 
+add_action('init','urlHandler_emailtrackingimage',1);	// handler for email images
 add_filter('home_url','home_url_cdn',1,2);
 add_filter('wp_head','add_server_name_meta',1);
 add_filter('redirect_canonical','bapi_redirect_fix',10,2);

@@ -56,12 +56,12 @@ context.init = function(options) {
 	context.inithelpers.setupinquiryformwidgets(options);
 	context.inithelpers.setuppopupinquiryformwidgets(options);
 	context.inithelpers.setupavailcalendarwidgets(options);
+	context.inithelpers.applymovemes(options);
 	context.inithelpers.setuprateblockwidgets(options);
 	context.inithelpers.applyflexsliders(options);
 	context.inithelpers.applytruncate(options);	
 	context.inithelpers.applydotdotdot(options);
 	context.inithelpers.setupmapwidgets(options);
-	context.inithelpers.applymovemes(options);			
 	context.inithelpers.setupprintlisteners(options);
 	context.inithelpers.setupbapitracker(options);	
 	context.inithelpers.loadjsdependencies(options);
@@ -572,7 +572,7 @@ context.createSummaryWidget = function (targetid, options, callback) {
 			if (options.log) { BAPI.log("--search result--"); BAPI.log(data); }
 			ids = data.result; 
 			// for the actual retrieval of the records, we want to include the context
-			if (options.entity == BAPI.entities.property) {
+			if (options.entity == BAPI.entities.property && !$(targetid).parent().hasClass('widget_bapi_featured_properties')) {
 				options.searchoptions = $.extend({}, options.searchoptions, BAPI.session.searchparams);
 			}
 			doSearch(targetid, ids, options.entity, options, alldata, callback); 
