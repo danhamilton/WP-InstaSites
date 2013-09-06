@@ -944,6 +944,7 @@ function bookingHelper_getFormData(options, booking) {
 	var reqdata = treqdata;
 	
 	var dfparse = BAPI.defaultOptions.dateFormatMoment();
+	alert(dfparse);
 	var df = BAPI.defaultOptions.dateFormatBAPI;
 	$('.' + options.dataselector).each(function () {			
 		var k = $(this).attr('data-field');
