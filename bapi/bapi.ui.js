@@ -944,7 +944,6 @@ function bookingHelper_getFormData(options, booking) {
 	var reqdata = treqdata;
 	
 	var dfparse = BAPI.defaultOptions.dateFormatMoment();
-	alert(dfparse);
 	var df = BAPI.defaultOptions.dateFormatBAPI;
 	$('.' + options.dataselector).each(function () {			
 		var k = $(this).attr('data-field');
@@ -952,7 +951,8 @@ function bookingHelper_getFormData(options, booking) {
 		if (v == null | v == '') v = $(this).val();
 		if (k != null && k.length > 0) { 
 			if (k=="checkin") {		
-				v = (v===null || v=='') ? null : moment(v, dfparse).format(df);								
+			    v = (v === null || v == '') ? null : moment(v, dfparse).format(df);
+			    alert(v);
 			}
 			else if (k=="checkout") {
 				v = (v===null || v=='') ? null : moment(v, dfparse).format(df);				
