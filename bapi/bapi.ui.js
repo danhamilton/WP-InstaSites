@@ -1418,16 +1418,17 @@ function PaymentHelper_PayHandler(targetid, options, propid) {
         if (!processing) { $(targetid).unblock(); return; }
         if (BAPI.isempty(curbooking)) { $(targetid).unblock(); alert("Fatal error trying to save this booking.  The context has been lost."); return; }
         var tempCin, tempCout;
-        tempCin = curbooking.SCheckIn;
-        tempCout = curbooking.SCheckOut;
+        tempCin = curbooking.CheckIn;
+        tempCout = curbooking.CheckOut;
+        BAPI.log(curbooking);
         var reqdata = bookingHelper_getFormData(options, curbooking);
         reqdata.CheckIn = tempCin;
         reqdata.CheckOut = tempCout;
         reqdata.AltID = curbooking.AltID;
         reqdata.ID = curbooking.ID;
-	reqdata.Statement.ID=curbooking.Statement.ID
-	reqdata.AmountToCharge=curbooking.AmountToCharge;
-	reqdata.AmountToCharge.SValue2 = +$('#txtAmountToCharge').val();
+	    reqdata.Statement.ID=curbooking.Statement.ID
+	    reqdata.AmountToCharge=curbooking.AmountToCharge;
+	    reqdata.AmountToCharge.SValue2 = +$('#txtAmountToCharge').val();
         var postdata = { "data":JSON.stringify(reqdata) };
         BAPI.save(BAPI.entities.booking, postdata, function (bres) {
             if (bres) {
