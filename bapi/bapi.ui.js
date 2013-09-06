@@ -952,9 +952,11 @@ function bookingHelper_getFormData(options, booking) {
 		if (k != null && k.length > 0) { 
 			if (k=="checkin") {		
 			    v = (v === null || v == '') ? null : moment(v, dfparse).format(df);
+			    alert(v);
 			}
 			else if (k=="checkout") {
 			    v = (v === null || v == '') ? null : moment(v, dfparse).format(df);
+                alert(v)
 			}
 						
 			// assign to the req and the session
