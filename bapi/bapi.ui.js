@@ -1419,7 +1419,8 @@ function PaymentHelper_PayHandler(targetid, options, propid) {
         if (BAPI.isempty(curbooking)) { $(targetid).unblock(); alert("Fatal error trying to save this booking.  The context has been lost."); return; }
         var tempCin, tempCout;
         tempCin = curbooking.CheckIn;
-        alert(curbooking.Check_In);
+        console.log(curbooking.Check_In);
+        al;
         tempCout = curbooking.CheckOut;
         BAPI.log(curbooking);
         var reqdata = bookingHelper_getFormData(options, curbooking);
