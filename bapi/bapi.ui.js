@@ -952,11 +952,9 @@ function bookingHelper_getFormData(options, booking) {
 		if (k != null && k.length > 0) { 
 			if (k=="checkin") {		
 			    v = (v === null || v == '') ? null : moment(v, dfparse).format(df);
-			    alert(v);
 			}
 			else if (k=="checkout") {
 			    v = (v === null || v == '') ? null : moment(v, dfparse).format(df);
-                alert(v)
 			}
 						
 			// assign to the req and the session
@@ -1419,7 +1417,12 @@ function PaymentHelper_PayHandler(targetid, options, propid) {
         BookingHelper_ValidateForm(reqfields);
         if (!processing) { $(targetid).unblock(); return; }
         if (BAPI.isempty(curbooking)) { $(targetid).unblock(); alert("Fatal error trying to save this booking.  The context has been lost."); return; }
+        var tempCin, tempCout;
+        tempCin = curbooking.SCheckIn;
+        tempCout = curbooking.SCheckOut;
         var reqdata = bookingHelper_getFormData(options, curbooking);
+        reqdata.CheckIn = tempCin;
+        reqdata.CheckOut = tempCout;
         reqdata.AltID = curbooking.AltID;
         reqdata.ID = curbooking.ID;
 	reqdata.Statement.ID=curbooking.Statement.ID
