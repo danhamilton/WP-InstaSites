@@ -924,6 +924,7 @@ context.nonsecureurl = function(path) {
 
 var curbooking = null;
 function bookingHelper_getFormData(options, booking) {
+    alert('here');
 	var treqdata = {};
 	treqdata.CheckIn = BAPI.isempty(booking.CheckIn) ? null : booking.CheckIn;
 	alert(booking.CheckIn);
