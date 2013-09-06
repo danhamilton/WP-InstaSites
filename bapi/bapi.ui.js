@@ -926,6 +926,7 @@ var curbooking = null;
 function bookingHelper_getFormData(options, booking) {
 	var treqdata = {};
 	treqdata.CheckIn = BAPI.isempty(booking.CheckIn) ? null : booking.CheckIn;
+	alert(booking.CheckIn);
 	treqdata.CheckOut = BAPI.isempty(booking.CheckOut) ? null : booking.CheckOut;
 	treqdata.Coupon = BAPI.isempty(booking.Coupon) ? null : booking.Coupon;
 	treqdata.CreditCard = BAPI.isempty(booking.CreditCard) ? null : booking.CreditCard;
@@ -952,7 +953,6 @@ function bookingHelper_getFormData(options, booking) {
 		if (k != null && k.length > 0) { 
 			if (k=="checkin") {		
 			    v = (v === null || v == '') ? null : moment(v, dfparse).format(df);
-			    alert(v);
 			}
 			else if (k=="checkout") {
 				v = (v===null || v=='') ? null : moment(v, dfparse).format(df);				
