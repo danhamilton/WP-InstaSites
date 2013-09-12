@@ -351,6 +351,54 @@
 {{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
 </script>
 
+<script id="tmpl-propertysearch-widephotoview" type="text/html">
+<div class="widephoto-view-page">
+{{#result}}
+<div class="portal-result">
+    <div class="portal-inner">
+        <div class="portal-images">
+		{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
+			<div id="slider" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false }'>
+			  <ul class="slides">
+				  <li><img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" /></li>
+				  {{#Images.1}}<li><img alt="{{Caption}}" src="{{&MediumURL}}" /></li>{{/Images.1}}
+				  {{#Images.2}}<li><img alt="{{Caption}}" src="{{&MediumURL}}" /></li>{{/Images.2}} 
+			  </ul>
+			</div>
+			{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
+		</div>       
+		<div class="portal-info">
+		<div class="row-fluid">
+		<div class="span7 left-side">
+			<h2 class="property-title">{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}{{Headline}}{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}</h2>
+			<div class="location">
+			<span class="hidden-phone"><b>{{textdata.City}}:</b> {{City}}</span> {{#Bedrooms}}| <b>{{textdata.Beds}}</b>: {{Bedrooms}} | {{/Bedrooms}}{{#Bathrooms}}<b>{{textdata.Baths}}</b>: {{Bathrooms}} | {{/Bathrooms}}{{#Sleeps}}<b>{{textdata.Sleeps}}</b>: {{Sleeps}}{{/Sleeps}}
+			</div>
+		</div>
+		<div class="span5 right-side align-right"> 
+			{{^ContextData.Quote.IsValid}}
+			{{#session.scheckin}}{{#session.scheckout}}<div class="alert alert-info no-rate">{{ContextData.Quote.ValidationMessage}}</div>{{/session.scheckout}}{{/session.scheckin}}
+			{{/ContextData.Quote.IsValid}}
+			<div class="portal-rates">
+				{{#ContextData.Quote.QuoteDisplay.value}}
+				{{#ContextData.Quote.QuoteDisplay.prefix}}<span class="prefix">{{ContextData.Quote.QuoteDisplay.prefix}}:</span>{{/ContextData.Quote.QuoteDisplay.prefix}}
+				{{ContextData.Quote.QuoteDisplay.value}}
+				{{#ContextData.Quote.QuoteDisplay.suffix}}<span classs="suffix">/{{ContextData.Quote.QuoteDisplay.suffix}}</span>{{/ContextData.Quote.QuoteDisplay.suffix}}
+				{{/ContextData.Quote.QuoteDisplay.value}}
+			</div>
+			{{#ContextData.SEO.Keyword}}<a class="property-link" href="{{&ContextData.SEO.DetailURL}}">{{textdata.Details}} <span>&rarr;</span></a>{{/ContextData.SEO.Keyword}}			
+		</div>
+		</div>
+		</div>
+	</div>
+</div>
+{{/result}}
+</div>
+<div class="clearfix"></div>
+{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalcount}})</a></span></div>{{/islastpage}}
+{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
+</script>
+
 <script id="tmpl-allproperties" type="text/html">
 <table class="table table-bordered table-striped">
 <thead>
