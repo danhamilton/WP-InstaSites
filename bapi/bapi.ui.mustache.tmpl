@@ -2087,20 +2087,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <script id="tmpl-booking-rentalpolicy" type="text/html">
 <div style="padding:10px;">
 {{{config.rentalpolicy}}}
@@ -2115,7 +2101,7 @@
 	<a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">{{session.currency}}<b class="caret"></b></a>
 	<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
 		{{#config.currencies}}
-		<li><a href='javascript:void(0)' class='changecurrency' data-currency='{{RegionInfo.ISOCurrencySymbol}}'>{{RegionInfo.ISOCurrencySymbol}} {{RegionInfo.CurrencyEnglishName}}</a></li>
+		<li>{{^RegionInfo}}<a href='javascript:void(0)' class='changecurrency' data-currency='{{CurrencySymbol}}'>{{CurrencySymbol}} {{Currency}}</a>{{/RegionInfo}}{{#RegionInfo}}<a href='javascript:void(0)' class='changecurrency' data-currency='{{RegionInfo.ISOCurrencySymbol}}'>{{RegionInfo.ISOCurrencySymbol}} {{RegionInfo.CurrencyEnglishName}}</a>{{/RegionInfo}}</li>
 		{{/config.currencies}}
 	</ul>    
 </span>
