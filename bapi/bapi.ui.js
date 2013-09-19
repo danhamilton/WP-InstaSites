@@ -392,22 +392,7 @@ context.setupmapwidgetshelper = function() {
 		if (linksel===null || linksel=='') { linksel = '.map-item'; }
 		var caticons = null;
 		try { caticons = $.parseJSON(ctl.attr('data-category-icons'));}
-		catch(err) {
-			caticons = function(category){
-					if (category == 'undefined' || category == '' || category == null)
-					{return new google.maps.MarkerImage('/wp-content/plugins/bookt-api/img/pin.png');}
-					else{
-						if (category.match('poi')){
-							return new google.maps.MarkerImage('/wp-content/plugins/bookt-api/img/pin_attractions.png');
-						} else if (category.match('starred') || category.match('property')){
-							return new google.maps.MarkerImage('/wp-content/plugins/bookt-api/img/pin_properties.png');
-						} else {
-							return new google.maps.MarkerImage('/wp-content/plugins/bookt-api/img/pin.png');
-						}
-					}
-					
-				}
-		}
+		catch(err) {}
 		var infowindowmaxwidth = ctl.attr('data-info-window-max-width');
 		if (infowindowmaxwidth!==null) { infowindowmaxwidth = parseInt(infowindowmaxwidth); }
 		BAPI.log("Creating map widget for " + selector + ', location selector=' + locsel + ', link selector=' + linksel);
