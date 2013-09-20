@@ -1,4 +1,36 @@
 <?php	
+	function curPageURL() {
+		$pageURL = 'http';
+		if ($_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
+		$pageURL .= "://";
+		if ($_SERVER["SERVER_PORT"] != "80") {
+			$pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+		} else {
+			$pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+		}
+		return $pageURL;
+	}
+	
+	function urlHandler_securepages() {
+		$url = get_relative($_SERVER['REQUEST_URI']);
+		//echo $url; exit();
+		if ((strpos($url,'makepayment') !== false)||(strpos($url,'makebooking') !== false)) {
+			$purl = parse_url(curPageURL());
+			if($purl['scheme'] == 'http'){
+				$nurl = "https://".$purl['host'].$purl['path'];
+				if(!empty($purl['query'])){
+					$nurl .= "?".$purl['query'];
+				}
+				//echo $nurl;
+				header("Location: $nurl");
+				exit();
+			}
+		}
+		else{
+			return;
+		}
+	}
+
 	function urlHandler_bapidefaultpages() {
 		$url = get_relative($_SERVER['REQUEST_URI']);
 		//echo $url; exit();
@@ -337,7 +369,6 @@
 								'menu-item-status' => 'publish',
 								'menu-item-parent-id' => $navParentID,
 								'menu-item-position' => $post['menu_order']));
-		echo $menu_id.":".$miid."<br/>";
 		$url = $post['post_name'];
 		$navmap[$url] = $miid;		
 		return $miid;

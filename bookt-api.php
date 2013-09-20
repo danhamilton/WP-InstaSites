@@ -48,6 +48,7 @@ add_action('wp_head','getconfig');
 add_action('wp_head','bapi_getmeta',1);
 add_action('wp_head','display_global_header',2);
 add_action('init','bapi_create_site',1);  //Hook to add new sites
+add_action('init','urlHandler_securepages',1);  //Hook to force redirect to secure pages
 add_action('init','bapi_wp_site_options',1);  //Preload Site Data to help reduce DB usage
 add_action('init','bapi_sync_coredata',2); 	// syncing BAPI core data
 add_action('init','bapi_sync_entity',3);	// syncing BAPI entities (such as properties, developments, etc...)
