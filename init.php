@@ -36,7 +36,8 @@
 		//echo $url; exit();
 		if (strtolower($url) != "/bapi.init")
 			return;
-			
+		
+		//echo $_SERVER['HTTP_REFERER'];
 		//Ensure we're updating the correct blog
 		$blogid = get_current_blog_id();
 		switch_to_blog($blogid);
@@ -142,15 +143,6 @@
 			"template" : "page-templates/full-width.php",
 			"title" : "Company",
 			"url" : "company"
-		  },
-		  { "addtomenu" : true,
-			"content" : "/default-content/services.php",
-			"intid" : "bapi_services",
-			"order" : 1,
-			"parent" : "company",
-			"template" : "page-templates/full-width.php",
-			"title" : "Services",
-			"url" : "services"
 		  },
 		  { "addtomenu" : true,
 			"content" : "/default-content/aboutus.php",

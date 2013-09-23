@@ -34,29 +34,51 @@ function bapi_create_site(){
 			
 			//Initialize menu and pages
 			$path = '/bapi.init?p=1';
+			$fields = array();
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL,get_site_url().$path);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_POST, true);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+			curl_setopt($ch, CURLOPT_REFERER, get_site_url().'/wp-admin/admin.php'); 
 			$server_output = curl_exec ($ch);
 			curl_close ($ch);
 			
-			print_r($server_output);
+			//print_r($server_output);
 			
-			$menuname = "Main Navigation Menu";
-			$menu_id = initmenu($menuname);
-			echo $menu_id;
 			//echo $s; exit();
 			//header('Location: http://'.$siteurl.'/wp-admin/admin.php?page=bookt-api/setup-sync.php');
+			header('Content-Type: application/javascript');	
+			$new_site = array(
+				"status" => "success",
+				"data" => array(
+					"blog_id" => $s,
+					"blog_url" => get_site_url()
+				)
+			);
+			echo json_encode($new_site);
 		}
 		else{
 			//fail
 			//print_r($s->errors['blog_taken'][0]); exit();  //Not sure if this is the only error returned.  Need a more generic message handler.
-			print_r($s); exit();
+			header('Content-Type: application/javascript');	
+			$new_site = array(
+				"status" => "error",
+				"data" => $s
+			);
+			echo json_encode($new_site);
 		}
 	}
 	else{
-		echo "debug1";
-		print_r($u);
+		header('Content-Type: application/javascript');	
+		$new_site = array(
+			"status" => "error",
+			"data" => array(
+				"errors" => array("user_unknown" => "Sorry, the username specified is invalid."),
+				"error_data" => ""
+			)
+		);
+		echo json_encode($new_site);
 	}
 	exit();
 }
