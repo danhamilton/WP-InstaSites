@@ -1,13 +1,268 @@
 <?php	
+	function curPageURL() {
+		$pageURL = 'http';
+		if ($_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
+		$pageURL .= "://";
+		if ($_SERVER["SERVER_PORT"] != "80") {
+			$pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+		} else {
+			$pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+		}
+		return $pageURL;
+	}
+	
+	function urlHandler_securepages() {
+		$url = get_relative($_SERVER['REQUEST_URI']);
+		//echo $url; exit();
+		if ((strpos($url,'makepayment') !== false)||(strpos($url,'makebooking') !== false)) {
+			$purl = parse_url(curPageURL());
+			if($purl['scheme'] == 'http'){
+				$nurl = "https://".$purl['host'].$purl['path'];
+				if(!empty($purl['query'])){
+					$nurl .= "?".$purl['query'];
+				}
+				//echo $nurl;
+				header("Location: $nurl");
+				exit();
+			}
+		}
+		else{
+			return;
+		}
+	}
+
 	function urlHandler_bapidefaultpages() {
 		$url = get_relative($_SERVER['REQUEST_URI']);
 		//echo $url; exit();
 		if (strtolower($url) != "/bapi.init")
 			return;
+			
+		//Ensure we're updating the correct blog
+		$blogid = get_current_blog_id();
+		switch_to_blog($blogid);
+		//echo get_current_blog_id()."<br/>"; 
 		$menuname = "Main Navigation Menu";
 		$menu_id = initmenu($menuname);
+		//echo $menu_id; //exit();
 		
-		$pagedefs = $_POST['pagedefs'];
+		/*if(!empty($_POST['pagedefs'])){
+			$pagedefs = $_POST['pagedefs'];
+		}
+		if(!empty($_GET['pagedefs'])){
+			$pagedefs = json_decode(stripslashes(urldecode($_GET['pagedefs'])),true);
+			//print_r($pagedefs);exit();
+		}*/
+		
+		$json = '[ { "addtomenu" : false,
+			"content" : "/default-content/home.php",
+			"intid" : "bapi_home",
+			"order" : 1,
+			"parent" : "",
+			"template" : "page-templates/front-page.php",
+			"title" : "Home",
+			"url" : ""
+		  },
+		  { "addtomenu" : true,
+			"content" : "",
+			"intid" : "bapi_rentals",
+			"order" : 2,
+			"parent" : "",
+			"template" : "page-templates/search-page.php",
+			"title" : "Rentals",
+			"url" : "rentals"
+		  },
+		  { "addtomenu" : true,
+			"content" : "/default-content/rentalsearch.php",
+			"intid" : "bapi_search",
+			"order" : 1,
+			"parent" : "rentals",
+			"template" : "page-templates/search-page.php",
+			"title" : "Search",
+			"url" : "rentalsearch"
+		  },
+		  { "addtomenu" : true,
+			"content" : "/default-content/allrentals.php",
+			"intid" : "bapi_property_grid",
+			"order" : 2,
+			"parent" : "rentals",
+			"template" : "page-templates/full-width.php",
+			"title" : "All Rentals",
+			"url" : "allrentals"
+		  },
+		  { "addtomenu" : true,
+			"content" : "/default-content/propertyfinders.php",
+			"intid" : "bapi_search_buckets",
+			"order" : 3,
+			"parent" : "rentals",
+			"template" : "page-templates/full-width.php",
+			"title" : "Search Buckets",
+			"url" : "searchbuckets"
+		  },
+		  { "addtomenu" : true,
+			"content" : "/default-content/developments.php",
+			"intid" : "bapi_developments",
+			"order" : 4,
+			"parent" : "rentals",
+			"template" : "page-templates/search-page.php",
+			"title" : "Developments",
+			"url" : "developments"
+		  },
+		  { "addtomenu" : false,
+			"content" : "/default-content/mylist.php",
+			"intid" : "bapi_mylist",
+			"order" : 5,
+			"parent" : "rentals",
+			"template" : "page-templates/search-page.php",
+			"title" : "My List",
+			"url" : "mylist"
+		  },
+		  { "addtomenu" : true,
+			"content" : "/default-content/specials.php",
+			"intid" : "bapi_specials",
+			"order" : 3,
+			"parent" : "",
+			"template" : "page-templates/full-width.php",
+			"title" : "Specials",
+			"url" : "specials"
+		  },
+		  { "addtomenu" : true,
+			"content" : "/default-content/attractions.php",
+			"intid" : "bapi_attractions",
+			"order" : 4,
+			"parent" : "",
+			"template" : "page-templates/full-width.php",
+			"title" : "Attractions",
+			"url" : "attractions"
+		  },
+		  { "addtomenu" : true,
+			"content" : "",
+			"intid" : "bapi_company",
+			"order" : 5,
+			"parent" : "",
+			"template" : "page-templates/full-width.php",
+			"title" : "Company",
+			"url" : "company"
+		  },
+		  { "addtomenu" : true,
+			"content" : "/default-content/services.php",
+			"intid" : "bapi_services",
+			"order" : 1,
+			"parent" : "company",
+			"template" : "page-templates/full-width.php",
+			"title" : "Services",
+			"url" : "services"
+		  },
+		  { "addtomenu" : true,
+			"content" : "/default-content/aboutus.php",
+			"intid" : "bapi_about_us",
+			"order" : 2,
+			"parent" : "company",
+			"template" : "page-templates/full-width.php",
+			"title" : "About Us",
+			"url" : "aboutus"
+		  },
+		  { "addtomenu" : true,
+			"content" : "/default-content/infoforowners.php",
+			"intid" : "bapi_company_owner",
+			"order" : 3,
+			"parent" : "company",
+			"template" : "page-templates/full-width.php",
+			"title" : "Owner Information",
+			"url" : "companyowner"
+		  },
+		  { "addtomenu" : true,
+			"content" : "/default-content/infoforguests.php",
+			"intid" : "bapi_company_guest",
+			"order" : 4,
+			"parent" : "company",
+			"template" : "page-templates/full-width.php",
+			"title" : "Guest Information",
+			"url" : "companyguest"
+		  },
+		  { "addtomenu" : true,
+			"content" : "/default-content/travelinsurance.php",
+			"intid" : "bapi_travel_insurance",
+			"order" : 5,
+			"parent" : "company",
+			"template" : "page-templates/full-width.php",
+			"title" : "Travel Insurance",
+			"url" : "travelinsurance"
+		  },
+		  { "addtomenu" : true,
+			"content" : "/default-content/contactus.php",
+			"intid" : "bapi_contact",
+			"order" : 6,
+			"parent" : "company",
+			"template" : "page-templates/full-width.php",
+			"title" : "Contact Us",
+			"url" : "contact"
+		  },
+		  { "addtomenu" : true,
+			"content" : "",
+			"intid" : "bapi_blog",
+			"order" : 7,
+			"parent" : "company",
+			"template" : "",
+			"title" : "Blog",
+			"url" : "blog"
+		  },
+		  { "addtomenu" : false,
+			"content" : "/default-content/makebooking.php",
+			"intid" : "bapi_makebooking",
+			"order" : 9,
+			"parent" : "",
+			"template" : "page-templates/full-width.php",
+			"title" : "Make Booking",
+			"url" : "makebooking"
+		  },
+		  { "addtomenu" : false,
+			"content" : "/default-content/makepayment.php",
+			"intid" : "bapi_makepayment",
+			"order" : 10,
+			"parent" : "",
+			"template" : "page-templates/full-width.php",
+			"title" : "Make a Payment",
+			"url" : "makepayment"
+		  },
+		  { "addtomenu" : false,
+			"content" : "/default-content/bookingconfirmation.php",
+			"intid" : "bapi_booking_confirm",
+			"order" : 11,
+			"parent" : "",
+			"template" : "page-templates/full-width.php",
+			"title" : "Booking Confirmation",
+			"url" : "bookingconfirmation"
+		  },
+		  { "addtomenu" : false,
+			"content" : "/default-content/rentalpolicy.php",
+			"intid" : "bapi_rental_policy",
+			"order" : 12,
+			"parent" : "",
+			"template" : "page-templates/full-width.php",
+			"title" : "Rental Policy",
+			"url" : "rentalpolicy"
+		  },
+		  { "addtomenu" : false,
+			"content" : "/default-content/privacypolicy.php",
+			"intid" : "bapi_privacy_policy",
+			"order" : 13,
+			"parent" : "",
+			"template" : "page-templates/full-width.php",
+			"title" : "Privacy Policy",
+			"url" : "privacypolicy"
+		  },
+		  { "addtomenu" : false,
+			"content" : "/default-content/termsofuse.php",
+			"intid" : "bapi_tos",
+			"order" : 14,
+			"parent" : "",
+			"template" : "page-templates/full-width.php",
+			"title" : "Terms of Use",
+			"url" : "termsofuse"
+		  }
+		]';
+		$pagedefs = json_decode($json,true);
+			
 		$navmap = array();
 		foreach ($pagedefs as $pagedef) {
 			addpage($pagedef, $menu_id);
@@ -96,7 +351,7 @@
 		if($post['post_title']=='Blog'){
 			update_option( 'page_for_posts', $pid);
 		}
-		print_r('<div>' . $action . ' menu item <b>' . $post['post_title'] . '</b> post_id=' . $pid . ', miid=' . $miid . '</div>');		
+		print_r('<div>' . $action . ' menu item <b>' . $post['post_title'] . '</b> post_id=' . $pid . ', miid=' . $miid . ', menu_id=' . $menu_id . '</div>');		
 	}	
 
 	function addtonav($pid, $menu_id, $post, $parent) {
@@ -105,7 +360,7 @@
 		if (!empty($navmap[$parent])&&!empty($parent)) {
 			$navParentID = $navmap[$parent]; //getNavMenuID($parent); //$menu_id;
 		}
-		print_r("Parent=".$parent.", navParentID=" . $navParentID . "<br/>");
+		print_r("PageID=".$pid.", Parent=".$parent.", navParentID=" . $navParentID . "<br/>");
 		$miid = wp_update_nav_menu_item($menu_id, 0, array(
 								'menu-item-title' => $post['post_title'],
 								'menu-item-object' => 'page',
@@ -127,11 +382,11 @@
 		// If it doesn't exist, let's create it.
 		if( !$menu_exists){			
 			$menu_id = wp_create_nav_menu($menuname);
-			//print_r("<div>Menu does not exist.  Created menu with menuid=" . $menu_id . ".</div>");
+			print_r("<div>Menu does not exist.  Created menu with menuid=" . $menu_id . ".</div>");
 		}
 		else {
 			$menu_id = getMenuID($bpmenulocation);
-			//print_r("<div>Menu already exists with menuid=" . $menu_id . ".</div>");
+			print_r("<div>Menu already exists with menuid=" . $menu_id . ".</div>");
 		}
 		
 		if( !has_nav_menu( $bpmenulocation ) ){

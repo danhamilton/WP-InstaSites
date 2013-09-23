@@ -9,7 +9,6 @@
 		update_option('bapi_site_cdn_domain', $_POST['bapi_site_cdn_domain']);
 		update_option('api_key', $_POST['api_key']);
 		update_option('bapi_sitelive', $_POST['bapi_sitelive']=='on');
-		update_option('bapi_language', $_POST['bapi_language']);
 		update_option('bapi_baseurl', $_POST['bapi_baseurl']);
 		update_option('bapi_secureurl', $securl);
 		update_option('bapi_cloudfronturl', $_POST['bapi_cloudfronturl']);
@@ -63,6 +62,10 @@
 		});
 	});
 	function validateURL(val){
+		if(val.slice(-1)=="/"){
+			val = val.substring(0,val.length-1);
+			jQuery('#site_url_input').val(val);
+		}
 		if(val.indexOf("www")==-1){
 			var c = confirm('The Site URL you have entered does not contain "www".\n\nCloudFront CDN and Redirection not supported in this configuration.\n\nAre you sure you wish to proceed?');
 			if(c){
@@ -86,7 +89,7 @@
 <form method="post">
 <table class="form-table">
 <tr valign="top">
-	<td scope="row">Site URL</td>
+	<td scope="row">Site URL:</td>
 	<td><input type="text" name="bapi_site_cdn_domain" id="site_url_input" size="60" value="<?php echo $cdn_url; ?>" onBlur="validateURL(this.value)"/></td>
 </tr>
 <tr valign="top">
@@ -98,10 +101,6 @@
 	<td><input type="text" name="api_key" id="apikey" size="60" value="<?php echo get_option('api_key'); ?>" />
 		<a href="javascript:void(0)" id="validate-apikey">Validate</a>
 	</td>
-</tr>
-<tr valign="top">
-	<td scope="row">Language:</td>
-	<td><input type="text" name="bapi_language" size="60" value="<?php echo $lang; ?>" /></td>
 </tr>
 <tr valign="top" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">
 	<td scope="row">BAPI Base URL:</td>
