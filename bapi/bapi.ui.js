@@ -1427,7 +1427,7 @@ function PaymentHelper_PayHandler(targetid, options, propid) {
         reqdata.ID = curbooking.ID;
 	    reqdata.Statement.ID=curbooking.Statement.ID
 	    reqdata.AmountToCharge=curbooking.AmountToCharge;
-	    reqdata.AmountToCharge.SValue2 = +$('#txtAmountToCharge').val();
+	    reqdata.AmountToCharge = +$('#txtAmountToCharge').val();
         var postdata = { "data":JSON.stringify(reqdata) };
         BAPI.save(BAPI.entities.booking, postdata, function (bres) {
             if (bres) {
