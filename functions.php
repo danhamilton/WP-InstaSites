@@ -162,7 +162,7 @@
 	}
 
 	function getbapijsurl($apiKey) {
-		return getbapiurl() . "/js/bapi.js?apikey=" . $apiKey . "&language=" . getbapilanguage();
+		return getbapiurl() . "/js/bapi.js?apikey=" . $apiKey;
 	}
 
 	function getbapiapikey() {
