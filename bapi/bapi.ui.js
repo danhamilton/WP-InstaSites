@@ -1139,6 +1139,7 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 			modifyStatement();
 		});
 	});
+	
 }
 
 function BookingHelper_SetupFormHandlers() {
@@ -1265,7 +1266,14 @@ context.createMakeBookingWidget = function (targetid, options) {
 
 	bookingHelper_FullLoad(targetid, options, propid);	
 	BookingHelper_SetupFormHandlers();
-	BookingHelper_BookHandler(targetid, options, propid);		
+	BookingHelper_BookHandler(targetid, options, propid);
+	/* we wait for the mustache templates to render then we move the SSL to his repective place */
+	$(window).load(function(){
+		if ($('#SSLcontent').length > 0 && $('#SSL').length > 0)
+		{
+			$('#SSLcontent').appendTo("#SSL");
+		}
+	});
 }
 
 function PaymentHelper_FullLoad(targetid, options, bid) {
