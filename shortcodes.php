@@ -86,4 +86,23 @@ function attractions_sc(){
 	return $d;
 }
 add_shortcode( 'attractions', 'attractions_sc' );
+
+
+//Make Booking
+function makebooking_sc(){
+	$d = '<div class="bapi-bookingform" id="bookingform"></div>';
+	return $d;
+}
+add_shortcode( 'makebooking', 'makebooking_sc' );
+
+
+//Booking Confirmation
+function booking_confirmation_sc(){
+	$td = getbapisolutiondata();
+	$d = '<h1>Reservation Request Received</h1>
+<p>Thank You! We have received your request and will process it shortly. Please note that your reservation is not confirmed until you receive written confirmation from us.</p>
+<p>If you have any questions regarding this reservation, please <a href="mailto:'.$td['site']['PrimaryEmail'].'">contact us.</a></p>';
+	return $d;
+}
+add_shortcode( 'bookingconfirmation', 'booking_confirmation_sc' );
 ?>
