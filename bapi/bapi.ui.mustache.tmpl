@@ -1980,8 +1980,9 @@
 			</span>
 			<span class="line2">
 				{{#result}}{{#ContextData.Quote.Statement.ValidUntil}}Quote is valid until: {{LongDateTime}}<br />{{/ContextData.Quote.Statement.ValidUntil}}{{/result}}
-				{{textdata.This page is secure}} - <a href="#">{{textdata.check here}}</a>
+				{{textdata.This page is secure}} - <a href="#SSL" data-toggle="collapse" data-target="#SSL">{{textdata.check here}}</a>
 			</span>
+			<div id="SSL" class="collapse"></div>
 		</div>
 		{{#result}}
 		<div class="amount-bk span4">

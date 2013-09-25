@@ -90,7 +90,8 @@ add_shortcode( 'attractions', 'attractions_sc' );
 
 //Make Booking
 function makebooking_sc(){
-	$d = '<div class="bapi-bookingform" id="bookingform"></div>';
+	/* the SSL was added here so it renders when the page is loaded otherwise the seal says that the page needs to be reloaded so it can be verified */
+	$d = '<div class="bapi-bookingform" id="bookingform"></div><div id="SSLcontent"><script pin type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=135640565046fb4bc11011f1400b8da37ea394266002690762020641"></script></div>';
 	return $d;
 }
 add_shortcode( 'makebooking', 'makebooking_sc' );
