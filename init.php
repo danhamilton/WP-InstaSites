@@ -14,7 +14,7 @@
 	function urlHandler_securepages() {
 		$url = get_relative($_SERVER['REQUEST_URI']);
 		//echo $url; exit();
-		if ((strpos($url,'makepayment') !== false)||(strpos($url,'makebooking') !== false)) {
+		if (((strpos($url,'makepayment') !== false)||(strpos($url,'makebooking') !== false))&&(strpos($_SERVER['HTTP_HOST'],'lodgingcloud.com') == false)) { //Do not force the redirect on lodgingcloud - helps bobby debug connect.
 			$purl = parse_url(curPageURL());
 			if($purl['scheme'] == 'http'){
 				$nurl = "https://".$purl['host'].$purl['path'];
