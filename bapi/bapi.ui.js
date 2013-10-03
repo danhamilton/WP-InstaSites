@@ -802,6 +802,10 @@ function createDatePickerJQuery(targetid, options) {
 
 function createDatePickerPickadate(targetid, options) {
 	options = InitDatePickerOptions(options);
+	/* default options for the pickadate calendar - English */
+	if(typeof(options.pickadatetranslate)==="undefined" || options.pickadatetranslate===null){
+	options.pickadatetranslate = {monthsFull: [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ],monthsShort: [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ],weekdaysFull: [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ],weekdaysShort: [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ],today: 'Today',clear: 'Clear'};
+	}
 	var p = options.property;
 	var ctl = $(targetid);
 	ctl.addClass("no-disabled");
@@ -829,6 +833,12 @@ function createDatePickerPickadate(targetid, options) {
 	var poptions = {};	
 	if (ctl.hasClass("datepickercheckin")) {
 		poptions = {
+			monthsFull: options.pickadatetranslate.monthsFull,
+			monthsShort: options.pickadatetranslate.monthsShort,
+			weekdaysFull: options.pickadatetranslate.weekdaysFull,
+			weekdaysShort: options.pickadatetranslate.weekdaysShort,
+			today: options.pickadatetranslate.today,
+			clear: options.pickadatetranslate.clear,
 			dateMin: mind,
 			dateMax: BAPI.config().maxbookingdays,
 			datesDisabled: cinblockouts,
@@ -856,6 +866,12 @@ function createDatePickerPickadate(targetid, options) {
 	}
 	else if (ctl.hasClass("datepickercheckout")) {
 		poptions = {
+			monthsFull: options.pickadatetranslate.monthsFull,
+			monthsShort: options.pickadatetranslate.monthsShort,
+			weekdaysFull: options.pickadatetranslate.weekdaysFull,
+			weekdaysShort: options.pickadatetranslate.weekdaysShort,
+			today: options.pickadatetranslate.today,
+			clear: options.pickadatetranslate.clear,
 			dateMin: mind,
 			dateMax: BAPI.config().maxbookingdays,
 			datesDisabled: coutblockouts,
@@ -899,7 +915,18 @@ context.createDatePicker = function (targetid, options) {
 		var url = context.jsroot + 'js/pickadate/source/pickadate.min.js';
 		var cssurl = context.jsroot + 'js/pickadate/themes/pickadate.01.default.css';
 		$("<link/>", { rel: "stylesheet", type: "text/css", href: cssurl }).appendTo("head");
-		createDatePickerPickadate(targetid, options);
+		/* we check if the file is already loaded in the context */
+		if(typeof(BAPI.UI.pickadatetranslate)==="undefined" || BAPI.UI.pickadatetranslate===null){
+			/* the file is not present lets load it */
+			$.getScript(context.jsroot + "bapi/bapi.ui.pickadate.translate.js", function (data, ts, jqxhr) {
+				options.pickadatetranslate = BAPI.UI.pickadatetranslate[BAPI.defaultOptions.languageISO];
+				createDatePickerPickadate(targetid, options);
+			});
+		}else{
+			/* the file is present */
+			options.pickadatetranslate = BAPI.UI.pickadatetranslate[BAPI.defaultOptions.languageISO];
+			createDatePickerPickadate(targetid, options);
+		}
 		//$.ajax({url: url, dataType: 'script', cache: true, success: function() {});  
 		//$.getScript(url, function(data, textStatus, jqxhr) { createDatePickerPickadate(targetid, options); });
 	}
