@@ -654,7 +654,7 @@ context.createFeaturedPropertiesWidget = function (targetid, options) {
 }
 
 /* Lead Request */
-context.createInquiryForm = function (targetid, options) {	
+context.createInquiryForm = function (targetid, options) {
 	options = initOptions(options, 1, 'tmpl-leadrequestform-propertyinquiry');
 	if (typeof (options.submitbuttonselector) === "undefined" || options.submitbuttonselector == null) { options.submitbuttonselector = 'doleadrequest'; }	
 	if (typeof (options.responseurl) === "undefined" || options.responseurl == null) { options.responseurl = '' }
@@ -666,6 +666,23 @@ context.createInquiryForm = function (targetid, options) {
 	/* we add the InquiryFormFields object to data so the values can get into account when rendereing the mustache template */
 	var data = { "config": options.config, "site": options.site, "textdata": options.textdata, "InquiryFormFields": options.InquiryFormFields }
 	$(targetid).html(Mustache.render(options.template, data));
+	/* do we have the date fields ? */
+	if(options.InquiryFormFields.Dates){
+		/* lets attach the datepickers */
+		$('#txtCheckIn').addClass('datepickercheckin');
+		$('#txtCheckOut').addClass('datepickercheckout');
+		/* check if we are in a property detail page so we use the availability for the calendars */
+		if(BAPI.curentity === null && $('.property-detail-page').length == 0 )
+		{
+			context.createDatePicker('#txtCheckIn', {"checkoutID": '#txtCheckOut' });
+			context.createDatePicker('#txtCheckOut', {});
+		}else{
+			BAPI.datamanager.get(BAPI.entities.property, BAPI.curentity.ID, function(p) {
+				context.createDatePicker('#txtCheckIn', { "property": p,"checkoutID": '#txtCheckOut' });
+				context.createDatePicker('#txtCheckOut', { "property": p });
+			});
+		}
+	}
 	$('.specialform').hide(); // hide the spam control
 	
 	var processing = false;	
@@ -894,14 +911,16 @@ function createDatePickerPickadate(targetid, options) {
 	var input = $(targetid).pickadate(poptions);
 	var calendar = input.data('pickadate');
 	
-	var trigger = $('<span>', { "class": "halflings calendar cal-icon-trigger" });
-	trigger.append("<i>");	
-	$(targetid).after(trigger);	
-	trigger.click(function() {
-		BAPI.log("datepicker trigger");
-		input.click();		
-	});
-	
+	/* add the icon only 1 time */
+	if($(targetid).siblings('span.cal-icon-trigger').length == 0){
+		var trigger = $('<span>', { "class": "halflings calendar cal-icon-trigger" });
+		trigger.append("<i>");	
+		$(targetid).after(trigger);	
+		trigger.click(function() {
+			BAPI.log("datepicker trigger");
+			input.click();		
+		});
+	}
 	// Create an array from the date while parsing each date unit as an integer
 	function createDateArray( date ) { return date.split( '-' ).map(function( value ) { return +value }) }
 }
