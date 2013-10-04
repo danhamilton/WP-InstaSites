@@ -10,6 +10,20 @@ function bapi_create_site(){
 	$apikey = $_POST['apikey'];
 	$username = $_POST['username'];
 	$password = $_POST['password'];
+	$domain = $_SERVER['SERVER_NAME'];
+	$siteurl = $prefix.'.'.$domain;  //How to check which domain is used for current service
+	$liveurl = 'http://'.$siteurl;
+	if(isset($_POST['domain'])&&!empty($_POST['domain'])){
+		$liveurl = $_POST['domain']; //bapi_site_cdn_domain
+	}
+	$cf_url = str_replace('http://','',$liveurl);
+	$cf_origin = str_replace('http://','',$siteurl);
+	$cf = create_cf_distro($cf_origin,$cf_url);
+	if($cf==false){
+		$cf = 'Error Creating CloudFront Distribution - Contact Support';
+	}
+	$meta = array('api_key' => $apikey, 'bapi_secureurl' => $prefix.'.imbookingsecure.com', 'bapi_site_cdn_domain' => $liveurl, 'bapi_cloudfronturl' => $cf);
+	//$siteurl = $prefix.'.imbookingsecure.com';
 	
 	$u = username_exists($username);
 	if(empty($u)){
@@ -18,10 +32,6 @@ function bapi_create_site(){
 	
 	//$u = wpmu_create_user($username,$password,$username);
 	if(is_numeric($u)){
-		$meta = array('api_key' => $apikey, 'bapi_secureurl' => $prefix.'.imbookingsecure.com');
-		$domain = $_SERVER['SERVER_NAME'];
-		$siteurl = $prefix.'.'.$domain;  //How to check which domain is used for current service
-		//$siteurl = $prefix.'.imbookingsecure.com';
 		$s = wpmu_create_blog($siteurl,'/',$sname,$u,$meta);
 		//$t = wpmu_create_blog('wpmutest.localhost','/','Test1',1);  //use this one to force a 'blog_taken' failure.
 		if(is_numeric($s)){
@@ -34,7 +44,8 @@ function bapi_create_site(){
 			
 			//Initialize menu and pages
 			$path = '/bapi.init?p=1';
-			$fields = array();
+			$url = get_site_url().$path;
+			/*$fields = array();
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL,get_site_url().$path);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -42,9 +53,10 @@ function bapi_create_site(){
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
 			curl_setopt($ch, CURLOPT_REFERER, get_site_url().'/wp-admin/admin.php'); 
 			$server_output = curl_exec ($ch);
-			curl_close ($ch);
+			curl_close ($ch);*/
 			
-			//print_r($server_output);
+			//$server_output = file_get_contents(get_site_url());
+			$server_output = file_get_contents($url);
 			
 			//echo $s; exit();
 			//header('Location: http://'.$siteurl.'/wp-admin/admin.php?page=bookt-api/setup-sync.php');

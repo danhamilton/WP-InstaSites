@@ -432,4 +432,26 @@
 			/* this is a super admin we do nothing */
 			return $return;
 	}
+	
+	function bapi_setup_default_pages() {
+		$url = get_relative($_SERVER['REQUEST_URI']);
+		//echo $url; exit();
+		if (strtolower($url) == "/bapi.init")
+			return;
+		if(!(strpos($_SERVER['REQUEST_URI'],'wp-admin')===false)||!(strpos($_SERVER['REQUEST_URI'],'wp-login')===false)){
+			return;
+		}
+		$menuname = "Main Navigation Menu";
+		$menu_id = initmenu($menuname);
+		$menu = wp_get_nav_menu_items($menu_id);
+		//print_r($menu);
+		if(count($menu) == 0){
+			//Initialize menu and pages
+			$path = '/bapi.init?mode=initial-setup';
+			$url = get_site_url().$path;
+			//$server_output = file_get_contents($url);
+			header("Location: $url");
+			exit();
+		}
+	}
 ?>

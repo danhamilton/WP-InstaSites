@@ -33,6 +33,7 @@ include_once(dirname( __FILE__ ).'/google-xml-sitemap.php');
 include_once(dirname( __FILE__ ).'/cdn-linker/wp-cdn-linker.php');
 include_once(dirname( __FILE__ ).'/create-site.php');
 include_once(dirname( __FILE__ ).'/shortcodes.php');
+include_once(dirname( __FILE__ ).'/cloudfront.php');
 require_once('bapi-php/bapi.php');
 require_once('init.php');
 
@@ -48,6 +49,7 @@ add_action('wp_head','getconfig');
 add_action('wp_head','bapi_getmeta',1);
 add_action('wp_head','display_global_header',2);
 add_action('init','bapi_create_site',1);  //Hook to add new sites
+add_action('init','bapi_setup_default_pages',1);
 add_action('init','urlHandler_securepages',1);  //Hook to force redirect to secure pages
 add_action('init','bapi_wp_site_options',1);  //Preload Site Data to help reduce DB usage
 add_action('init','bapi_sync_coredata',2); 	// syncing BAPI core data

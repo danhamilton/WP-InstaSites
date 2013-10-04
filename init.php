@@ -33,15 +33,12 @@
 
 	function urlHandler_bapidefaultpages() {
 		$url = get_relative($_SERVER['REQUEST_URI']);
-		//echo $url; exit();
+		//echo $_SERVER['QUERY_STRING']; exit();
 		if (strtolower($url) != "/bapi.init")
 			return;
+			
+		wp_authenticate(BAPI_SUPER_ADMIN,BAPI_SUPER_ADMIN_PW);
 		
-		//echo $_SERVER['HTTP_REFERER'];
-		//Ensure we're updating the correct blog
-		$blogid = get_current_blog_id();
-		switch_to_blog($blogid);
-		//echo get_current_blog_id()."<br/>"; 
 		$menuname = "Main Navigation Menu";
 		$menu_id = initmenu($menuname);
 		//echo $menu_id; //exit();
@@ -261,6 +258,12 @@
 			//print_r($pagedef);
 			//print_r("<br />");
 		}
+		
+		$qs = $_SERVER['QUERY_STRING'];
+		if(strtolower($qs) == 'mode=initial-setup'){
+			$blog_url = get_site_url();
+			header("Location: $blog_url");
+		}
 		//return;
 		exit();
 	}
@@ -374,11 +377,11 @@
 		// If it doesn't exist, let's create it.
 		if( !$menu_exists){			
 			$menu_id = wp_create_nav_menu($menuname);
-			print_r("<div>Menu does not exist.  Created menu with menuid=" . $menu_id . ".</div>");
+			//print_r("<div>Menu does not exist.  Created menu with menuid=" . $menu_id . ".</div>");
 		}
 		else {
 			$menu_id = getMenuID($bpmenulocation);
-			print_r("<div>Menu already exists with menuid=" . $menu_id . ".</div>");
+			//print_r("<div>Menu already exists with menuid=" . $menu_id . ".</div>");
 		}
 		
 		if( !has_nav_menu( $bpmenulocation ) ){
