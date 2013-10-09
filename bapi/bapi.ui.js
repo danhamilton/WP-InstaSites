@@ -392,7 +392,42 @@ context.setupmapwidgetshelper = function() {
 		if (linksel===null || linksel=='') { linksel = '.map-item'; }
 		var caticons = null;
 		try { caticons = $.parseJSON(ctl.attr('data-category-icons'));}
-		catch(err) {}
+		catch(err) {
+			/* the data-category-icons wasnt specified */
+			caticons = function(category){
+				/* no category specified lets show the default pin */
+					if (category == 'undefined' || category == '' || category == null || category == 'poi')
+					{return new google.maps.MarkerImage('/wp-content/plugins/bookt-api/img/pin.png');}
+					else{
+						/* this is a poi and is numbered */
+						if (category.indexOf('poi') == 0){
+							/* lets use an sprite for the numbered pins instead of individual images */
+							//BAPI.log('im here ' + category);
+							//BAPI.log(category.substring(4,category.length)*5);
+							var theIconNumber = category.substring(4,category.length);
+							if($('.property-detail-page').length > 0){theIconNumber = parseInt(theIconNumber) + 1;}
+							//BAPI.log('the icon number '+theIconNumber);
+							var pointX = ((theIconNumber % 10)-1)*22;
+							var pointY = Math.floor(theIconNumber / 10)* 39;
+							if (theIconNumber % 10 == 0){pointX = 198; pointY = (Math.floor(theIconNumber / 10)-1)* 39;}
+							//BAPI.log('point X '+pointX);
+							//BAPI.log('point Y '+pointY);
+							return new google.maps.MarkerImage("/wp-content/plugins/bookt-api/img/pins-numbered.png", new google.maps.Size(22, 39), new google.maps.Point(pointX, pointY));
+						} else if (category.indexOf('property') == 0){
+							/* this is a property pin */
+							return new google.maps.MarkerImage('/wp-content/plugins/bookt-api/img/pin_properties.png');
+						} else if (category.indexOf('mainPoi') == 0){
+							/* this is an attraction poi */
+							return new google.maps.MarkerImage('/wp-content/plugins/bookt-api/img/pin_attractions.png');
+						} else {
+							/* none of the above lets use the default pin */
+							return new google.maps.MarkerImage('/wp-content/plugins/bookt-api/img/pin.png');
+						}
+					}
+					
+				}
+		
+		}
 		var infowindowmaxwidth = ctl.attr('data-info-window-max-width');
 		if (infowindowmaxwidth!==null) { infowindowmaxwidth = parseInt(infowindowmaxwidth); }
 		BAPI.log("Creating map widget for " + selector + ', location selector=' + locsel + ', link selector=' + linksel);
