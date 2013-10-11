@@ -14,7 +14,7 @@
 	function urlHandler_securepages() {
 		$url = get_relative($_SERVER['REQUEST_URI']);
 		//echo $url; exit();
-		if (((strpos($url,'makepayment') !== false)||(strpos($url,'makebooking') !== false))&&(strpos($_SERVER['HTTP_HOST'],'lodgingcloud.com') == false)) { //Do not force the redirect on lodgingcloud - helps bobby debug connect.
+		if (((strpos($url,'makepayment') !== false)||(strpos($url,'makebooking') !== false))&&(strpos($_SERVER['HTTP_HOST'],'lodgingcloud.com') == false)&&(strpos($_SERVER['HTTP_HOST'],'localhost') == false)) { //Do not force the redirect on lodgingcloud - helps bobby debug connect.
 			$purl = parse_url(curPageURL());
 			if($purl['scheme'] == 'http'){
 				$nurl = "https://".$purl['host'].$purl['path'];
@@ -261,6 +261,7 @@
 		
 		$qs = $_SERVER['QUERY_STRING'];
 		if(strtolower($qs) == 'mode=initial-setup'){
+			bapi_wp_site_options();
 			$blog_url = get_site_url();
 			header("Location: $blog_url");
 		}
