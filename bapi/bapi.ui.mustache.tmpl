@@ -550,8 +550,8 @@
 						{{#Sleeps}}<li>{{textdata.Sleeps}}: <span>{{Sleeps}}</span></li>{{/Sleeps}}
 						{{#Stories}}<li>{{textdata.Stories}}: <span>{{Stories}}</span></li>{{/Stories}}
 						{{#Floor}}<li>{{textdata.Floor}}: <span>{{Floor}}</span></li>{{/Floor}}
-						{{#AdjLivingSpace}}<li>Unit Size: <span>{{AdjLivingSpace}}</span></li>{{/AdjLivingSpace}}
-						{{#LotSize}}<li>Lot Size: <span>{{LotSize}}</span></li>{{/LotSize}}
+						{{#AdjLivingSpace}}<li>Unit Size: <span>{{AdjLivingSpace}} {{AdjLivingSpaceUnit}}</span></li>{{/AdjLivingSpace}}
+						{{#LotSize}}<li>Lot Size: <span>{{LotSize}} {{LotSizeUnit}}</span></li>{{/LotSize}}
 					</ul>
 					</div>
 				</div>
@@ -608,8 +608,8 @@
 			<tbody id="map-locations">
 			<tr>
 				<td>
-				<div class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}} } }'>
-					<a class="poi-map-item halflings map-marker" href="#"><i></i></a>
+				<div class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}} }, "category" : "property"}'>
+					<a class="poi-map-item mapmarker-prop" href="#">Property</a>
 					<div class="info-html">
 						<div class="marker-infowindow"> 		
 							<span class="prop-image pull-left"><img src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>
@@ -636,8 +636,8 @@
 			{{#ContextData.Attractions}}
 			<tr>
 				<td>
-				<div class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}} } }'>
-					<a class="poi-map-item halflings map-marker" href="#"><i></i></a>
+				<div class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}} }, "category":"poi-{{ContextData.ItemIndex}}" }'>
+					<a class="poi-map-item mapmarker-{{ContextData.ItemIndex}}" href="#">{{ContextData.ItemIndex}}</a>
 					<div class="info-html">
 						<div class="marker-infowindow"> 
 							<span class="prop-image pull-left"><img src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>					
@@ -1062,7 +1062,7 @@
   <div class="item-result">
 	<div class="item-inner">
 	  <div class="item-images">	  
-	  <div class="poi-map-location" data-id="{{ContextData.ItemIndex}}" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}} }, "category": "poi"}'>
+	  <div class="poi-map-location" data-id="{{ContextData.ItemIndex}}" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}} }, "category": "poi-{{ContextData.ItemIndex}}"}'>
 	  <a href="#" class="poi-map-item"><div class="number-tag">{{&ContextData.ItemIndex}}</div></a>
 	  <div class="info-html">
 	<div class="marker-infowindow"> 		
@@ -1153,7 +1153,7 @@
 					<div class="span6 box-left">                
 						<h3>{{textdata.Nearby Rentals}}</h3>						
 						<div id="map-locations">
-						<div class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}}}, "category": "poi"}'>
+						<div class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}}}, "category": "mainPoi"}'>
 						- &nbsp;<a href="#" class="poi-map-item">{{Name}}</a>
 							<div class="info-html">
 <div class="gmap-poi">
@@ -1169,7 +1169,7 @@
 							</div>
 						</div>
 						{{#ContextData.NearbyProperties}}
-						<div class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}}}, "category": "starred"}'>
+						<div class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}}}, "category": "poi-{{ContextData.ItemIndex}}"}'>
 						{{ContextData.ItemIndex}}&nbsp;-&nbsp;<a href="#" class="poi-map-item">{{Headline}}</a> - {{ContextData.Distance}}
 							<div class="info-html">
 								<div class="gmap-property">
@@ -1196,7 +1196,7 @@
 					</div>			
 					<div class="span6 box-right">                
 					<h3>{{textdata.Map}}</h3>
-					<div id="poi-map-prop" class="bapi-map" data-loc-selector='.poi-map-location' data-link-selector='.poi-map-item' data-category-icons='{ "starred": { "color": "#E8413A" }, "poi": { "color": "#465AE0" } }' style="width:100%; height:350px; float:left;"></div>
+					<div id="poi-map-prop" class="bapi-map" data-loc-selector='.poi-map-location' data-link-selector='.poi-map-item' style="width:100%; height:350px; float:left;"></div>
 					</div>
 				</div>
 			</div>
