@@ -518,8 +518,26 @@
 			<li><img alt="" src="{{&ThumbnailURL}}" /></li>
 		{{/Images}}                   
 		</ul>
-		</div>                   
-	</div>        
+		</div>
+ 
+<!-- Modal -->
+<div id="fullScreenSlideshow" class="modal hide fade fullScreenSlideshow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-body">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+  <div id="fullScreenCarousel" class="carousel slide fullScreenCarousel" data-interval="10800000">
+  <!-- Carousel items -->
+<div class="carousel-inner">
+{{#Images}}<div class="item" data-caption="{{Caption}}" data-imgurl="{{&OriginalURL}}"><div class="carousel-caption"><h4 class="headline">{{Headline}}</h4><p>{{Caption}}</p></div></div>{{/Images}}
+</div>
+<!-- Carousel nav -->
+<div class="carousel-controls"><a class="carousel-control left" href="#fullScreenCarousel" data-slide="prev">&lsaquo;</a>
+<a class="carousel-control right" href="#fullScreenCarousel" data-slide="next">&rsaquo;</a></div>
+</div>
+</div>
+</div>
+
+
+	</div>
 </div>
 </section>
 <section class="row-fluid item-info module shadow-border">

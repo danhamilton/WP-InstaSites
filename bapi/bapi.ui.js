@@ -268,6 +268,25 @@ context.inithelpers = {
 	},
 	applyflexsliders: function(options) {
 		$('.bapi-flexslider').each(function (i) {
+			/* check if the fullScreen Carousel is present so we attach the click event to the flexslider viewport */
+			if($('#fullScreenCarousel').length > 0){
+				$( "#slider .flex-viewport" ).on( "click", function() {
+					/* lets not do this each time the image is clicked */
+					if($('#fullScreenCarousel.alreadyOpened').length > 0){
+						$('#fullScreenSlideshow').modal('show');
+					}else{
+					$('#fullScreenCarousel .carousel-inner .item').each(function( index ) {
+						if(index == 0){$(this).addClass('active');}
+						var img = document.createElement('img');
+						img.src = $(this).data("imgurl");
+						img.alt = $(this).data("caption");
+						$(this).append(img);
+					});
+						$('#fullScreenSlideshow').modal('show');
+						$('#fullScreenCarousel').addClass('alreadyOpened');
+					}
+				});
+			}
 			var ctl = $(this);		
 			var options = null;
 			try { options = $.parseJSON(ctl.attr('data-options')); } catch(err) {}
