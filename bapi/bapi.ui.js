@@ -410,8 +410,7 @@ context.setupmapwidgetshelper = function() {
 		var linksel = ctl.attr('data-link-selector');
 		if (linksel===null || linksel=='') { linksel = '.map-item'; }
 		var caticons = null;
-		try { caticons = $.parseJSON(ctl.attr('data-category-icons'));}
-		catch(err) {
+		try {
 			/* the data-category-icons wasnt specified */
 			caticons = function(category){
 				/* no category specified lets show the default pin */
@@ -445,8 +444,8 @@ context.setupmapwidgetshelper = function() {
 					}
 					
 				}
-		
-		}
+			}
+		catch(err) {}
 		var infowindowmaxwidth = ctl.attr('data-info-window-max-width');
 		if (infowindowmaxwidth!==null) { infowindowmaxwidth = parseInt(infowindowmaxwidth); }
 		BAPI.log("Creating map widget for " + selector + ', location selector=' + locsel + ', link selector=' + linksel);
