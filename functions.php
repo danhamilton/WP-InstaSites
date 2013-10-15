@@ -80,11 +80,15 @@
 		header('Cache-Control: public');
 		//header( 'Expires: Sat, 26 Jul 1997 05:00:00 GMT' );
 				 
-		$path = plugins_url('bapi/bapi.ui.mustache.tmpl', __FILE__);
-		$path = get_relative($path);
-		$path = realpath(substr($path,1));
-		$c = file_get_contents($path);
-		$j2 = rawurlencode($c); //addslashes($c);	
+		$c = file_get_contents(BAPISync::getMustacheLocation());
+		$j2 = rawurlencode($c); //addslashes($c);		
+		
+		if (BAPISync::isMustacheOverriden()) {
+			echo "// custom bapi template file\r\n";
+		} else {
+			echo "// baseline bapi template file\r\n";
+		}
+		
 		echo "var t = '" . $j2 . "';\r\n";	
 		echo "t = decodeURIComponent(t);\r\n";
 		echo "BAPI.templates.set(t);\r\n";	

@@ -28,11 +28,32 @@
 		public static function getSEODataLastModRaw() { global $bapi_all_options; return $bapi_all_options['bapi_keywords_lastmod']; }
 		public static function getSEOData() { return json_decode(BAPISync::getSEODataRaw(), TRUE); }
 		
-		public static function getTemplates() { 
-			$url = "bapi/bapi.ui.mustache.tmpl";
-			$url = get_relative( plugins_url($url, __FILE__) );
-			$url = realpath('') . $url;
-			return file_get_contents($url); 
+		public static function isMustacheOverriden() { 
+			$basefilename = "bapi/bapi.ui.mustache.tmpl";
+			// see if there is a custom theme in the theme's folder
+			$test = get_stylesheet_directory() . '/' . $basefilename;
+			if (file_exists($test)) {
+				return true;
+			}
+			return false;			
+		}
+		
+		public static function getMustacheLocation() { 
+			$basefilename = "bapi/bapi.ui.mustache.tmpl";
+			// see if there is a custom theme in the theme's folder
+			$test = get_stylesheet_directory() . '/' . $basefilename;
+			if (file_exists($test)) {
+				return $test;
+			}
+			
+			// otherwise, just return the baseline version stored in the plugin folder
+			$test = plugins_url($basefilename, __FILE__);
+			$test = get_relative($test);
+			$test = realpath(substr($test,1));
+			return $test;			
+		}
+		public static function getTemplates() { 			
+			return file_get_contents(BAPISync::getMustacheLocation()); 
 		}
 		
 		public static function cleanurl($url) {
