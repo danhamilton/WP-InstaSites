@@ -71,6 +71,45 @@
 		exit();
 	}
 	
+	function urlHandler_bapiconfig() {
+		$url = get_relative($_SERVER['REQUEST_URI']);
+		if (strtolower($url) != "/bapi.config.js")
+			return; // not our handler
+		
+		header('Content-Type: application/javascript');	
+		header('Cache-Control: public');
+		//header( 'Expires: Sat, 26 Jul 1997 05:00:00 GMT' );
+				 
+		echo "BAPI.config().adults.enabled = false;\r\n";
+		echo "BAPI.config().altid.enabled = false;\r\n";
+		echo "BAPI.config().amenity.enabled = false;\r\n";				
+		echo "BAPI.config().beds.enabled = false;\r\n";
+		echo "BAPI.config().category.enabled = false;\r\n";
+		echo "BAPI.config().checkin.enabled = false;\r\n";
+		echo "BAPI.config().checkout.enabled = false;\r\n";
+		echo "BAPI.config().children.enabled = false;\r\n";
+		echo "BAPI.config().city.enabled = false;\r\n";
+		echo "BAPI.config().dev.enabled = false;\r\n";
+		echo "BAPI.config().headline.enabled = false;\r\n";
+		echo "BAPI.config().los.enabled = false;\r\n";
+		echo "BAPI.config().location.enabled = false;\r\n";
+		echo "BAPI.config().rate.enabled = false;\r\n";
+		echo "BAPI.config().rooms.enabled = false;\r\n";
+		echo "BAPI.config().sleeps.enabled = false;\r\n";
+		
+		echo "BAPI.config().minlos = 3;\r\n";
+		echo "BAPI.config().availcalendarmonths = 6;\r\n";
+		echo "BAPI.config().displayavailcalendar = false;\r\n";		
+		echo "BAPI.config().hasreviews = false;\r\n";		
+		
+		echo "BAPI.config().leadsettings.emailrequired = false;\r\n";
+		echo "BAPI.config().leadsettings.hasdatesoninquiryform = false;\r\n";
+		echo "BAPI.config().leadsettings.lsrequired = false;\r\n";
+		echo "BAPI.config().leadsettings.phonerequired = false;\r\n";
+		
+		exit();
+	}
+	
 	function urlHandler_bapitemplates() {
 		$url = get_relative($_SERVER['REQUEST_URI']);
 		if (strtolower($url) != "/bapi.templates.js")
@@ -221,12 +260,12 @@
 			}
 			$siteurl = str_replace("http://", "", $siteurl);
 ?>
-<link rel="stylesheet" type="text/css" href="<?= get_relative(plugins_url('/css/jquery.ui/jquery-ui-1.10.2.min.css', __FILE__)) ?>" />
+<link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/jquery.ui.all.css" rel="stylesheet" />
 
-<script type="text/javascript" src="<?= get_relative(plugins_url('/js/jquery.1.9.1.min.js', __FILE__)) ?>" ></script>
-<script type="text/javascript" src="<?= get_relative(plugins_url('/js/jquery-migrate-1.0.0.min.js', __FILE__)) ?>" ></script>		
-<script type="text/javascript" src="<?= get_relative(plugins_url('/js/jquery-ui-1.10.2.min.js', __FILE__)) ?>" ></script>
-<script type="text/javascript" src="<?= get_relative(plugins_url('/js/jquery-ui-i18n.min.js', __FILE__)) ?>" ></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-migrate/1.2.1/jquery-migrate.min.js" type="text/javascript"></script>    
+<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js" type="text/javascript"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/i18n/jquery-ui-i18n.min.js" type="text/javascript"></script>
 <!--[if gt IE 7]>
 <script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/pickadate.min.js', __FILE__)) ?>" ></script>			
 <![endif]-->
@@ -238,8 +277,9 @@
 <![endif]-->
 <script type="text/javascript" src="<?= getbapijsurl($apiKey) ?>"></script>
 <script type="text/javascript" src="<?= get_relative(plugins_url('/bapi/bapi.ui.js', __FILE__)) ?>" ></script>		
-<script type="text/javascript" src="/bapi.textdata.js" ></script>		
-<script type="text/javascript" src="/bapi.templates.js" ></script>		
+<script type="text/javascript" src="/bapi.textdata.js" ></script>
+<script type="text/javascript" src="/bapi.templates.js" ></script>
+<!--<script type="text/javascript" src="/bapi.config.js" ></script>-->
 <script type="text/javascript">		
 	BAPI.UI.loading.setLoadingImgUrl('<?= get_relative(plugins_url("/img/loading.gif", __FILE__)) ?>');
 	BAPI.site.url =  '<?= $siteurl ?>';
