@@ -80,17 +80,34 @@
 </div>
 {{/config.baths.enabled}}
 {{#config.location.enabled}}
+{{#config.location.autocomplete}}
 <div class="category-block">
 	<input type="text" class="span12 property-search-input quicksearch sessionlocation bapi-malocationsearch" data-field="location" placeholder="{{config.location.prompt}}" />
 </div>
+{{#config.location.autocomplete}}
+{{^config.location.autocomplete}}
+<div class="category-block">
+	<select class="span12 property-search-input quicksearch sessionlocation" data-field="location]">
+		<option value="">{{config.location.prompt}}</option>
+		{{#config.location.values}}<option value="{{Data}}">{{Label}}</option>{{/config.location.values}}
+	</select>
+</div>
+{{^config.location.autocomplete}}
 {{/config.location.enabled}}
 {{#config.city.enabled}}
+{{#config.city.autocomplete}}
+<div class="category-block">
+	<input type="text" class="span12 property-search-input quicksearch sessionlocation bapi-locationsearch" data-field="location" placeholder="{{config.location.prompt}}" />
+</div>
+{{/config.city.autocomplete}}
+{{^config.city.autocomplete}}
 <div class="category-block">
 	<select class="span12 property-search-input quicksearch sessionlocation" data-field="location">
 		<option value="">{{config.city.prompt}}</option>		
 		{{#config.city.values}}<option value="{{Data}}">{{Label}}</option>{{/config.city.values}}
 	</select>
 </div>
+{{/config.city.autocomplete}}
 {{/config.city.enabled}}
 {{#config.rate.enabled}}
 <div class="category-block">
