@@ -63,18 +63,10 @@ context.init = function(options) {
 	context.inithelpers.applydotdotdot(options);
 	context.inithelpers.setupmapwidgets(options);
 	context.inithelpers.setupprintlisteners(options);
-	context.inithelpers.setupbapitracker(options);	
-	context.inithelpers.loadjsdependencies(options);
+	context.inithelpers.setupbapitracker(options);		
 }
 
 context.inithelpers = {	
-	loadjsdependencies: function(options) {
-		if (typeof(BAPI.location)!=="undefined" && BAPI.location!==null) { return; }
-		if ($(".bapi-locationsearch").length>0) {
-			var url = BAPI.defaultOptions.baseURL + '/js/bapi.locdata.js?apikey=' + BAPI.defaultOptions.apikey + '&language=' + BAPI.defaultOptions.language;
-			$.getScript(url);	
-		}
-	},
 	setupsummarywidgets: function(options) {
 		$.each($('.bapi-summary'), function (i, item) {
 			var ctl = $(item);		
@@ -551,10 +543,12 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 	
 	// setup date pickers
 	context.createDatePicker('.datepickercheckin', { "property": p, "checkoutID": '.datepickercheckout' });
-	context.createDatePicker('.datepickercheckout', { "property": p });		
-	context.inithelpers.loadjsdependencies();
+	context.createDatePicker('.datepickercheckout', { "property": p });			
 	$(".bapi-locationsearch").live("focus", function() {
-		$(this).typeaheadmap({ "source": BAPI.location.lookups, "key": "displayName", "value": "searchTerm", "displayer": function(that, item, highlighted) {return highlighted + (item.locLookupTypeID==413?" (Neightborhood)":"") + " (" + item.propSum + ")";} });				
+		$(this).typeaheadmap({ "source": BAPI.config().city.values, "key": "Label", "value": "Data", "displayer": function(that, item, highlighted) {return highlighted + (item.locLookupTypeID==413?" (Neightborhood)":"") + " (" + item.propSum + ")";} });				
+	});
+	$(".bapi-malocationsearch").live("focus", function() {
+		$(this).typeaheadmap({ "source": BAPI.location.lookups, "key": "Label", "value": "Data", "displayer": function(that, item, highlighted) {return highlighted + (item.locLookupTypeID==413?" (Neightborhood)":"") + " (" + item.propSum + ")";} });				
 	});
 	
 	// handle user clicking Search

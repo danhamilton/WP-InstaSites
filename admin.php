@@ -19,7 +19,8 @@ function bapi_create_menu() {
 	add_menu_page('InstaSite Plugin Settings', 'InstaSite', 'administrator', __FILE__, 'bapi_settings_page', plugins_url('/img/icon.png', __FILE__));	
 	
 	add_submenu_page($parent, 'General','General', 'administrator', get_adminurl('admin.php'));	
-	add_submenu_page($parent, 'Slideshow','Slideshow', 'administrator', get_adminurl('setup-slideshow.php'));
+	add_submenu_page($parent, 'Site Settings','Site Settings', 'administrator', get_adminurl('setup-sitesettings.php'));
+	add_submenu_page($parent, 'Slideshow','Slideshow', 'administrator', get_adminurl('setup-slideshow.php'));	
 	add_submenu_page($parent, 'Take me Live','Take me Live', 'administrator', get_adminurl('setup-golive.php'));
 	add_submenu_page($parent, 'Data Sync','Data Sync', 'administrator', get_adminurl('setup-sync.php'));	
 	add_submenu_page($parent, 'Initial Setup','Initial Setup', 'administrator', get_adminurl('setup-initial.php'));	
@@ -43,6 +44,7 @@ function bapi_options_init(){
 	register_setting('bapi_options','bapi_site_cdn_domain'); 
 	register_setting('bapi_options','bapi_cloudfronturl'); 
 	register_setting('bapi_options','bapi_global_header'); 
+	register_setting('bapi_options','bapi_sitesettings'); 
 	
 	// register the slideshow settings
 	// register the settings

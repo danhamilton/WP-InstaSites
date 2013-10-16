@@ -79,8 +79,18 @@
 		header('Content-Type: application/javascript');	
 		header('Cache-Control: public');
 		//header( 'Expires: Sat, 26 Jul 1997 05:00:00 GMT' );
-				 
-		echo "BAPI.config().adults.enabled = false;\r\n";
+		
+		global $bapi_all_options;
+		$sitesettings = $bapi_all_options['bapi_sitesettings'];
+		$array = json_decode($sitesettings, TRUE);
+		foreach($array as $v) {
+			if (strpos($v, 'BAPI.config()') === 0) {
+				echo $v; echo "\r\n";
+			}
+			//print_r($v);
+		}
+		//print_r($array);
+		/*echo "BAPI.config().adults.enabled = false;\r\n";
 		echo "BAPI.config().altid.enabled = false;\r\n";
 		echo "BAPI.config().amenity.enabled = false;\r\n";				
 		echo "BAPI.config().beds.enabled = false;\r\n";
@@ -106,7 +116,7 @@
 		echo "BAPI.config().leadsettings.hasdatesoninquiryform = false;\r\n";
 		echo "BAPI.config().leadsettings.lsrequired = false;\r\n";
 		echo "BAPI.config().leadsettings.phonerequired = false;\r\n";
-		
+		*/
 		exit();
 	}
 	
@@ -259,6 +269,7 @@
 				$siteurl = $bapi_all_options['bapi_site_cdn_domain'];
 			}
 			$siteurl = str_replace("http://", "", $siteurl);
+			$sitesettings = $bapi_all_options['bapi_sitesettings'];
 ?>
 <script type="text/javascript">
 window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", suppressErrors: false, branding: "none" } }; (function () { var m = document.createElement("script"); m.type = "text/javascript"; m.async = true; m.src = (window.location.protocol == "https:" ? "https:" : "http:") + "//musculahq.appspot.com/Muscula2.js"; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(m, s); window.Muscula.run = function (c) { eval(c); window.Muscula.run = function () { } }; window.Muscula.errors = []; window.onerror = function () { window.Muscula.errors.push(arguments); return window.Muscula.settings.suppressErrors === undefined } })();
@@ -282,7 +293,9 @@ window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", su
 <script type="text/javascript" src="<?= get_relative(plugins_url('/bapi/bapi.ui.js', __FILE__)) ?>" ></script>		
 <script type="text/javascript" src="/bapi.textdata.js" ></script>
 <script type="text/javascript" src="/bapi.templates.js" ></script>
-<!--<script type="text/javascript" src="/bapi.config.js" ></script>-->
+<?php if (!empty($sitesettings)) { ?>
+<script type="text/javascript" src="/bapi.config.js" ></script>
+<?php } ?>
 <script type="text/javascript">		
 	BAPI.UI.loading.setLoadingImgUrl('<?= get_relative(plugins_url("/img/loading.gif", __FILE__)) ?>');
 	BAPI.site.url =  '<?= $siteurl ?>';

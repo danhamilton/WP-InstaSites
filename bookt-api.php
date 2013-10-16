@@ -56,7 +56,8 @@ add_action('init','bapi_sync_coredata',2); 	// syncing BAPI core data
 add_action('init','bapi_sync_entity',3);	// syncing BAPI entities (such as properties, developments, etc...)
 add_action('init','urlHandler_bapitextdata',4);	// handler for /bapi.textdata.js
 add_action('init','urlHandler_bapitemplates',4);	// handler for /bapi.templates.js
-add_action('init','urlHandler_bapidefaultpages',4);	// handler for /bapi.init
+add_action('init','urlHandler_bapitextdata',4);	// handler for /bapi.textdata.js
+add_action('init','urlHandler_bapiconfig',4);	// handler for /bapi.config.js
 add_action('init','urlHandler_sitelist',4);	// handler for /sitelist (possible warmup list)
 add_action('init','disable_kses_content',20);
 add_action('template_redirect', 'google_sitemap'); // sitemap handler
