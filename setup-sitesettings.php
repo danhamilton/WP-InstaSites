@@ -149,8 +149,10 @@ jQuery(document).ready(function () {
 	<td>
 		<select name="locsearch" id="locsearch">
 		<option value="BAPI.config().city.enabled=false; BAPI.config().location.enabled=false;">Disabled</option>
-		<option value="BAPI.config().city.enabled=true; BAPI.config().location.enabled=false;">City Drop Down List</option>
-		<option value="BAPI.config().city.enabled=false; BAPI.config().location.enabled=true;">Market Area Drop Down List</option>
+		<option value="BAPI.config().city.enabled=true; BAPI.config().location.enabled=false; BAPI.config().city.autocomplete=false;">City Drop Down List</option>
+		<option value="BAPI.config().city.enabled=true; BAPI.config().location.enabled=false; BAPI.config().city.autocomplete=true;">City Autocomplete</option>
+		<option value="BAPI.config().city.enabled=false; BAPI.config().location.enabled=true; BAPI.config().location.autocomplete=false;">Market Area Drop Down List</option>
+		<option value="BAPI.config().city.enabled=false; BAPI.config().location.enabled=true; BAPI.config().location.autocomplete=true;">Market Area Autocomplete</option>
 		</select>
 	</td>
 </tr>	
