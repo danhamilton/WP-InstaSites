@@ -30,7 +30,7 @@
 			"headlinesearch": "BAPI.config().headline.enabled=false;",
 			"locsearch": "BAPI.config().city.enabled=false; BAPI.config().location.enabled=false;",
 			"showunavailunits": "BAPI.config().restrictavail=true;",
-			"searchsort": "BAPI.config().sort='random';",
+			"searchsort": "BAPI.config().sort=\"random\";",
 			"searchsortorder": "BAPI.config().sortdesc=false;",
 			"propdetail-availcal": "BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=1;",
 			"propdetail-reviewtab": "BAPI.config().hasreviews=false;"		
