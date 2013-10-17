@@ -80,6 +80,7 @@
 		header('Cache-Control: public');
 		//header( 'Expires: Sat, 26 Jul 1997 05:00:00 GMT' );
 		
+		echo 'BAPI.config().searchmodes={}||BAPI.config().searchmodes'; echo "\r\n";
 		global $bapi_all_options;
 		$sitesettings = $bapi_all_options['bapi_sitesettings'];
 		$array = json_decode($sitesettings, TRUE);
@@ -89,34 +90,6 @@
 			}
 			//print_r($v);
 		}
-		//print_r($array);
-		/*echo "BAPI.config().adults.enabled = false;\r\n";
-		echo "BAPI.config().altid.enabled = false;\r\n";
-		echo "BAPI.config().amenity.enabled = false;\r\n";				
-		echo "BAPI.config().beds.enabled = false;\r\n";
-		echo "BAPI.config().category.enabled = false;\r\n";
-		echo "BAPI.config().checkin.enabled = false;\r\n";
-		echo "BAPI.config().checkout.enabled = false;\r\n";
-		echo "BAPI.config().children.enabled = false;\r\n";
-		echo "BAPI.config().city.enabled = false;\r\n";
-		echo "BAPI.config().dev.enabled = false;\r\n";
-		echo "BAPI.config().headline.enabled = false;\r\n";
-		echo "BAPI.config().los.enabled = false;\r\n";
-		echo "BAPI.config().location.enabled = false;\r\n";
-		echo "BAPI.config().rate.enabled = false;\r\n";
-		echo "BAPI.config().rooms.enabled = false;\r\n";
-		echo "BAPI.config().sleeps.enabled = false;\r\n";
-		
-		echo "BAPI.config().minlos = 3;\r\n";
-		echo "BAPI.config().availcalendarmonths = 6;\r\n";
-		echo "BAPI.config().displayavailcalendar = false;\r\n";		
-		echo "BAPI.config().hasreviews = false;\r\n";		
-		
-		echo "BAPI.config().leadsettings.emailrequired = false;\r\n";
-		echo "BAPI.config().leadsettings.hasdatesoninquiryform = false;\r\n";
-		echo "BAPI.config().leadsettings.lsrequired = false;\r\n";
-		echo "BAPI.config().leadsettings.phonerequired = false;\r\n";
-		*/
 		exit();
 	}
 	
