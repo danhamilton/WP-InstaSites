@@ -66,7 +66,7 @@ context.init = function(options) {
 	context.inithelpers.setupbapitracker(options);		
 	
 	// ensure that searchmodes exists
-	BAPI.config().searchmodes = {};
+	if (BAPI.config().searchmodes>=0) { BAPI.config().searchmodes = {} };
 	if (BAPI.isempty(BAPI.config().searchmodes.listview)) { BAPI.config().searchmodes.listview=true; }
 	if (BAPI.isempty(BAPI.config().searchmodes.photoview)) { BAPI.config().searchmodes.photoview=true; }
 	if (BAPI.isempty(BAPI.config().searchmodes.widephotoview)) { BAPI.config().searchmodes.widephotoview=false; }
