@@ -559,7 +559,7 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 			"value": "Data", 
 			"displayer": function(that, item, highlighted) {
 				return highlighted;
-			}) 
+			} 
 		});
 	});
 	$(".bapi-malocationsearch").live("focus", function() {
@@ -569,7 +569,7 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 			"value": "Data", 
 			"displayer": function(that, item, highlighted) {
 				return highlighted;
-			}) 
+			}
 		});
 	});
 	
