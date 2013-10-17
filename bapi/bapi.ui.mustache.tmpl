@@ -3,14 +3,9 @@
 */
 <script id="tmpl-search-homepage" type="text/html">
 <div class="property-search-block">
-<input type="text" class="quicksearch hide" data-field="sort" value="{{config.sort}}" />
-<input type="text" class="quicksearch hide" data-field="sortdesc" value="{{config.sortdesc}}" />
-{{#config.restrictavail}}
-<input type="text" class="quicksearch hide" data-field="restrictavail" value="1" />
-{{/config.restrictavail}}
-{{#config.restrictavail}}
-<input type="text" class="span12 txtb quicksearch hide" data-field="restrictavail" value="0" />
-{{/config.restrictavail}}
+<input type="text" class="quicksearch" style="display:none" data-field="sort" value="{{config.sort}}" />
+<input type="text" class="quicksearch" style="display:none" data-field="sortdesc" value="{{config.sortdesc}}" />
+<input type="text" class="quicksearch" style="display:none" data-field="restrictavail" value="{{#config.restrictavail}}1{{/config.restrictavail}}{^#config.restrictavail}}0{{/config.restrictavail}}" />
 {{#config.checkin.enabled}}
 <div class="category-block">
 	<input type="text" class="span12 txtb quicksearch sessioncheckin datepickercheckin" data-field="checkin" placeholder="{{textdata.Check-In}}" />
