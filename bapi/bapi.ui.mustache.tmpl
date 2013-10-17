@@ -65,20 +65,36 @@
 {{/config.dev.enabled}}
 {{#config.sleeps.enabled}}
 <div class="category-block">
-	<select class="span12 property-search-input quicksearch sessionsleepsmin" data-field="sleeps[min]">
+	<select class="span12 property-search-input quicksearch sessionsleepsmin" data-field="sleeps[exact]">
 		<option value="">{{config.sleeps.prompt}}</option>
 		{{#config.sleeps.values}}<option value="{{Data}}">{{Label}}</option>{{/config.sleeps.values}}
 	</select>
 </div>
 {{/config.sleeps.enabled}}
+{{#config.minsleeps.enabled}}
+<div class="category-block">
+	<select class="span12 property-search-input quicksearch sessionsleepsmin" data-field="sleeps[min]">
+		<option value="">{{config.sleeps.prompt}}</option>
+		{{#config.sleeps.values}}<option value="{{Data}}">{{Label}}</option>{{/config.sleeps.values}}
+	</select>
+</div>
+{{/config.minsleeps.enabled}}
 {{#config.beds.enabled}}
+<div class="category-block">
+	<select class="span12 property-search-input quicksearch sessionbedsmin" data-field="beds[exact]">
+		<option value="">{{config.beds.prompt}}</option>
+		{{#config.beds.values}}<option value="{{Data}}">{{Label}}</option>{{/config.beds.values}}
+	</select>
+</div>
+{{/config.beds.enabled}}
+{{#config.minbeds.enabled}}
 <div class="category-block">
 	<select class="span12 property-search-input quicksearch sessionbedsmin" data-field="beds[min]">
 		<option value="">{{config.beds.prompt}}</option>
 		{{#config.beds.values}}<option value="{{Data}}">{{Label}}</option>{{/config.beds.values}}
 	</select>
 </div>
-{{/config.beds.enabled}}
+{{/config.minbeds.enabled}}
 {{#config.baths.enabled}}
 <div class="category-block">
 	<select class="span12 property-search-input quicksearch sessionbathsmin" data-field="baths[min]">
@@ -252,10 +268,10 @@
 	<label class="control-label"></label>
 	<div class="controls">
 		<div class="btn-group" data-toggle="buttons-radio">
-		<button class="btn changeview" data-template="tmpl-propertysearch-listview"><i class="icon-list"></i>&nbsp;{{textdata.List}}</button>
-		<button class="btn changeview active" data-template="tmpl-propertysearch-galleryview"><i class="icon-th-large"></i>&nbsp;{{textdata.Photo}}</button>		
-		</div>
-        <button class="btn changeview" data-template="tmpl-propertysearch-galleryview" style="display:none"><i class="icon-map-marker"></i>&nbsp;{{textdata.Map}}</button>
+		{{#config.searchmode.listview}}<button class="btn changeview" data-template="tmpl-propertysearch-listview"><i class="icon-list"></i>&nbsp;{{textdata.List}}</button>{{/config.searchmode.listview}}
+		{{#config.searchmode.photoview}}<button class="btn changeview active" data-template="tmpl-propertysearch-galleryview"><i class="icon-th-large"></i>&nbsp;{{textdata.Photo}}</button>{{/config.searchmode.photoview}}
+		{{#config.searchmode.mapview}}<button class="btn changeview" data-template="tmpl-propertysearch-galleryview"><i class="icon-map-marker"></i>&nbsp;{{textdata.Map}}</button>{{/config.searchmode.mapview}}
+		</div>        
 	</div>
 </div>
 </div>	
@@ -318,10 +334,10 @@
 	<label class="control-label"></label>
 	<div class="controls">
 		<div class="btn-group" data-toggle="buttons-radio">
-		<button class="btn changeview active" data-template="tmpl-propertysearch-listview" data-rowfixselector="" data-rowfixcount"1"><i class="icon-list"></i>&nbsp;{{textdata.List}}</button>
-		<button class="btn changeview" data-template="tmpl-propertysearch-galleryview" data-rowfixselector=".gallery-view-page%20%3E%20.span6" data-rowfixcount="2"><i class="icon-th-large"></i>&nbsp;{{textdata.Photo}}</button>		
-		</div>
-        <button class="btn changeview" data-template="tmpl-propertysearch-galleryview" style="display:none"><i class="icon-map-marker"></i>&nbsp;{{textdata.Map}}</button>
+		{{#config.searchmode.listview}}<button class="btn changeview active" data-template="tmpl-propertysearch-listview" data-rowfixselector="" data-rowfixcount"1"><i class="icon-list"></i>&nbsp;{{textdata.List}}</button>{{/config.searchmode.listview}}
+		{{#config.searchmode.photoview}}<button class="btn changeview" data-template="tmpl-propertysearch-galleryview" data-rowfixselector=".gallery-view-page%20%3E%20.span6" data-rowfixcount="2"><i class="icon-th-large"></i>&nbsp;{{textdata.Photo}}</button>{{/config.searchmode.photoview}}
+		{{#config.searchmode.mapview}}<button class="btn changeview" data-template="tmpl-propertysearch-galleryview"><i class="icon-map-marker"></i>&nbsp;{{textdata.Map}}</button>{{/config.searchmode.mapview}}
+		</div>        
 	</div>
 </div>
 </div>	

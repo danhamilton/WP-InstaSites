@@ -18,12 +18,27 @@
 	if (!empty($sitesettings)) {
 		echo 'var settings=' . $sitesettings . ';';
 	} else {
-		echo 'var settings={};';
-	}
-	
+		echo 'var settings={
+			"searchmode-listview": "BAPI.config().searchmodes.listview=true;",			
+			"searchmode-photoview": "BAPI.config().searchmodes.photoview=true;",
+			"searchmode-widephotoview": "BAPI.config().searchmodes.widephotoview=false;",
+			"searchmode-hotelview": "BAPI.config().searchmodes.hotelview=false;",
+			"amenitysearch": "BAPI.config().amenity.enabled=false;",
+			"devsearch": "BAPI.config().dev.enabled=false;",
+			"adultsearch: "BAPI.config().adults.enabled=false;",
+			"childsearch": "BAPI.config().children.enabled=false;",
+			"headlinesearch": "BAPI.config().headline.enabled=false;",
+			"locsearch": "BAPI.config().city.enabled=false; BAPI.config().location.enabled=false;",
+			"showunavailunits": "BAPI.config().restrictavail=true;",
+			"searchsort": "BAPI.config().sort='random';",
+			"searchsortorder": "BAPI.config().sortdesc=false;",
+			"propdetail-availcal": "BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=1;",
+			"propdetail-reviewtab": "BAPI.config().hasreviews=false;"		
+		};';
+	}	
 ?> 
 jQuery(document).ready(function () {	
-	// if not a post
+	// update the settings
 	jQuery.each(settings, function( key, value ) {
 		console.log(key + '=' + value);
 		if (key.indexOf('$')<0) {
@@ -37,7 +52,80 @@ jQuery(document).ready(function () {
 <h2>InstaSite Plugin - Site Settings</h2>
 <form method="post">
 
-<h3>Property Search Settings</h3>
+<h3>Search Result Display Modes</h3>
+<table class="form-table">
+<tr valign="top">
+	<td scope="row">List View:</td>
+	<td><select name="searchmode-listview" id="searchmode-listview">
+		<option value="BAPI.config().searchmodes.listview=false;">Disable</option>
+		<option value="BAPI.config().searchmodes.listview=true;">Enable</option>		
+	    </select>
+	</td>	
+</tr>
+<tr valign="top">
+	<td scope="row">Photo View:</td>
+	<td><select name="searchmode-photoview" id="searchmode-photoview">
+		<option value="BAPI.config().searchmodes.photoview=false;">Disable</option>
+		<option value="BAPI.config().searchmodes.photoview=true;">Enable</option>		
+	    </select>
+	</td>	
+</tr>
+<tr valign="top">
+	<td scope="row">Wide Photo View:</td>
+	<td><select name="searchmode-widephotoview" id="searchmode-widephotoview">
+		<option value="BAPI.config().searchmodes.widephotoview=false;">Disable</option>
+		<option value="BAPI.config().searchmodes.widephotoview=true;">Enable</option>		
+	    </select>
+	</td>	
+</tr>
+<tr valign="top" style="display:none">
+	<td scope="row">Hotel View:</td>
+	<td><select name="searchmode-hotelview" id="searchmode-hotelview">
+		<option value="BAPI.config().searchmodes.hotelview=false;">Disable</option>
+		<option value="BAPI.config().searchmodes.hotelview=true;">Enable</option>		
+	    </select>
+	</td>	
+</tr>
+</table>
+<div class="clear"></div>
+
+<h3>Search Result Settings</h3>
+<table class="form-table">
+<tr valign="top">
+	<td scope="row">Show unavailable units:</td>
+	<td><select name="showunavailunits" id="showunavailunits">
+		<option value="BAPI.config().restrictavail=false;">Disable</option>
+		<option value="BAPI.config().restrictavail=true;">Enable</option>		
+	    </select>
+	</td>	
+</tr>
+<tr valign="top" style="display:none">
+	<td scope="row">Show Avg. Review Rating in Search Result:</td>
+	<td><input id="" type="checkbox" name=""></td>
+</tr>
+<tr valign="top">
+	<td scope="row">Default Search Sort Order Option:</td>
+	<td>
+		<select name="searchsort" id="searchsort">
+		<option value="BAPI.config().sort='beds';">By Bedrooms</option>
+		<option value="BAPI.config().sort='sleeps';">By Sleeps</option>
+		<option value="BAPI.config().sort='category';">By Category</option>
+		<option value="BAPI.config().sort='headline';">By Headline</option>
+		<option value="BAPI.config().sort='location';">By City</option>
+		<option value="BAPI.config().sort='minrate';">By Minimum Price</option>
+		<option value="BAPI.config().sort='maxrate';">By Maximum Price</option>
+		<option value="BAPI.config().sort='random';">Random</option>
+		</select>
+		<select name="searchsortorder" id="searchsortorder">
+			<option value="BAPI.config().sortdesc=false;">Ascending</option>
+			<option value="BAPI.config().sortdesc=true;">Descending</option>		
+		</select>
+	</td>
+</tr>
+</table>
+<div class="clear"></div>
+
+<h3>Property Search Form Settings</h3>
 <table class="form-table">
 <tr valign="top">
 	<td scope="row">Check-In Check-Out Mode:</td>
@@ -154,8 +242,8 @@ jQuery(document).ready(function () {
 	<td scope="row">Amenity Search:</td>
 	<td>
 		<select name="amenitysearch" id="amenitysearch">
-		<option value="BAPI.config().amenity.enabled=false">Disabled</option>
-		<option value="BAPI.config().amenity.enabled=true">Amenities Checkbox Group</option>		
+		<option value="BAPI.config().amenity.enabled=false;">Disabled</option>
+		<option value="BAPI.config().amenity.enabled=true;">Amenities Checkbox Group</option>		
 		</select>
 	</td>
 </tr>
@@ -207,42 +295,6 @@ jQuery(document).ready(function () {
 		</select>
 	</td>
 </tr>	
-</table>
-<div class="clear"></div>
-
-<h3>Availability Search Result Settings</h3>
-<table class="form-table">
-<tr valign="top">
-	<td scope="row">Show unavailable units:</td>
-	<td><select name="showunavailunits" id="showunavailunits">
-		<option value="BAPI.config().restrictavail=false;">Disable</option>
-		<option value="BAPI.config().restrictavail=true;">Enable</option>		
-	    </select>
-	</td>	
-</tr>
-<tr valign="top" style="display:none">
-	<td scope="row">Show Avg. Review Rating in Search Result:</td>
-	<td><input id="" type="checkbox" name=""></td>
-</tr>
-<tr valign="top">
-	<td scope="row">Default Search Sort Order Option:</td>
-	<td>
-		<select name="searchsort" id="searchsort">
-		<option value="BAPI.config().sort='beds';">By Bedrooms</option>
-		<option value="BAPI.config().sort='sleeps';">By Sleeps</option>
-		<option value="BAPI.config().sort='category';">By Category</option>
-		<option value="BAPI.config().sort='headline';">By Headline</option>
-		<option value="BAPI.config().sort='location';">By City</option>
-		<option value="BAPI.config().sort='minrate';">By Minimum Price</option>
-		<option value="BAPI.config().sort='maxrate';">By Maximum Price</option>
-		<option value="BAPI.config().sort='random';">By Random</option>
-		</select>
-		<select name="searchsortorder" id="searchsortorder">
-			<option value="BAPI.config().sortdesc=false;">Ascending</option>
-			<option value="BAPI.config().sortdesc=true;">Descending</option>		
-		</select>
-	</td>
-</tr>
 </table>
 <div class="clear"></div>
 
