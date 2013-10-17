@@ -85,7 +85,7 @@
 		$array = json_decode($sitesettings, TRUE);
 		foreach($array as $v) {
 			if (strpos($v, 'BAPI.config()') === 0) {
-				echo $v; echo "\r\n";
+				echo stripslashes($v); echo "\r\n";
 			}
 			//print_r($v);
 		}
