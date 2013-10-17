@@ -84,7 +84,7 @@
 <div class="category-block">
 	<input type="text" class="span12 property-search-input quicksearch sessionlocation bapi-malocationsearch" data-field="location" placeholder="{{config.location.prompt}}" />
 </div>
-{{#config.location.autocomplete}}
+{{/config.location.autocomplete}}
 {{^config.location.autocomplete}}
 <div class="category-block">
 	<select class="span12 property-search-input quicksearch sessionlocation" data-field="location]">
@@ -92,7 +92,7 @@
 		{{#config.location.values}}<option value="{{Data}}">{{Label}}</option>{{/config.location.values}}
 	</select>
 </div>
-{{^config.location.autocomplete}}
+{{/config.location.autocomplete}}
 {{/config.location.enabled}}
 {{#config.city.enabled}}
 {{#config.city.autocomplete}}
