@@ -553,10 +553,24 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 	context.createDatePicker('.datepickercheckin', { "property": p, "checkoutID": '.datepickercheckout' });
 	context.createDatePicker('.datepickercheckout', { "property": p });			
 	$(".bapi-locationsearch").live("focus", function() {
-		$(this).typeaheadmap({ "source": BAPI.config().city.values, "key": "Label", "value": "Data" });
+		$(this).typeaheadmap({ 
+			"source": BAPI.config().city.values, 
+			"key": "Label", 
+			"value": "Data", 
+			"displayer": function(that, item, highlighted) {
+				return highlighted;
+			}) 
+		});
 	});
 	$(".bapi-malocationsearch").live("focus", function() {
-		$(this).typeaheadmap({ "source": BAPI.config().location.values, "key": "Label", "value": "Data" });
+		$(this).typeaheadmap({ 
+			"source": BAPI.config().location.values, 
+			"key": "Label", 
+			"value": "Data", 
+			"displayer": function(that, item, highlighted) {
+				return highlighted;
+			}) 
+		});
 	});
 	
 	// handle user clicking Search
