@@ -196,8 +196,8 @@ jQuery(document).ready(function () {
 <tr valign="top">
 	<td scope="row">Sleeps Search (Min):</td>
 	<td><select name="minsleepsearch" id="minsleepsearch">
-		<option value="BAPI.config().minsleeps=BAPI.config().sleeps; BAPI.config().minsleeps.enabled=false;">Disable</option>
-		<option value="BAPI.config().minsleeps=BAPI.config().sleeps; BAPI.config().minsleeps.enabled=true;">Enable</option>		
+		<option value="BAPI.config().minsleeps={}; BAPI.config().minsleeps.enabled=false;">Disable</option>
+		<option value="BAPI.config().minsleeps={}; BAPI.config().minsleeps.enabled=true;">Enable</option>		
 	    </select>
 	</td>	
 </tr>
@@ -212,8 +212,8 @@ jQuery(document).ready(function () {
 <tr valign="top">
 	<td scope="row">Bedroom Search (Min):</td>
 	<td><select name="minbedsearch" id="minbedsearch">
-		<option value="BAPI.config().minbeds=BAPI.config().beds; BAPI.config().minbeds.enabled=false;">Disable</option>
-		<option value="BAPI.config().minbeds=BAPI.config().beds; BAPI.config().minbeds.enabled=true;">Enable</option>		
+		<option value="BAPI.config().minbeds={}; BAPI.config().minbeds.enabled=false;">Disable</option>
+		<option value="BAPI.config().minbeds={}; BAPI.config().minbeds.enabled=true;">Enable</option>		
 	    </select>
 	</td>	
 </tr>
