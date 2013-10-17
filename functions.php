@@ -80,15 +80,6 @@
 		header('Cache-Control: public');
 		//header( 'Expires: Sat, 26 Jul 1997 05:00:00 GMT' );
 		
-		// do some prelim stuff
-		// ensure that searchmodes exists
-		echo 'if (BAPI.config().searchmodes>=0) { BAPI.config().searchmodes = {} };'; echo "\r\n";
-		echo 'if (BAPI.isempty(BAPI.config().searchmodes.listview)) { BAPI.config().searchmodes.listview=true; }'; echo "\r\n";
-		echo 'if (BAPI.isempty(BAPI.config().searchmodes.photoview)) { BAPI.config().searchmodes.photoview=true; }'; echo "\r\n";
-		echo 'if (BAPI.isempty(BAPI.config().searchmodes.widephotoview)) { BAPI.config().searchmodes.widephotoview=false; }'; echo "\r\n";
-		echo 'if (BAPI.isempty(BAPI.config().searchmodes.mapview)) { BAPI.config().searchmodes.mapview=false; }'; echo "\r\n";
-		echo 'if (BAPI.isempty(BAPI.config().searchmodes.hotelview)) { BAPI.config().searchmodes.hotelview=false; }'; echo "\r\n";
-		
 		global $bapi_all_options;
 		$sitesettings = $bapi_all_options['bapi_sitesettings'];
 		$array = json_decode($sitesettings, TRUE);
