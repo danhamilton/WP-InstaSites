@@ -192,7 +192,7 @@
 	}
 
 	function getbapiuijsurl() {
-		return getbapiurl() . "/ws/js/bapi.ui.js"
+		return getbapiurl() . "/ws/js/bapi.ui.js";
 	}
 	
 	function getbapiapikey() {
