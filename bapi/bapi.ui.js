@@ -1741,18 +1741,18 @@ function loadFormFromSession(s) {
 	$('.sessioncheckin').val(s.scheckin);
 	$('.sessioncheckout').val(s.scheckout);
 	$('.sessionlos').val(s.los);
-	$('.sessionadultsmin').val(s.adults.min);
-	$('.sessionchildrenmin').val(s.children.min);
 	$('.sessioncategory').val(s.category);
 	$('.sessiondevid').val(s.dev);
-	$('.sessionsleepsmin').val(s.sleeps.min);
-	$('.sessionbedsmin').val(s.beds.min);
-	$('.sessionbathsmin').val(s.baths.min);
 	$('.sessionlocation').val(s.location);
-	$('.sessionratemin').val(s.rate.min);
-	$('.sessionroomsmin').val(s.rooms.min);
 	$('.sessionheadline').val(s.headline);
 	$('.sessionaltid').val(s.altid);
+	if (!BAPI.isempty(s.adults)) { $('.sessionadultsmin').val(s.adults.min); }
+	if (!BAPI.isempty(s.children)) { $('.sessionchildrenmin').val(s.children.min); }
+	if (!BAPI.isempty(s.sleeps)) { $('.sessionsleepsmin').val(s.sleeps.min); }
+	if (!BAPI.isempty(s.beds)) { $('.sessionbedsmin').val(s.beds.min); }
+	if (!BAPI.isempty(s.baths)) { $('.sessionbathsmin').val(s.baths.min); }
+	if (!BAPI.isempty(s.rate)) { $('.sessionratemin').val(s.rate.min); }
+	if (!BAPI.isempty(s.rooms)) { $('.sessionroomsmin').val(s.rooms.min); }	
 }
 
 function saveFormToSession(ctl, options) {

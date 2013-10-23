@@ -191,6 +191,10 @@
 		return getbapiurl() . "/js/bapi.js?apikey=" . $apiKey;
 	}
 
+	function getbapiuijsurl() {
+		return getbapiurl() . "/ws/js/bapi.ui.js"
+	}
+	
 	function getbapiapikey() {
 		global $bapi_all_options;
 		return $bapi_all_options['api_key'];	
@@ -263,7 +267,7 @@ window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", su
 <script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/pickadate.legacy.min.js', __FILE__)) ?>" ></script>			
 <![endif]-->
 <script type="text/javascript" src="<?= getbapijsurl($apiKey) ?>"></script>
-<script type="text/javascript" src="<?= get_relative(plugins_url('/bapi/bapi.ui.js', __FILE__)) ?>" ></script>		
+<script type="text/javascript" src="<?= getbapiuijsurl() ?>" ></script>		
 <script type="text/javascript" src="/bapi.textdata.js" ></script>
 <script type="text/javascript" src="/bapi.templates.js" ></script>
 <?php if (!empty($sitesettings)) { ?>
