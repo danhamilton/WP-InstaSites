@@ -94,8 +94,8 @@ jQuery(document).ready(function () {
 <tr valign="top">
 	<td scope="row">Show unavailable units:</td>
 	<td><select name="showunavailunits" id="showunavailunits">		
-		<option value="BAPI.config().restrictavail=true;">Disable</option>
-		<option value="BAPI.config().restrictavail=false;">Enable</option>
+		<option value="BAPI.config().restrictavail=true;">Show available units</option>
+		<option value="BAPI.config().restrictavail=false;">Do not show unavailable units</option>
 	    </select>
 	</td>	
 </tr>
