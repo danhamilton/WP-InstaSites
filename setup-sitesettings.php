@@ -93,9 +93,9 @@ jQuery(document).ready(function () {
 <table class="form-table">
 <tr valign="top">
 	<td scope="row">Show unavailable units:</td>
-	<td><select name="showunavailunits" id="showunavailunits">
-		<option value="BAPI.config().restrictavail=false;">Disable</option>
-		<option value="BAPI.config().restrictavail=true;">Enable</option>		
+	<td><select name="showunavailunits" id="showunavailunits">		
+		<option value="BAPI.config().restrictavail=true;">Disable</option>
+		<option value="BAPI.config().restrictavail=false;">Enable</option>
 	    </select>
 	</td>	
 </tr>
