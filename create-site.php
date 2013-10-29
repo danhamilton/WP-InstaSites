@@ -20,7 +20,18 @@ function bapi_create_site(){
 	$cf_origin = str_replace('http://','',$siteurl);
 	$cf = create_cf_distro($cf_origin,$cf_url);
 	if($cf==false){
-		$cf = 'Error Creating CloudFront Distribution - Contact Support';
+		$cf = 'Error Creating CloudFront Distribution';
+		
+		header('Content-Type: application/javascript');	
+		$new_site = array(
+			"status" => "error",
+			"data" => array(
+				"errors" => array("cloudfront_distrib" => $cf),
+				"error_data" => ""
+			)
+		);
+		echo json_encode($new_site);
+		exit();
 	}
 	$meta = array('api_key' => $apikey, 'bapi_secureurl' => $prefix.'.imbookingsecure.com', 'bapi_site_cdn_domain' => $liveurl, 'bapi_cloudfronturl' => $cf);
 	//$siteurl = $prefix.'.imbookingsecure.com';

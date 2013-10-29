@@ -13,7 +13,7 @@ function create_cf_distro($origin,$cname){
 	$result = $client->createDistribution(array(
 		'Aliases' => array('Quantity' => 1, 'Items' => array($cname)),
 		'CacheBehaviors' => array('Quantity' => 0),
-		'Comment' => 'Testing... 123',
+		'Comment' => 'InstaSite Signup',
 		'Enabled' => true,
 		'CallerReference' => 'InstaSites-'.$origin,
 		'DefaultCacheBehavior' => array(

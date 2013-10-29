@@ -33,7 +33,7 @@
 
 	function urlHandler_bapidefaultpages() {
 		$url = get_relative($_SERVER['REQUEST_URI']);
-		//echo $_SERVER['QUERY_STRING']; exit();
+		//echo $_SERVER['REQUEST_URI']; exit();
 		if (strtolower($url) != "/bapi.init")
 			return;
 			
