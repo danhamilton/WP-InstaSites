@@ -270,7 +270,7 @@ window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", su
 <script type="text/javascript" src="<?= getbapiuijsurl() ?>" ></script>		
 <script type="text/javascript" src="/bapi.textdata.js" ></script>
 <script type="text/javascript" src="/bapi.templates.js" ></script>
-<?php if (!empty($sitesettings)) { ?>
+<?php if (!empty($sitesettings) && $sitesettings!='') { ?>
 <script type="text/javascript" src="/bapi.config.js" ></script>
 <?php } ?>
 <script type="text/javascript">		
