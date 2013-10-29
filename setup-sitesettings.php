@@ -185,10 +185,10 @@ jQuery(document).ready(function () {
 	    </select>
 	</td>	
 </tr>
-<tr valign="top">
+<tr valign="top" style="display:none">
 	<td scope="row">Sleeps Search (Exact):</td>
 	<td><select name="sleepsearch" id="sleepsearch">
-		<option value="BAPI.config().sleeps.enabled=false;">Disable</option>
+		<option value="BAPI.config().sleeps.enabled=false;" selected>Disable</option>
 		<option value="BAPI.config().sleeps.enabled=true;">Enable</option>		
 	    </select>
 	</td>	
@@ -201,10 +201,10 @@ jQuery(document).ready(function () {
 	    </select>
 	</td>	
 </tr>
-<tr valign="top">
+<tr valign="top" style="display:none">
 	<td scope="row">Bedroom Search (Exact):</td>
 	<td><select name="bedsearch" id="bedsearch">
-		<option value="BAPI.config().beds.enabled=false;">Disable</option>
+		<option value="BAPI.config().beds.enabled=false;" selected>Disable</option>
 		<option value="BAPI.config().beds.enabled=true;">Enable</option>		
 	    </select>
 	</td>	
