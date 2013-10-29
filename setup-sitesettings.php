@@ -92,10 +92,10 @@ jQuery(document).ready(function () {
 <h3>Search Result Settings</h3>
 <table class="form-table">
 <tr valign="top">
-	<td scope="row">Show unavailable units:</td>
+	<td scope="row">Availability Filtering:</td>
 	<td><select name="showunavailunits" id="showunavailunits">		
-		<option value="BAPI.config().restrictavail=true;">Show available units</option>
-		<option value="BAPI.config().restrictavail=false;">Do not show unavailable units</option>
+		<option value="BAPI.config().restrictavail=true;">Hide unavailable units</option>
+		<option value="BAPI.config().restrictavail=false;">Show unavailable units</option>
 	    </select>
 	</td>	
 </tr>
