@@ -361,7 +361,7 @@ window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", su
 
 	function get_home_url_cdn( $blog_id = null, $path = '', $scheme = null ) {	
 		$cdn_url = get_option('home');
-		if(get_option('bapi_site_cdn_domain')&&!(is_admin()||is_super_admin())&&(strpos($_SERVER['HTTP_HOST'],'imbookingsecure.com') == false)&&(strpos($_SERVER['HTTP_HOST'],'lodgingcloud.com') == false)){
+		if(get_option('bapi_site_cdn_domain')&&!(is_admin()||is_super_admin())){
 			$cdn_url = get_option('bapi_site_cdn_domain');
 		}
 		$home_url = str_replace(get_option('home'),$cdn_url,$path);
