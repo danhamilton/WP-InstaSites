@@ -59,6 +59,7 @@ function google_sitemap() {
   
   // now output the pages from bapi seo data
 	global $bapisync;
+	bapi_wp_site_options();
 	foreach ($bapisync->seodata as $seo) {											
 		if (!empty($seo["entity"]) && !empty($seo["pkid"])) {
 			$turl = BAPISync::cleanurl($seo["DetailURL"]);				
