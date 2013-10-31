@@ -7,6 +7,10 @@ function bapi_create_site(){
 	
 	$prefix = $_POST['siteprefix'];
 	$sname = $_POST['sitename'];
+	$tagline = '';
+	if(isset($_POST['tagline'])&&!empty($_POST['tagline'])){
+		$tagline = $_POST['tagline'];
+	}
 	$apikey = $_POST['apikey'];
 	$username = $_POST['username'];
 	$password = $_POST['password'];
@@ -33,7 +37,7 @@ function bapi_create_site(){
 		echo json_encode($new_site);
 		exit();
 	}
-	$meta = array('api_key' => $apikey, 'bapi_secureurl' => $prefix.'.imbookingsecure.com', 'bapi_site_cdn_domain' => $liveurl, 'bapi_cloudfronturl' => $cf);
+	$meta = array('api_key' => $apikey, 'bapi_secureurl' => $prefix.'.imbookingsecure.com', 'bapi_site_cdn_domain' => $liveurl, 'bapi_cloudfronturl' => $cf, 'blogdescription' => $tagline);
 	//$siteurl = $prefix.'.imbookingsecure.com';
 	
 	$u = username_exists($username);
@@ -56,21 +60,9 @@ function bapi_create_site(){
 			//Initialize menu and pages
 			$path = '/bapi.init?p=1';
 			$url = get_site_url().$path;
-			/*$fields = array();
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL,get_site_url().$path);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_POST, true);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
-			curl_setopt($ch, CURLOPT_REFERER, get_site_url().'/wp-admin/admin.php'); 
-			$server_output = curl_exec ($ch);
-			curl_close ($ch);*/
-			
-			//$server_output = file_get_contents(get_site_url());
 			$server_output = file_get_contents($url);
 			
-			//echo $s; exit();
-			//header('Location: http://'.$siteurl.'/wp-admin/admin.php?page=bookt-api/setup-sync.php');
+			//Provide response
 			header('Content-Type: application/javascript');	
 			$new_site = array(
 				"status" => "success",
@@ -90,6 +82,7 @@ function bapi_create_site(){
 				"data" => $s
 			);
 			echo json_encode($new_site);
+			exit();
 		}
 	}
 	else{
@@ -102,6 +95,7 @@ function bapi_create_site(){
 			)
 		);
 		echo json_encode($new_site);
+		exit();
 	}
 	exit();
 }

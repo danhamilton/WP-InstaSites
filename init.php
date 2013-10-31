@@ -36,8 +36,6 @@
 		//echo $_SERVER['REQUEST_URI']; exit();
 		if (strtolower($url) != "/bapi.init")
 			return;
-			
-		wp_authenticate(BAPI_SUPER_ADMIN,BAPI_SUPER_ADMIN_PW);
 		
 		$menuname = "Main Navigation Menu";
 		$menu_id = initmenu($menuname);

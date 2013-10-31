@@ -491,6 +491,9 @@ window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", su
 		//print_r($menu);
 		if(count($menu) == 0){
 			//Initialize menu and pages
+			if(!(is_admin()||is_super_admin())){
+				wp_die('<h3>Site Configuration Incomplete</h3>Please <a href="/wp-login.php?redirect_to='.urlencode(get_site_url()).'">sign-in to the dashboard</a> to complete setup','Site Configuration Incomplete');
+			}
 			$path = '/bapi.init?mode=initial-setup';
 			$url = get_site_url().$path;
 			//$server_output = file_get_contents($url);
