@@ -8,13 +8,13 @@
 <input type="text" class="quicksearch" style="display:none" data-field="restrictavail" value="{{#config.restrictavail}}1{{/config.restrictavail}}{{^config.restrictavail}}0{{/config.restrictavail}}" />
 {{#config.checkin.enabled}}
 <div class="category-block">
-	<input type="text" class="span12 txtb quicksearch sessioncheckin datepickercheckin" data-field="scheckin" data-value="{{session.searchparams.scheckin}}" placeholder="{{textdata.Check-In}}" />
+	<input type="text" class="span12 txtb quicksearch sessioncheckin datepickercheckin" data-field="scheckin" placeholder="{{textdata.Check-In}}" />
 </div>
 {{/config.checkin.enabled}}
 {{#config.checkin.enabled}}
 {{#config.checkout.enabled}}
 <div class="category-block">
-	<input type="text" class="span12 txtb quicksearch sessioncheckout datepickercheckout" data-field="scheckout" data-value="{{session.searchparams.scheckout}}" placeholder="{{textdata.Check-Out}}" />
+	<input type="text" class="span12 txtb quicksearch sessioncheckout datepickercheckout" data-field="scheckout" value="{{session.searchparams.scheckout}}" placeholder="{{textdata.Check-Out}}" />
 </div>
 {{/config.checkout.enabled}}
 {{#config.los.enabled}}
@@ -187,12 +187,12 @@
 	
 <div class="span6">
 <label>{{textdata.Check-In}}</label>
-<input class="span12 quicksearch datepickercheckin" type="text" placeholder="{{textdata.Check-In}}" value="{{session.searchparams.scheckin}}" data-field="scheckin" data-value="{{session.searchparams.scheckin}}" required>
+<input class="span12 quicksearch datepickercheckin" type="text" placeholder="{{textdata.Check-In}}" value="{{session.searchparams.scheckin}}" data-field="scheckin" required>
 </div>
 
 <div class="span6">
 <label>{{textdata.Check-Out}}</label>
-<input class="span12 quicksearch datepickercheckout" type="text" placeholder="{{textdata.Check-Out}}" value="{{session.searchparams.scheckout}}" data-field="scheckout" data-value="{{session.searchparams.scheckout}}" required>
+<input class="span12 quicksearch datepickercheckout" type="text" placeholder="{{textdata.Check-Out}}" value="{{session.searchparams.scheckout}}" data-field="scheckout" required>
 <input style="display:none" class="quicksearch" type="text" value="" data-field="los">
 </div>
 
@@ -240,7 +240,7 @@
 
 {{#config.checkout.enabled}}
 <div class="category-block">
-	<input type="text" class="span12 txtb quicksearch sessioncheckout datepickercheckout" data-field="scheckout" data-value="{{session.searchparams.scheckout}}" />
+	<input type="text" class="span12 txtb quicksearch sessioncheckout datepickercheckout" data-field="scheckout" />
 </div>
 {{/config.checkout.enabled}}
 {{#config.los.enabled}}
@@ -1669,11 +1669,11 @@
     <div class="row-fluid">
 		<div class="span6">
 			<label>{{textdata.Check-In}}</label>
-			<input class="span12 revisedates datepickercheckin" type="text" placeholder="{{textdata.Check-In}}" value="{{session.searchparams.scheckin}}" data-field="scheckin" data-value="{{session.searchparams.scheckin}}" required>
+			<input class="span12 revisedates datepickercheckin" type="text" placeholder="{{textdata.Check-In}}" value="{{session.searchparams.scheckin}}" data-field="scheckin" required>
 		</div>
 		<div class="span6">
 			<label>{{textdata.Check-Out}}</label>
-			<input class="span12 revisedates datepickercheckout" type="text" placeholder="{{textdata.Check-Out}}" value="{{session.searchparams.scheckout}}" data-field="scheckout" data-value="{{session.searchparams.scheckout}}" required>	  
+			<input class="span12 revisedates datepickercheckout" type="text" placeholder="{{textdata.Check-Out}}" value="{{session.searchparams.scheckout}}" data-field="scheckout" required>	  
 		</div>
 	</div>
 	<div class="row-fluid">
