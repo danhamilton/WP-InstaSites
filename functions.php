@@ -281,7 +281,7 @@ window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", su
 	<?php } ?>
 	BAPI.init();
 	BAPI.UI.jsroot = '<?= plugins_url("/", __FILE__) ?>'
-	$(document).ready(function () {
+	$(window).load(function(){
 		BAPI.UI.init();
 	});    
 </script>
