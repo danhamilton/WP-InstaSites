@@ -259,6 +259,7 @@
 		
 		$qs = $_SERVER['QUERY_STRING'];
 		if(strtolower($qs) == 'mode=initial-setup'){
+			switch_theme('instatheme01');
 			bapi_wp_site_options();
 			$blog_url = get_site_url();
 			header("Location: $blog_url");
