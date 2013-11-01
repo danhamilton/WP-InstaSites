@@ -541,7 +541,7 @@
 		<div id="slider" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "sync": "#carousel" }'>
 		<ul class="slides">
 		{{#Images}}
-			<li><img alt="{{Caption}}" title="Open Slideshow" src="{{&MediumURL}}" />
+			<li><img alt="{{Caption}}" title="Open Slideshow" src="/wp-content/plugins/bookt-api/img/loading.gif" data-src="{{&MediumURL}}" />
 			{{#Caption}}
 			<p class="flex-caption">{{Caption}}</p></li>
 			{{/Caption}}
@@ -551,7 +551,7 @@
 		<div id="carousel" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "itemWidth": 50, "itemMargin": 10, "asNavFor": "#slider" }'>
 		<ul class="slides">
 		{{#Images}}
-			<li><img alt="" src="{{&ThumbnailURL}}" /></li>
+			<li><img alt="" src="/wp-content/plugins/bookt-api/img/loading.gif" data-src="{{&ThumbnailURL}}" /></li>
 		{{/Images}}                   
 		</ul>
 		</div>
@@ -666,7 +666,7 @@
 					<a class="poi-map-item mapmarker-prop" href="#">Property</a>
 					<div class="info-html">
 						<div class="marker-infowindow"> 		
-							<span class="prop-image pull-left"><img src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>
+							<span class="prop-image pull-left"><img src="/wp-content/plugins/bookt-api/img/loading.gif" data-src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>
 							<span class="prop-location pull-left">
 								<span>
 								{{#ContextData.SEO.Keyword}}<a target="_blank" href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
@@ -694,7 +694,7 @@
 					<a class="poi-map-item mapmarker-{{ContextData.ItemIndex}}" href="#">{{ContextData.ItemIndex}}</a>
 					<div class="info-html">
 						<div class="marker-infowindow"> 
-							<span class="prop-image pull-left"><img src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>					
+							<span class="prop-image pull-left"><img src="/wp-content/plugins/bookt-api/img/loading.gif" data-src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>					
 							<span class="prop-location pull-left">
 								<span>
 								{{#ContextData.SEO.Keyword}}<a target="_blank" href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
