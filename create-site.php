@@ -58,9 +58,9 @@ function bapi_create_site(){
 			bapi_wp_site_options();
 			
 			//Initialize menu and pages
-			$path = '/bapi.init?p=1';
-			$url = get_site_url().$path;
-			$server_output = file_get_contents($url);
+			//$path = '/bapi.init?p=1';
+			//$url = get_site_url().$path;
+			//$server_output = file_get_contents($url);
 			
 			//Provide response
 			header('Content-Type: application/javascript');	
