@@ -36,8 +36,6 @@
 		//echo $_SERVER['REQUEST_URI']; exit();
 		if (strtolower($url) != "/bapi.init")
 			return;
-			
-		wp_authenticate(BAPI_SUPER_ADMIN,BAPI_SUPER_ADMIN_PW);
 		
 		$menuname = "Main Navigation Menu";
 		$menu_id = initmenu($menuname);
@@ -261,6 +259,7 @@
 		
 		$qs = $_SERVER['QUERY_STRING'];
 		if(strtolower($qs) == 'mode=initial-setup'){
+			switch_theme('instatheme01');
 			bapi_wp_site_options();
 			$blog_url = get_site_url();
 			header("Location: $blog_url");
