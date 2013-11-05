@@ -94,7 +94,7 @@ function bapi_settings_page() {
 ?>
 
 <link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/jquery.ui/jquery-ui-1.10.2.min.css', __FILE__) ?>" />
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
 <script type="text/javascript">
 	jQuery(document).ready(function($){
 		$('#viewraw-soldata').click(function() { $("#dlg-soldata").dialog({ width: 540});});	
