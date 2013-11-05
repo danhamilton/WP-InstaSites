@@ -30,6 +30,10 @@ function create_cf_distro($origin,$cname){
 				'Cookies' => array(
 					'Forward' => 'none'
 				)
+			),
+			'TrustedSigners' => array(
+				'Enabled' => false,
+				'Quantity' => 0
 			)
 		),
 		'DefaultRootObject' => '',
