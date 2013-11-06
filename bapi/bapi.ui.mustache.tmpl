@@ -2382,6 +2382,21 @@
 </script>
 <script id="tmpl-booking-makepayment-pay" type="text/html">
 {{#result}}
+<legend>4. {{textdata.Accept Terms and Conditions}}</legend>
+<div class="control-group">
+	<p style="display:none">{{config.rentalpolicysummary}}</p>
+	<div class="controls-rows">
+		<label class="checkbox span6">	
+			<small>
+			<em>
+				<input type="checkbox" class="required checkbox">{{textdata.I have read and accept the terms and conditions}}:</input>&nbsp;
+				<a target="_blank" href="/rentalpolicy">{{textdata.Rental Policy}}</a>&nbsp;
+				<a target="_blank" href="/termsofuse">{{textdata.Terms of Service}}</a>
+			</em>
+			</small>		
+		</label>
+	</div>
+</div>
 <div class="control-group">
 	<div class="controls-rows">
 		<div class="btn-book-header span6">
