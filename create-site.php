@@ -37,7 +37,7 @@ function bapi_create_site(){
 		echo json_encode($new_site);
 		exit();
 	}
-	$meta = array('api_key' => $apikey, 'bapi_secureurl' => $prefix.'.imbookingsecure.com', 'bapi_site_cdn_domain' => $liveurl, 'bapi_cloudfronturl' => $cf, 'blogdescription' => $tagline);
+	$meta = array('api_key' => $apikey, 'bapi_secureurl' => $prefix.'.imbookingsecure.com', 'bapi_site_cdn_domain' => $liveurl, 'bapi_cloudfronturl' => $cf, 'blogdescription' => $tagline, 'bapi_first_look' => 1);
 	//$siteurl = $prefix.'.imbookingsecure.com';
 	
 	$u = username_exists($username);

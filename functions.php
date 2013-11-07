@@ -28,6 +28,9 @@
 		if(!isset($bapi_all_options['bapi_baseurl'])){
 			$bapi_all_options['bapi_baseurl'] = 'connect.bookt.com';
 		}
+		if(!isset($bapi_all_options['bapi_first_look'])){
+			$bapi_all_options['bapi_first_look'] = 0;
+		}
 		//print_r($bapi_all_options); exit();
 	}
 	
@@ -476,6 +479,7 @@ window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", su
 	}
 	
 	function bapi_setup_default_pages() {
+		global $bapi_all_options;
 		$url = get_relative($_SERVER['REQUEST_URI']);
 		//echo $url; exit();
 		if (strtolower($url) == "/bapi.init")
@@ -489,7 +493,7 @@ window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", su
 		//print_r($menu);
 		if(count($menu) == 0){
 			//Initialize menu and pages
-			if(!(is_admin()||is_super_admin())){
+			if($bapi_all_options['bapi_first_look']==1){
 				wp_die('<h3>Site Configuration Incomplete</h3>Please <a href="/wp-login.php?redirect_to='.urlencode(get_site_url()).'">sign-in to the dashboard</a> to complete setup','Site Configuration Incomplete');
 			}
 			$path = '/bapi.init?mode=initial-setup';
@@ -498,5 +502,9 @@ window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", su
 			header("Location: $url");
 			exit();
 		}
+	}
+	
+	function bapi_reset_first_look(){
+		update_option( 'bapi_first_look', 0 );
 	}
 ?>

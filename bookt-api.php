@@ -49,7 +49,7 @@ add_action('wp_head','getconfig');
 add_action('wp_head','bapi_getmeta',1);
 add_action('wp_head','display_global_header',10);
 add_action('init','bapi_create_site',1);  //Hook to add new sites
-add_action('init','bapi_setup_default_pages',1);
+add_action('init','bapi_setup_default_pages',5);
 add_action('init','urlHandler_bapidefaultpages',1);
 add_action('init','urlHandler_securepages',1);  //Hook to force redirect to secure pages
 add_action('init','bapi_wp_site_options',1);  //Preload Site Data to help reduce DB usage
@@ -62,6 +62,7 @@ add_action('init','urlHandler_bapiconfig',4);	// handler for /bapi.config.js
 add_action('init','urlHandler_sitelist',4);	// handler for /sitelist (possible warmup list)
 add_action('init','disable_kses_content',20);
 add_action('template_redirect', 'google_sitemap'); // sitemap handler
+add_action('wp_login','bapi_reset_first_look');
 
 // create custom plugin settings menu
 add_action('admin_menu', 'bapi_create_menu');

@@ -260,8 +260,13 @@
 		$qs = $_SERVER['QUERY_STRING'];
 		if(strtolower($qs) == 'mode=initial-setup'){
 			switch_theme('instatheme01');
+			$toptions = get_option('instaparent_theme_options');
+			$toptions['presetStyle'] = 'style01';
+			update_option('instaparent_theme_options',$toptions);
+			setSlideshowImages();
 			bapi_wp_site_options();
 			$blog_url = get_site_url();
+			update_option( 'bapi_first_look', 0 );
 			header("Location: $blog_url");
 		}
 		//return;
