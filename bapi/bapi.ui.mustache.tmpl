@@ -581,7 +581,9 @@
 	<div class="tabbable">
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="#tab1" data-toggle="tab">{{textdata.General}}</a></li>
+		{{#HideAvailability}}
 		<li><a href="#tab2" data-toggle="tab">{{textdata.Rates & Availability}}</a></li>
+		{{/HideAvailability}}
 		<li><a href="#tab3" data-toggle="tab">{{textdata.Amenities}}</a></li>
 		<li><a href="#tab4" id="tabs4" data-toggle="tab">{{textdata.Attractions}}</a></li>
 		{{#config.hasreviews}}		
@@ -617,6 +619,7 @@
 		</div>
 		</div>
 		</div>
+		{{#HideAvailability}}
 		<div class="tab-pane" id="tab2">					
 		<div class="row-fluid">
 		<div class="span12 box-sides">		
@@ -626,11 +629,11 @@
 		<div class="bapi-ratetable"></div>		
 		</div>
 		</div>
-		</div>		
+		</div>
+		{{/HideAvailability}}
 		<div class="tab-pane" id="tab3">			
 		<div class="row-fluid">
 		<div class="span12 box-sides">
-		
 		<h3>{{textdata.Amenities}}</h3>
 		{{#Amenities}}		
 		<ul class="amenities-list unstyled clearfix">
@@ -641,10 +644,9 @@
 		</ul>
 		<div class="clearfix"></div>
 		{{/Amenities}}
-		
 		</div>
 		</div>
-		</div>		
+		</div>
 		<div class="tab-pane" id="tab4">			
 		<div class="row-fluid">
 		<div class="span12 box-sides">
