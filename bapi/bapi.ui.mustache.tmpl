@@ -581,7 +581,7 @@
 	<div class="tabbable">
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="#tab1" data-toggle="tab">{{textdata.General}}</a></li>
-		{{#HideAvailability}}
+		{{^HideAvailability}}
 		<li><a href="#tab2" data-toggle="tab">{{textdata.Rates & Availability}}</a></li>
 		{{/HideAvailability}}
 		<li><a href="#tab3" data-toggle="tab">{{textdata.Amenities}}</a></li>
@@ -619,7 +619,7 @@
 		</div>
 		</div>
 		</div>
-		{{#HideAvailability}}
+		{{^HideAvailability}}
 		<div class="tab-pane" id="tab2">					
 		<div class="row-fluid">
 		<div class="span12 box-sides">		
