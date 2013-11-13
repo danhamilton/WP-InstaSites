@@ -499,6 +499,7 @@ window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", su
 			$path = '/bapi.init?mode=initial-setup';
 			$url = get_site_url().$path;
 			//$server_output = file_get_contents($url);
+			header("HTTP/1.1 307 Temporary Redirect");
 			header("Location: $url");
 			exit();
 		}

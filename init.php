@@ -267,7 +267,9 @@
 			bapi_wp_site_options();
 			$blog_url = get_site_url();
 			update_option( 'bapi_first_look', 0 );
+			header("HTTP/1.1 307 Temporary Redirect");
 			header("Location: $blog_url");
+			exit();
 		}
 		//return;
 		exit();
