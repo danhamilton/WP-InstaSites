@@ -508,4 +508,28 @@ window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", su
 	function bapi_reset_first_look(){
 		update_option( 'bapi_first_look', 0 );
 	}
+	
+	function bapi_login_handler(){
+		$url = get_relative($_SERVER['REQUEST_URI']);
+		//if (strtolower($url) != "/bapi.login"){
+		if (strpos($_SERVER['REQUEST_URI'],'bapi.login')===false){
+			return;
+		}
+		
+		$username = $_REQUEST['username'];
+		$password = $_REQUEST['password'];
+		$redir = $_REQUEST['redir'];
+		
+		$creds = array();
+		$creds['user_login'] = $username;
+		$creds['user_password'] = $password;
+		$creds['remember'] = true;
+		$user = wp_signon( $creds, false );
+		if ( is_wp_error($user) )
+			wp_die($user->get_error_message());
+			
+		header("HTTP/1.1 307 Temporary Redirect");
+		header("Location: $redir");
+		exit();
+	}
 ?>

@@ -165,24 +165,45 @@
 			// ERROR: What should we do?
 		}
 		$post = get_page_by_path($_SERVER['REDIRECT_URL']);
-		//print_r($post);
-		
-		// locate the SEO data stored in Bookt from the requested URL
-		$seo = $bapisync->getSEOFromUrl($_SERVER['REDIRECT_URL']);
-		if (!empty($seo) && (empty($seo["entity"]) || empty($seo["pkid"]))) {
-			$seo = null; // ignore seo info if it doesn't point to a valid entity
-		}		
+		if(empty($_SERVER['REDIRECT_URL'])){
+			$home_id = get_option('page_on_front');
+			$post = get_page($home_id);
+		}	
 		// parse out the meta attributes for the current post
 		$page_exists_in_wp = !empty($post);				
 		$meta = $page_exists_in_wp ? get_post_custom($post->ID) : null;
 		$last_update = !empty($meta) ? $meta['bapi_last_update'][0] : null;
+		$staticpagekey = !empty($meta) ? $meta['bapi_page_id'][0] : null;
 		$pagekey = !empty($meta) ? $meta['bapikey'][0] : null;
 		$meta_keywords = !empty($meta) ? $meta['bapi_meta_keywords'][0] : null;
-		$meta_description = !empty($meta) ? $meta['bapi_meta_description'][0] : null;			
+		$meta_description = !empty($meta) ? $meta['bapi_meta_description'][0] : null;	
+		
+		// locate the SEO data stored in Bookt from the requested URL
+		$seo = $bapisync->getSEOFromUrl($_SERVER['REDIRECT_URL']);
+		if (!empty($seo) && (empty($seo["entity"]) || empty($seo["pkid"])) && empty($staticpagekey)) {
+			$seo = null; // ignore seo info if it doesn't point to a valid entity
+		}			
 			
 		$do_page_update = false;
 		$do_meta_update = false;
 		$changes = "";
+		
+		if($page_exists_in_wp && !empty($staticpagekey)){
+			if(empty($seo) && (defined(BAPI_BASEURL) && (BAPI_BASEURL == 'connect.bookt.biz'))){
+				$seo = array();
+				$seo["MetaDescrip"]	= "sample meta description";
+				$seo["MetaKeywords"] = "sample meta keywords";
+			}
+			if(!empty($seo)){
+				// update the meta tags		
+				if(empty($meta['bapi_last_update'])||((time()-$meta['bapi_last_update'][0])>3600)){			
+					does_meta_exist("bapi_last_update", $meta) ? update_post_meta($post->ID, 'bapi_last_update', time()) : add_post_meta($post->ID, 'bapi_last_update', time(), true);
+					does_meta_exist("bapi_meta_description", $meta) ? update_post_meta($post->ID, 'bapi_meta_description', $seo["MetaDescrip"]) : add_post_meta($post->ID, 'bapi_meta_description', $seo["MetaDescrip"], true);
+					does_meta_exist("bapi_meta_keywords", $meta) ? update_post_meta($post->ID, 'bapi_meta_keywords', $seo["MetaKeywords"]) : add_post_meta($post->ID, 'bapi_meta_keywords', $seo["MetaKeywords"], true);
+				}
+			}
+			return true;
+		}
 		
 		//catch bad bapikey
 		if ($page_exists_in_wp && !empty($pagekey)){
@@ -312,10 +333,12 @@
 		if(empty($data) || empty($lastmod) || ((time()-$lastmod)>3600) || $do_core_update) {					
 			$data = $bapi->getcontext(true,$syncdebugmode);
 			if (!empty($data)) {
+				$tagline = $data['SolutionTagline'];
 				$data = json_encode($data); // convert back to text
 				update_option('bapi_solutiondata',$data);
 				update_option('bapi_solutiondata_lastmod',time());
-			}					
+				update_option('blogdescription',$tagline);
+			}			
 		}	
 		
 		// check if we need to refresh seo data
