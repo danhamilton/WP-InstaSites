@@ -189,17 +189,14 @@
 		$changes = "";
 		
 		if($page_exists_in_wp && !empty($staticpagekey)){
-			if(empty($seo) && (defined(BAPI_BASEURL) && (BAPI_BASEURL == 'connect.bookt.biz'))){
-				$seo = array();
-				$seo["MetaDescrip"]	= "sample meta description";
-				$seo["MetaKeywords"] = "sample meta keywords";
-			}
-			if(!empty($seo)){
-				// update the meta tags		
-				if(empty($meta['bapi_last_update'])||((time()-$meta['bapi_last_update'][0])>3600)){			
-					does_meta_exist("bapi_last_update", $meta) ? update_post_meta($post->ID, 'bapi_last_update', time()) : add_post_meta($post->ID, 'bapi_last_update', time(), true);
-					does_meta_exist("bapi_meta_description", $meta) ? update_post_meta($post->ID, 'bapi_meta_description', $seo["MetaDescrip"]) : add_post_meta($post->ID, 'bapi_meta_description', $seo["MetaDescrip"], true);
-					does_meta_exist("bapi_meta_keywords", $meta) ? update_post_meta($post->ID, 'bapi_meta_keywords', $seo["MetaKeywords"]) : add_post_meta($post->ID, 'bapi_meta_keywords', $seo["MetaKeywords"], true);
+			// update the meta tags		
+			if(empty($meta['bapi_last_update'])||((time()-$meta['bapi_last_update'][0])>3600)){			
+				does_meta_exist("bapi_last_update", $meta) ? update_post_meta($post->ID, 'bapi_last_update', time()) : add_post_meta($post->ID, 'bapi_last_update', time(), true);
+				if(!empty($seo)){
+					if ($meta['bapi_meta_description'][0] != $seo["MetaDescrip"]) { update_post_meta($post->ID, 'bapi_meta_description', $seo["MetaDescrip"]); }
+					if ($meta['bapi_meta_keywords'][0] != $seo["MetaKeywords"]) { update_post_meta($post->ID, 'bapi_meta_keywords', $seo["MetaKeywords"]); }
+					//does_meta_exist("bapi_meta_description", $meta) ? update_post_meta($post->ID, 'bapi_meta_description', $seo["MetaDescrip"]) : add_post_meta($post->ID, 'bapi_meta_description', $seo["MetaDescrip"], true);
+					//does_meta_exist("bapi_meta_keywords", $meta) ? update_post_meta($post->ID, 'bapi_meta_keywords', $seo["MetaKeywords"]) : add_post_meta($post->ID, 'bapi_meta_keywords', $seo["MetaKeywords"], true);
 				}
 			}
 			return true;
