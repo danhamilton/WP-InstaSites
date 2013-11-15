@@ -59,7 +59,6 @@ function bapi_create_site(){
 		$meta['bapi_secureurl'] = $prefix.'.lodgingcloud.com';
 		$meta['bapi_baseurl'] = BAPI_BASEURL;
 	}
-	print_r($meta); exit();
 	//$siteurl = $prefix.'.imbookingsecure.com';
 	
 	$u = username_exists($username);
