@@ -11,7 +11,10 @@ function bapi_create_site(){
 	if(isset($_POST['tagline'])&&!empty($_POST['tagline'])){
 		$tagline = $_POST['tagline'];
 	}
-	$apikey = $_POST['apikey'];
+	$apikey = "";
+	if(isset($_POST['apikey'])&&!empty($_POST['apikey'])){
+		$apikey = $_POST['apikey'];
+	}
 	$username = $_POST['username'];
 	$password = $_POST['password'];
 	$domain = $_SERVER['SERVER_NAME'];
@@ -22,6 +25,20 @@ function bapi_create_site(){
 	}
 	$cf_url = str_replace('http://','',$liveurl);
 	$cf_origin = str_replace('http://','',$siteurl);
+	
+	if($apikey==""){
+		header('Content-Type: application/javascript');	
+		$new_site = array(
+			"status" => "error",
+			"data" => array(
+				"errors" => array("apikey_not_set" => "A valid API key is required."),
+				"error_data" => ""
+			)
+		);
+		echo json_encode($new_site);
+		exit();
+	}
+	
 	$cf = create_cf_distro($cf_origin,$cf_url);
 	if($cf==false){
 		$cf = 'Error Creating CloudFront Distribution';
