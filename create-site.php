@@ -16,6 +16,7 @@ function bapi_create_site(){
 			)
 		);
 		echo json_encode($new_site);
+		exit();
 	}
 	
 	$prefix = $_POST['siteprefix'];
