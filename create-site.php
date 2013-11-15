@@ -5,7 +5,7 @@ function bapi_create_site(){
 		return;
 	}
 	
-	if(isset($_POST['blogid'])&&$_POST['blogid']==0){
+	if(isset($_POST['blogid'])&&$_POST['blogid']!=0){
 		switch_to_blog($_POST['blogid']);
 		header('Content-Type: application/javascript');	
 		$new_site = array(
