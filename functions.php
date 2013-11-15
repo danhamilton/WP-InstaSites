@@ -510,6 +510,7 @@ window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", su
 	}
 	
 	function bapi_login_handler(){
+		header('Access-Control-Allow-Origin: *');
 		$url = get_relative($_SERVER['REQUEST_URI']);
 		//if (strtolower($url) != "/bapi.login"){
 		if (strpos($_SERVER['REQUEST_URI'],'bapi.login')===false){

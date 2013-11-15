@@ -32,6 +32,7 @@
 	}
 
 	function urlHandler_bapidefaultpages() {
+		header('Access-Control-Allow-Origin: *');
 		$url = get_relative($_SERVER['REQUEST_URI']);
 		//echo $_SERVER['REQUEST_URI']; exit();
 		if (strtolower($url) != "/bapi.init")
