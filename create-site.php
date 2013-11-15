@@ -55,10 +55,11 @@ function bapi_create_site(){
 		exit();
 	}
 	$meta = array('api_key' => $apikey, 'bapi_secureurl' => $prefix.'.imbookingsecure.com', 'bapi_site_cdn_domain' => $liveurl, 'bapi_cloudfronturl' => $cf, 'blogdescription' => $tagline, 'bapi_first_look' => 1);
-	if(defined(BAPI_BASEURL) && (BAPI_BASEURL == 'connect.bookt.biz')){
+	if(defined('BAPI_BASEURL') && (BAPI_BASEURL == 'connect.bookt.biz')){
 		$meta['bapi_secureurl'] = $prefix.'.lodgingcloud.com';
 		$meta['bapi_baseurl'] = BAPI_BASEURL;
 	}
+	print_r($meta); exit();
 	//$siteurl = $prefix.'.imbookingsecure.com';
 	
 	$u = username_exists($username);
