@@ -38,6 +38,7 @@
 		if (strtolower($url) != "/bapi.init")
 			return;
 		
+		header("Cache-Control: no-cache, must-revalidate");
 		$menuname = "Main Navigation Menu";
 		$menu_id = initmenu($menuname);
 		//echo $menu_id; //exit();
