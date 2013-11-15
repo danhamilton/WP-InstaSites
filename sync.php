@@ -331,10 +331,12 @@
 			$data = $bapi->getcontext(true,$syncdebugmode);
 			if (!empty($data)) {
 				$tagline = $data['SolutionTagline'];
+				$solName = $data['SolutionNameInformal'];
 				$data = json_encode($data); // convert back to text
 				update_option('bapi_solutiondata',$data);
 				update_option('bapi_solutiondata_lastmod',time());
 				update_option('blogdescription',$tagline);
+				update_option('blogname',$solName);
 			}			
 		}	
 		
