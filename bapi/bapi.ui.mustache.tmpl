@@ -1849,6 +1849,7 @@
 {{/Discounts.length}}
 {{#Deposits.length}}
 <div id="deposits-modal" class="item row-fluid">
+<h5>Deposits</h5>
 {{/Deposits.length}}
 {{#Deposits}}
 <p>{{{Notes}}} {{#Description}}<small class="charges-desc"><a data-toggle="collapse" data-target="#description{{RelatedToID}}">({{textdata.Description}})</a></small>{{/Description}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>{{#Description}}<div id="description{{RelatedToID}}" class="collapse">{{{Description}}}</div>{{/Description}}
