@@ -535,4 +535,13 @@ window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", su
 		header("Location: $redir");
 		exit();
 	}
+	
+	function bapi_no_follow(){
+		//Amazon CloudFront
+		if(empty($_SERVER['HTTP_REFERER']) || ($_SERVER['HTTP_REFERER']!="Amazon CloudFront")){
+			?>
+            <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+            <?php
+		}
+	}
 ?>
