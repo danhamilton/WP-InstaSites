@@ -1150,6 +1150,23 @@
   </div>
 </div>
 {{/result}}
+{{#site.office.ShowOnMap}}
+<div class="poi-map-location hide" data-id="{{site.solutionid}}" data-jmapping='{ "id": {{site.solutionid}}, "point": { "lng": {{site.office.Longitude}}, "lat": {{site.office.Latitude}} }, "category": "pinOffice}"}'>
+	  <a href="#" class="poi-map-item">{{site.solutionnameinformal}}</a>
+	<div class="info-html">
+	<div class="marker-infowindow"> 		
+		<span class="prop-image pull-left"><img style="max-height:175px; max-width:175px" src="{{&site.logo}}" alt="{{site.tagline}}"></span>
+		<span class="prop-location pull-left">
+			<span>
+			<a target="_blank" href="mailto:{{&site.email}}">
+			<b>{{site.solutionnameinformal}}</b></a><br/>
+			<b>{{textdata.Address}}: </b>{{&site.office.Address1}}
+			</span>
+		</span>
+	</div>
+    </div>
+</div>
+{{/site.office.ShowOnMap}}
 </div>
 <div class="clearfix"></div>
 {{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalcount}})</a></span></div>{{/islastpage}}
