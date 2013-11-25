@@ -48,6 +48,7 @@ add_action('template_redirect', 'do_ossdl_off_ob_start');
 add_action('wp_head','getconfig');
 add_action('wp_head','bapi_getmeta',1);
 add_action('wp_head','display_global_header',10);
+add_action('wp_head','bapi_no_follow',1);
 add_action('init','bapi_create_site',1);  //Hook to add new sites
 add_action('init','bapi_setup_default_pages',5);
 add_action('init','urlHandler_bapidefaultpages',1);

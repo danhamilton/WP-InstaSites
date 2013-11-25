@@ -1150,6 +1150,23 @@
   </div>
 </div>
 {{/result}}
+{{#site.office.ShowOnMap}}
+<div class="poi-map-location hide" data-id="{{site.solutionid}}" data-jmapping='{ "id": {{site.solutionid}}, "point": { "lng": {{site.office.Longitude}}, "lat": {{site.office.Latitude}} }, "category": "pinOffice}"}'>
+	  <a href="#" class="poi-map-item">{{site.solutionnameinformal}}</a>
+	<div class="info-html">
+	<div class="marker-infowindow"> 		
+		<span class="prop-image pull-left"><img style="max-height:175px; max-width:175px" src="{{&site.logo}}" alt="{{site.tagline}}"></span>
+		<span class="prop-location pull-left">
+			<span>
+			<a target="_blank" href="mailto:{{&site.email}}">
+			<b>{{site.solutionnameinformal}}</b></a><br/>
+			<b>{{textdata.Address}}: </b>{{&site.office.Address1}}
+			</span>
+		</span>
+	</div>
+    </div>
+</div>
+{{/site.office.ShowOnMap}}
 </div>
 <div class="clearfix"></div>
 {{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalcount}})</a></span></div>{{/islastpage}}
@@ -1726,7 +1743,7 @@
 {{#OptionalFees}}
 	<p>
 	{{#BoolField}}<input type="checkbox" class="bapi-optionalfee" {{#Quantity}}checked{{/Quantity}} data-rid="{{RelatedToID}}" data-reid="{{RelatedToEntityID}}" />{{/BoolField}}
-	{{^BoolField}}<input type="number" class="span2 bapi-optionalfee" min="{{MinQty}}" max="{{MaxQty}}" value="{{Quantity}}" data-rid="{{RelatedToID}}" data-reid="{{RelatedToEntityID}}" />{{/BoolField}}
+	{{^BoolField}}<input type="number" class="span2 bapi-optionalfee" {{#MinQty}}min="{{MinQty}}"{{/MinQty}}{{^MinQty}}min="0"{{/MinQty}} max="{{MaxQty}}" value="{{Quantity}}" data-rid="{{RelatedToID}}" data-reid="{{RelatedToEntityID}}" />{{/BoolField}}
 	{{{Notes}}}
 	<span class="pull-right">{{#SubTotal}}{{OptionalFeesTotal.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span>
 	</p>
@@ -1845,7 +1862,18 @@
 {{/Discounts}}
 {{#Discounts.length}}
 </div>
+<hr />
 {{/Discounts.length}}
+{{#Deposits.length}}
+<div id="deposits-modal" class="item row-fluid">
+<h5>{{textdata.Deposits}}</h5>
+{{/Deposits.length}}
+{{#Deposits}}
+<p>{{{Notes}}} {{#Description}}<small class="charges-desc"><a data-toggle="collapse" data-target="#description{{RelatedToID}}">({{textdata.Description}})</a></small>{{/Description}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>{{#Description}}<div id="description{{RelatedToID}}" class="collapse">{{{Description}}}</div>{{/Description}}
+{{/Deposits}}
+{{#Deposits.length}}
+</div>
+{{/Deposits.length}}
 </div>
 <div class="modal-footer">
 <button class="btn" data-dismiss="modal" aria-hidden="true">{{textdata.Close}}</button>                        
