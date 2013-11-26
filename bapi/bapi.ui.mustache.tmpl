@@ -963,6 +963,23 @@
 <span class="end"></span>
 </script>
 
+<script id="tmpl-developments-quickview" type="text/html">
+{{#result}}
+<div class="development-holder">
+	<div class="development-image">
+	<a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}">
+		<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" />	
+	</a>
+	</div>
+	<div class="development-description">
+		<a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}"><h4 class="developments-title">{{Name}}</h4></a>
+	<div class="development-location"><span class="type">{{Type}}</span>{{#Region}}, {{Region}}{{/Region}}{{#State}}, {{State}}{{/State}}</div><hr/>
+	<div class="developments-sum bapi-truncate" data-trunclen="100">{{&Summary}}</div>
+	</div>
+</div>
+{{/result}}
+</script>
+
 /*
 	Group: Market Areas
 */
