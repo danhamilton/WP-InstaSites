@@ -1628,13 +1628,13 @@
 	<header class="pagination-centered pd">
 		<h1>{{textdata.Fast Secure Online Booking}}</h1>
 		<p>
-			<strong>{{Headline}}</strong><span class="hidden-phone">&nbsp;-&nbsp;{{Type}}
+			<a href="{{&ContextData.SEO.DetailURL}}"><strong>{{Headline}}</strong></a><span class="hidden-phone">&nbsp;-&nbsp;{{Type}}
 			{{#Bedrooms}}&nbsp;/&nbsp;{{textdata.Beds}}&nbsp;{{Bedrooms}}{{/Bedrooms}}
 			{{#Bathrooms}}&nbsp;/&nbsp;{{textdata.Baths}}&nbsp;{{Bathrooms}}{{/Bathrooms}}
 			{{#Sleeps}}&nbsp;/&nbsp;{{textdata.Sleeps}}&nbsp;{{Sleeps}}{{/Sleeps}}</span>
 		</p>
 		<div class="booking-prop-img">
-			<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.OriginalURL}}" caption="{{PrimaryImage.Captions}}" />		
+			<a href="{{&ContextData.SEO.DetailURL}}"><img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.OriginalURL}}" caption="{{PrimaryImage.Captions}}" title="Back to the Property Detail Page" /></a>
 		</div>
 	</header>	
 	<div class="booking-page bordersolid">
