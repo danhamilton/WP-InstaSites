@@ -98,6 +98,7 @@
 			if($entity=='specials') { $t=BAPISync::getSolutionData(); return $t["Site"]["BaseSpecialURL"]; }
 			if($entity=='poi') { $t=BAPISync::getSolutionData(); return $t["Site"]["BasePOIURL"]; }
 			if($entity=='searches') { $t=BAPISync::getSolutionData(); return $t["Site"]["BasePropertyFinderURL"]; }
+			if($entity=='marketarea') { $t=BAPISync::getSolutionData(); $s=BAPISync::getSEOData(); return ''; }
 			return '/rentals/';
 		}
 		
@@ -164,6 +165,10 @@
 		if (empty($bapisync)) { 
 			// ERROR: What should we do?
 		}
+
+		$t=BAPISync::getSolutionData();
+		$maEnabled = $t['BizRules']['Has Market Area Landing Pages'];
+		
 		$post = get_page_by_path($_SERVER['REDIRECT_URL']);
 		if(empty($_SERVER['REDIRECT_URL'])){
 			$home_id = get_option('page_on_front');
@@ -180,13 +185,19 @@
 		
 		// locate the SEO data stored in Bookt from the requested URL
 		$seo = $bapisync->getSEOFromUrl($_SERVER['REDIRECT_URL']);
+		//print_r($seo);//exit();
 		if (!empty($seo) && (empty($seo["entity"]) || empty($seo["pkid"])) && empty($staticpagekey)) {
 			$seo = null; // ignore seo info if it doesn't point to a valid entity
 		}			
 			
 		$do_page_update = false;
 		$do_meta_update = false;
+		$do_market_update = false;
 		$changes = "";
+		
+		if(!empty($seo) && ($seo["entity"]=='property' || $seo["entity"]=='marketarea') && $maEnabled){
+			$do_market_update = true;
+		}
 		
 		if($page_exists_in_wp && !empty($staticpagekey)){
 			// update the meta tags		
@@ -243,7 +254,7 @@
 		}
 		// case 4: page does not exist in wp but exists in Bookt
 		else if (!$page_exists_in_wp && !empty($seo)) {
-			//print_r("case 4");
+			//print_r("case 4".$do_market_update);exit();
 			// Result-> Need to create the page
 			$changes = "create new page";
 			$tempPost = new stdClass();
@@ -256,7 +267,7 @@
 			$do_page_update = true;
 			$debugmode = 1;
 		}
-
+		
 		if ($do_page_update) {
 			// do page update
 			$post->comment_status = "close";		
@@ -264,9 +275,16 @@
 			$post->post_content = $bapisync->getMustache($seo["entity"],$seo["pkid"],$template,$debugmode);
 			$post->post_title = $seo["PageTitle"];
 			$post->post_name = BAPISync::clean_post_name($seo["DetailURL"]);
-			$post->post_parent = get_page_by_path(BAPISync::getRootPath($seo["entity"]))->ID;						
+			$post->post_parent = get_page_by_path(BAPISync::getRootPath($seo["entity"]))->ID;
+			if($do_market_update){
+				$post->post_parent = ensure_ma_landing_pages($seo["DetailURL"]);
+			}
+			if($seo['entity']=="marketarea"){
+				return;
+			}
 			$post->post_type = "page";
 			remove_filter('content_save_pre', 'wp_filter_post_kses');
+			//print_r($post);exit();
 			if (empty($post->ID)) {
 				$post->ID = wp_insert_post($post, $wp_error);
 			} else {
@@ -376,5 +394,40 @@ function get_doc_template($docname,$setting){
 		bapi_wp_site_options();
 	}
 	return $bapi_all_options[$setting];
+}
+
+function ensure_ma_landing_pages($detailurl){
+	$perm = explode('/',rtrim(ltrim($detailurl,'/'),'/'));
+	$i = 0;
+	$req_path = '';
+	while($i < count($perm)-1){
+		$orig_req = $req_path;
+		$req_path .= $perm[$i].'/';
+		//echo $req_path;
+		$pid = get_page_by_path($req_path)->ID;
+		//echo ' '.$pid;
+		if(empty($pid)){
+			//echo "no-page";
+			$tempPost = new stdClass();
+			$post = new WP_Post($tempPost);
+			$post->comment_status = "close";
+			$post->post_content = "";
+			$post->post_title = $perm[$i];
+			$post->post_name = $perm[$i];
+			$post->post_parent = get_page_by_path($orig_req)->ID;
+			$post->post_type = "page";
+			//print_r($post);
+			$pid = wp_insert_post($post, $wp_error);
+			//echo $postid;
+			// update the meta tags					
+			add_post_meta($post->ID, 'bapi_last_update', 0, true);
+			add_post_meta($post->ID, 'bapi_meta_description', '', true);
+			add_post_meta($post->ID, 'bapi_meta_keywords', '', true);
+			add_post_meta($post->ID, "bapikey", 'marketarea:-1', true);			
+		}
+		$i++;
+		//echo "<br>";
+	}
+	return $pid;
 }
 ?>
