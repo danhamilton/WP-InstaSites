@@ -963,6 +963,23 @@
 <span class="end"></span>
 </script>
 
+<script id="tmpl-developments-quickview" type="text/html">
+{{#result}}
+<div class="development-holder">
+	<div class="development-image">
+	<a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}">
+		<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" />	
+	</a>
+	</div>
+	<div class="development-description">
+		<a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}"><h4 class="developments-title">{{Name}}</h4></a>
+	<div class="development-location"><span class="type">{{Type}}</span>{{#Region}}, {{Region}}{{/Region}}{{#State}}, {{State}}{{/State}}</div><hr/>
+	<div class="developments-sum bapi-truncate" data-trunclen="100">{{&Summary}}</div>
+	</div>
+</div>
+{{/result}}
+</script>
+
 /*
 	Group: Market Areas
 */
@@ -1628,13 +1645,13 @@
 	<header class="pagination-centered pd">
 		<h1>{{textdata.Fast Secure Online Booking}}</h1>
 		<p>
-			<strong>{{Headline}}</strong><span class="hidden-phone">&nbsp;-&nbsp;{{Type}}
+			<a href="{{&ContextData.SEO.DetailURL}}"><strong>{{Headline}}</strong></a><span class="hidden-phone">&nbsp;-&nbsp;{{Type}}
 			{{#Bedrooms}}&nbsp;/&nbsp;{{textdata.Beds}}&nbsp;{{Bedrooms}}{{/Bedrooms}}
 			{{#Bathrooms}}&nbsp;/&nbsp;{{textdata.Baths}}&nbsp;{{Bathrooms}}{{/Bathrooms}}
 			{{#Sleeps}}&nbsp;/&nbsp;{{textdata.Sleeps}}&nbsp;{{Sleeps}}{{/Sleeps}}</span>
 		</p>
 		<div class="booking-prop-img">
-			<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.OriginalURL}}" caption="{{PrimaryImage.Captions}}" />		
+			<a href="{{&ContextData.SEO.DetailURL}}"><img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.OriginalURL}}" caption="{{PrimaryImage.Captions}}" title="Back to the Property Detail Page" /></a>
 		</div>
 	</header>	
 	<div class="booking-page bordersolid">
