@@ -224,6 +224,12 @@
 				wp_delete_post($post->ID,true);  //Going w/ deleting post for now - I think this will work because if page should exist it will ge recreated.
 				//delete_post_meta($post->ID,'bapikey');
 			}
+			//Check for non-initialized market area page (-1) and set correct bapikey
+			if(($pktest[1]==-1)&&$pktest[0]=='marketarea'){
+				$seo = $bapisync->getSEOFromUrl($_SERVER['REDIRECT_URL']);
+				//print_r($post); exit();
+				update_post_meta($post->ID, "bapikey", 'marketarea:'.$seo['pkid']);	
+			}
 		}
 		
 		// case 1: page exists in wp and is marked for syncing on wp but, it no longer exists in Bookt		
@@ -275,14 +281,12 @@
 			$post->comment_status = "close";		
 			$template = $bapisync->getMustacheTemplate($seo["entity"]);		
 			$post->post_content = $bapisync->getMustache($seo["entity"],$seo["pkid"],$template,$debugmode);
+			//print_r($post); exit();
 			$post->post_title = $seo["PageTitle"];
 			$post->post_name = BAPISync::clean_post_name($seo["DetailURL"]);
 			$post->post_parent = get_page_by_path(BAPISync::getRootPath($seo["entity"]))->ID;
 			if($do_market_update){
 				$post->post_parent = ensure_ma_landing_pages($seo["DetailURL"]);
-			}
-			if($seo['entity']=="marketarea"){
-				return;
 			}
 			$post->post_type = "page";
 			remove_filter('content_save_pre', 'wp_filter_post_kses');
@@ -422,10 +426,10 @@ function ensure_ma_landing_pages($detailurl){
 			$pid = wp_insert_post($post, $wp_error);
 			//echo $postid;
 			// update the meta tags					
-			add_post_meta($post->ID, 'bapi_last_update', 0, true);
-			add_post_meta($post->ID, 'bapi_meta_description', '', true);
-			add_post_meta($post->ID, 'bapi_meta_keywords', '', true);
-			add_post_meta($post->ID, "bapikey", 'marketarea:-1', true);			
+			add_post_meta($pid, 'bapi_last_update', 0, true);
+			add_post_meta($pid, 'bapi_meta_description', '', true);
+			add_post_meta($pid, 'bapi_meta_keywords', '', true);
+			add_post_meta($pid, "bapikey", 'marketarea:-1', true);			
 		}
 		$i++;
 		//echo "<br>";
