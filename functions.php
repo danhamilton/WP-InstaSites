@@ -308,27 +308,27 @@ window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", su
 		$slideshow = array();
 		$i = 0;
 		if(strlen($slide1)>0){
-			$slideshow[$i] = array("url"=>$slide1,"caption"=>$slide1cap,"thumb"=>plugins_url('thumbs/timthumb.php?src='.urlencode($slide1).'&h=80', __FILE__));
+			$slideshow[$i] = array("url"=>wp_make_link_relative($slide1),"caption"=>$slide1cap,"thumb"=>plugins_url('thumbs/timthumb.php?src='.urlencode($slide1).'&h=80', __FILE__));
 			$i++;
 		}
 		if(strlen($slide2)>0){
-			$slideshow[$i] = array("url"=>$slide2,"caption"=>$slide2cap,"thumb"=>plugins_url('thumbs/timthumb.php?src='.urlencode($slide2).'&h=80', __FILE__));
+			$slideshow[$i] = array("url"=>wp_make_link_relative($slide2),"caption"=>$slide2cap,"thumb"=>plugins_url('thumbs/timthumb.php?src='.urlencode($slide2).'&h=80', __FILE__));
 			$i++;
 		}
 		if(strlen($slide3)>0){
-			$slideshow[$i] = array("url"=>$slide3,"caption"=>$slide3cap,"thumb"=>plugins_url('thumbs/timthumb.php?src='.urlencode($slide3).'&h=80', __FILE__));
+			$slideshow[$i] = array("url"=>wp_make_link_relative($slide3),"caption"=>$slide3cap,"thumb"=>plugins_url('thumbs/timthumb.php?src='.urlencode($slide3).'&h=80', __FILE__));
 			$i++;
 		}
 		if(strlen($slide4)>0){
-			$slideshow[$i] = array("url"=>$slide4,"caption"=>$slide4cap,"thumb"=>plugins_url('thumbs/timthumb.php?src='.urlencode($slide4).'&h=80', __FILE__));
+			$slideshow[$i] = array("url"=>wp_make_link_relative($slide4),"caption"=>$slide4cap,"thumb"=>plugins_url('thumbs/timthumb.php?src='.urlencode($slide4).'&h=80', __FILE__));
 			$i++;
 		}
 		if(strlen($slide5)>0){
-			$slideshow[$i] = array("url"=>$slide5,"caption"=>$slide5cap,"thumb"=>plugins_url('thumbs/timthumb.php?src='.urlencode($slide5).'&h=80', __FILE__));
+			$slideshow[$i] = array("url"=>wp_make_link_relative($slide5),"caption"=>$slide5cap,"thumb"=>plugins_url('thumbs/timthumb.php?src='.urlencode($slide5).'&h=80', __FILE__));
 			$i++;
 		}
 		if(strlen($slide6)>0){
-			$slideshow[$i] = array("url"=>$slide6,"caption"=>$slide6cap,"thumb"=>plugins_url('thumbs/timthumb.php?src='.urlencode($slide6).'&h=80', __FILE__));
+			$slideshow[$i] = array("url"=>wp_make_link_relative($slide6),"caption"=>$slide6cap,"thumb"=>plugins_url('thumbs/timthumb.php?src='.urlencode($slide6).'&h=80', __FILE__));
 			$i++;
 		}
 		if($mode=='raw'){

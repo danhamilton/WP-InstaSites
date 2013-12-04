@@ -385,7 +385,7 @@ function get_doc_template($docname,$setting){
 		$doctext = $darr->result[0]->DocText;
 		
 		/* Temporary Hack For Tag Substitution */
-		$siteurl = parse_url($bapi_all_options['siteurl'],PHP_URL_HOST);
+		$siteurl = parse_url($bapi_all_options['bapi_site_cdn_domain'],PHP_URL_HOST);
 		$solution = $bapi_all_options['blogname'];
 		$doctext = str_replace("#Solution.Solution#", $solution, $doctext);
 		$doctext = str_replace("#Site.PrimaryURL#", $siteurl, $doctext);
