@@ -109,8 +109,8 @@
 			else if ($entity == "development") { $template_name = "tmpl-developments-detail"; }
 			else if ($entity == "specials") { $template_name = "tmpl-specials-detail"; }
 			else if ($entity == "poi") { $template_name = "tmpl-attractions-detail"; }
-			else if ($entity = "searches") { $template_name = "tmpl-searches-detail"; }
-			else if ($entity = "marketarea") { $template_name = "tmpl-marketarea-detail"; }
+			else if ($entity == "searches") { $template_name = "tmpl-searches-detail"; }
+			else if ($entity == "marketarea") { $template_name = "tmpl-marketarea-detail"; }
 			if (empty($template_name)) { return ""; } // not a valid entity to get a template
 			
 			$this->loadtemplates();
