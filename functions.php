@@ -662,10 +662,10 @@ function bapi_make_link( $link ) {
     );
 	
 	$cdn_url = $bapi_all_options['home'];
+	//$home_url = str_replace($bapi_all_options['home'],$cdn_url,$path);
 	if($bapi_all_options['bapi_site_cdn_domain']&&!(is_admin()||is_super_admin())){
 		$cdn_url = $bapi_all_options['bapi_site_cdn_domain'];
 	}
-	$home_url = str_replace($bapi_all_options['home'],$cdn_url,$path);
 		
 	foreach ( $filters as $filter ) {
 	  remove_filter( $filter, 'bapi_make_link' );
