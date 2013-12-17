@@ -1052,7 +1052,7 @@
 					{{/PrimaryImage.Caption}}
 				  {{/Images}}
 				  {{#Images}}
-                    <li><img alt="{{Caption}}" src="{{&MediumURL}}" />
+                    <li><img alt="{{Caption}}" src="{{&OriginalURL}}" />
 					{{#Caption}}
 					<p class="flex-caption">{{Caption}}</p></li>
 					{{/Caption}}
@@ -1075,8 +1075,8 @@
 
 {{#Description}}
 <div class="row-fluid">
-<div class="span12 outside-description">
-{{&Description}}
+<div class="span12 outside-description bapi-dotdotdot" data-readmorelink="true" data-dotdotdotheight="100">
+{{{Description}}}
 </div>
 </div>
 {{/Description}}
