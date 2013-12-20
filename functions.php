@@ -362,7 +362,7 @@ window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", su
 
 	function get_home_url_cdn( $blog_id = null, $path = '', $scheme = null ) {	
 		$cdn_url = get_option('home');
-		if(get_option('bapi_site_cdn_domain')&&!(is_admin()||is_super_admin())){
+		if(get_option('bapi_site_cdn_domain')&&!(current_user_can('manage_options')||is_super_admin())){
 			$cdn_url = get_option('bapi_site_cdn_domain');
 		}
 		$home_url = str_replace(get_option('home'),$cdn_url,$path);
@@ -663,7 +663,7 @@ function bapi_make_link( $link ) {
 	
 	$cdn_url = $bapi_all_options['home'];
 	//$home_url = str_replace($bapi_all_options['home'],$cdn_url,$path);
-	if($bapi_all_options['bapi_site_cdn_domain']&&!(is_admin()||is_super_admin())){
+	if($bapi_all_options['bapi_site_cdn_domain']&&!(current_user_can('manage_options')||is_super_admin())){
 		$cdn_url = $bapi_all_options['bapi_site_cdn_domain'];
 	}
 		

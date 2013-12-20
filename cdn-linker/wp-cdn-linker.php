@@ -135,7 +135,7 @@ class CDNLinksRewriterWordpress extends CDNLinksRewriter
 	 * This function is called by Wordpress if the plugin was enabled.
 	 */
 	public function register_as_output_buffer() {
-		if (($this->blog_url != get_option('bapi_site_cdn_domain'))&&!(is_admin()||is_super_admin())&&(get_option('bapi_sitelive'))) {
+		if (($this->blog_url != get_option('bapi_site_cdn_domain'))&&!(current_user_can('manage_options')||is_super_admin())&&(get_option('bapi_sitelive'))) {
 			ob_start(array(&$this, 'rewrite'));
 		}
 	}
