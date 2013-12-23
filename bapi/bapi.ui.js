@@ -1626,7 +1626,7 @@ function loadFormFromSession(s) {
 	$('.sessionbedsmin').val(s.beds.min);
 	$('.sessionbathsmin').val(s.baths.min);
 	$('.sessionlocation').val(s.location);
-	$('.sessionratemin').val(s.rate.min);
+	$('.sessionratemin').val(s.rate.max);
 	$('.sessionroomsmin').val(s.rooms.min);
 	$('.sessionheadline').val(s.headline);
 	$('.sessionaltid').val(s.altid);
