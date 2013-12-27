@@ -283,7 +283,8 @@ window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", su
 	BAPI.site.secureurl = '<?= $secureurl ?>';
 	<?php } ?>
 	BAPI.init();
-	BAPI.UI.jsroot = '<?= plugins_url("/", __FILE__) ?>'
+	BAPI.UI.jsroot = '<?= plugins_url("/", __FILE__) ?>';
+	BAPI.defaultOptions.logpageviews = true;
 	$(document).ready(function () { BAPI.UI.init(); });    
 </script>
 
