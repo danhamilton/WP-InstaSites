@@ -23,6 +23,7 @@
 			"searchmode-photoview": "BAPI.config().searchmodes.photoview=true;",
 			"searchmode-widephotoview": "BAPI.config().searchmodes.widephotoview=false;",
 			"searchmode-hotelview": "BAPI.config().searchmodes.hotelview=false;",
+			"searchmode-mapview": "BAPI.config().searchmodes.mapview=false;",
 			"amenitysearch": "BAPI.config().amenity.enabled=false;",
 			"devsearch": "BAPI.config().dev.enabled=false;",
 			"adultsearch: "BAPI.config().adults.enabled=false;",
@@ -75,6 +76,14 @@ jQuery(document).ready(function () {
 	<td><select name="searchmode-widephotoview" id="searchmode-widephotoview">
 		<option value="BAPI.config().searchmodes.widephotoview=false;">Disable</option>
 		<option value="BAPI.config().searchmodes.widephotoview=true;">Enable</option>		
+	    </select>
+	</td>	
+</tr>
+<tr valign="top">
+	<td scope="row">Map View:</td>
+	<td><select name="searchmode-mapview" id="searchmode-mapview">
+		<option value="BAPI.config().searchmodes.mapview=false;">Disable</option>
+		<option value="BAPI.config().searchmodes.mapview=true;">Enable</option>		
 	    </select>
 	</td>	
 </tr>
