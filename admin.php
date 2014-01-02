@@ -44,7 +44,8 @@ function bapi_options_init(){
 	register_setting('bapi_options','bapi_site_cdn_domain'); 
 	register_setting('bapi_options','bapi_cloudfronturl'); 
 	register_setting('bapi_options','bapi_global_header'); 
-	register_setting('bapi_options','bapi_sitesettings'); 
+	register_setting('bapi_options','bapi_sitesettings');
+	register_setting('bapi_options','bapi_google_webmaster_htmltag');
 	
 	// register the slideshow settings
 	// register the settings

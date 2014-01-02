@@ -677,4 +677,12 @@ function bapi_make_link( $link ) {
 	  add_filter( $filter, 'bapi_make_link' );
 	}
 }
+
+function display_gw_verification(){
+	global $bapi_all_options;
+	if(strlen($bapi_all_options['bapi_google_webmaster_htmltag'])>1){
+		?><meta name="google-site-verification" content="<?= $bapi_all_options['bapi_google_webmaster_htmltag'] ?>" />
+<?php
+	}
+}
 ?>
