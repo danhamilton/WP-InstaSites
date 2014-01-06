@@ -279,11 +279,11 @@
 	  <a href="#" class="prop-map-item"><div class="number-tag">{{&ContextData.ItemIndex}}</div></a>
 	<div class="info-html">
 	<div class="marker-infowindow"> 		
-		<span class="prop-image pull-left"><img style="max-height:175px; max-width:175px" src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>
+		<span class="prop-image pull-left">{{#ContextData.SEO.Keyword}}<a target="_blank" href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}<img style="max-height:175px; max-width:175px" src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}" />{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}</span>
 		<span class="prop-location pull-left">
 			<span>
 			{{#ContextData.SEO.Keyword}}<a target="_blank" href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
-			<b>{{Name}}</b>
+			<b>{{Headline}}</b>
 			{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}<br/>
 			<b>{{textdata.Category}}:</b>{{Type}}<br/>
 			<b>{{textdata.Address}}: </b>{{&Location}}
