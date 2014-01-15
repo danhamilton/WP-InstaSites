@@ -264,7 +264,7 @@
 	<div class="controls">
 		<div class="btn-group" data-toggle="buttons-radio">
 		{{#config.searchmodes.listview}}<button class="btn changeview" data-template="tmpl-propertysearch-listview"><i class="icon-list"></i>&nbsp;{{textdata.List}}</button>{{/config.searchmodes.listview}}
-		{{#config.searchmodes.photoview}}<button class="btn changeview" data-template="tmpl-propertysearch-galleryview"><i class="icon-th-large"></i>&nbsp;{{textdata.Photo}}</button>{{/config.searchmodes.photoview}}
+		{{#config.searchmodes.photoview}}<button class="btn changeview" data-template="tmpl-propertysearch-galleryview" data-rowfixselector=".gallery-view-page%20%3E%20.span6" data-rowfixcount="2"><i class="icon-th-large"></i>&nbsp;{{textdata.Photo}}</button>{{/config.searchmodes.photoview}}
 		{{#config.searchmodes.mapview}}<button class="btn changeview active" data-template="tmpl-propertysearch-mapview" data-showallresults="1"><i class="icon-map-marker"></i>&nbsp;{{textdata.Map}}</button>{{/config.searchmodes.mapview}}
 		</div>        
 	</div>
@@ -314,7 +314,7 @@
 	<div class="controls">
 		<div class="btn-group" data-toggle="buttons-radio">
 		{{#config.searchmodes.listview}}<button class="btn changeview" data-template="tmpl-propertysearch-listview"><i class="icon-list"></i>&nbsp;{{textdata.List}}</button>{{/config.searchmodes.listview}}
-		{{#config.searchmodes.photoview}}<button class="btn changeview active" data-template="tmpl-propertysearch-galleryview"><i class="icon-th-large"></i>&nbsp;{{textdata.Photo}}</button>{{/config.searchmodes.photoview}}
+		{{#config.searchmodes.photoview}}<button class="btn changeview active" data-template="tmpl-propertysearch-galleryview" data-rowfixselector=".gallery-view-page%20%3E%20.span6" data-rowfixcount="2"><i class="icon-th-large"></i>&nbsp;{{textdata.Photo}}</button>{{/config.searchmodes.photoview}}
 		{{#config.searchmodes.mapview}}<button class="btn changeview" data-template="tmpl-propertysearch-mapview" data-showallresults="1"><i class="icon-map-marker"></i>&nbsp;{{textdata.Map}}</button>{{/config.searchmodes.mapview}}
 		</div>        
 	</div>
