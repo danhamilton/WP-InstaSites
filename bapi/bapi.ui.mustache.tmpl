@@ -1132,7 +1132,7 @@
 {{/Description}}
 
 <h3 class="outside-title">{{textdata.Available Properties}}</h3>
-<div id="propresults" class="bapi-summary marketarea-props" data-log="0" data-templatename="tmpl-allproperties"  data-entity="property" data-searchoptions='{ "maid": {{ID}}, "seo": 1, "pagesize": 10 }'></div>
+<div id="propresults" class="bapi-summary marketarea-props" data-log="0" data-templatename="tmpl-allproperties"  data-entity="property" data-ignoresession="1" data-searchoptions='{ "maid": {{ID}}, "location": "{{#PostalCode}}{{&PostalCode}}{{/PostalCode}}{{^PostalCode}}{{#Neighborhood}}{{&Neighborhood}}{{/Neighborhood}}{{^Neighborhood}}{{#Metro}}{{&Metro}}{{/Metro}}{{^Metro}}{{#City}}{{&City}}{{/City}}{{^City}}{{#County}}{{&County}}{{/County}}{{^County}}{{#State}}{{&State}}{{/State}}{{^State}}{{#Region}}{{&Region}}{{/Region}}{{^Region}}{{#Country}}{{&Country}}{{/Country}}{{/Region}}{{/State}}{{/County}}{{/City}}{{/Metro}}{{/Neighborhood}}{{/PostalCode}}" , "seo": 1, "pagesize": 10 }'></div>
 
 <div class="bapi-moveme" data-from=".marketarea-details" data-to=".detail-overview-target" data-method="append">
 <div class="marketarea-details module shadow">
