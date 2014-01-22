@@ -1615,6 +1615,7 @@ function doSearch(targetid, ids, entity, options, alldata, callback) {
 }
 
 function loadFormFromSession(s) {
+
 	$('.sessioncheckin').val(s.scheckin);
 	$('.sessioncheckout').val(s.scheckout);
 	$('.sessionlos').val(s.los);
@@ -1630,6 +1631,7 @@ function loadFormFromSession(s) {
 	$('.sessionroomsmin').val(s.rooms.min);
 	$('.sessionheadline').val(s.headline);
 	$('.sessionaltid').val(s.altid);
+
 }
 
 function saveFormToSession(ctl, options) {
