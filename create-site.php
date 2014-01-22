@@ -5,11 +5,75 @@ function bapi_create_site(){
 		return;
 	}
 	
+	if(isset($_POST['blogid'])&&$_POST['blogid']!=0){
+		switch_to_blog($_POST['blogid']);
+		header('Content-Type: application/javascript');	
+		$new_site = array(
+			"status" => "success",
+			"data" => array(
+				"blog_id" => $_POST['blogid'],
+				"blog_url" => get_site_url()
+			)
+		);
+		echo json_encode($new_site);
+		exit();
+	}
+	
 	$prefix = $_POST['siteprefix'];
 	$sname = $_POST['sitename'];
-	$apikey = $_POST['apikey'];
+	$tagline = '';
+	if(isset($_POST['tagline'])&&!empty($_POST['tagline'])){
+		$tagline = $_POST['tagline'];
+	}
+	$apikey = "";
+	if(isset($_POST['apikey'])&&!empty($_POST['apikey'])){
+		$apikey = $_POST['apikey'];
+	}
 	$username = $_POST['username'];
 	$password = $_POST['password'];
+	$domain = $_SERVER['SERVER_NAME'];
+	$siteurl = $prefix.'.'.$domain;  //How to check which domain is used for current service
+	$liveurl = 'http://'.$siteurl;
+	if(isset($_POST['domain'])&&!empty($_POST['domain'])){
+		$liveurl = $_POST['domain']; //bapi_site_cdn_domain
+	}
+	$cf_url = str_replace('http://','',$liveurl);
+	$cf_origin = str_replace('http://','',$siteurl);
+	
+	if($apikey==""){
+		header('Content-Type: application/javascript');	
+		$new_site = array(
+			"status" => "error",
+			"data" => array(
+				"errors" => array("apikey_not_set" => "A valid API key is required."),
+				"error_data" => ""
+			)
+		);
+		echo json_encode($new_site);
+		exit();
+	}
+	
+	$cf = create_cf_distro($cf_origin,$cf_url);
+	if($cf==false){
+		$cf = 'Error Creating CloudFront Distribution';
+		
+		header('Content-Type: application/javascript');	
+		$new_site = array(
+			"status" => "error",
+			"data" => array(
+				"errors" => array("cloudfront_distrib" => $cf),
+				"error_data" => ""
+			)
+		);
+		echo json_encode($new_site);
+		exit();
+	}
+	$meta = array('api_key' => $apikey, 'bapi_secureurl' => $prefix.'.imbookingsecure.com', 'bapi_site_cdn_domain' => $liveurl, 'bapi_cloudfronturl' => $cf, 'blogdescription' => $tagline, 'bapi_first_look' => 1);
+	if(defined('BAPI_BASEURL') && (BAPI_BASEURL == 'connect.bookt.biz')){
+		$meta['bapi_secureurl'] = $prefix.'.lodgingcloud.com';
+		$meta['bapi_baseurl'] = BAPI_BASEURL;
+	}
+	//$siteurl = $prefix.'.imbookingsecure.com';
 	
 	$u = username_exists($username);
 	if(empty($u)){
@@ -18,10 +82,6 @@ function bapi_create_site(){
 	
 	//$u = wpmu_create_user($username,$password,$username);
 	if(is_numeric($u)){
-		$meta = array('api_key' => $apikey, 'bapi_secureurl' => $prefix.'.imbookingsecure.com');
-		$domain = $_SERVER['SERVER_NAME'];
-		$siteurl = $prefix.'.'.$domain;  //How to check which domain is used for current service
-		//$siteurl = $prefix.'.imbookingsecure.com';
 		$s = wpmu_create_blog($siteurl,'/',$sname,$u,$meta);
 		//$t = wpmu_create_blog('wpmutest.localhost','/','Test1',1);  //use this one to force a 'blog_taken' failure.
 		if(is_numeric($s)){
@@ -33,30 +93,44 @@ function bapi_create_site(){
 			bapi_wp_site_options();
 			
 			//Initialize menu and pages
-			$path = '/bapi.init?p=1';
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL,get_site_url().$path);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			$server_output = curl_exec ($ch);
-			curl_close ($ch);
+			//$path = '/bapi.init?p=1';
+			//$url = get_site_url().$path;
+			//$server_output = file_get_contents($url);
 			
-			print_r($server_output);
-			
-			$menuname = "Main Navigation Menu";
-			$menu_id = initmenu($menuname);
-			echo $menu_id;
-			//echo $s; exit();
-			//header('Location: http://'.$siteurl.'/wp-admin/admin.php?page=bookt-api/setup-sync.php');
+			//Provide response
+			header('Content-Type: application/javascript');	
+			$new_site = array(
+				"status" => "success",
+				"data" => array(
+					"blog_id" => $s,
+					"blog_url" => get_site_url()
+				)
+			);
+			echo json_encode($new_site);
 		}
 		else{
 			//fail
 			//print_r($s->errors['blog_taken'][0]); exit();  //Not sure if this is the only error returned.  Need a more generic message handler.
-			print_r($s); exit();
+			header('Content-Type: application/javascript');	
+			$new_site = array(
+				"status" => "error",
+				"data" => $s
+			);
+			echo json_encode($new_site);
+			exit();
 		}
 	}
 	else{
-		echo "debug1";
-		print_r($u);
+		header('Content-Type: application/javascript');	
+		$new_site = array(
+			"status" => "error",
+			"data" => array(
+				"errors" => array("user_unknown" => "Sorry, the username specified is invalid."),
+				"error_data" => ""
+			)
+		);
+		echo json_encode($new_site);
+		exit();
 	}
 	exit();
 }

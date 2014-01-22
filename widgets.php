@@ -586,7 +586,65 @@ class BAPI_Featured_Properties extends WP_Widget {
 } // class BAPI_Featured_Properties
 
 
+/**
+* Adds BAPI_Developments_Widget widget.
+*/
+class BAPI_Developments_Widget extends WP_Widget {
+	
+	public function __construct() {
+		parent::__construct(
+	 		'bapi_developments_widget', // Base ID
+			'Insta Developments', // Name
+			array( 'description' => __( 'Insta Developments', 'text_domain' ), ) // Args
+		);
+	}
 
+	public function widget( $args, $instance ) {
+		extract($args);
+		$title = apply_filters('widget_title',$instance['title']);
+		$pagesize = esc_textarea($instance['text']);
+		$rowsize = intval($instance['rowsize']);
+		if($rowsize<=0) { $rowsize=1; }
+		echo $before_widget;
+		if(!empty($title))
+			echo $before_title . $title . $after_title;
+		?>
+        <div id="developments-widget" class="bapi-summary development-widget row-fluid" data-applyfixers="1" data-log="0" data-templatename="tmpl-developments-quickview" data-entity="development" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }' data-rowfixselector=".development-holder" data-rowfixcount="<?= $rowsize ?>"></div>
+        <?php
+		echo $after_widget;
+	}
+
+	public function update( $new_instance, $old_instance ) {
+		$instance = array();
+		$instance['title'] = strip_tags( $new_instance['title'] );
+		if ( current_user_can('unfiltered_html') )
+			$instance['text'] =  $new_instance['text'];
+		else
+			$instance['text'] = stripslashes( wp_filter_post_kses( addslashes($new_instance['text']) ) ); // wp_filter_post_kses() expects slashed
+		$instance['rowsize'] = $new_instance['rowsize'];
+		return $instance;
+	}
+
+	public function form( $instance ) {
+		if ( isset( $instance[ 'title' ] ) ) { $title = $instance[ 'title' ]; }
+		else { $title = __( 'Developments', 'text_domain' ); }
+		if ( isset( $instance[ 'text' ] ) ) { $pagesize =  esc_textarea($instance['text']); }
+		else { $pagesize = __( '4', 'text_domain' ); }
+		if ( isset( $instance[ 'rowsize' ] ) ) { $rowsize =  $instance['rowsize']; }
+		else { $rowsize = '4'; }		
+		?>
+		<p>
+		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
+		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+        <label for="<?php echo $this->get_field_id( 'text' ); ?>"><?php _e( '# of Developments:' ); ?></label>
+        <input id="<?php echo $this->get_field_id( 'text' ); ?>" name="<?php echo $this->get_field_name( 'text' ); ?>" type="text" value="<?php echo esc_attr( $pagesize ); ?>" />
+        <label for="<?php echo $this->get_field_id( 'rowsize' ); ?>"><?php _e( 'Row Size:' ); ?></label>
+        <input id="<?php echo $this->get_field_id( 'rowsize' ); ?>" name="<?php echo $this->get_field_name( 'rowsize' ); ?>" type="text" value="<?php echo esc_attr( $rowsize ); ?>" />
+		</p>
+		<?php 
+	}
+
+} // class BAPI_Developments_Widget
 
 
 /**

@@ -26,6 +26,20 @@ http://Instamanager.com
 3. Fill in your Bookt/Instamanager API key and save.
 4. Go to Instasite > Data Sync and click on "Create Default Pages"
 
+- Apache mod_rewrite must be enabled.  Use command 'a2enmod rewrite' and then restart apache for this change to take effect.
+- .htaccess file must contain the following:
+	# BEGIN WordPress
+	<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase /
+	RewriteRule ^index\.php$ - [L]
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule . /index.php [L]
+	</IfModule>
+	# END WordPress
+- We recommend using "Day and Name" for permalink settings at first.  Other modes may require different rewrite rules in .htaccess (Wordpress Requirement)
+
 == Frequently Asked Questions ==
 
 = Where do I get a Bookt/Instamanager API Key? =

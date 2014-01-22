@@ -59,11 +59,12 @@ function google_sitemap() {
   
   // now output the pages from bapi seo data
 	global $bapisync;
+	global $bapi_all_options;
 	foreach ($bapisync->seodata as $seo) {											
 		if (!empty($seo["entity"]) && !empty($seo["pkid"])) {
 			$turl = BAPISync::cleanurl($seo["DetailURL"]);				
 			$xml .= "\t<url>\n";
-			$xml .= "\t\t<loc>" . $turl . "</loc>\n";
+			$xml .= "\t\t<loc>" . $bapi_all_options['bapi_site_cdn_domain'] . $turl . "</loc>\n";
 			$xml .= "\t\t<lastmod>" . mysql2date( 'Y-m-d\TH:i:s+00:00', $seo["ModifiedOn"]["LongDateTime"], false ) . "</lastmod>\n";
 			$xml .= "\t\t<changefreq>" . 'weekly' . "</changefreq>\n";
 			$xml .= "\t\t<priority>" . '0.8' . "</priority>\n";

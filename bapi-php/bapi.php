@@ -36,7 +36,7 @@ class BAPI
 		
 	public function getcontext($jsondecode,$debugmode=0) {
 		if (!$this->isvalid()) { return null; }
-		$url = $this->getBaseURL() . '/js/bapi.context?apikey=' . $this->apikey . '&language=' . $this->language;
+		$url = $this->getBaseURL() . '/js/bapi.context?apikey=' . $this->apikey;
 		$c = file_get_contents($url,FALSE,$this->getOptions) or wp_die('Error Retrieving Context','Oops!');
 		
 		global $getContextURL;
@@ -49,7 +49,7 @@ class BAPI
 	
 	public function gettextdata($jsondecode,$debugmode=0) {
 		if (!$this->isvalid()) { return null; }
-		$url = $this->getBaseURL() . '/ws/?method=get&entity=textdata&apikey=' . $this->apikey . '&language=' . $this->language;
+		$url = $this->getBaseURL() . '/ws/?method=get&entity=textdata&apikey=' . $this->apikey;
 		$c = file_get_contents($url,FALSE,$this->getOptions) or wp_die('Error Retrieving TextData','Oops!');
 		
 		global $textDataURL;
@@ -62,7 +62,7 @@ class BAPI
 	
 	public function getseodata($jsondecode=true,$debugmode=0) {
 		if (!$this->isvalid()) { return null; }
-		$url = $this->getBaseURL() . '/ws/?method=get&entity=seo&apikey=' . $this->apikey . '&language=' . $this->language;
+		$url = $this->getBaseURL() . '/ws/?method=get&entity=seo&apikey=' . $this->apikey;
 		$c = file_get_contents($url,FALSE,$this->getOptions) or wp_die('Error Retrieving Keywords','Oops!');
 		
 		global $seoDataURL;
@@ -96,7 +96,7 @@ class BAPI
 	
 	public function get($entity,$ids,$options=null,$jsondecode=true,$debugmode=0) {
 		if (!$this->isvalid()) { return null; }
-		$url = $this->getBaseURL() . "/ws/?method=get&apikey=" . $this->apikey . "&entity=" . $entity . '&ids=' . implode(",", $ids) . '&language=' . $this->language;
+		$url = $this->getBaseURL() . "/ws/?method=get&apikey=" . $this->apikey . "&entity=" . $entity . '&ids=' . implode(",", $ids);
 		if (!empty($options)) { $url = $url . "&" . http_build_query($options); }
 		
 		global $entityUpdateURL;

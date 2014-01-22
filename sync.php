@@ -28,11 +28,32 @@
 		public static function getSEODataLastModRaw() { global $bapi_all_options; return $bapi_all_options['bapi_keywords_lastmod']; }
 		public static function getSEOData() { return json_decode(BAPISync::getSEODataRaw(), TRUE); }
 		
-		public static function getTemplates() { 
-			$url = "bapi/bapi.ui.mustache.tmpl";
-			$url = get_relative( plugins_url($url, __FILE__) );
-			$url = realpath('') . $url;
-			return file_get_contents($url); 
+		public static function isMustacheOverriden() { 
+			$basefilename = "bapi/bapi.ui.mustache.tmpl";
+			// see if there is a custom theme in the theme's folder
+			$test = get_stylesheet_directory() . '/' . $basefilename;
+			if (file_exists($test)) {
+				return true;
+			}
+			return false;			
+		}
+		
+		public static function getMustacheLocation() { 
+			$basefilename = "bapi/bapi.ui.mustache.tmpl";
+			// see if there is a custom theme in the theme's folder
+			$test = get_stylesheet_directory() . '/' . $basefilename;
+			if (file_exists($test)) {
+				return $test;
+			}
+			
+			// otherwise, just return the baseline version stored in the plugin folder
+			$test = plugins_url($basefilename, __FILE__);
+			$test = get_relative($test);
+			$test = realpath(substr($test,1));
+			return $test;			
+		}
+		public static function getTemplates() { 			
+			return file_get_contents(BAPISync::getMustacheLocation()); 
 		}
 		
 		public static function cleanurl($url) {
@@ -68,6 +89,7 @@
 			if($entity=='specials') { return 'page-templates/other-detail-page.php'; }
 			if($entity=='poi') { return 'page-templates/other-detail-page.php'; }
 			if($entity=='searches') { return 'page-templates/other-detail-page.php'; }
+			if($entity=='marketarea') { return 'page-templates/other-detail-page.php'; }
 			return 'page-templates/full-width.php';
 		}
 		
@@ -77,6 +99,7 @@
 			if($entity=='specials') { $t=BAPISync::getSolutionData(); return $t["Site"]["BaseSpecialURL"]; }
 			if($entity=='poi') { $t=BAPISync::getSolutionData(); return $t["Site"]["BasePOIURL"]; }
 			if($entity=='searches') { $t=BAPISync::getSolutionData(); return $t["Site"]["BasePropertyFinderURL"]; }
+			if($entity=='marketarea') { $t=BAPISync::getSolutionData(); $s=BAPISync::getSEOData(); return ''; }
 			return '/rentals/';
 		}
 		
@@ -86,7 +109,8 @@
 			else if ($entity == "development") { $template_name = "tmpl-developments-detail"; }
 			else if ($entity == "specials") { $template_name = "tmpl-specials-detail"; }
 			else if ($entity == "poi") { $template_name = "tmpl-attractions-detail"; }
-			else if ($entity = "searches") { $template_name = "tmpl-searches-detail"; }
+			else if ($entity == "searches") { $template_name = "tmpl-searches-detail"; }
+			else if ($entity == "marketarea") { $template_name = "tmpl-marketarea-detail"; }
 			if (empty($template_name)) { return ""; } // not a valid entity to get a template
 			
 			$this->loadtemplates();
@@ -143,25 +167,53 @@
 		if (empty($bapisync)) { 
 			// ERROR: What should we do?
 		}
-		$post = get_page_by_path($_SERVER['REDIRECT_URL']);
-		//print_r($post);
+
+		$t=BAPISync::getSolutionData();
+		$maEnabled = $t['BizRules']['Has Market Area Landing Pages'];
 		
-		// locate the SEO data stored in Bookt from the requested URL
-		$seo = $bapisync->getSEOFromUrl($_SERVER['REDIRECT_URL']);
-		if (!empty($seo) && (empty($seo["entity"]) || empty($seo["pkid"]))) {
-			$seo = null; // ignore seo info if it doesn't point to a valid entity
-		}		
+		$post = get_page_by_path($_SERVER['REDIRECT_URL']);
+		if(empty($_SERVER['REDIRECT_URL'])){
+			$home_id = get_option('page_on_front');
+			$post = get_page($home_id);
+		}	
 		// parse out the meta attributes for the current post
 		$page_exists_in_wp = !empty($post);				
 		$meta = $page_exists_in_wp ? get_post_custom($post->ID) : null;
 		$last_update = !empty($meta) ? $meta['bapi_last_update'][0] : null;
+		$staticpagekey = !empty($meta) ? $meta['bapi_page_id'][0] : null;
 		$pagekey = !empty($meta) ? $meta['bapikey'][0] : null;
 		$meta_keywords = !empty($meta) ? $meta['bapi_meta_keywords'][0] : null;
-		$meta_description = !empty($meta) ? $meta['bapi_meta_description'][0] : null;			
+		$meta_description = !empty($meta) ? $meta['bapi_meta_description'][0] : null;	
+		
+		// locate the SEO data stored in Bookt from the requested URL
+		$seo = $bapisync->getSEOFromUrl($_SERVER['REDIRECT_URL']);
+		//print_r($seo);//exit();
+		if (!empty($seo) && (empty($seo["entity"]) || empty($seo["pkid"])) && empty($staticpagekey)) {
+			$seo = null; // ignore seo info if it doesn't point to a valid entity
+		}			
 			
 		$do_page_update = false;
 		$do_meta_update = false;
+		$do_market_update = false;
 		$changes = "";
+		
+		if(!empty($seo) && ($seo["entity"]=='property' || $seo["entity"]=='marketarea') && $maEnabled){
+			$do_market_update = true;
+		}
+		
+		if($page_exists_in_wp && !empty($staticpagekey)){
+			// update the meta tags		
+			if(empty($meta['bapi_last_update'])||((time()-$meta['bapi_last_update'][0])>3600)){			
+				does_meta_exist("bapi_last_update", $meta) ? update_post_meta($post->ID, 'bapi_last_update', time()) : add_post_meta($post->ID, 'bapi_last_update', time(), true);
+				if(!empty($seo)){
+					if ($meta['bapi_meta_description'][0] != $seo["MetaDescrip"]) { update_post_meta($post->ID, 'bapi_meta_description', $seo["MetaDescrip"]); }
+					if ($meta['bapi_meta_keywords'][0] != $seo["MetaKeywords"]) { update_post_meta($post->ID, 'bapi_meta_keywords', $seo["MetaKeywords"]); }
+					//does_meta_exist("bapi_meta_description", $meta) ? update_post_meta($post->ID, 'bapi_meta_description', $seo["MetaDescrip"]) : add_post_meta($post->ID, 'bapi_meta_description', $seo["MetaDescrip"], true);
+					//does_meta_exist("bapi_meta_keywords", $meta) ? update_post_meta($post->ID, 'bapi_meta_keywords', $seo["MetaKeywords"]) : add_post_meta($post->ID, 'bapi_meta_keywords', $seo["MetaKeywords"], true);
+				}
+			}
+			return true;
+		}
 		
 		//catch bad bapikey
 		if ($page_exists_in_wp && !empty($pagekey)){
@@ -171,6 +223,12 @@
 				//To Delete Meta or Page, that is the question.
 				wp_delete_post($post->ID,true);  //Going w/ deleting post for now - I think this will work because if page should exist it will ge recreated.
 				//delete_post_meta($post->ID,'bapikey');
+			}
+			//Check for non-initialized market area page (-1) and set correct bapikey
+			if(($pktest[1]==-1)&&$pktest[0]=='marketarea'){
+				$seo = $bapisync->getSEOFromUrl($_SERVER['REDIRECT_URL']);
+				//print_r($post); exit();
+				update_post_meta($post->ID, "bapikey", 'marketarea:'.$seo['pkid']);	
 			}
 		}
 		
@@ -204,7 +262,7 @@
 		}
 		// case 4: page does not exist in wp but exists in Bookt
 		else if (!$page_exists_in_wp && !empty($seo)) {
-			//print_r("case 4");
+			//print_r("case 4".$do_market_update);exit();
 			// Result-> Need to create the page
 			$changes = "create new page";
 			$tempPost = new stdClass();
@@ -217,17 +275,22 @@
 			$do_page_update = true;
 			$debugmode = 1;
 		}
-
+		
 		if ($do_page_update) {
 			// do page update
 			$post->comment_status = "close";		
 			$template = $bapisync->getMustacheTemplate($seo["entity"]);		
 			$post->post_content = $bapisync->getMustache($seo["entity"],$seo["pkid"],$template,$debugmode);
+			//print_r($post); exit();
 			$post->post_title = $seo["PageTitle"];
 			$post->post_name = BAPISync::clean_post_name($seo["DetailURL"]);
-			$post->post_parent = get_page_by_path(BAPISync::getRootPath($seo["entity"]))->ID;						
+			$post->post_parent = get_page_by_path(BAPISync::getRootPath($seo["entity"]))->ID;
+			if($do_market_update){
+				$post->post_parent = ensure_ma_landing_pages($seo["DetailURL"]);
+			}
 			$post->post_type = "page";
 			remove_filter('content_save_pre', 'wp_filter_post_kses');
+			//print_r($post);exit();
 			if (empty($post->ID)) {
 				$post->ID = wp_insert_post($post, $wp_error);
 			} else {
@@ -291,10 +354,14 @@
 		if(empty($data) || empty($lastmod) || ((time()-$lastmod)>3600) || $do_core_update) {					
 			$data = $bapi->getcontext(true,$syncdebugmode);
 			if (!empty($data)) {
+				$tagline = $data['SolutionTagline'];
+				$solName = $data['SolutionNameInformal'];
 				$data = json_encode($data); // convert back to text
 				update_option('bapi_solutiondata',$data);
 				update_option('bapi_solutiondata_lastmod',time());
-			}					
+				update_option('blogdescription',$tagline);
+				update_option('blogname',$solName);
+			}			
 		}	
 		
 		// check if we need to refresh seo data
@@ -322,7 +389,7 @@ function get_doc_template($docname,$setting){
 		$doctext = $darr->result[0]->DocText;
 		
 		/* Temporary Hack For Tag Substitution */
-		$siteurl = parse_url($bapi_all_options['siteurl'],PHP_URL_HOST);
+		$siteurl = parse_url($bapi_all_options['bapi_site_cdn_domain'],PHP_URL_HOST);
 		$solution = $bapi_all_options['blogname'];
 		$doctext = str_replace("#Solution.Solution#", $solution, $doctext);
 		$doctext = str_replace("#Site.PrimaryURL#", $siteurl, $doctext);
@@ -333,5 +400,40 @@ function get_doc_template($docname,$setting){
 		bapi_wp_site_options();
 	}
 	return $bapi_all_options[$setting];
+}
+
+function ensure_ma_landing_pages($detailurl){
+	$perm = explode('/',rtrim(ltrim($detailurl,'/'),'/'));
+	$i = 0;
+	$req_path = '';
+	while($i < count($perm)-1){
+		$orig_req = $req_path;
+		$req_path .= $perm[$i].'/';
+		//echo $req_path;
+		$pid = get_page_by_path($req_path)->ID;
+		//echo ' '.$pid;
+		if(empty($pid)){
+			//echo "no-page";
+			$tempPost = new stdClass();
+			$post = new WP_Post($tempPost);
+			$post->comment_status = "close";
+			$post->post_content = "";
+			$post->post_title = $perm[$i];
+			$post->post_name = $perm[$i];
+			$post->post_parent = get_page_by_path($orig_req)->ID;
+			$post->post_type = "page";
+			//print_r($post);
+			$pid = wp_insert_post($post, $wp_error);
+			//echo $postid;
+			// update the meta tags					
+			add_post_meta($pid, 'bapi_last_update', 0, true);
+			add_post_meta($pid, 'bapi_meta_description', '', true);
+			add_post_meta($pid, 'bapi_meta_keywords', '', true);
+			add_post_meta($pid, "bapikey", 'marketarea:-1', true);			
+		}
+		$i++;
+		//echo "<br>";
+	}
+	return $pid;
 }
 ?>

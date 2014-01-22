@@ -14,7 +14,7 @@
 	function urlHandler_securepages() {
 		$url = get_relative($_SERVER['REQUEST_URI']);
 		//echo $url; exit();
-		if ((strpos($url,'makepayment') !== false)||(strpos($url,'makebooking') !== false)) {
+		if (((strpos($url,'makepayment') !== false)||(strpos($url,'makebooking') !== false))&&(strpos($_SERVER['HTTP_HOST'],'lodgingcloud.com') == false)&&(strpos($_SERVER['HTTP_HOST'],'localhost') == false)) { //Do not force the redirect on lodgingcloud - helps bobby debug connect.
 			$purl = parse_url(curPageURL());
 			if($purl['scheme'] == 'http'){
 				$nurl = "https://".$purl['host'].$purl['path'];
@@ -32,15 +32,13 @@
 	}
 
 	function urlHandler_bapidefaultpages() {
+		header('Access-Control-Allow-Origin: *');
 		$url = get_relative($_SERVER['REQUEST_URI']);
-		//echo $url; exit();
+		//echo $_SERVER['REQUEST_URI']; exit();
 		if (strtolower($url) != "/bapi.init")
 			return;
-			
-		//Ensure we're updating the correct blog
-		$blogid = get_current_blog_id();
-		switch_to_blog($blogid);
-		//echo get_current_blog_id()."<br/>"; 
+		
+		header("Cache-Control: no-cache, must-revalidate");
 		$menuname = "Main Navigation Menu";
 		$menu_id = initmenu($menuname);
 		//echo $menu_id; //exit();
@@ -142,15 +140,6 @@
 			"template" : "page-templates/full-width.php",
 			"title" : "Company",
 			"url" : "company"
-		  },
-		  { "addtomenu" : true,
-			"content" : "/default-content/services.php",
-			"intid" : "bapi_services",
-			"order" : 1,
-			"parent" : "company",
-			"template" : "page-templates/full-width.php",
-			"title" : "Services",
-			"url" : "services"
 		  },
 		  { "addtomenu" : true,
 			"content" : "/default-content/aboutus.php",
@@ -269,6 +258,21 @@
 			//print_r($pagedef);
 			//print_r("<br />");
 		}
+		
+		$qs = $_SERVER['QUERY_STRING'];
+		if(strtolower($qs) == 'mode=initial-setup'){
+			switch_theme('instatheme01');
+			$toptions = get_option('instaparent_theme_options');
+			$toptions['presetStyle'] = 'style01';
+			update_option('instaparent_theme_options',$toptions);
+			setSlideshowImages();
+			bapi_wp_site_options();
+			$blog_url = get_site_url();
+			update_option( 'bapi_first_look', 0 );
+			header("HTTP/1.1 307 Temporary Redirect");
+			header("Location: $blog_url");
+			exit();
+		}
 		//return;
 		exit();
 	}
@@ -382,11 +386,11 @@
 		// If it doesn't exist, let's create it.
 		if( !$menu_exists){			
 			$menu_id = wp_create_nav_menu($menuname);
-			print_r("<div>Menu does not exist.  Created menu with menuid=" . $menu_id . ".</div>");
+			//print_r("<div>Menu does not exist.  Created menu with menuid=" . $menu_id . ".</div>");
 		}
 		else {
 			$menu_id = getMenuID($bpmenulocation);
-			print_r("<div>Menu already exists with menuid=" . $menu_id . ".</div>");
+			//print_r("<div>Menu already exists with menuid=" . $menu_id . ".</div>");
 		}
 		
 		if( !has_nav_menu( $bpmenulocation ) ){

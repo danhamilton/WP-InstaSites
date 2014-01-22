@@ -3,15 +3,18 @@
 */
 <script id="tmpl-search-homepage" type="text/html">
 <div class="property-search-block">
+<input type="text" class="quicksearch" style="display:none" data-field="sort" value="{{config.sort}}" />
+<input type="text" class="quicksearch" style="display:none" data-field="sortdesc" value="{{config.sortdesc}}" />
+<input type="text" class="quicksearch" style="display:none" data-field="restrictavail" value="{{#config.restrictavail}}1{{/config.restrictavail}}{{^config.restrictavail}}0{{/config.restrictavail}}" />
 {{#config.checkin.enabled}}
 <div class="category-block">
-	<input type="text" class="span12 txtb quicksearch sessioncheckin datepickercheckin" data-field="checkin" placeholder="{{textdata.Check-In}}" />
+	<input id="searchcheckin" type="text" class="span12 txtb quicksearch sessioncheckin datepickercheckin" data-field="scheckin" placeholder="{{textdata.Check-In}}" />
 </div>
 {{/config.checkin.enabled}}
 {{#config.checkin.enabled}}
 {{#config.checkout.enabled}}
 <div class="category-block">
-	<input type="text" class="span12 txtb quicksearch sessioncheckout datepickercheckout" data-field="checkout" placeholder="{{textdata.Check-Out}}" />
+	<input id="searchcheckout" type="text" class="span12 txtb quicksearch sessioncheckout datepickercheckout" data-field="scheckout" value="{{session.searchparams.scheckout}}" placeholder="{{textdata.Check-Out}}" />
 </div>
 {{/config.checkout.enabled}}
 {{#config.los.enabled}}
@@ -57,20 +60,36 @@
 {{/config.dev.enabled}}
 {{#config.sleeps.enabled}}
 <div class="category-block">
-	<select class="span12 property-search-input quicksearch sessionsleepsmin" data-field="sleeps[min]">
+	<select class="span12 property-search-input quicksearch sessionsleepsmin" data-field="sleeps[exact]">
 		<option value="">{{config.sleeps.prompt}}</option>
 		{{#config.sleeps.values}}<option value="{{Data}}">{{Label}}</option>{{/config.sleeps.values}}
 	</select>
 </div>
 {{/config.sleeps.enabled}}
+{{#config.minsleeps.enabled}}
+<div class="category-block">
+	<select class="span12 property-search-input quicksearch sessionsleepsmin" data-field="sleeps[min]">
+		<option value="">{{config.sleeps.minprompt}}</option>
+		{{#config.sleeps.minvalues}}<option value="{{Data}}">{{Label}}</option>{{/config.sleeps.minvalues}}
+	</select>
+</div>
+{{/config.minsleeps.enabled}}
 {{#config.beds.enabled}}
 <div class="category-block">
-	<select class="span12 property-search-input quicksearch sessionbedsmin" data-field="beds[min]">
+	<select class="span12 property-search-input quicksearch sessionbedsmin" data-field="beds[exact]">
 		<option value="">{{config.beds.prompt}}</option>
 		{{#config.beds.values}}<option value="{{Data}}">{{Label}}</option>{{/config.beds.values}}
 	</select>
 </div>
 {{/config.beds.enabled}}
+{{#config.minbeds.enabled}}
+<div class="category-block">
+	<select class="span12 property-search-input quicksearch sessionbedsmin" data-field="beds[min]">
+		<option value="">{{config.beds.minprompt}}</option>
+		{{#config.beds.minvalues}}<option value="{{Data}}">{{Label}}</option>{{/config.beds.minvalues}}
+	</select>
+</div>
+{{/config.minbeds.enabled}}
 {{#config.baths.enabled}}
 <div class="category-block">
 	<select class="span12 property-search-input quicksearch sessionbathsmin" data-field="baths[min]">
@@ -80,17 +99,34 @@
 </div>
 {{/config.baths.enabled}}
 {{#config.location.enabled}}
+{{#config.location.autocomplete}}
+<div class="category-block">
+	<input type="text" class="span12 property-search-input quicksearch sessionlocation bapi-malocationsearch" data-field="location" placeholder="{{config.location.prompt}}" />
+</div>
+{{/config.location.autocomplete}}
+{{^config.location.autocomplete}}
+<div class="category-block">
+	<select class="span12 property-search-input quicksearch sessionlocation" data-field="location">
+		<option value="">{{config.location.prompt}}</option>
+		{{#config.location.values}}<option value="{{Data}}">{{Label}}</option>{{/config.location.values}}
+	</select>
+</div>
+{{/config.location.autocomplete}}
+{{/config.location.enabled}}
+{{#config.city.enabled}}
+{{#config.city.autocomplete}}
 <div class="category-block">
 	<input type="text" class="span12 property-search-input quicksearch sessionlocation bapi-locationsearch" data-field="location" placeholder="{{config.location.prompt}}" />
 </div>
-{{/config.location.enabled}}
-{{#config.city.enabled}}
+{{/config.city.autocomplete}}
+{{^config.city.autocomplete}}
 <div class="category-block">
 	<select class="span12 property-search-input quicksearch sessionlocation" data-field="location">
 		<option value="">{{config.city.prompt}}</option>		
 		{{#config.city.values}}<option value="{{Data}}">{{Label}}</option>{{/config.city.values}}
 	</select>
 </div>
+{{/config.city.autocomplete}}
 {{/config.city.enabled}}
 {{#config.rate.enabled}}
 <div class="category-block">
@@ -151,12 +187,12 @@
 	
 <div class="span6">
 <label>{{textdata.Check-In}}</label>
-<input class="span12 quicksearch datepickercheckin" type="text" placeholder="{{textdata.Check-In}}" value="{{session.searchparams.scheckin}}" data-field="checkin" required>
+<input id="rateblockcheckin" class="span12 quicksearch datepickercheckin" type="text" placeholder="{{textdata.Check-In}}" value="{{session.searchparams.scheckin}}" data-field="scheckin" required>
 </div>
 
 <div class="span6">
 <label>{{textdata.Check-Out}}</label>
-<input class="span12 quicksearch datepickercheckout" type="text" placeholder="{{textdata.Check-Out}}" value="{{session.searchparams.scheckout}}" data-field="checkout" required>
+<input id="rateblockcheckout" class="span12 quicksearch datepickercheckout" type="text" placeholder="{{textdata.Check-Out}}" value="{{session.searchparams.scheckout}}" data-field="scheckout" required>
 <input style="display:none" class="quicksearch" type="text" value="" data-field="los">
 </div>
 
@@ -204,7 +240,7 @@
 
 {{#config.checkout.enabled}}
 <div class="category-block">
-	<input type="text" class="span12 txtb quicksearch sessioncheckout datepickercheckout" data-field="checkout" />
+	<input type="text" class="span12 txtb quicksearch sessioncheckout datepickercheckout" data-field="scheckout" />
 </div>
 {{/config.checkout.enabled}}
 {{#config.los.enabled}}
@@ -219,6 +255,56 @@
 /*
 	Group: Properties
 */
+<script id="tmpl-propertysearch-mapview" type="text/html">
+<header class="row-fluid search-result-controls">
+<div class="span7 form-horizontal">&nbsp;</div>
+<div class="span5 form-horizontal">
+<div class="control-group pull-right">
+	<label class="control-label"></label>
+	<div class="controls">
+		<div class="btn-group" data-toggle="buttons-radio">
+		{{#config.searchmodes.listview}}<button class="btn changeview" data-template="tmpl-propertysearch-listview"><i class="icon-list"></i>&nbsp;{{textdata.List}}</button>{{/config.searchmodes.listview}}
+		{{#config.searchmodes.photoview}}<button class="btn changeview" data-template="tmpl-propertysearch-galleryview" data-rowfixselector=".gallery-view-page%20%3E%20.span6" data-rowfixcount="2"><i class="icon-th-large"></i>&nbsp;{{textdata.Photo}}</button>{{/config.searchmodes.photoview}}
+		{{#config.searchmodes.mapview}}<button class="btn changeview active" data-template="tmpl-propertysearch-mapview" data-showallresults="1"><i class="icon-map-marker"></i>&nbsp;{{textdata.Map}}</button>{{/config.searchmodes.mapview}}
+		</div>        
+	</div>
+</div>
+</div>	
+</header>
+<div class="map-view-page">
+<div id="prop-map" class="bapi-map" data-loc-selector='.prop-map-location' data-link-selector='.prop-map-item' style="width:100%; height:650px; float:left;"></div>
+<div id="map-locations">
+{{#result}}
+<div class="prop-map-location hide" data-id="{{ContextData.ItemIndex}}" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}} }, "category": "poi-{{ContextData.ItemIndex}}"}'>
+	  <a href="#" class="prop-map-item"><div class="number-tag">{{&ContextData.ItemIndex}}</div></a>
+	<div class="info-html">
+	<div class="marker-infowindow"> 		
+		<div class="prop-image">{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}<img src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}" />{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}</div>
+		<div class="prop-title">{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
+			<b>{{Headline}}</b>
+			{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}</div>
+		<div class="bottom-block">
+		<div class="prop-location pull-left">
+			<span>
+			<b>{{textdata.Category}}: </b>{{Type}}<br/>
+			<b>{{textdata.City}}: </b>{{&City}}{{#Bedrooms}}&nbsp;|&nbsp;<b>{{textdata.Beds}}: </b>{{&Bedrooms}}{{/Bedrooms}}{{#Bathrooms}}&nbsp;|&nbsp;<b>{{textdata.Baths}}: </b>{{&Bathrooms}}{{/Bathrooms}}{{#Sleeps}}&nbsp;|&nbsp;<b>{{textdata.Sleeps}}: </b>{{&Sleeps}}{{/Sleeps}}
+			</span>
+		</div>
+		<div class="rate-value pull-right">
+		{{ContextData.Quote.QuoteDisplay.value}}
+		</div>
+		</div>
+	</div>
+	</div>	
+	  </div>	  
+{{/result}}
+</div>
+<div class="clearfix"></div>
+</div>
+<br/>
+<div class="clearfix"></div>
+</script>
+
 <script id="tmpl-propertysearch-galleryview" type="text/html">
 <header class="row-fluid search-result-controls">
 <div class="span7 form-horizontal">&nbsp;</div>
@@ -227,10 +313,10 @@
 	<label class="control-label"></label>
 	<div class="controls">
 		<div class="btn-group" data-toggle="buttons-radio">
-		<button class="btn changeview" data-template="tmpl-propertysearch-listview"><i class="icon-list"></i>&nbsp;{{textdata.List}}</button>
-		<button class="btn changeview active" data-template="tmpl-propertysearch-galleryview"><i class="icon-th-large"></i>&nbsp;{{textdata.Photo}}</button>		
-		</div>
-        <button class="btn changeview" data-template="tmpl-propertysearch-galleryview" style="display:none"><i class="icon-map-marker"></i>&nbsp;{{textdata.Map}}</button>
+		{{#config.searchmodes.listview}}<button class="btn changeview" data-template="tmpl-propertysearch-listview"><i class="icon-list"></i>&nbsp;{{textdata.List}}</button>{{/config.searchmodes.listview}}
+		{{#config.searchmodes.photoview}}<button class="btn changeview active" data-template="tmpl-propertysearch-galleryview" data-rowfixselector=".gallery-view-page%20%3E%20.span6" data-rowfixcount="2"><i class="icon-th-large"></i>&nbsp;{{textdata.Photo}}</button>{{/config.searchmodes.photoview}}
+		{{#config.searchmodes.mapview}}<button class="btn changeview" data-template="tmpl-propertysearch-mapview" data-showallresults="1"><i class="icon-map-marker"></i>&nbsp;{{textdata.Map}}</button>{{/config.searchmodes.mapview}}
+		</div>        
 	</div>
 </div>
 </div>	
@@ -293,10 +379,10 @@
 	<label class="control-label"></label>
 	<div class="controls">
 		<div class="btn-group" data-toggle="buttons-radio">
-		<button class="btn changeview active" data-template="tmpl-propertysearch-listview" data-rowfixselector="" data-rowfixcount"1"><i class="icon-list"></i>&nbsp;{{textdata.List}}</button>
-		<button class="btn changeview" data-template="tmpl-propertysearch-galleryview" data-rowfixselector=".gallery-view-page%20%3E%20.span6" data-rowfixcount="2"><i class="icon-th-large"></i>&nbsp;{{textdata.Photo}}</button>		
-		</div>
-        <button class="btn changeview" data-template="tmpl-propertysearch-galleryview" style="display:none"><i class="icon-map-marker"></i>&nbsp;{{textdata.Map}}</button>
+		{{#config.searchmodes.listview}}<button class="btn changeview active" data-template="tmpl-propertysearch-listview" data-rowfixselector="" data-rowfixcount"1"><i class="icon-list"></i>&nbsp;{{textdata.List}}</button>{{/config.searchmodes.listview}}
+		{{#config.searchmodes.photoview}}<button class="btn changeview" data-template="tmpl-propertysearch-galleryview" data-rowfixselector=".gallery-view-page%20%3E%20.span6" data-rowfixcount="2"><i class="icon-th-large"></i>&nbsp;{{textdata.Photo}}</button>{{/config.searchmodes.photoview}}
+		{{#config.searchmodes.mapview}}<button class="btn changeview" data-template="tmpl-propertysearch-mapview" data-showallresults="1"><i class="icon-map-marker"></i>&nbsp;{{textdata.Map}}</button>{{/config.searchmodes.mapview}}
+		</div>        
 	</div>
 </div>
 </div>	
@@ -505,7 +591,7 @@
 		<div id="slider" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "sync": "#carousel" }'>
 		<ul class="slides">
 		{{#Images}}
-			<li><img alt="{{Caption}}" src="{{&MediumURL}}" />
+			<li><img alt="{{Caption}}" title="Open Slideshow" src="/wp-content/plugins/bookt-api/img/loading.gif" data-src="{{&MediumURL}}" />
 			{{#Caption}}
 			<p class="flex-caption">{{Caption}}</p></li>
 			{{/Caption}}
@@ -515,11 +601,29 @@
 		<div id="carousel" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "itemWidth": 50, "itemMargin": 10, "asNavFor": "#slider" }'>
 		<ul class="slides">
 		{{#Images}}
-			<li><img alt="" src="{{&ThumbnailURL}}" /></li>
+			<li><img alt="" src="/wp-content/plugins/bookt-api/img/loading.gif" data-src="{{&ThumbnailURL}}" /></li>
 		{{/Images}}                   
 		</ul>
-		</div>                   
-	</div>        
+		</div>
+ 
+<!-- Modal -->
+<div id="fullScreenSlideshow" class="modal hide fade fullScreenSlideshow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-body">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+  <div id="fullScreenCarousel" class="carousel slide fullScreenCarousel" data-interval="10800000">
+  <!-- Carousel items -->
+<div class="carousel-inner">
+{{#Images}}<div class="item" data-caption="{{Caption}}" data-imgurl="{{&OriginalURL}}"><div class="carousel-caption"><h4 class="headline">{{Headline}}</h4><p>{{Caption}}</p></div></div>{{/Images}}
+</div>
+<!-- Carousel nav -->
+<div class="carousel-controls"><a class="carousel-control left" href="#fullScreenCarousel" data-slide="prev">&lsaquo;</a>
+<a class="carousel-control right" href="#fullScreenCarousel" data-slide="next">&rsaquo;</a></div>
+</div>
+</div>
+</div>
+
+
+	</div>
 </div>
 </section>
 <section class="row-fluid item-info module shadow-border">
@@ -527,7 +631,9 @@
 	<div class="tabbable">
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="#tab1" data-toggle="tab">{{textdata.General}}</a></li>
+		{{^HideAvailability}}
 		<li><a href="#tab2" data-toggle="tab">{{textdata.Rates & Availability}}</a></li>
+		{{/HideAvailability}}
 		<li><a href="#tab3" data-toggle="tab">{{textdata.Amenities}}</a></li>
 		<li><a href="#tab4" id="tabs4" data-toggle="tab">{{textdata.Attractions}}</a></li>
 		{{#config.hasreviews}}		
@@ -550,8 +656,8 @@
 						{{#Sleeps}}<li>{{textdata.Sleeps}}: <span>{{Sleeps}}</span></li>{{/Sleeps}}
 						{{#Stories}}<li>{{textdata.Stories}}: <span>{{Stories}}</span></li>{{/Stories}}
 						{{#Floor}}<li>{{textdata.Floor}}: <span>{{Floor}}</span></li>{{/Floor}}
-						{{#AdjLivingSpace}}<li>Unit Size: <span>{{AdjLivingSpace}}</span></li>{{/AdjLivingSpace}}
-						{{#LotSize}}<li>Lot Size: <span>{{LotSize}}</span></li>{{/LotSize}}
+						{{#AdjLivingSpace}}<li>Unit Size: <span>{{AdjLivingSpace}} {{AdjLivingSpaceUnit}}</span></li>{{/AdjLivingSpace}}
+						{{#LotSize}}<li>Lot Size: <span>{{LotSize}} {{LotSizeUnit}}</span></li>{{/LotSize}}
 					</ul>
 					</div>
 				</div>
@@ -563,6 +669,7 @@
 		</div>
 		</div>
 		</div>
+		{{^HideAvailability}}
 		<div class="tab-pane" id="tab2">					
 		<div class="row-fluid">
 		<div class="span12 box-sides">		
@@ -572,13 +679,13 @@
 		<div class="bapi-ratetable"></div>		
 		</div>
 		</div>
-		</div>		
+		</div>
+		{{/HideAvailability}}
 		<div class="tab-pane" id="tab3">			
 		<div class="row-fluid">
 		<div class="span12 box-sides">
-		
 		<h3>{{textdata.Amenities}}</h3>
-		{{#Amenities2}}		
+		{{#Amenities}}		
 		<ul class="amenities-list unstyled clearfix">
 		<li class="category-title">{{Key}}</li> 	
 		{{#Values}}
@@ -586,11 +693,10 @@
 		{{/Values}}		
 		</ul>
 		<div class="clearfix"></div>
-		{{/Amenities2}}
-		
+		{{/Amenities}}
 		</div>
 		</div>
-		</div>		
+		</div>
 		<div class="tab-pane" id="tab4">			
 		<div class="row-fluid">
 		<div class="span12 box-sides">
@@ -608,11 +714,11 @@
 			<tbody id="map-locations">
 			<tr>
 				<td>
-				<div class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}} } }'>
-					<a class="poi-map-item halflings map-marker" href="#"><i></i></a>
+				<div class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}} }, "category" : "property"}'>
+					<a class="poi-map-item mapmarker-prop" href="#">Property</a>
 					<div class="info-html">
 						<div class="marker-infowindow"> 		
-							<span class="prop-image pull-left"><img src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>
+							<span class="prop-image pull-left"><img src="/wp-content/plugins/bookt-api/img/loading.gif" data-src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>
 							<span class="prop-location pull-left">
 								<span>
 								{{#ContextData.SEO.Keyword}}<a target="_blank" href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
@@ -636,11 +742,11 @@
 			{{#ContextData.Attractions}}
 			<tr>
 				<td>
-				<div class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}} } }'>
-					<a class="poi-map-item halflings map-marker" href="#"><i></i></a>
+				<div class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}} }, "category":"poi-{{ContextData.ItemIndex}}" }'>
+					<a class="poi-map-item mapmarker-{{ContextData.ItemIndex}}" href="#">{{ContextData.ItemIndex}}</a>
 					<div class="info-html">
 						<div class="marker-infowindow"> 
-							<span class="prop-image pull-left"><img src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>					
+							<span class="prop-image pull-left"><img src="/wp-content/plugins/bookt-api/img/loading.gif" data-src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>					
 							<span class="prop-location pull-left">
 								<span>
 								{{#ContextData.SEO.Keyword}}<a target="_blank" href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
@@ -653,7 +759,7 @@
 					  </div>					
 					</div>
 				</td>
-				<td>{{Name}}</td>
+				<td>{{#ContextData.SEO.Keyword}}<a target="_blank" href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}{{Name}}{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}</td>
 				<td>{{Type}}</td>
 				<td>{{ContextData.Distance}}</td>  
 			</tr>
@@ -678,7 +784,7 @@
 			</div>
 			<div class="span10">
 				<h5 class="title">{{Title}}</h5>
-				<div class="rating">{{Rating}} <span>Posted on: {{SubmittedOn.ShortDate}}</span></div>
+				<div class="rating">{<span class="reviewrating-{{Rating}}"></span> <span>Posted on: {{SubmittedOn.ShortDate}}</span></div>
 				<div class="comment">
 				{{&Comment}}
 				</div>
@@ -907,6 +1013,23 @@
 <span class="end"></span>
 </script>
 
+<script id="tmpl-developments-quickview" type="text/html">
+{{#result}}
+<div class="development-holder">
+	<div class="development-image">
+	<a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}">
+		<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" />	
+	</a>
+	</div>
+	<div class="development-description">
+		<a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}"><h4 class="developments-title">{{Name}}</h4></a>
+	<div class="development-location"><span class="type">{{Type}}</span>{{#Region}}, {{Region}}{{/Region}}{{#State}}, {{State}}{{/State}}</div><hr/>
+	<div class="developments-sum bapi-truncate" data-trunclen="100">{{&Summary}}</div>
+	</div>
+</div>
+{{/result}}
+</script>
+
 /*
 	Group: Market Areas
 */
@@ -979,7 +1102,7 @@
 					{{/PrimaryImage.Caption}}
 				  {{/Images}}
 				  {{#Images}}
-                    <li><img alt="{{Caption}}" src="{{&MediumURL}}" />
+                    <li><img alt="{{Caption}}" src="{{&OriginalURL}}" />
 					{{#Caption}}
 					<p class="flex-caption">{{Caption}}</p></li>
 					{{/Caption}}
@@ -1002,14 +1125,14 @@
 
 {{#Description}}
 <div class="row-fluid">
-<div class="span12 outside-description">
-{{&Description}}
+<div class="span12 outside-description bapi-dotdotdot" data-readmorelink="true" data-dotdotdotheight="100">
+{{{Description}}}
 </div>
 </div>
 {{/Description}}
 
 <h3 class="outside-title">{{textdata.Available Properties}}</h3>
-<div id="propresults" class="bapi-summary marketarea-props" data-log="0" data-templatename="tmpl-allproperties"  data-entity="property" data-searchoptions='{ "maid": {{ID}}, "seo": 1, "pagesize": 10 }'></div>
+<div id="propresults" class="bapi-summary marketarea-props" data-log="0" data-templatename="tmpl-allproperties"  data-entity="property" data-ignoresession="1" data-searchoptions='{ "maid": {{ID}}, "location": "{{#PostalCode}}{{&PostalCode}}{{/PostalCode}}{{^PostalCode}}{{#Neighborhood}}{{&Neighborhood}}{{/Neighborhood}}{{^Neighborhood}}{{#Metro}}{{&Metro}}{{/Metro}}{{^Metro}}{{#City}}{{&City}}{{/City}}{{^City}}{{#County}}{{&County}}{{/County}}{{^County}}{{#State}}{{&State}}{{/State}}{{^State}}{{#Region}}{{&Region}}{{/Region}}{{^Region}}{{#Country}}{{&Country}}{{/Country}}{{/Region}}{{/State}}{{/County}}{{/City}}{{/Metro}}{{/Neighborhood}}{{/PostalCode}}" , "seo": 1, "pagesize": 10 }'></div>
 
 <div class="bapi-moveme" data-from=".marketarea-details" data-to=".detail-overview-target" data-method="append">
 <div class="marketarea-details module shadow">
@@ -1062,7 +1185,7 @@
   <div class="item-result">
 	<div class="item-inner">
 	  <div class="item-images">	  
-	  <div class="poi-map-location" data-id="{{ContextData.ItemIndex}}" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}} }, "category": "poi"}'>
+	  <div class="poi-map-location" data-id="{{ContextData.ItemIndex}}" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}} }, "category": "poi-{{ContextData.ItemIndex}}"}'>
 	  <a href="#" class="poi-map-item"><div class="number-tag">{{&ContextData.ItemIndex}}</div></a>
 	  <div class="info-html">
 	<div class="marker-infowindow"> 		
@@ -1094,6 +1217,23 @@
   </div>
 </div>
 {{/result}}
+{{#site.office.ShowOnMap}}
+<div class="poi-map-location hide" data-id="{{site.solutionid}}" data-jmapping='{ "id": {{site.solutionid}}, "point": { "lng": {{site.office.Longitude}}, "lat": {{site.office.Latitude}} }, "category": "pinOffice}"}'>
+	  <a href="#" class="poi-map-item">{{site.solutionnameinformal}}</a>
+	<div class="info-html">
+	<div class="marker-infowindow"> 		
+		<span class="prop-image pull-left"><img style="max-height:175px; max-width:175px" src="{{&site.logo}}" alt="{{site.tagline}}"></span>
+		<span class="prop-location pull-left">
+			<span>
+			<a target="_blank" href="mailto:{{&site.email}}">
+			<b>{{site.solutionnameinformal}}</b></a><br/>
+			<b>{{textdata.Address}}: </b>{{&site.office.Address1}}
+			</span>
+		</span>
+	</div>
+    </div>
+</div>
+{{/site.office.ShowOnMap}}
 </div>
 <div class="clearfix"></div>
 {{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalcount}})</a></span></div>{{/islastpage}}
@@ -1153,7 +1293,7 @@
 					<div class="span6 box-left">                
 						<h3>{{textdata.Nearby Rentals}}</h3>						
 						<div id="map-locations">
-						<div class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}}}, "category": "poi"}'>
+						<div class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}}}, "category": "mainPoi"}'>
 						- &nbsp;<a href="#" class="poi-map-item">{{Name}}</a>
 							<div class="info-html">
 <div class="gmap-poi">
@@ -1169,7 +1309,7 @@
 							</div>
 						</div>
 						{{#ContextData.NearbyProperties}}
-						<div class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}}}, "category": "starred"}'>
+						<div class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}}}, "category": "poi-{{ContextData.ItemIndex}}"}'>
 						{{ContextData.ItemIndex}}&nbsp;-&nbsp;<a href="#" class="poi-map-item">{{Headline}}</a> - {{ContextData.Distance}}
 							<div class="info-html">
 								<div class="gmap-property">
@@ -1196,7 +1336,7 @@
 					</div>			
 					<div class="span6 box-right">                
 					<h3>{{textdata.Map}}</h3>
-					<div id="poi-map-prop" class="bapi-map" data-loc-selector='.poi-map-location' data-link-selector='.poi-map-item' data-category-icons='{ "starred": { "color": "#E8413A" }, "poi": { "color": "#465AE0" } }' style="width:100%; height:350px; float:left;"></div>
+					<div id="poi-map-prop" class="bapi-map" data-loc-selector='.poi-map-location' data-link-selector='.poi-map-item' style="width:100%; height:350px; float:left;"></div>
 					</div>
 				</div>
 			</div>
@@ -1555,13 +1695,13 @@
 	<header class="pagination-centered pd">
 		<h1>{{textdata.Fast Secure Online Booking}}</h1>
 		<p>
-			<strong>{{Headline}}</strong><span class="hidden-phone">&nbsp;-&nbsp;{{Type}}
+			<a href="{{&ContextData.SEO.DetailURL}}"><strong>{{Headline}}</strong></a><span class="hidden-phone">&nbsp;-&nbsp;{{Type}}
 			{{#Bedrooms}}&nbsp;/&nbsp;{{textdata.Beds}}&nbsp;{{Bedrooms}}{{/Bedrooms}}
 			{{#Bathrooms}}&nbsp;/&nbsp;{{textdata.Baths}}&nbsp;{{Bathrooms}}{{/Bathrooms}}
 			{{#Sleeps}}&nbsp;/&nbsp;{{textdata.Sleeps}}&nbsp;{{Sleeps}}{{/Sleeps}}</span>
 		</p>
 		<div class="booking-prop-img">
-			<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.OriginalURL}}" caption="{{PrimaryImage.Captions}}" />		
+			<a href="{{&ContextData.SEO.DetailURL}}"><img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.OriginalURL}}" caption="{{PrimaryImage.Captions}}" title="Back to the Property Detail Page" /></a>
 		</div>
 	</header>	
 	<div class="booking-page bordersolid">
@@ -1615,11 +1755,11 @@
     <div class="row-fluid">
 		<div class="span6">
 			<label>{{textdata.Check-In}}</label>
-			<input class="span12 revisedates datepickercheckin" type="text" placeholder="{{textdata.Check-In}}" value="{{session.searchparams.scheckin}}" data-field="checkin" required>
+			<input id="makebookingcheckin" class="span12 revisedates datepickercheckin" type="text" placeholder="{{textdata.Check-In}}" value="{{session.searchparams.scheckin}}" data-field="scheckin" required>
 		</div>
 		<div class="span6">
 			<label>{{textdata.Check-Out}}</label>
-			<input class="span12 revisedates datepickercheckout" type="text" placeholder="{{textdata.Check-Out}}" value="{{session.searchparams.scheckout}}" data-field="checkout" required>	  
+			<input id="makebookingcheckout" class="span12 revisedates datepickercheckout" type="text" placeholder="{{textdata.Check-Out}}" value="{{session.searchparams.scheckout}}" data-field="scheckout" required>	  
 		</div>
 	</div>
 	<div class="row-fluid">
@@ -1670,7 +1810,7 @@
 {{#OptionalFees}}
 	<p>
 	{{#BoolField}}<input type="checkbox" class="bapi-optionalfee" {{#Quantity}}checked{{/Quantity}} data-rid="{{RelatedToID}}" data-reid="{{RelatedToEntityID}}" />{{/BoolField}}
-	{{^BoolField}}<input type="number" class="span2 bapi-optionalfee" min="{{MinQty}}" max="{{MaxQty}}" value="{{Quantity}}" data-rid="{{RelatedToID}}" data-reid="{{RelatedToEntityID}}" />{{/BoolField}}
+	{{^BoolField}}<input type="number" class="span2 bapi-optionalfee" {{#MinQty}}min="{{MinQty}}"{{/MinQty}}{{^MinQty}}min="0"{{/MinQty}} max="{{MaxQty}}" value="{{Quantity}}" data-rid="{{RelatedToID}}" data-reid="{{RelatedToEntityID}}" />{{/BoolField}}
 	{{{Notes}}}
 	<span class="pull-right">{{#SubTotal}}{{OptionalFeesTotal.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span>
 	</p>
@@ -1696,7 +1836,7 @@
 </div>
 <div id="msgs" class="item row-fluid">
 	<div class="msg-yellow">
-	  <p><i class="halflings-icon star"></i> <strong>{{textdata.Total}}</strong><span class="pull-right"><strong>{{Total2.CurrencySymbol}}{{Total2.SValue2}}</strong></span></p>
+	  <p><i class="halflings-icon star"></i> <strong>{{textdata.Total}}</strong><span class="pull-right"><strong>{{TotalDueNow.CurrencySymbol}} {{Total}}</strong></span></p>
 	  {{#DiscountsTotal.Value}}<p><strong>You saved<span class="pull-right">{{DiscountsTotal.CurrencySymbol}}{{DiscountsTotal.SValue2}}</span></strong></p>{{/DiscountsTotal.Value}}
 	  <p><strong>Amount Due Now:</strong><span class="pull-right">{{TotalDueNow.CurrencySymbol}} {{TotalDueNow.SValue2}}</span></p>	  
 	</div>
@@ -1783,13 +1923,25 @@
 {{/OptionalFees.length}}
 {{#Discounts.length}}
 <div id="discounts-modal" class="item row-fluid">
+<h5>{{textdata.Discounts}}</h5>
 {{/Discounts.length}}
 {{#Discounts}}
 <p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
 {{/Discounts}}
 {{#Discounts.length}}
 </div>
+<hr />
 {{/Discounts.length}}
+{{#Deposits.length}}
+<div id="deposits-modal" class="item row-fluid">
+<h5>{{textdata.Deposits}}</h5>
+{{/Deposits.length}}
+{{#Deposits}}
+<p>{{{Notes}}} {{#Description}}<small class="charges-desc"><a data-toggle="collapse" data-target="#description{{RelatedToID}}">({{textdata.Description}})</a></small>{{/Description}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>{{#Description}}<div id="description{{RelatedToID}}" class="collapse">{{{Description}}}</div>{{/Description}}
+{{/Deposits}}
+{{#Deposits.length}}
+</div>
+{{/Deposits.length}}
 </div>
 <div class="modal-footer">
 <button class="btn" data-dismiss="modal" aria-hidden="true">{{textdata.Close}}</button>                        
@@ -1980,8 +2132,9 @@
 			</span>
 			<span class="line2">
 				{{#result}}{{#ContextData.Quote.Statement.ValidUntil}}Quote is valid until: {{LongDateTime}}<br />{{/ContextData.Quote.Statement.ValidUntil}}{{/result}}
-				{{textdata.This page is secure}} - <a href="#">{{textdata.check here}}</a>
+				{{textdata.This page is secure}} - <a href="#SSL" data-toggle="collapse" data-target="#SSL">{{textdata.check here}}</a>
 			</span>
+			<div id="SSL" class="collapse"></div>
 		</div>
 		{{#result}}
 		<div class="amount-bk span4">
@@ -2231,7 +2384,7 @@
 </div>
 <div id="msgs" class="item row-fluid">
 	<div class="msg-yellow">
-	  <p><i class="halflings-icon star"></i> <strong>{{textdata.Total}}</strong><span class="pull-right"><strong>{{Total2.CurrencySymbol}}{{Total2.SValue2}}</strong></span></p>
+	  <p><i class="halflings-icon star"></i> <strong>{{textdata.Total}}</strong><span class="pull-right"><strong>{{TotalDueNow.CurrencySymbol}} {{Total}}</strong></span></p>
 	  {{#DiscountsTotal.Value}}<p><strong>You saved<span class="pull-right">{{DiscountsTotal.CurrencySymbol}}{{DiscountsTotal.SValue2}}{{/DiscountsTotal.Value}}</strong></span></p>
 	    <p><strong>Amount Paid:</strong><span class="pull-right">{{AmountPaid.CurrencySymbol}} {{AmountPaid.SValue2}}</span></p>	
 	<p><strong>Amount Due Now:</strong><span class="pull-right">{{AmountPaid.CurrencySymbol}} {{TotalDueNow.SValue2}}</span></p>	  
@@ -2312,8 +2465,8 @@
 <span class="glyphicons module notes_2"><i></i>{{textdata.Booking Details}}</span>
 <div id="details" class="item row-fluid">  
 		<span style='display:none'>
-			<input class="span12" type="text"  value="{{SCheckIn}}" data-field="checkin">
-			<input class="span12" type="text" value="{{SCheckOut}}" data-field="checkout">	  
+			<input class="span12" type="text"  value="{{SCheckIn}}" data-field="scheckin">
+			<input class="span12" type="text" value="{{SCheckOut}}" data-field="scheckout">	  
 		</span>
 		</div>            
 	<p><span class="glyphicons calendar"><i></i>{{textdata.Check-In}}</span> <span class="pull-right">{{SCheckIn}}</span></p>
@@ -2327,6 +2480,21 @@
 </script>
 <script id="tmpl-booking-makepayment-pay" type="text/html">
 {{#result}}
+<legend>4. {{textdata.Accept Terms and Conditions}}</legend>
+<div class="control-group">
+	<p style="display:none">{{config.rentalpolicysummary}}</p>
+	<div class="controls-rows">
+		<label class="checkbox span6">	
+			<small>
+			<em>
+				<input type="checkbox" class="required checkbox">{{textdata.I have read and accept the terms and conditions}}:</input>&nbsp;
+				<a target="_blank" href="/rentalpolicy">{{textdata.Rental Policy}}</a>&nbsp;
+				<a target="_blank" href="/termsofuse">{{textdata.Terms of Service}}</a>
+			</em>
+			</small>		
+		</label>
+	</div>
+</div>
 <div class="control-group">
 	<div class="controls-rows">
 		<div class="btn-book-header span6">

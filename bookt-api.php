@@ -33,6 +33,7 @@ include_once(dirname( __FILE__ ).'/google-xml-sitemap.php');
 include_once(dirname( __FILE__ ).'/cdn-linker/wp-cdn-linker.php');
 include_once(dirname( __FILE__ ).'/create-site.php');
 include_once(dirname( __FILE__ ).'/shortcodes.php');
+include_once(dirname( __FILE__ ).'/cloudfront.php');
 require_once('bapi-php/bapi.php');
 require_once('init.php');
 
@@ -46,18 +47,26 @@ add_filter('get_sample_permalink_html', 'perm', '',4); //Remove Edit Button for 
 add_action('template_redirect', 'do_ossdl_off_ob_start');
 add_action('wp_head','getconfig');
 add_action('wp_head','bapi_getmeta',1);
-add_action('wp_head','display_global_header',2);
+add_action('wp_head','display_global_header',10);
+add_action('wp_head','display_gw_verification',10);
+add_action('wp_head','bapi_no_follow',1);
 add_action('init','bapi_create_site',1);  //Hook to add new sites
+add_action('init','bapi_setup_default_pages',5);
+add_action('init','urlHandler_bapidefaultpages',1);
 add_action('init','urlHandler_securepages',1);  //Hook to force redirect to secure pages
 add_action('init','bapi_wp_site_options',1);  //Preload Site Data to help reduce DB usage
 add_action('init','bapi_sync_coredata',2); 	// syncing BAPI core data
 add_action('init','bapi_sync_entity',3);	// syncing BAPI entities (such as properties, developments, etc...)
 add_action('init','urlHandler_bapitextdata',4);	// handler for /bapi.textdata.js
 add_action('init','urlHandler_bapitemplates',4);	// handler for /bapi.templates.js
-add_action('init','urlHandler_bapidefaultpages',4);	// handler for /bapi.init
+add_action('init','urlHandler_bapitextdata',4);	// handler for /bapi.textdata.js
+add_action('init','urlHandler_bapiconfig',4);	// handler for /bapi.config.js
 add_action('init','urlHandler_sitelist',4);	// handler for /sitelist (possible warmup list)
 add_action('init','disable_kses_content',20);
 add_action('template_redirect', 'google_sitemap'); // sitemap handler
+add_action('wp_login','bapi_reset_first_look');
+add_action('after_setup_theme','bapi_login_handler',1);  //Hook to do single sign-on
+add_action('template_redirect','relative_url');
 
 // create custom plugin settings menu
 add_action('admin_menu', 'bapi_create_menu');
@@ -78,6 +87,7 @@ add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Propert
 add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Specials_Widget" );' ) );
 add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Weather_Widget" );' ) );
 add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_DetailOverview_Widget" );' ) );
+add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Developments_Widget" );' ) );
 
 require_once('mustache.php-2.1.0/src/Mustache/Autoloader.php');
 Mustache_Autoloader::register();
