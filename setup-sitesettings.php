@@ -4,7 +4,13 @@
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {				
 		//bapi_wp_site_options();
 		unset($_POST['submit']);		
-		//print_r($_POST);
+		$postSitesettings = $_POST;
+		//print_r($postSitesettings);
+		
+		/*foreach ($postSitesettings as $k => $v) {
+			echo "[$k] => $v<br/>";
+		}*/
+
 		$sitesettings = json_encode($_POST);
 		update_option('bapi_sitesettings',  $sitesettings);		
 		echo '<div id="message" class="updated"><p><strong>Settings saved.</strong></p></div>';		
@@ -12,43 +18,12 @@
 	else {
 		$sitesettings = $bapi_all_options['bapi_sitesettings'];
 	}
+/* we get BAPI */
+getconfig();
 ?> 
-<script type="text/javascript">
-<?php			
-	if (!empty($sitesettings)) {
-		echo 'var settings=' . stripslashes($sitesettings) . ';';
-	} else {
-		echo 'var settings={
-			"searchmode-listview": "BAPI.config().searchmodes.listview=true;",			
-			"searchmode-photoview": "BAPI.config().searchmodes.photoview=true;",
-			"searchmode-widephotoview": "BAPI.config().searchmodes.widephotoview=false;",
-			"searchmode-hotelview": "BAPI.config().searchmodes.hotelview=false;",
-			"searchmode-mapview": "BAPI.config().searchmodes.mapview=false;",
-			"amenitysearch": "BAPI.config().amenity.enabled=false;",
-			"devsearch": "BAPI.config().dev.enabled=false;",
-			"adultsearch: "BAPI.config().adults.enabled=false;",
-			"childsearch": "BAPI.config().children.enabled=false;",
-			"headlinesearch": "BAPI.config().headline.enabled=false;",
-			"locsearch": "BAPI.config().city.enabled=false; BAPI.config().location.enabled=false;",
-			"showunavailunits": "BAPI.config().restrictavail=true;",
-			"searchsort": "BAPI.config().sort=\'random\';",
-			"searchsortorder": "BAPI.config().sortdesc=false;",
-			"propdetail-availcal": "BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=1;",
-			"propdetail-reviewtab": "BAPI.config().hasreviews=false;"		
-		};';
-	}	
-?> 
-jQuery(document).ready(function () {	
-	// update the settings
-	jQuery.each(settings, function( key, value ) {
-		console.log(key + '=' + value);
-		if (key.indexOf('$')<0) {
-			jQuery('#'+key).val(value);
-		}
-	});
-})
-</script>
-<div class="wrap">
+
+
+<div class="wrap sitesettings-wrapper" style="display: none;">
 <h1><a href="http://www.bookt.com" target="_blank"><img src="<?= plugins_url('/img/logo.png', __FILE__) ?>" /></a></h1>
 <h2>InstaSite Plugin - Site Settings</h2>
 <form method="post">
@@ -57,44 +32,34 @@ jQuery(document).ready(function () {
 <table class="form-table">
 <tr valign="top">
 	<td scope="row">List View:</td>
-	<td><select name="searchmode-listview" id="searchmode-listview">
-		<option value="BAPI.config().searchmodes.listview=false;">Disable</option>
-		<option value="BAPI.config().searchmodes.listview=true;">Enable</option>		
-	    </select>
+	<td><input class="searchmode-listview-cbx" type="checkbox" checked="" />
+	<input type="hidden" id="searchmode-listview" name="searchmode-listview" data-prevalue="BAPI.config().searchmodes.listview=" value="" />
 	</td>	
 </tr>
 <tr valign="top">
 	<td scope="row">Photo View:</td>
-	<td><select name="searchmode-photoview" id="searchmode-photoview">
-		<option value="BAPI.config().searchmodes.photoview=false;">Disable</option>
-		<option value="BAPI.config().searchmodes.photoview=true;">Enable</option>		
-	    </select>
+	<td><input class="searchmode-photoview-cbx" type="checkbox" checked="" />
+	<input type="hidden" id="searchmode-photoview" name="searchmode-photoview" data-prevalue="BAPI.config().searchmodes.photoview=" value="" />
 	</td>	
 </tr>
 <tr valign="top">
 	<td scope="row">Wide Photo View:</td>
-	<td><select name="searchmode-widephotoview" id="searchmode-widephotoview">
-		<option value="BAPI.config().searchmodes.widephotoview=false;">Disable</option>
-		<option value="BAPI.config().searchmodes.widephotoview=true;">Enable</option>		
-	    </select>
+	<td><input class="searchmode-widephotoview-cbx" type="checkbox" checked="" />
+	<input type="hidden" id="searchmode-widephotoview" name="searchmode-widephotoview" data-prevalue="BAPI.config().searchmodes.widephotoview=" value="" />
 	</td>	
 </tr>
 <tr valign="top">
 	<td scope="row">Map View:</td>
-	<td><select name="searchmode-mapview" id="searchmode-mapview">
-		<option value="BAPI.config().searchmodes.mapview=false;">Disable</option>
-		<option value="BAPI.config().searchmodes.mapview=true;">Enable</option>		
-	    </select>
+	<td><input class="searchmode-mapview-cbx" type="checkbox" checked="" />
+	<input type="hidden" id="searchmode-mapview" name="searchmode-mapview" data-prevalue="BAPI.config().searchmodes.mapview=" value="" />
 	</td>	
 </tr>
-<tr valign="top" style="display:none">
+<!--<tr valign="top">
 	<td scope="row">Hotel View:</td>
-	<td><select name="searchmode-hotelview" id="searchmode-hotelview">
-		<option value="BAPI.config().searchmodes.hotelview=false;">Disable</option>
-		<option value="BAPI.config().searchmodes.hotelview=true;">Enable</option>		
-	    </select>
+	<td><input class="searchmode-hotelview-cbx" type="checkbox" checked="" />
+	<input type="hidden" id="searchmode-hotelview" name="searchmode-hotelview" data-prevalue="BAPI.config().searchmodes.hotelview=" value="" />
 	</td>	
-</tr>
+</tr>-->
 </table>
 <div class="clear"></div>
 
@@ -102,16 +67,14 @@ jQuery(document).ready(function () {
 <table class="form-table">
 <tr valign="top">
 	<td scope="row">Availability Filtering:</td>
-	<td><select name="showunavailunits" id="showunavailunits">		
-		<option value="BAPI.config().restrictavail=true;">Hide unavailable units</option>
-		<option value="BAPI.config().restrictavail=false;">Show unavailable units</option>
-	    </select>
+	<td><input class="showunavailunits-cbx" type="checkbox" checked="" />
+	<input type="hidden" id="showunavailunits" name="showunavailunits" data-prevalue="BAPI.config().restrictavail=" value="" />
 	</td>	
 </tr>
-<tr valign="top" style="display:none">
+<!--<tr valign="top">
 	<td scope="row">Show Avg. Review Rating in Search Result:</td>
 	<td><input id="" type="checkbox" name=""></td>
-</tr>
+</tr>-->
 <tr valign="top">
 	<td scope="row">Default Search Sort Order Option:</td>
 	<td>
@@ -148,82 +111,42 @@ jQuery(document).ready(function () {
 <tr valign="top">
 	<td scope="row">Default Nights of Stay:</td>
 	<td><select name="deflos" id="deflos">
-		<option value="BAPI.config().los.defaultval=0; BAPI.config().minlos=0;">Disable</option>
-		<option value="BAPI.config().los.defaultval=1; BAPI.config().minlos=1;">1</option>
-		<option value="BAPI.config().los.defaultval=2; BAPI.config().minlos=2;">2</option>
-		<option value="BAPI.config().los.defaultval=3; BAPI.config().minlos=3;">3</option>
-		<option value="BAPI.config().los.defaultval=4; BAPI.config().minlos=4;">4</option>
-		<option value="BAPI.config().los.defaultval=5; BAPI.config().minlos=5;">5</option>
-		<option value="BAPI.config().los.defaultval=6; BAPI.config().minlos=6;">6</option>
-		<option value="BAPI.config().los.defaultval=7; BAPI.config().minlos=7;">7</option>
-		<option value="BAPI.config().los.defaultval=8; BAPI.config().minlos=8;">8</option>
-		<option value="BAPI.config().los.defaultval=9; BAPI.config().minlos=9;">9</option>
-		<option value="BAPI.config().los.defaultval=10; BAPI.config().minlos=10;">10</option>
-		<option value="BAPI.config().los.defaultval=11; BAPI.config().minlos=11;">11</option>
-		<option value="BAPI.config().los.defaultval=12; BAPI.config().minlos=12;">12</option>
-		<option value="BAPI.config().los.defaultval=13; BAPI.config().minlos=13;">13</option>
-		<option value="BAPI.config().los.defaultval=14; BAPI.config().minlos=14;">14</option>
-		<option value="BAPI.config().los.defaultval=15; BAPI.config().minlos=15;">15</option>
-		<option value="BAPI.config().los.defaultval=16; BAPI.config().minlos=16;">16</option>
-		<option value="BAPI.config().los.defaultval=17; BAPI.config().minlos=17;">17</option>
-		<option value="BAPI.config().los.defaultval=18; BAPI.config().minlos=18;">18</option>
-		<option value="BAPI.config().los.defaultval=19; BAPI.config().minlos=19;">19</option>
-		<option value="BAPI.config().los.defaultval=20; BAPI.config().minlos=20;">20</option>
-		<option value="BAPI.config().los.defaultval=21; BAPI.config().minlos=21;">21</option>
-		<option value="BAPI.config().los.defaultval=22; BAPI.config().minlos=22;">22</option>
-		<option value="BAPI.config().los.defaultval=23; BAPI.config().minlos=23;">23</option>
-		<option value="BAPI.config().los.defaultval=24; BAPI.config().minlos=24;">24</option>
-		<option value="BAPI.config().los.defaultval=25; BAPI.config().minlos=25;">25</option>
-		<option value="BAPI.config().los.defaultval=26; BAPI.config().minlos=26;">26</option>
-		<option value="BAPI.config().los.defaultval=27; BAPI.config().minlos=27;">27</option>
-		<option value="BAPI.config().los.defaultval=28; BAPI.config().minlos=28;">28</option>
-		<option value="BAPI.config().los.defaultval=29; BAPI.config().minlos=29;">29</option>
-		<option value="BAPI.config().los.defaultval=30; BAPI.config().minlos=30;">30</option>
+		<option value="BAPI.config().los.defaultval=0; BAPI.config().los.minval=0;">Disable</option>
 	    </select>
 	</td>	
 </tr>
-<tr valign="top" style="display:none">
+<!--<tr valign="top">
 	<td scope="row">Default Check-In Date X # of days Out (0 means no default):</td>
 	<td><input id="" type="numeric" name=""></td>
-</tr>
+</tr>-->
 <tr valign="top">
 	<td scope="row">Category Search:</td>
-	<td><select name="categorysearch" id="categorysearch">
-		<option value="BAPI.config().category.enabled=false;">Disable</option>
-		<option value="BAPI.config().category.enabled=true;">Enable</option>		
-	    </select>
+	<td><input class="categorysearch-cbx" type="checkbox" checked="" />
+	<input type="hidden" id="categorysearch" name="categorysearch" data-prevalue="BAPI.config().category.enabled=" value="" />
 	</td>	
 </tr>
-<tr valign="top" style="display:none">
+<!--<tr valign="top">
 	<td scope="row">Sleeps Search (Exact):</td>
-	<td><select name="sleepsearch" id="sleepsearch">
-		<option value="BAPI.config().sleeps.enabled=false;" selected>Disable</option>
-		<option value="BAPI.config().sleeps.enabled=true;">Enable</option>		
-	    </select>
+	<td><input class="sleepsearch-cbx" type="checkbox" checked="" />
+	<input type="hidden" id="sleepsearch" name="sleepsearch" data-prevalue="BAPI.config().sleeps.enabled=" value="" />
 	</td>	
-</tr>
+</tr>-->
 <tr valign="top">
 	<td scope="row">Sleeps Search (Min):</td>
-	<td><select name="minsleepsearch" id="minsleepsearch">
-		<option value="BAPI.config().minsleeps={}; BAPI.config().minsleeps.enabled=false;">Disable</option>
-		<option value="BAPI.config().minsleeps={}; BAPI.config().minsleeps.enabled=true;">Enable</option>		
-	    </select>
+	<td><input class="minsleepsearch-cbx" type="checkbox" checked="" />
+	<input type="hidden" id="minsleepsearch" name="minsleepsearch" data-prevalue="BAPI.config().minsleeps={}; BAPI.config().minsleeps.enabled=" value="" />
 	</td>	
 </tr>
 <tr valign="top" style="display:none">
 	<td scope="row">Bedroom Search (Exact):</td>
-	<td><select name="bedsearch" id="bedsearch">
-		<option value="BAPI.config().beds.enabled=false;" selected>Disable</option>
-		<option value="BAPI.config().beds.enabled=true;">Enable</option>		
-	    </select>
-	</td>	
+	<td><input class="bedsearch-cbx" type="checkbox" checked="" />
+	<input type="hidden" id="bedsearch" name="bedsearch" data-prevalue="BAPI.config().beds.enabled=" value="BAPI.config().beds.enabled=false;" />
+	</td>
 </tr>
 <tr valign="top">
 	<td scope="row">Bedroom Search (Min):</td>
-	<td><select name="minbedsearch" id="minbedsearch">
-		<option value="BAPI.config().minbeds={}; BAPI.config().minbeds.enabled=false;">Disable</option>
-		<option value="BAPI.config().minbeds={}; BAPI.config().minbeds.enabled=true;">Enable</option>		
-	    </select>
+	<td><input class="minbedsearch-cbx" type="checkbox" checked="" />
+	<input type="hidden" id="minbedsearch" name="minbedsearch" data-prevalue="BAPI.config().minbeds={}; BAPI.config().minbeds.enabled=" value="" />
 	</td>	
 </tr>
 <tr valign="top">
@@ -247,50 +170,46 @@ jQuery(document).ready(function () {
 	    </select>
 	</td>	
 </tr>
-<tr valign="top" style="display:none">
+<!--<tr valign="top">
 	<td scope="row">Amenity Search:</td>
-	<td>
-		<select name="amenitysearch" id="amenitysearch">
-		<option value="BAPI.config().amenity.enabled=false;">Disabled</option>
-		<option value="BAPI.config().amenity.enabled=true;">Amenities Checkbox Group</option>		
-		</select>
+	<td><input class="amenitysearch-cbx" type="checkbox" checked="" />
+	<input type="hidden" id="amenitysearch" name="amenitysearch" data-prevalue="BAPI.config().amenity.enabled=" value="" />
 	</td>
-</tr>
+</tr>-->
 <tr valign="top">
 	<td scope="row">Development Search:</td>
-	<td><select name="devsearch" id="devsearch">
-		<option value="BAPI.config().dev.enabled=false;">Disable</option>
-		<option value="BAPI.config().dev.enabled=true;">Enable</option>		
-	    </select>
+	<td><input class="devsearch-cbx" type="checkbox" checked="" />
+	<input type="hidden" id="devsearch" name="devsearch" data-prevalue="BAPI.config().dev.enabled=" value="" />
 	</td>	
 </tr>
 <tr valign="top">
 	<td scope="row">Number of Adults Search:</td>
-	<td><select name="adultsearch" id="adultsearch">
-		<option value="BAPI.config().adults.enabled=false;">Disable</option>
-		<option value="BAPI.config().adults.enabled=true;">Enable</option>		
-	    </select>
+	<td><input class="adultsearch-cbx" type="checkbox" checked="" />
+	<input type="hidden" id="adultsearch" name="adultsearch" data-prevalue="BAPI.config().adults.enabled=" value="" />
 	</td>	
 </tr>
 <tr valign="top">
 	<td scope="row">Number of Children Search:</td>
-	<td><select name="childsearch" id="childsearch">
-		<option value="BAPI.config().children.enabled=false;">Disable</option>
-		<option value="BAPI.config().children.enabled=true;">Enable</option>		
-	    </select>
+	<td><input class="childsearch-cbx" type="checkbox" checked="" />
+	<input type="hidden" id="childsearch" name="childsearch" data-prevalue="BAPI.config().children.enabled=" value="" />
 	</td>	
 </tr>
 <tr valign="top">
 	<td scope="row">Property Headline Search:</td>
-	<td><select name="headlinesearch" id="headlinesearch">
-		<option value="BAPI.config().headline.enabled=false;">Disable</option>
-		<option value="BAPI.config().headline.enabled=true;">Enable</option>		
-	    </select>
+	<td><input class="headlinesearch-cbx" type="checkbox" checked="" />
+	<input type="hidden" id="headlinesearch" name="headlinesearch" data-prevalue="BAPI.config().headline.enabled=" value="" />
 	</td>	
 </tr>
-<tr valign="top" style="display:none">
+<tr valign="top">
+	<td scope="row">Max Rate Search:</td>
+	<td><input class="maxratesearch-cbx" type="checkbox" checked="" />
+	<input type="hidden" id="maxratesearch" name="maxratesearch" data-prevalue="BAPI.config().rate.enabled=" value="" />
+	</td>
+</tr>
+<tr valign="top" style="display:none;" >
 	<td scope="row">Include # of Rooms/Units Search:</td>
-	<td><input id="" type="checkbox" name=""></td>
+	<td><input class="roomsearch-cbx" type="checkbox" checked="" />
+	<input type="hidden" id="roomsearch" name="roomsearch" data-prevalue="BAPI.config().rooms.enabled=" value="BAPI.config().rooms.enabled=false" />
 </tr>
 <tr valign="top">
 	<td scope="row">Location Search:</td>
@@ -312,19 +231,19 @@ jQuery(document).ready(function () {
 <tr valign="top">
 	<td scope="row">Availability Calendar:</td>
 	<td><select name="propdetail-availcal" id="propdetail-availcal">
-		<option value="BAPI.config().displayavailcalendar=false; BAPI.config().availcalendarmonths=0;">Disable</option>
+		<option value="BAPI.config().displayavailcalendar=false;  BAPI.config().availcalendarmonths=0;">Disable</option>
 		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=1;">Show 1 Month</option>
-		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=1;">Show 2 Months</option>
-		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=1;">Show 3 Months</option>
-		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=1;">Show 4 Months</option>
-		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=1;">Show 5 Months</option>
-		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=1;">Show 6 Months</option>
-		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=1;">Show 7 Months</option>
-		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=1;">Show 8 Months</option>
-		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=1;">Show 9 Months</option>
-		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=1;">Show 10 Months</option>
-		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=1;">Show 11 Months</option>
-		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=1;">Show 12 Months</option>
+		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=2;">Show 2 Months</option>
+		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=3;">Show 3 Months</option>
+		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=4;">Show 4 Months</option>
+		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=5;">Show 5 Months</option>
+		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=6;">Show 6 Months</option>
+		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=7;">Show 7 Months</option>
+		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=8;">Show 8 Months</option>
+		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=9;">Show 9 Months</option>
+		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=10;">Show 10 Months</option>
+		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=11;">Show 11 Months</option>
+		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=12;">Show 12 Months</option>
 	    </select>
 	</td>	
 </tr>
@@ -334,10 +253,8 @@ jQuery(document).ready(function () {
 </tr>
 <tr valign="top">
 	<td scope="row">Display Property Review Tab:</td>
-	<td><select name="propdetail-reviewtab" id="propdetail-reviewtab">
-		<option value="BAPI.config().hasreviews=false;">Disable</option>
-		<option value="BAPI.config().hasreviews=true;">Enable</option>		
-	    </select>
+	<td><input class="propdetail-reviewtab-cbx" type="checkbox" checked="" />
+	<input type="hidden" id="propdetail-reviewtab" name="propdetail-reviewtab" data-prevalue="BAPI.config().rate.enabled=" value="" />
 	</td>	
 </tr>
 </table>
@@ -345,3 +262,120 @@ jQuery(document).ready(function () {
 <?php submit_button(); ?>
 </form>
 </div>
+<script type="text/javascript" src="<?= get_relative(plugins_url('/js/jquery.ibutton.min.js', __FILE__)) ?>" ></script>
+<link type="text/css" href="<?= get_relative(plugins_url('/css/jquery.ibutton.min.css', __FILE__)) ?>" rel="stylesheet" media="all" />
+<script type="text/javascript">
+<?php
+
+	if (!empty($sitesettings)) {
+		echo 'var settings=' . stripslashes($sitesettings) . ';';
+	} else {
+		echo '
+		
+		var locsearch = "BAPI.config().city.enabled=false; BAPI.config().location.enabled=false;";
+		if(BAPI.config().city.enabled && BAPI.config().location.enabled==false && BAPI.config().city.autocomplete==false)
+		{
+			locsearch = "BAPI.config().city.enabled=true; BAPI.config().location.enabled=false; BAPI.config().city.autocomplete=false;";
+		}
+		if(BAPI.config().city.enabled && BAPI.config().location.enabled==false && BAPI.config().city.autocomplete)
+		{
+			locsearch = "BAPI.config().city.enabled=true; BAPI.config().location.enabled=false; BAPI.config().city.autocomplete=true;";
+		}
+		if(BAPI.config().city.enabled==false && BAPI.config().location.enabled && BAPI.config().location.autocomplete==false)
+		{
+			locsearch = "BAPI.config().city.enabled=false; BAPI.config().location.enabled=true; BAPI.config().location.autocomplete=false;";
+		}
+		/* there is no location autocomplete right now */
+		if(BAPI.config().city.enabled==false && BAPI.config().location.enabled && BAPI.config().location.autocomplete)
+		{
+			locsearch = "BAPI.config().city.enabled=false; BAPI.config().location.enabled=true; BAPI.config().location.autocomplete=true;";
+		}
+		
+		var settings={
+			"searchmode-listview": "BAPI.config().searchmodes.listview="+BAPI.config().searchmodes.listview+";",			
+			"searchmode-photoview": "BAPI.config().searchmodes.photoview="+BAPI.config().searchmodes.photoview+";",
+			"searchmode-widephotoview": "BAPI.config().searchmodes.widephotoview="+BAPI.config().searchmodes.widephotoview+";",
+			"searchmode-hotelview": "BAPI.config().searchmodes.hotelview="+BAPI.config().searchmodes.hotelview+";",
+			"searchmode-mapview": "BAPI.config().searchmodes.mapview=true;",
+			"amenitysearch": "BAPI.config().amenity.enabled="+BAPI.config().amenity.enabled+";",
+			"devsearch": "BAPI.config().dev.enabled="+BAPI.config().dev.enabled+";",
+			"adultsearch": "BAPI.config().adults.enabled="+BAPI.config().adults.enabled+";",
+			"childsearch": "BAPI.config().children.enabled="+BAPI.config().children.enabled+";",
+			"headlinesearch": "BAPI.config().headline.enabled="+BAPI.config().headline.enabled+";",
+			"locsearch": locsearch,
+			"showunavailunits": "BAPI.config().restrictavail="+BAPI.config().restrictavail+";",
+			"searchsort": "BAPI.config().sort="+BAPI.config().sort+";",
+			"searchsortorder": "BAPI.config().sortdesc="+BAPI.config().sortdesc+";",
+			"propdetail-availcal": "BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths="+BAPI.config().availcalendarmonths+";",
+			"propdetail-reviewtab": "BAPI.config().hasreviews="+BAPI.config().hasreviews+";",
+			"checkinoutmode": "BAPI.config().checkin.enabled="+BAPI.config().checkin.enabled+"; BAPI.config().checkout.enabled="+BAPI.config().checkout.enabled+"; BAPI.config().los.enabled="+BAPI.config().los.enabled+";",
+			"deflos": "BAPI.config().los.defaultval="+BAPI.config().los.defaultval+"; BAPI.config().los.minval="+BAPI.config().los.minval+";",
+			"categorysearch": "BAPI.config().category.enabled="+BAPI.config().category.enabled+";",
+			"minsleepsearch": "BAPI.config().minsleeps={}; BAPI.config().minsleeps.enabled="+BAPI.config().sleeps.enabled+";",
+			"minbedsearch": "BAPI.config().minbeds={}; BAPI.config().minbeds.enabled="+BAPI.config().beds.enabled+";",
+			"maxbedsearch": "BAPI.config().beds.values=BAPI.config().beds.values.splice(0,"+BAPI.config().beds.maxval+");",
+			"maxratesearch": "BAPI.config().rate.enabled="+BAPI.config().rate.enabled+";",
+			"bedsearch": "BAPI.config().beds.enabled="+BAPI.config().beds.enabled+";",
+			"roomsearch" : "BAPI.config().rooms.enabled="+BAPI.config().rooms.enabled+";"
+		};';
+	}	
+?>
+
+jQuery(document).ready(function () {
+/* we already have min beds */
+settings["bedsearch"] = "BAPI.config().beds.enabled=false;";
+/* we are not showing this yet */
+settings["roomsearch"] = "BAPI.config().rooms.enabled=false;";
+
+/* lets populate the dropdown */
+	$.each(BAPI.config().los.values,function(key,value) {
+        $("#deflos").append('<option value="BAPI.config().los.defaultval='+value.Data+'; BAPI.config().los.minval='+value.Data+';">' + value.Label  + '</option>');
+	});
+	/*$.each(BAPI.config().beds.values,function(key,value) {
+        $("#maxbedsearch").append('<option value="BAPI.config().beds.values=BAPI.config().beds.values.splice(0,'+ value.Data +');">' + value.Label  + '</option>');
+	});*/
+	/* make all checkboxes iphone style */
+	$(":checkbox").iButton();
+	// update the settings
+	jQuery.each(settings, function( key, value ) {
+		console.log(key + '=' + value);
+		if (key.indexOf('$')<0) {
+			var theKey = '.'+key+'-cbx';
+			/* check if this i a checkbox */
+			if(jQuery(theKey).is(':checkbox'))
+			{
+				jQuery(theKey).change(function(){
+				cb = jQuery(this);
+				jQuery('#'+key).val(jQuery('#'+key).attr('data-prevalue') + cb.prop('checked') + ";");
+				});
+				
+				
+				var arr = value.split('=');
+				var whereIsBool = 1;
+				if(theKey == '.minsleepsearch-cbx' || theKey == '.minbedsearch-cbx')
+				{
+					whereIsBool = 2;
+				}
+				var arrBolean = arr[whereIsBool].slice(0,-1);
+				if( arrBolean == 'true')
+				{
+					jQuery(theKey).prop('checked',true );
+					jQuery(theKey).iButton("toggle", true)
+				}else{
+					jQuery(theKey).prop('checked', false);
+					jQuery(theKey).iButton("toggle", false)
+				}
+			}
+			/* this will still populate the hidden inputs */
+			jQuery('#'+key).val(value);
+		}
+		
+/* make all checkboxes iphone style */
+  jQuery(":checkbox").iButton();
+
+	});
+	/* everything is in place show all */
+	jQuery('.sitesettings-wrapper').show();
+});
+
+</script>
