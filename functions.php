@@ -291,6 +291,7 @@ window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", su
 				var old_src = $(this).attr('src');
 				$(this).attr('src', '');
 				setTimeout(function(){ $(this).attr('src', old_src + '&currency='+ BAPI.session.currency); }, 250);
+				BAPI.log( $(this).attr('src'));
 			}
 		  });	  }   });
 </script>
