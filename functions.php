@@ -290,7 +290,7 @@ window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", su
 			if ($(this).attr('src')!=null && $(this).attr('src').indexOf('bapi.js')>-1) {
 				var old_src = $(this).attr('src');
 				var new_src= old_src + '&currency='+ BAPI.session.currency;
-				$(this)).remove();
+				$(this).remove();
 				var script = document.createElement('script');
 				//the script's source here
 				script.src = new_src;
