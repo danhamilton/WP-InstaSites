@@ -288,11 +288,14 @@ window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", su
 	$(document).ready(function () { BAPI.UI.init(); });
 	$(document).ready(function (){	  //reload bapi js with currency param for max search	  if(BAPI.config().rate.enabled){		  $('script').each(function() {
 			if ($(this).attr('src')!=null && $(this).attr('src').indexOf('bapi.js')>-1) {
-				BAPI.log('here');
 				var old_src = $(this).attr('src');
-				$(this).attr('src', '');
-				setTimeout(function(){ $(this).attr('src', old_src + '&currency='+ BAPI.session.currency);BAPI.log($(this).attr('src')); }, 250);
-				;				
+				var new_src= old_src + '&currency='+ BAPI.session.currency;
+				$(this)).remove();
+				var script = document.createElement('script');
+				//the script's source here
+				script.src = new_src;
+				script.type ='text/javascript';
+				document.getElementsByTagName('head')[0].appendChild(script);			
 			}
 		  });	  }   });
 </script>
