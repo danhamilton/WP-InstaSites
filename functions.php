@@ -285,7 +285,14 @@ window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", su
 	BAPI.init();
 	BAPI.UI.jsroot = '<?= plugins_url("/", __FILE__) ?>';
 	BAPI.defaultOptions.logpageviews = true;
-	$(document).ready(function () { BAPI.UI.init(); });    
+	$(document).ready(function () { BAPI.UI.init(); });
+	$(document).ready(function (){	  //reload bapi js with currency param for max search	  if(BAPI.config().rate.enabled){		  $('script').each(function() {
+			if ($(this).attr('src') !== 'assets/js/jquery.min.js') {
+				var old_src = $(this).attr('src');
+				$(this).attr('src', '');
+				setTimeout(function(){ $(this).attr('src', old_src + '&currency='+ BAPI.session.currency); }, 250);
+			}
+		  });	  }   });
 </script>
 
 <?php			
