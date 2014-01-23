@@ -285,19 +285,7 @@ window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", su
 	BAPI.init();
 	BAPI.UI.jsroot = '<?= plugins_url("/", __FILE__) ?>';
 	BAPI.defaultOptions.logpageviews = true;
-	$(document).ready(function () { BAPI.UI.init(); });
-	$(document).ready(function (){	  //reload bapi js with currency param for max search	  if(BAPI.config().rate.enabled){		  $('script').each(function() {
-			if ($(this).attr('src')!=null && $(this).attr('src').indexOf('bapi.js')>-1) {
-				var old_src = $(this).attr('src');
-				var new_src= old_src + '&currency='+ BAPI.session.currency;
-				$(this).remove();
-				var script = document.createElement('script');
-				//the script's source here
-				script.src = new_src;
-				script.type ='text/javascript';
-				document.getElementsByTagName('head')[0].appendChild(script);			
-			}
-		  });	  }   });
+	$(document).ready(function () { BAPI.UI.init(); });
 </script>
 
 <?php			
