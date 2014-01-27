@@ -142,11 +142,28 @@
 				}else{
 					$options = null;
 				}
-			}			
+			}
 
-			$c = $bapi->get($entity,$pkid,$options,true,$debugmode);						
+			$c = $bapi->get($entity,$pkid,$options,true,$debugmode);
 			$c["config"] = BAPISync::getSolutionData();
 			$c["config"] = $c["config"]["ConfigObj"];
+			/* we get the sitesettings */
+			global $bapi_all_options;
+			$sitesettings = json_decode($bapi_all_options['bapi_sitesettings'],TRUE);
+			/* we get the review value from the sitesettings*/
+			$hasreviews = $sitesettings["propdetail-reviewtab"];
+			/* we make an array using = and ; as delimiters */
+			$hasreviews = split('[=;]', $hasreviews);
+			/* we assign the value to var in the config array - reviews*/
+			$hasreviews = $hasreviews[1];
+			$c["config"]["hasreviews"] = ($hasreviews === 'true');
+			/* the same as review but for the availability calendar */
+			$displayavailcalendar = $sitesettings["propdetail-availcal"];
+			$displayavailcalendar = split('[=;]', $displayavailcalendar);
+			$availcalendarmonths = (int) $displayavailcalendar[3];
+			$displayavailcalendar = $displayavailcalendar[1];
+			$c["config"]["displayavailcalendar"] = ($displayavailcalendar === 'true');
+			$c["config"]["availcalendarmonths"] =  $availcalendarmonths;
 			$c["textdata"] = BAPISync::getTextData();
 			$m = new Mustache_Engine();
 			$string = $m->render($template, $c);				

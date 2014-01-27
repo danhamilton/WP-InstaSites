@@ -682,9 +682,9 @@
 	<div class="tabbable">
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="#tab1" data-toggle="tab">{{textdata.General}}</a></li>
-		{{^HideAvailability}}
+		{{#config.displayavailcalendar}}
 		<li><a href="#tab2" data-toggle="tab">{{textdata.Rates & Availability}}</a></li>
-		{{/HideAvailability}}
+		{{/config.displayavailcalendar}}
 		<li><a href="#tab3" data-toggle="tab">{{textdata.Amenities}}</a></li>
 		<li><a href="#tab4" id="tabs4" data-toggle="tab">{{textdata.Attractions}}</a></li>
 		{{#config.hasreviews}}		
@@ -720,7 +720,7 @@
 		</div>
 		</div>
 		</div>
-		{{^HideAvailability}}
+		{{#config.displayavailcalendar}}
 		<div class="tab-pane" id="tab2">					
 		<div class="row-fluid">
 		<div class="span12 box-sides">		
@@ -731,7 +731,7 @@
 		</div>
 		</div>
 		</div>
-		{{/HideAvailability}}
+		{{/config.displayavailcalendar}}
 		<div class="tab-pane" id="tab3">			
 		<div class="row-fluid">
 		<div class="span12 box-sides">

@@ -232,18 +232,12 @@ getconfig();
 	<td scope="row">Availability Calendar:</td>
 	<td><select name="propdetail-availcal" id="propdetail-availcal">
 		<option value="BAPI.config().displayavailcalendar=false;  BAPI.config().availcalendarmonths=0;">Disable</option>
-		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=1;">Show 1 Month</option>
-		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=2;">Show 2 Months</option>
 		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=3;">Show 3 Months</option>
-		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=4;">Show 4 Months</option>
-		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=5;">Show 5 Months</option>
 		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=6;">Show 6 Months</option>
-		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=7;">Show 7 Months</option>
-		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=8;">Show 8 Months</option>
 		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=9;">Show 9 Months</option>
-		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=10;">Show 10 Months</option>
-		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=11;">Show 11 Months</option>
 		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=12;">Show 12 Months</option>
+		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=15;">Show 15 Months</option>
+		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=18;">Show 18 Months</option>
 	    </select>
 	</td>	
 </tr>
@@ -254,7 +248,7 @@ getconfig();
 <tr valign="top">
 	<td scope="row">Display Property Review Tab:</td>
 	<td><input class="propdetail-reviewtab-cbx" type="checkbox" checked="" />
-	<input type="hidden" id="propdetail-reviewtab" name="propdetail-reviewtab" data-prevalue="BAPI.config().rate.enabled=" value="" />
+	<input type="hidden" id="propdetail-reviewtab" name="propdetail-reviewtab" data-prevalue="BAPI.config().hasreviews=" value="" />
 	</td>	
 </tr>
 </table>
