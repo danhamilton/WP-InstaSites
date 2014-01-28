@@ -10,7 +10,7 @@
 		/*foreach ($postSitesettings as $k => $v) {
 			echo "[$k] => $v<br/>";
 		}*/
-
+		
 		$sitesettings = json_encode($_POST);
 		update_option('bapi_sitesettings',  $sitesettings);		
 		echo '<div id="message" class="updated"><p><strong>Settings saved.</strong></p></div>';		
@@ -333,35 +333,49 @@ settings["roomsearch"] = "BAPI.config().rooms.enabled=false;";
 	// update the settings
 	jQuery.each(settings, function( key, value ) {
 		console.log(key + '=' + value);
+		var theKey = '.'+key+'-cbx';
 		if (key.indexOf('$')<0) {
-			var theKey = '.'+key+'-cbx';
-			/* check if this i a checkbox */
-			if(jQuery(theKey).is(':checkbox'))
-			{
+			/* we check if the value is valid */
+			if (typeof (value) !== "undefined" && value != ''){
+				
+				/* check if this i a checkbox */
+				if(jQuery(theKey).is(':checkbox'))
+				{
+					jQuery(theKey).change(function(){
+					cb = jQuery(this);
+					jQuery('#'+key).val(jQuery('#'+key).attr('data-prevalue') + cb.prop('checked') + ";");
+					});
+					
+					var arr = value.split('=');
+					var whereIsBool = 1;
+					if(theKey == '.minsleepsearch-cbx' || theKey == '.minbedsearch-cbx')
+					{
+						whereIsBool = 2;
+					}
+					var arrBolean = arr[whereIsBool].slice(0,-1);
+					if( arrBolean == 'true')
+					{
+						jQuery(theKey).prop('checked',true );
+						jQuery(theKey).iButton("toggle", true)
+					}else{
+						jQuery(theKey).prop('checked', false);
+						jQuery(theKey).iButton("toggle", false)
+					}
+				}
+				/* this will still populate the hidden inputs */
+				jQuery('#'+key).val(value);
+			}else{
+				/* values is not valid by default set it to false */
+				jQuery('#'+key).val(jQuery('#'+key).attr('data-prevalue') + "false;");
+				jQuery(theKey).prop('checked',false );
+				jQuery(theKey).iButton("toggle", false);
+				
 				jQuery(theKey).change(function(){
-				cb = jQuery(this);
-				jQuery('#'+key).val(jQuery('#'+key).attr('data-prevalue') + cb.prop('checked') + ";");
+					cb = jQuery(this);
+					jQuery('#'+key).val(jQuery('#'+key).attr('data-prevalue') + cb.prop('checked') + ";");
 				});
-				
-				
-				var arr = value.split('=');
-				var whereIsBool = 1;
-				if(theKey == '.minsleepsearch-cbx' || theKey == '.minbedsearch-cbx')
-				{
-					whereIsBool = 2;
-				}
-				var arrBolean = arr[whereIsBool].slice(0,-1);
-				if( arrBolean == 'true')
-				{
-					jQuery(theKey).prop('checked',true );
-					jQuery(theKey).iButton("toggle", true)
-				}else{
-					jQuery(theKey).prop('checked', false);
-					jQuery(theKey).iButton("toggle", false)
-				}
 			}
-			/* this will still populate the hidden inputs */
-			jQuery('#'+key).val(value);
+			
 		}
 		
 /* make all checkboxes iphone style */
