@@ -276,7 +276,9 @@ window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", su
 <?php if (!empty($sitesettings) && $sitesettings!='') { ?>
 <script type="text/javascript" src="/bapi.config.js" ></script>
 <?php } ?>
-<script type="text/javascript">		
+<script type="text/javascript">
+    preload_image = new Image(66,66); 
+    preload_image.src="<?= get_relative(plugins_url("/img/loading.gif", __FILE__)) ?>"; 
 	BAPI.UI.loading.setLoadingImgUrl('<?= get_relative(plugins_url("/img/loading.gif", __FILE__)) ?>');
 	BAPI.site.url =  '<?= $siteurl ?>';
 	<?php if ($secureurl!='') { ?>
@@ -285,7 +287,7 @@ window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", su
 	BAPI.init();
 	BAPI.UI.jsroot = '<?= plugins_url("/", __FILE__) ?>';
 	BAPI.defaultOptions.logpageviews = true;
-	$(document).ready(function () { BAPI.UI.init(); });
+	$(document).ready(function () { BAPI.UI.init(); });
 </script>
 
 <?php			
