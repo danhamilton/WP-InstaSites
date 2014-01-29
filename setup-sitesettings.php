@@ -258,59 +258,123 @@ getconfig();
 </div>
 <script type="text/javascript" src="<?= get_relative(plugins_url('/js/jquery.ibutton.min.js', __FILE__)) ?>" ></script>
 <link type="text/css" href="<?= get_relative(plugins_url('/css/jquery.ibutton.min.css', __FILE__)) ?>" rel="stylesheet" media="all" />
+<?php //var_dump(BAPISync::getSolutionData()); ?>
+
 <script type="text/javascript">
 <?php
+$bapiSolutionData = BAPISync::getSolutionData();
+$bapiSolutionDataConfig = $bapiSolutionData["ConfigObj"];
+$maxratesearch = ($bapiSolutionDataConfig["rate"]["enabled"]) ? 'true' : 'false';
+$amenitysearch = ($bapiSolutionDataConfig["amenity"]["enabled"]) ? 'true' : 'false';
+$devsearch = ($bapiSolutionDataConfig["dev"]["enabled"]) ? 'true' : 'false';
+$adultsearch = ($bapiSolutionDataConfig["adults"]["enabled"]) ? 'true' : 'false';
+$adultsearch = ($bapiSolutionDataConfig["adults"]["enabled"]) ? 'true' : 'false';
+$childsearch = ($bapiSolutionDataConfig["children"]["enabled"]) ? 'true' : 'false';
+$headlinesearch = ($bapiSolutionDataConfig["headline"]["enabled"]) ? 'true' : 'false';
+$propdetailavailcal = ($bapiSolutionDataConfig["displayavailcalendar"]) ? 'true' : 'false';
+$availcalendarmonths = $bapiSolutionDataConfig["availcalendarmonths"];
+$propdetailreviewtab = ($bapiSolutionDataConfig["hasreviews"]) ? 'true' : 'false';
+$checkin = ($bapiSolutionDataConfig["checkin"]["enabled"]) ? 'true' : 'false';
+$checkout = ($bapiSolutionDataConfig["checkout"]["enabled"]) ? 'true' : 'false';
+$los = ($bapiSolutionDataConfig["los"]["enabled"]) ? 'true' : 'false';
+$losdefaultval = $bapiSolutionDataConfig["los"]["defaultval"];
+$losminval = $bapiSolutionDataConfig["los"]["minval"];
+$categorysearch = ($bapiSolutionDataConfig["category"]["enabled"]) ? 'true' : 'false';
+$minsleepsearch = ($bapiSolutionDataConfig["sleeps"]["enabled"]) ? 'true' : 'false';
+$minbedsearch = ($bapiSolutionDataConfig["beds"]["enabled"]) ? 'true' : 'false';
+$maxbedsearch = $bapiSolutionDataConfig["beds"]["maxval"];
+$roomsearch = ($bapiSolutionDataConfig["rooms"]["enabled"]) ? 'true' : 'false';
+$city = ($bapiSolutionDataConfig["city"]["enabled"]) ? 'true' : 'false';
+$location = ($bapiSolutionDataConfig["location"]["enabled"]) ? 'true' : 'false';
 
+$showunavailunits = ($bapiSolutionData["BizRules"]["Search By Availability"]) ? 'true' : 'false';
+$searchsort = $bapiSolutionData["BizRules"]["Search Sort Order Option"];
+
+/*		ByCategory = 0
+            ByBedrooms = 1
+            ByPriceLoHi = 2
+            ByPriceHiLo = 3
+            ByLocation = 4
+            ByRandom = 5
+            ByHeadline = 6
+            ByImages = 7*/
+            
+
+	
 	if (!empty($sitesettings)) {
 		echo 'var settings=' . stripslashes($sitesettings) . ';';
 	} else {
+		
 		echo '
 		
 		var locsearch = "BAPI.config().city.enabled=false; BAPI.config().location.enabled=false;";
-		if(BAPI.config().city.enabled && BAPI.config().location.enabled==false && BAPI.config().city.autocomplete==false)
+		if('.$city.' && '.$location.'==false )
 		{
 			locsearch = "BAPI.config().city.enabled=true; BAPI.config().location.enabled=false; BAPI.config().city.autocomplete=false;";
 		}
-		if(BAPI.config().city.enabled && BAPI.config().location.enabled==false && BAPI.config().city.autocomplete)
-		{
-			locsearch = "BAPI.config().city.enabled=true; BAPI.config().location.enabled=false; BAPI.config().city.autocomplete=true;";
-		}
-		if(BAPI.config().city.enabled==false && BAPI.config().location.enabled && BAPI.config().location.autocomplete==false)
+		if('.$city.'==false && '.$location.')
 		{
 			locsearch = "BAPI.config().city.enabled=false; BAPI.config().location.enabled=true; BAPI.config().location.autocomplete=false;";
 		}
-		/* there is no location autocomplete right now */
-		if(BAPI.config().city.enabled==false && BAPI.config().location.enabled && BAPI.config().location.autocomplete)
-		{
-			locsearch = "BAPI.config().city.enabled=false; BAPI.config().location.enabled=true; BAPI.config().location.autocomplete=true;";
+		var thesearchsort = "'.$searchsort.'";
+		
+		if(thesearchsort==0){
+			thesearchsort = "BAPI.config().sort=\'category\';"
+		}else{
+			if(thesearchsort==1){
+				thesearchsort = "BAPI.config().sort=\'beds\';"
+			}else{
+				if(thesearchsort==2){
+					thesearchsort = "BAPI.config().sort=\'minrate\';"
+				}else{
+					if(thesearchsort==3){
+						thesearchsort = "BAPI.config().sort=\'maxrate\';"
+					}else{
+						if(thesearchsort==4){
+							thesearchsort = "BAPI.config().sort=\'location\';"
+						}else{
+							if(thesearchsort==5){
+								thesearchsort = "BAPI.config().sort=\'random\';"
+							}else{
+								if(thesearchsort==6){
+									thesearchsort = "BAPI.config().sort=\'headline\';"
+								}else{
+									thesearchsort = "BAPI.config().sort=\'random\';"
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 		
+		
 		var settings={
-			"searchmode-listview": "BAPI.config().searchmodes.listview="+BAPI.config().searchmodes.listview+";",			
-			"searchmode-photoview": "BAPI.config().searchmodes.photoview="+BAPI.config().searchmodes.photoview+";",
-			"searchmode-widephotoview": "BAPI.config().searchmodes.widephotoview="+BAPI.config().searchmodes.widephotoview+";",
-			"searchmode-hotelview": "BAPI.config().searchmodes.hotelview="+BAPI.config().searchmodes.hotelview+";",
+			"maxratesearch": "BAPI.config().rate.enabled='.$maxratesearch.';",
+			"searchmode-listview": "BAPI.config().searchmodes.listview=true;",
+			"searchmode-photoview": "BAPI.config().searchmodes.photoview=true;",
+			"searchmode-widephotoview": "BAPI.config().searchmodes.widephotoview=false;",
+			"searchmode-hotelview": "BAPI.config().searchmodes.hotelview=false;",
 			"searchmode-mapview": "BAPI.config().searchmodes.mapview=true;",
-			"amenitysearch": "BAPI.config().amenity.enabled="+BAPI.config().amenity.enabled+";",
-			"devsearch": "BAPI.config().dev.enabled="+BAPI.config().dev.enabled+";",
-			"adultsearch": "BAPI.config().adults.enabled="+BAPI.config().adults.enabled+";",
-			"childsearch": "BAPI.config().children.enabled="+BAPI.config().children.enabled+";",
-			"headlinesearch": "BAPI.config().headline.enabled="+BAPI.config().headline.enabled+";",
+			"amenitysearch": "BAPI.config().amenity.enabled='.$amenitysearch.';",
+			"devsearch": "BAPI.config().dev.enabled='.$devsearch.';",
+			"adultsearch": "BAPI.config().adults.enabled='.$adultsearch.';",
+			"childsearch": "BAPI.config().children.enabled='.$childsearch.';",
+			"headlinesearch": "BAPI.config().headline.enabled='.$headlinesearch.';",
 			"locsearch": locsearch,
-			"showunavailunits": "BAPI.config().restrictavail="+BAPI.config().restrictavail+";",
-			"searchsort": "BAPI.config().sort="+BAPI.config().sort+";",
-			"searchsortorder": "BAPI.config().sortdesc="+BAPI.config().sortdesc+";",
-			"propdetail-availcal": "BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths="+BAPI.config().availcalendarmonths+";",
-			"propdetail-reviewtab": "BAPI.config().hasreviews="+BAPI.config().hasreviews+";",
-			"checkinoutmode": "BAPI.config().checkin.enabled="+BAPI.config().checkin.enabled+"; BAPI.config().checkout.enabled="+BAPI.config().checkout.enabled+"; BAPI.config().los.enabled="+BAPI.config().los.enabled+";",
-			"deflos": "BAPI.config().los.defaultval="+BAPI.config().los.defaultval+"; BAPI.config().los.minval="+BAPI.config().los.minval+";",
-			"categorysearch": "BAPI.config().category.enabled="+BAPI.config().category.enabled+";",
-			"minsleepsearch": "BAPI.config().minsleeps={}; BAPI.config().minsleeps.enabled="+BAPI.config().sleeps.enabled+";",
-			"minbedsearch": "BAPI.config().minbeds={}; BAPI.config().minbeds.enabled="+BAPI.config().beds.enabled+";",
-			"maxbedsearch": "BAPI.config().beds.values=BAPI.config().beds.values.splice(0,"+BAPI.config().beds.maxval+");",
-			"maxratesearch": "BAPI.config().rate.enabled="+BAPI.config().rate.enabled+";",
-			"bedsearch": "BAPI.config().beds.enabled="+BAPI.config().beds.enabled+";",
-			"roomsearch" : "BAPI.config().rooms.enabled="+BAPI.config().rooms.enabled+";"
+			"showunavailunits": "BAPI.config().restrictavail='.$showunavailunits.';",
+			"searchsort": thesearchsort,
+			"searchsortorder": "BAPI.config().sortdesc=false;",
+			"propdetail-availcal": "BAPI.config().displayavailcalendar='.$propdetailavailcal.';  BAPI.config().availcalendarmonths='.$availcalendarmonths.';",
+			"propdetail-reviewtab": "BAPI.config().hasreviews='.$propdetailreviewtab.';",
+			"checkinoutmode": "BAPI.config().checkin.enabled='.$checkin.'; BAPI.config().checkout.enabled='.$checkout.'; BAPI.config().los.enabled='.$los.';",
+			"deflos": "BAPI.config().los.defaultval='.$losdefaultval.'; BAPI.config().los.minval='.$losminval.';",
+			"categorysearch": "BAPI.config().category.enabled='.$categorysearch.';",
+			"minsleepsearch": "BAPI.config().minsleeps={}; BAPI.config().minsleeps.enabled='.$minsleepsearch.';",
+			"minbedsearch": "BAPI.config().minbeds={}; BAPI.config().minbeds.enabled='.$minbedsearch.';",
+			"maxbedsearch": "BAPI.config().beds.values=BAPI.config().beds.values.splice(0,'.$maxbedsearch.');",
+			"bedsearch": "BAPI.config().beds.enabled='.$minbedsearch.';",
+			"roomsearch" : "BAPI.config().rooms.enabled='.$roomsearch.';"
 		};';
 	}	
 ?>
@@ -334,6 +398,7 @@ settings["roomsearch"] = "BAPI.config().rooms.enabled=false;";
 	jQuery.each(settings, function( key, value ) {
 		console.log(key + '=' + value);
 		var theKey = '.'+key+'-cbx';
+		//console.log(theKey);
 		if (key.indexOf('$')<0) {
 			/* we check if the value is valid */
 			if (typeof (value) !== "undefined" && value != ''){
@@ -365,10 +430,16 @@ settings["roomsearch"] = "BAPI.config().rooms.enabled=false;";
 				/* this will still populate the hidden inputs */
 				jQuery('#'+key).val(value);
 			}else{
-				/* values is not valid by default set it to false */
-				jQuery('#'+key).val(jQuery('#'+key).attr('data-prevalue') + "false;");
-				jQuery(theKey).prop('checked',false );
-				jQuery(theKey).iButton("toggle", false);
+				if(theKey == '.propdetail-availcal-cbx')
+				{
+					jQuery('#'+key).val("BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=6;");
+					
+				}else{
+					/* values is not valid by default set it to false */
+					jQuery('#'+key).val(jQuery('#'+key).attr('data-prevalue') + "false;");
+					jQuery(theKey).prop('checked',false );
+					jQuery(theKey).iButton("toggle", false);
+				}
 				
 				jQuery(theKey).change(function(){
 					cb = jQuery(this);
