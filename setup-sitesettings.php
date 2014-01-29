@@ -102,7 +102,7 @@ getconfig();
 <tr valign="top">
 	<td scope="row">Check-In Check-Out Mode:</td>
 	<td><select name="checkinoutmode" id="checkinoutmode">
-		<option value="BAPI.config().checkin.enabled=false; BAPI.config().checkout.enabled=false; BAPI.config().los.enabled=false;">Disable</option>
+		<option value="BAPI.config().checkin.enabled=false; BAPI.config().checkout.enabled=false; BAPI.config().los.enabled=false;">Disabled</option>
 		<option value="BAPI.config().checkin.enabled=true; BAPI.config().checkout.enabled=true; BAPI.config().los.enabled=false;">Check In Date Picker/Check Out DatePicker</option>
 		<option value="BAPI.config().checkin.enabled=true; BAPI.config().checkout.enabled=false; BAPI.config().los.enabled=true;">Check In Date Picker/Length of Stay DropDown</option>
 	    </select>
@@ -231,7 +231,7 @@ getconfig();
 <tr valign="top">
 	<td scope="row">Availability Calendar:</td>
 	<td><select name="propdetail-availcal" id="propdetail-availcal">
-		<option value="BAPI.config().displayavailcalendar=false;  BAPI.config().availcalendarmonths=0;">Disable</option>
+		<option value="BAPI.config().displayavailcalendar=false;  BAPI.config().availcalendarmonths=0;">Disabled</option>
 		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=3;">Show 3 Months</option>
 		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=6;">Show 6 Months</option>
 		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=9;">Show 9 Months</option>
