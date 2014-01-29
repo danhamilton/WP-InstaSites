@@ -111,7 +111,7 @@ getconfig();
 <tr valign="top">
 	<td scope="row">Default Nights of Stay:</td>
 	<td><select name="deflos" id="deflos">
-		<option value="BAPI.config().los.defaultval=0; BAPI.config().los.minval=0;">Disable</option>
+		<option value="BAPI.config().los.defaultval=0; BAPI.config().los.minval=0;">Disabled</option>
 	    </select>
 	</td>	
 </tr>
