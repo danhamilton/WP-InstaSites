@@ -68,7 +68,9 @@ function bapi_options_init(){
 	register_setting('bapi_options','bapi_privacy_policy');
 	register_setting('bapi_options','bapi_privacy_policy_lastmod');
 	register_setting('bapi_options','bapi_terms_of_use');
-	register_setting('bapi_options','bapi_terms_of_use_lastmod');	
+	register_setting('bapi_options','bapi_terms_of_use_lastmod');
+	register_setting('bapi_options','bapi_safe_harbor');
+	register_setting('bapi_options','bapi_safe_harbor_lastmod');	
 }
 
 function bapi_settings_page() {
