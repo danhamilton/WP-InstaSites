@@ -16,7 +16,7 @@ function doc_template_sc($atts){
 	$settings = array(
 		"Rental Policy" => 'bapi_rental_policy',
 		"Privacy Policy" => 'bapi_privacy_policy',
-		"Terms of Use" => 'bapi_terms_of_use'
+		"Terms of Use" => 'bapi_terms_of_use',
 		"Safe Harbor Policy" => 'bapi_safe_harbor'
 	);
 	if(!array_key_exists($docname,$settings)){
