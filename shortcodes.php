@@ -17,6 +17,7 @@ function doc_template_sc($atts){
 		"Rental Policy" => 'bapi_rental_policy',
 		"Privacy Policy" => 'bapi_privacy_policy',
 		"Terms of Use" => 'bapi_terms_of_use'
+		"Safe Harbor Policy" => 'bapi_safe_harbor'
 	);
 	if(!array_key_exists($docname,$settings)){
 		return 'The specified document template is not configured for synchronization.';
