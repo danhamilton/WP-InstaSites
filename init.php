@@ -27,7 +27,16 @@
 			}
 		}
 		else{
-			return;
+			$purl = parse_url(curPageURL());
+			if($purl['scheme'] == 'https'){
+				$nurl = "http://".$purl['host'].$purl['path'];
+				if(!empty($purl['query'])){
+					$nurl .= "?".$purl['query'];
+				}
+				//echo $nurl;
+				header("Location: $nurl");
+				exit();
+			}
 		}
 	}
 
