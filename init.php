@@ -30,7 +30,7 @@
 		if (((strpos($url,'makepayment') === false)&&(strpos($url,'makebooking') === false)&&(strpos($url,'bapi') === false))){
 			$purl = parse_url(curPageURL());
 			if($purl['scheme'] == 'https'){
-				$nurl = $bapi_all_options['bapi_site_cdn_domain'].$purl['path'];
+				$nurl = "http://".$bapi_all_options['bapi_site_cdn_domain'].$purl['path'];
 				if(!empty($purl['query'])){
 					$nurl .= "?".$purl['query'];
 				}
