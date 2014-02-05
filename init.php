@@ -35,7 +35,7 @@
 				if(!empty($purl['query'])){
 					$nurl .= "?".$purl['query'];
 				}
-				//echo $nurl;
+				echo $nurl;
 				header("Location: $nurl");
 				exit();
 			}
