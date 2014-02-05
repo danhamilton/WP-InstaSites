@@ -26,7 +26,7 @@
 				exit();
 			}
 		}
-		if (((strpos($url,'makepayment') === false)&&(strpos($url,'makebooking') === false))){
+		if (((strpos($url,'makepayment') === false)&&(strpos($url,'makebooking') === false)&&(strpos($url,'bapi') === false))){
 			$purl = parse_url(curPageURL());
 			if($purl['scheme'] == 'https'){
 				$nurl = "http://".$purl['host'].$purl['path'];
