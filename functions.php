@@ -666,7 +666,7 @@ function bapi_make_link( $link ) {
       // 'home_url'
     );
 	
-	$cdn_url = $bapi_all_options['home'];
+	$cdn_url = 'test.com';
 	//$home_url = str_replace($bapi_all_options['home'],$cdn_url,$path);
 	if($bapi_all_options['bapi_site_cdn_domain']&&!(current_user_can('manage_options')||is_super_admin())){
 		$cdn_url = $bapi_all_options['bapi_site_cdn_domain'];
@@ -676,7 +676,7 @@ function bapi_make_link( $link ) {
 	  remove_filter( $filter, 'bapi_make_link' );
 	}
 	$cdn = rtrim($cdn_url,'/');
-	return preg_replace( '|https?://[^/]+(/.*)|i', $cdn, $link );
+	return preg_replace( '|https?://[^/]+(/?.*)|i', $cdn, $link );
 	foreach ( $filters as $filter ) {
 	  add_filter( $filter, 'bapi_make_link' );
 	}
