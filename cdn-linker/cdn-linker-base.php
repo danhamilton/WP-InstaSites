@@ -56,7 +56,8 @@ class CDNLinksRewriter
 		if ($this->exclude_single($match[0])) {
 			return $match[0];
 		} else {
-			if (!$this->rootrelative || strstr($match[0], $this->blog_url)) {
+			$bu = parse_url($this->blog_url);
+			if (!$this->rootrelative || strstr($match[0], $bu['host'])) {
 				return str_replace($this->blog_url, $this->cdn_url, $match[0]);
 			} else { // obviously $this->rootrelative is true and we got a root-relative link - else that case won't happen
 				return $this->cdn_url . $match[0];
