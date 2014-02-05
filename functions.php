@@ -559,6 +559,7 @@ window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", su
       'post_link',       // Normal post link
       'post_type_link',  // Custom post type link
       'page_link',       // Page link
+      '_page_link',       // Page link?
       'attachment_link', // Attachment link
       'get_shortlink',   // Shortlink
       'post_type_archive_link',    // Post type archive link
@@ -618,6 +619,7 @@ function bapi_make_link( $link ) {
       'post_link',       // Normal post link
       'post_type_link',  // Custom post type link
       'page_link',       // Page link
+      '_page_link',       // Page link?
       'attachment_link', // Attachment link
       'get_shortlink',   // Shortlink
       'post_type_archive_link',    // Post type archive link
