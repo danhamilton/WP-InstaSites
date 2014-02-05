@@ -29,9 +29,8 @@
 		}
 		if (((strpos($url,'makepayment') === false)&&(strpos($url,'makebooking') === false)&&(strpos($url,'bapi') === false))){
 			$purl = parse_url(curPageURL());
-			$cdnurl = parse_url($bapi_all_options['bapi_site_cdn_domain']);
 			if($purl['scheme'] == 'https'){
-				$nurl = "http://".$cdnurl['host'].$purl['path'];
+				$nurl = $bapi_all_options['bapi_site_cdn_domain'].$purl['path'];
 				if(!empty($purl['query'])){
 					$nurl .= "?".$purl['query'];
 				}
