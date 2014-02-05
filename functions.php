@@ -602,7 +602,7 @@ window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", su
       'script_loader_src', // plugin scripts url
       'style_loader_src', // plugin styles url
       'get_theme_root_uri'
-      ,'home_url'
+      // 'home_url'
     );
 
     foreach ( $filters as $filter ) {
