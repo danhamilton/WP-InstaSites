@@ -26,7 +26,7 @@
 				exit();
 			}
 		}
-		else{
+		if (((strpos($url,'makepayment') === false)&&(strpos($url,'makebooking') === false))){
 			$purl = parse_url(curPageURL());
 			if($purl['scheme'] == 'https'){
 				$nurl = "http://".$purl['host'].$purl['path'];
@@ -37,6 +37,9 @@
 				header("Location: $nurl");
 				exit();
 			}
+		}
+		else{
+			return;
 		}
 	}
 
