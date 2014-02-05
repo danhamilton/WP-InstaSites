@@ -66,7 +66,7 @@ add_action('init','disable_kses_content',20);
 add_action('template_redirect', 'google_sitemap'); // sitemap handler
 add_action('wp_login','bapi_reset_first_look');
 add_action('after_setup_theme','bapi_login_handler',1);  //Hook to do single sign-on
-add_action('template_redirect','relative_url',1);
+add_action('template_redirect','relative_url',-10000000);
 
 // create custom plugin settings menu
 add_action('admin_menu', 'bapi_create_menu');
