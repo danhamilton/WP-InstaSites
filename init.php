@@ -12,6 +12,7 @@
 	}
 	
 	function urlHandler_securepages() {
+		global $bapi_all_options;
 		$url = get_relative($_SERVER['REQUEST_URI']);
 		//echo $url; exit();
 		if (((strpos($url,'makepayment') !== false)||(strpos($url,'makebooking') !== false))&&(strpos($_SERVER['HTTP_HOST'],'lodgingcloud.com') == false)&&(strpos($_SERVER['HTTP_HOST'],'localhost') == false)) { //Do not force the redirect on lodgingcloud - helps bobby debug connect.
@@ -28,8 +29,9 @@
 		}
 		if (((strpos($url,'makepayment') === false)&&(strpos($url,'makebooking') === false)&&(strpos($url,'bapi') === false))){
 			$purl = parse_url(curPageURL());
+			$cdnurl = parse_url($bapi_all_options['bapi_site_cdn_domain']);
 			if($purl['scheme'] == 'https'){
-				$nurl = "http://".$purl['host'].$purl['path'];
+				$nurl = "http://".$cdnurl['host'].$purl['path'];
 				if(!empty($purl['query'])){
 					$nurl .= "?".$purl['query'];
 				}
