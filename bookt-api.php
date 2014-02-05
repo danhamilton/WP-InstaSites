@@ -44,7 +44,7 @@ add_filter('redirect_canonical','bapi_redirect_fix',10,2);
 add_filter('language_attributes','bapi_language_attributes',10);	// ensure output of proper language
 add_filter('upload_mimes', 'custom_upload_mimes');
 add_filter('get_sample_permalink_html', 'perm', '',4); //Remove Edit Button for non superusers on BAPI pages
-add_action('template_redirect', 'do_ossdl_off_ob_start');
+add_action('template_redirect', 'do_ossdl_off_ob_start',10);
 add_action('wp_head','getconfig');
 add_action('wp_head','bapi_getmeta',1);
 add_action('wp_head','display_global_header',10);
@@ -66,7 +66,7 @@ add_action('init','disable_kses_content',20);
 add_action('template_redirect', 'google_sitemap'); // sitemap handler
 add_action('wp_login','bapi_reset_first_look');
 add_action('after_setup_theme','bapi_login_handler',1);  //Hook to do single sign-on
-add_action('template_redirect','relative_url');
+add_action('template_redirect','relative_url',1);
 
 // create custom plugin settings menu
 add_action('admin_menu', 'bapi_create_menu');
