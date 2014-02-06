@@ -101,9 +101,29 @@ add_shortcode( 'makebooking', 'makebooking_sc' );
 //Booking Confirmation
 function booking_confirmation_sc(){
 	$td = getbapisolutiondata();
+	$googleConversionkey = get_option( 'bapi_google_conversion_key');
+	$googleConversionlabel = get_option( 'bapi_google_conversion_label');
+	$googleConversionCode = '';
+	if($googleConversionkey != '' && $googleConversionlabel != ''){
+		$googleConversionCode = '<!-- Google Code for Signup Conversion Page -->
+<script type="text/javascript">
+/* <![CDATA[ */
+var google_conversion_id = '.$googleConversionkey.';
+var google_conversion_language = "en";
+var google_conversion_format = "3";
+var google_conversion_color = "ffffff";
+var google_conversion_label = "'.$googleConversionlabel.'";
+var google_conversion_value = 0;
+var google_remarketing_only = false;
+/* ]]> */
+</script>
+<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js"></script>
+<noscript><div style="display:inline;"><img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/'.$googleConversionkey.'/?value=0&label='.$googleConversionlabel.'&guid=ON&script=0"/></div></noscript>';
+	}
+
 	$d = '<h1>Reservation Request Received</h1>
 <p>Thank You! We have received your request and will process it shortly. Please note that your reservation is not confirmed until you receive written confirmation from us.</p>
-<p>If you have any questions regarding this reservation, please <a href="mailto:'.$td['site']['PrimaryEmail'].'">contact us.</a></p>';
+<p>If you have any questions regarding this reservation, please <a href="mailto:'.$td['site']['PrimaryEmail'].'">contact us.</a></p>'.$googleConversionCode;
 	return $d;
 }
 add_shortcode( 'bookingconfirmation', 'booking_confirmation_sc' );

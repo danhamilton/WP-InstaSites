@@ -409,6 +409,21 @@ class BAPI_Inquiry_Form extends WP_Widget {
 		?>
 		<div id="bapi-inquiryform" class="bapi-inquiryform" data-templatename="tmpl-leadrequestform-propertyinquiry" data-log="0" data-showphonefield="<?= $bShowPhoneField ? 1 : 0; ?>" data-phonefieldrequired="<?= $bPhoneFieldRequired ? 1 : 0; ?>" data-showdatefields="<?= $bShowDateFields ? 1 : 0; ?>" data-shownumberguestsfields="<?= $bShowNumberGuestsFields ? 1 : 0; ?>" data-showleadsourcedropdown="<?= $bShowLeadSourceDropdown ? 1 : 0; ?>" data-leadsourcedropdownrequired="<?= $bLeadSourceDropdownRequired ? 1 : 0; ?>" data-showcommentsfield="<?= $bShowCommentsField ? 1 : 0; ?>" ></div>
         <?php
+        
+        $googleConversionkey = get_option( 'bapi_google_conversion_key');
+	$googleConversionlabel = get_option( 'bapi_google_conversion_label');
+	$googleConversionCode = '';
+	if($googleConversionkey != '' && $googleConversionlabel != ''){
+		$googleConversionCode = '<!-- Google Code Conversion -->
+<script type="text/javascript">
+function googleConversionTrack(){
+	var image = new Image(1,1); 
+	image.src = "//www.googleadservices.com/pagead/conversion/'.$googleConversionkey.'/?value=0&amp;label='.$googleConversionlabel.'&amp;guid=ON&amp;script=0";
+}
+</script>';
+	}
+	
+        echo $googleConversionCode;
 		echo $after_widget;
 	}
 
