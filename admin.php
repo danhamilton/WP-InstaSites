@@ -34,7 +34,6 @@ function bapi_options_init(){
 	// register the core settings
 	register_setting('bapi_options','api_key');
 	register_setting('bapi_options','bapi_language');
-	register_setting('bapi_options','bapi_sitelive');
 	register_setting('bapi_options','bapi_basueurl');
 	register_setting('bapi_options','bapi_secureurl');	
 	register_setting('bapi_options','bapi_solutiondata');
@@ -92,8 +91,6 @@ function bapi_settings_page() {
 	$textdata = is_super_admin() ? get_option('bapi_textdata') : 'N/A';
 	$seodata = is_super_admin() ? get_option('bapi_keywords_array') : 'N/A';		
 	
-	$slitelive = get_option('bapi_sitelive');
-	$sitelive = empty($slitelive) ? 'No' : 'Yes';		
 ?>
 
 <link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/jquery.ui/jquery-ui-1.10.2.min.css', __FILE__) ?>" />

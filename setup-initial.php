@@ -8,7 +8,7 @@
 		}
 		update_option('bapi_site_cdn_domain', $_POST['bapi_site_cdn_domain']);
 		update_option('api_key', $_POST['api_key']);
-		update_option('bapi_sitelive', $_POST['bapi_sitelive']=='on');
+		//update_option('bapi_sitelive', $_POST['bapi_sitelive']=='on');
 		update_option('bapi_baseurl', $_POST['bapi_baseurl']);
 		update_option('bapi_secureurl', $securl);
 		update_option('bapi_cloudfronturl', $_POST['bapi_cloudfronturl']);
@@ -26,8 +26,8 @@
 	$surl = '';
 	if(get_option('bapi_secureurl')){ $surl = get_option('bapi_secureurl'); }
 	
-	$sitelive = get_option('bapi_sitelive');		
-	$sitelive = empty($sitelive) ? '' : 'checked';
+	//$sitelive = get_option('bapi_sitelive');		
+	//$sitelive = empty($sitelive) ? '' : 'checked';
 	
 	$cloudfronturl = get_option('bapi_cloudfronturl');		
 	
@@ -92,10 +92,10 @@
 	<td scope="row">Site URL:</td>
 	<td><input type="text" name="bapi_site_cdn_domain" id="site_url_input" size="60" value="<?php echo $cdn_url; ?>" onBlur="validateURL(this.value)"/></td>
 </tr>
-<tr valign="top">
+<!--<tr valign="top">
 	<td scope="row">Site Live?</td>
 	<td><input type="checkbox" name="bapi_sitelive" size="60" <?php echo $sitelive; ?> /></td>
-</tr>
+</tr>-->
 <tr valign="top">
 	<td scope="row">API Key:</td>
 	<td><input type="text" name="api_key" id="apikey" size="60" value="<?php echo get_option('api_key'); ?>" />
