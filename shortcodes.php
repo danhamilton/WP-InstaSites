@@ -31,7 +31,7 @@ add_shortcode( 'doctemplate', 'doc_template_sc' );
 
 //Property Search
 function search_page_sc(){
-	$d = '<div id="results" class="bapi-summary" data-log="0" data-templatename="tmpl-propertysearch-listview" data-entity="property" data-applyfixers="1" data-rowfixcount="2"></div>';
+	$d = '<div id="results" class="bapi-summary" data-log="0" data-defaultsearchresultview="1" data-templatename="tmpl-propertysearch-listview" data-entity="property" data-applyfixers="1" data-rowfixselector=".gallery-view-page%20%3E%20.span6" data-rowfixcount="2" data-showallresults="1"></div>';
 	return $d;
 }
 add_shortcode( 'searchpage', 'search_page_sc' );

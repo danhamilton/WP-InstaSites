@@ -4,7 +4,7 @@
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {				
 		//bapi_wp_site_options();
 		unset($_POST['submit']);		
-		$postSitesettings = $_POST;
+		//$postSitesettings = $_POST;
 		//print_r($postSitesettings);
 		
 		/*foreach ($postSitesettings as $k => $v) {
@@ -60,6 +60,13 @@ getconfig();
 	<input type="hidden" id="searchmode-hotelview" name="searchmode-hotelview" data-prevalue="BAPI.config().searchmodes.hotelview=" value="" />
 	</td>	
 </tr>-->
+<tr valign="top">
+	<td scope="row">Default Search Result View:</td>
+	<td>
+		<select name="defaultsearchresultview" id="defaultsearchresultview">
+		</select>
+	</td>
+</tr>
 </table>
 <div class="clear"></div>
 
@@ -351,6 +358,7 @@ $searchsort = $bapiSolutionData["BizRules"]["Search Sort Order Option"];
 		
 		var settings={
 			"maxratesearch": "BAPI.config().rate.enabled='.$maxratesearch.';",
+			"defaultsearchresultview": "BAPI.config().defaultsearchresultview=\'tmpl-propertysearch-listview\';",
 			"searchmode-listview": "BAPI.config().searchmodes.listview=true;",
 			"searchmode-photoview": "BAPI.config().searchmodes.photoview=true;",
 			"searchmode-widephotoview": "BAPI.config().searchmodes.widephotoview=false;",
@@ -389,6 +397,33 @@ settings["roomsearch"] = "BAPI.config().rooms.enabled=false;";
 	$.each(BAPI.config().los.values,function(key,value) {
         $("#deflos").append('<option value="BAPI.config().los.defaultval='+value.Data+'; BAPI.config().los.minval='+value.Data+';">' + value.Label  + '</option>');
 	});
+
+	/* populating the dropdown and selecting the option that was set */
+	function populatedefaultviewddp(showListview,showPhotoView,showMapView){
+		var thedefaultsearchresultviewOptions = '';
+		if(showListview){
+			thedefaultsearchresultviewOptions = thedefaultsearchresultviewOptions + '<option value="BAPI.config().defaultsearchresultview=\'tmpl-propertysearch-listview\';">List View</option>';
+		}
+		if(showPhotoView){
+			thedefaultsearchresultviewOptions = thedefaultsearchresultviewOptions + '<option value="BAPI.config().defaultsearchresultview=\'tmpl-propertysearch-galleryview\';">Photo View</option>';
+		}
+		if(showMapView){
+			thedefaultsearchresultviewOptions = thedefaultsearchresultviewOptions + '<option value="BAPI.config().defaultsearchresultview=\'tmpl-propertysearch-mapview\';">Map View</option>';
+		}
+		if(thedefaultsearchresultviewOptions != ''){
+			$('#defaultsearchresultview').html(thedefaultsearchresultviewOptions);
+		}else{
+			$('#defaultsearchresultview').html('<option value="">Disabled</option>');
+		}
+		$('#defaultsearchresultview').val(settings['defaultsearchresultview']);
+	}
+	populatedefaultviewddp(settings['searchmode-listview'] == 'BAPI.config().searchmodes.listview=true;',settings['searchmode-photoview'] == 'BAPI.config().searchmodes.photoview=true;',settings['searchmode-mapview'] == 'BAPI.config().searchmodes.mapview=true;');
+	/* calling the function on change so the dropdown is updated */
+	$('.searchmode-listview-cbx,.searchmode-photoview-cbx,.searchmode-mapview-cbx').change(function(){
+		populatedefaultviewddp($('.searchmode-listview-cbx').is(":checked"),$('.searchmode-photoview-cbx').is(":checked"),$('.searchmode-mapview-cbx').is(":checked"));
+	});
+
+		
 	/*$.each(BAPI.config().beds.values,function(key,value) {
         $("#maxbedsearch").append('<option value="BAPI.config().beds.values=BAPI.config().beds.values.splice(0,'+ value.Data +');">' + value.Label  + '</option>');
 	});*/
@@ -396,7 +431,7 @@ settings["roomsearch"] = "BAPI.config().rooms.enabled=false;";
 	$(":checkbox").iButton();
 	// update the settings
 	jQuery.each(settings, function( key, value ) {
-		console.log(key + '=' + value);
+		//console.log(key + '=' + value);
 		var theKey = '.'+key+'-cbx';
 		//console.log(theKey);
 		if (key.indexOf('$')<0) {
