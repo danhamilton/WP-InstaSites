@@ -689,4 +689,21 @@ function display_gw_verification(){
 <?php
 	}
 }
+
+function getTextDataArray(){
+	bapi_wp_site_options();
+	global $bapi_all_options;
+	$apikey = $bapi_all_options["api_key"];
+	$connecturl = $bapi_all_options["bapi_baseurl"];
+	//var_dump($connecturl);
+	$dataurl = 'https://'.$connecturl.'/ws/?method=get&entity=textdata&apikey='.$apikey;
+	$data = file_get_contents($dataurl);
+	$textDataArray = json_decode($data,TRUE);
+	$textDataArray = $textDataArray["result"];
+	if($textDataArray === null){
+		$textDataArray = '';
+	}
+	return $textDataArray;
+}
+
 ?>
