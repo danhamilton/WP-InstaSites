@@ -44,6 +44,8 @@ add_filter('redirect_canonical','bapi_redirect_fix',10,2);
 add_filter('language_attributes','bapi_language_attributes',10);	// ensure output of proper language
 add_filter('upload_mimes', 'custom_upload_mimes');
 add_filter('get_sample_permalink_html', 'perm', '',4); //Remove Edit Button for non superusers on BAPI pages
+add_filter('page_row_actions', 'remove_quickedit_for_nonsuperusers', 10, 2 );
+add_action('admin_menu', 'remove_pageattributes_meta_box' );
 add_action('template_redirect', 'do_ossdl_off_ob_start',10);
 add_action('wp_head','getconfig');
 add_action('wp_head','bapi_getmeta',1);

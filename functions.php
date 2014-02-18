@@ -705,5 +705,57 @@ function getTextDataArray(){
 	}
 	return $textDataArray;
 }
+	/**
+	* Remove quick edit link in the list of all pages for non super users.
+	*
+	* @param	array		$actions		The page row actions
+	* @param	object		$page_object			The page being listed
+	* @return	array
+	*/
+	function remove_quickedit_for_nonsuperusers( $actions, $page_object ) {
+		/* if the user is not super admin */
+		if (!is_super_admin()) {
+			/* we get the page ID */
+			$thePageID = $page_object->ID;
+			/* we get the meta data array for this post */
+			$metaArray = get_post_meta($thePageID);
+				/* we check if our custom fields exists */
+				if(!empty($metaArray) && array_key_exists('bapi_page_id', $metaArray) || array_key_exists('bapikey', $metaArray) || array_key_exists('bapi_last_update', $metaArray)){
+					/* this is not a super admin and the page is a BAPI page we remove quick edit*/
+					unset ( $actions ['inline hide-if-no-js'] );
+				}
+		}
+		return $actions;
+	}
+	
+	/**
+	* Remove page attributes meta box.
+	*
+	* @uses		remove_meta_box()
+	*/
+	function remove_pageattributes_meta_box() {
+		/* if the user is not super admin */
+		if (!is_super_admin()) {
+			/* if the post var is set this var show when editing post and pages like this /wp-admin/post.php?post=2468&action=edit */
+			if(isset($_GET['post']) && $_GET['post'] != ''){
+			/* its set we get the post ID */
+			$thePostID = $_GET['post'];
+			/* we get the meta data array for this post */
+			$metaArray = get_post_meta($thePostID);
+				/* we check if our custom fields exists */
+				if(!empty($metaArray) && array_key_exists('bapi_page_id', $metaArray) || array_key_exists('bapikey', $metaArray) || array_key_exists('bapi_last_update', $metaArray)){
+					/* this is not a super admin and the page is a BAPI page we remove the metabox*/
+					remove_meta_box( 'pageparentdiv', 'page', 'normal' );
+					/* lets add a metabox with a message as to why there is no page Attributes metabox */
+					add_meta_box( 'pageattributesmessage_meta_box_id', 'Page Attributes', 'create_pageattributesmessage_meta_box', 'page', 'side', 'high' );
+				}
+			}
+		}
+	}
+	
+	function create_pageattributesmessage_meta_box()
+	{
+		echo 'This page is synced with InstaManager. Editing content, URL and page attributes is disabled.';  
+	}
 
 ?>
