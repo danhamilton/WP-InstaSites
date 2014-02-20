@@ -755,7 +755,7 @@ function getTextDataArray(){
 	
 	function create_pageattributesmessage_meta_box()
 	{
-		echo 'This page is synced with InstaManager. Editing content, URL and page attributes is disabled.';  
+		echo '<div style="background-color:#FCF8E3;border:1px solid #FBEED5;border-radius:4px;padding:8px 35px 8px 14px;text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);color: #C09853;">This page is synced with InstaManager. Editing content, URL and page attributes is disabled.<br/> <a href="//support.bookt.com/customer/portal/articles/1455747-missing-attributes-on-shared-pages" target="_blank">Learn More</a></div>';  
 	}
 
 ?>
