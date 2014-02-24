@@ -181,4 +181,13 @@ function bapi_settings_page() {
 
 <?php 
 } 
+
+
+function bapi_notify_blog_public(){
+	global $bapi_all_options;
+	if($bapi_all_options['blog_public']==0){
+		echo '<div class="error"><p>Your site is currently hidden to search engines. <a href="/wp-admin/options-reading.php">CLICK HERE</a> to enable <em>Search Engine Visibility</em> and fix this problem.</p></div>';
+	}
+}
+add_action('admin_notices','bapi_notify_blog_public');
 ?>
