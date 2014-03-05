@@ -210,7 +210,7 @@
 		$meta_description = !empty($meta) ? $meta['bapi_meta_description'][0] : null;	
 		
 		// locate the SEO data stored in Bookt from the requested URL
-		$seo = $bapisync->getSEOFromUrl($_SERVER['REDIRECT_URL']);
+		$seo = $bapisync->getSEOFromUrl(str_replace("?".$_SERVER['QUERY_STRING'],'',$_SERVER['REQUEST_URI']));
 		//print_r($seo);//exit();
 		if (!empty($seo) && (empty($seo["entity"]) || empty($seo["pkid"])) && empty($staticpagekey)) {
 			$seo = null; // ignore seo info if it doesn't point to a valid entity
@@ -250,7 +250,7 @@
 			}
 			//Check for non-initialized market area page (-1) and set correct bapikey
 			if(($pktest[1]==-1)&&$pktest[0]=='marketarea'){
-				$seo = $bapisync->getSEOFromUrl($_SERVER['REDIRECT_URL']);
+				$seo = $bapisync->getSEOFromUrl(str_replace("?".$_SERVER['QUERY_STRING'],'',$_SERVER['REQUEST_URI']));
 				//print_r($post); exit();
 				update_post_meta($post->ID, "bapikey", 'marketarea:'.$seo['pkid']);	
 			}
