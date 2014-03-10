@@ -105,7 +105,6 @@ function bapi_settings_page() {
 		$('#reset-seodata').click(function() { $("#reset-seodata-form").submit(); });	
 	});
 </script>
-
 <div class="wrap">
 <h1><a href="http://www.bookt.com" target="_blank"><img src="<?= plugins_url('/img/logo-im.png', __FILE__) ?>" /></a></h1>
 <h2>InstaSite Plugin</h2>
