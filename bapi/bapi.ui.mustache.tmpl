@@ -165,7 +165,15 @@
 {{#result}}
 <div id="book-block" class="module shadow">
 <div class="pd">
-	<div class="rate-type">		
+	<div class="rate-type">
+	{{^IsBookable}}
+	{{#ContextData.Quote.QuoteDisplay.prefix}}<span>{{ContextData.Quote.QuoteDisplay.prefix}}:</span>{{/ContextData.Quote.QuoteDisplay.prefix}}
+		<div class="clearfix"></div>
+		<strong class="rate">{{ContextData.Quote.QuoteDisplay.value}}</strong>
+		{{#ContextData.Quote.QuoteDisplay.suffix}}<span classs="input-small">/{{ContextData.Quote.QuoteDisplay.suffix}}</span>{{/ContextData.Quote.QuoteDisplay.suffix}}
+	</div>
+	{{/IsBookable}}
+	{{#IsBookable}}
 		{{^ContextData.Quote.IsValid}}
 		<div class="alert alert-error">{{ContextData.Quote.ValidationMessage}}</div>
 		{{/ContextData.Quote.IsValid}}
@@ -174,14 +182,14 @@
 		<div class="clearfix"></div>
 		<strong class="rate">{{ContextData.Quote.QuoteDisplay.value}}</strong>
 		{{#ContextData.Quote.QuoteDisplay.suffix}}<span classs="input-small">/{{ContextData.Quote.QuoteDisplay.suffix}}</span>{{/ContextData.Quote.QuoteDisplay.suffix}}
-		{{/ContextData.Quote.IsValid}}			
-	</div>       
+		{{/ContextData.Quote.IsValid}}
+	</div>
+
 	{{#ContextData.Quote.IsValid}}
-		{{#IsBookable}}
 		<button class="book-btn btn btn-large btn-warning bapi-booknow" type="button">{{textdata.Book Now}}</button>
-		{{/IsBookable}}
-	{{/ContextData.Quote.IsValid}}			
-	<hr />  
+	{{/ContextData.Quote.IsValid}}
+
+<hr />  
 
 <div class="row-fluid">
 	
@@ -222,15 +230,8 @@
 </div>
 
 	<button class="btn btn-mini bapi-getquote" type="button">{{textdata.Update}}</button>
-	<hr />
-	<div class="wylt-block"> 
-	<h5>{{textdata.Would you like to}}</h5>
-	<ul>
-		<li><span class="bapi-print" data-class="media">{{textdata.Print this Page}}</span></li>
-		<li style="display:none"><span>Email</span> to a Friend</li>
-	</ul>
-	</div>
-	<hr />
+{{/IsBookable}}
+<hr />
 	<button class="btn add-wishlist bapi-wishlisttracker{{#inmylist}} active{{/inmylist}}" data-pkid="{{ID}}" type="button" data-toggle="button">
 		<span class="halflings heart-empty"><i></i>{{^inmylist}}{{textdata.WishList}}{{/inmylist}}{{#inmylist}}{{textdata.WishListed}}{{/inmylist}}</span></button>
 </div>
@@ -862,7 +863,7 @@
 </section>
 {{/result}}
 <span class="end"></span>
-<div id="bapi-rateblock" class="bapi-rateblock" data-templatename="tmpl-search-rateblock" data-log="1"></div>
+<div id="bapi-rateblock" class="bapi-rateblock {{#result}}{{^IsBookable}}inquirymode{{/IsBookable}}{{/result}}" data-templatename="tmpl-search-rateblock" data-log="1"></div>
 <div class="bapi-moveme" data-from="#bapi-rateblock" data-to=".detail-overview-target" data-method="append"></div>
 </script>
 
