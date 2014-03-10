@@ -80,7 +80,7 @@
 	}
 </script>
 <div class="wrap">
-<h1><a href="http://www.bookt.com" target="_blank"><img src="<?= plugins_url('/img/logo.png', __FILE__) ?>" /></a></h1>
+<h1><a href="http://www.bookt.com" target="_blank"><img src="<?= plugins_url('/img/logo-im.png', __FILE__) ?>" /></a></h1>
 <h2>InstaSite Plugin - Initial Setup</h2>
 <form method="post">
 <table class="form-table">
