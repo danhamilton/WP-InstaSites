@@ -816,9 +816,9 @@ function bapi_register_dashboard_metabox() {
 /* Add the custom Instansite Metaboxes */	
 	global $wp_meta_boxes;	
 	  add_meta_box('bapi-gs', 'Getting Started', 'register_started_box', 'dashboard', 'normal', 'high');
-	  add_meta_box('bapi-instaapp', 'InstaApp Actions', 'register_instaapp_box', 'dashboard', 'normal', 'high');
+	  add_meta_box('bapi-instaapp', 'InstaApp Actions', 'register_instaapp_box', 'dashboard', 'side', 'high');
 	  add_meta_box('bapi-action', 'Advanced Actions', 'register_action_box', 'dashboard', 'normal', 'high');
-	  add_meta_box('bapi-tips', 'Tips', 'register_tips_box', 'dashboard', 'normal', 'high');
+	  add_meta_box('bapi-tips', 'Tips', 'register_tips_box', 'dashboard', 'side', 'high');
 	  wp_enqueue_style( 'custom-dashboard', plugins_url('css/custom-dashboard.css', __FILE__) );
 	}
 add_action('wp_dashboard_setup', 'bapi_register_dashboard_metabox',2);

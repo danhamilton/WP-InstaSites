@@ -5,8 +5,8 @@
 #welcome-panel.custom{background:#248CCE url(../img/bg-dashboard.png) repeat;border:2px solid #f1f1f1;border-radius:10px;-moz-border-radius:10px;-webkit-border-radius:10px;box-shadow:none;-moz-box-shadow:none;-webkit-box-shadow:none;padding:23px 10px;margin:0;}
 .welcome-panel.custom{background:none;border:none;box-shadow:none;-moz-box-shadow:none;-webkit-box-shadow:none;padding:0;}
 #dashboard-widgets .postbox-container{width:50%!important;}
-.welcome-panel-content-custom{margin-left:0;}
-.welcome-panel-content-custom h1{color:#fff;font-size:50px;line-height:150%;margin-top:10px;margin-bottom:10px;text-align:center;}
+#welcome-panel .welcome-panel-content-custom{margin-left:0;}
+#welcome-panel .welcome-panel-content-custom h1{color:#fff;font-size:50px;line-height:150%;margin-top:10px;margin-bottom:10px;text-align:center;}
 #welcome-panel.custom .welcome-panel-content-custom p{color:#fff;font-size:20px;line-height:125%;margin-bottom:30px;text-align:center;}
 #welcome-panel.custom .btn-close{
 background: #ffffff; /* Old browsers */
@@ -31,8 +31,7 @@ background: -ms-linear-gradient(top,  #ffffff 0%,#ececec 100%); /* IE10+ */
 background: linear-gradient(to bottom,  #ffffff 0%,#ececec 100%); /* W3C */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ececec',GradientType=0 ); /* IE6-9 */
 }
-#wpfooter{display:none;}
-#custom-footer #footer-upgrade img{display:inline-block;margin-bottom:-7px;margin-right:5px;}
+#wpbody-content #dashboard-widgets #postbox-container-3, #wpbody-content #dashboard-widgets #postbox-container-4{display:none;}
 @media (max-width: 767px) {
 #dashboard-widgets .postbox-container{width:100%!important;}	
 #footer-left{display:block;float:none;}
