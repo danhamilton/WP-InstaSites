@@ -758,4 +758,211 @@ function getTextDataArray(){
 		echo '<div style="background-color:#FCF8E3;border:1px solid #FBEED5;border-radius:4px;padding:8px 35px 8px 14px;text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);color: #C09853;">This page is synced with InstaManager. Editing content, URL and page attributes is disabled.<br/> <a href="//support.bookt.com/customer/portal/articles/1455747-missing-attributes-on-shared-pages" target="_blank">Learn More</a></div>';  
 	}
 
+/* Custom Instasite Dashboard */
+
+function bapi_welcome_panel() {
+/*
+ Hide the defaul welcome message and put the custom Instansite block.
+*/	
+?>	
+<script type="text/javascript">
+/* Hide default welcome message */
+jQuery(document).ready( function($) 
+{
+	$('#wpbody .wrap h2').html('<img src="<?php echo plugins_url( 'img/dashboard-logo.png' , __FILE__ ) ?>" />');
+	$('#welcome-panel .welcome-panel-content').hide();
+	$('#welcome-panel .welcome-panel-close').hide();
+	$('#welcome-panel.custom .welcome-panel-close').show();
+	
+});
+</script>
+<div id="welcome-panel" class="welcome-panel custom">
+		<?php wp_nonce_field( 'welcome-panel-nonce', 'welcomepanelnonce', false ); ?>
+        <div class="btn-close">
+		<a class="welcome-panel-close" href="<?php echo esc_url( admin_url( '?welcome=0' ) ); ?>"><?php _e( 'Close' ); ?></a>
+		</div>
+        <div class="welcome-panel-content-custom">
+        <h1><?php _e( 'Welcome to your InstaSite!' ); ?></h1>
+        <p class="about-description"><?php _e( 'If this is your first time here, take the tour, choose theme, etc.' ); ?><br />			<?php _e( 'If you are tired of seeing this message simply close at the top right.' ); ?></p>
+        </div>
+</div>
+<?php
+}
+add_action( 'welcome_panel', 'bapi_welcome_panel' );
+
+function bapi_dashboard_custom_footer() {
+/* Put the logo in the right botton footer */	
+ echo '<span id="footer-thankyou"><img src="'.plugins_url( 'img/dashboard-logo.png' , __FILE__ ).'" /></span>';
+}
+add_filter( 'admin_footer_text', 'bapi_dashboard_custom_footer' );
+
+function hide_dashboard_metabox() {
+/* Put off the wordpress dashboard default metabox*/	
+   $hide = array(
+      0 => 'dashboard_recent_comments',
+      1 => 'dashboard_incoming_links',
+      2 => 'dashboard_activity',
+      3 => 'dashboard_quick_press',
+      4 => 'dashboard_primary',
+      5 => 'dashboard_secondary',
+	  6 => 'dashboard_recent_drafts',
+	  7 => 'dashboard_right_now',
+   );
+   return $hide;
+}
+add_filter('get_user_option_metaboxhidden_dashboard', 'hide_dashboard_metabox', 1);
+
+function bapi_register_dashboard_metabox() {
+/* Add the custom Instansite Metaboxes */	
+	global $wp_meta_boxes;	
+	  add_meta_box('bapi-gs', 'Getting Started', 'register_started_box', 'dashboard', 'normal', 'high');
+	  add_meta_box('bapi-instaapp', 'InstaApp Actions', 'register_instaapp_box', 'dashboard', 'normal', 'high');
+	  add_meta_box('bapi-action', 'Advanced Actions', 'register_action_box', 'dashboard', 'normal', 'high');
+	  add_meta_box('bapi-tips', 'Tips', 'register_tips_box', 'dashboard', 'normal', 'high');
+	  wp_enqueue_style( 'custom-dashboard', plugins_url('css/custom-dashboard.css', __FILE__) );
+	}
+add_action('wp_dashboard_setup', 'bapi_register_dashboard_metabox',2);
+
+function register_started_box() {	
+/* Getting Started Metabox */
+	$items = array( array( url => "themes.php", 
+                      icon => "welcome-icon dashicons-images-alt2",
+                      name => "Choose your Theme" 
+                    ),
+               array( url => "themes.php?page=theme_options", 
+                      icon => 'welcome-icon dashicons-admin-appearance',
+                      name => 'Change your theme',
+                    ),
+			   array( url => "admin.php?page=bookt-api/setup-slideshow.php", 
+                      icon => "welcome-icon dashicons-format-gallery",
+                      name => "Add a slideshow" 
+                    ),	 	
+               array( url => "nav-menus.php", 
+                      icon => "welcome-icon dashicons-menu",
+                      name => "Manage your menu" 
+                    ),
+				array( url => "post-new.php?post_type=page", 
+                      icon => "welcome-icon dashicons-welcome-add-page",
+                      name => "Add a page" 
+                    )	
+             );	
+	// Display the container
+	echo '<div class="welcome-panel rss-widget custom">';
+   echo '<ul>';
+   for($i = 0; $i < count($items) ; $i++ ){		
+				echo '<li>';
+				echo '<a href="'.admin_url( $items[$i]['url'] ).'" class="'.$items[$i]['icon'].'">';
+				echo $items[$i]['name'];
+				echo '</a>';
+				echo '</li>';
+	}
+	echo '<li><a class="button button-primary button-hero load-customize hide-if-no-customize" href="'.home_url( '/' ).'">View your site</a></li>';
+	echo '</ul></div>';
+}
+function register_instaapp_box() {	
+/* Instaapp Options Metabox */
+	$items = array( array( url => "https://app.instamanager.com/SummaryV2.aspx?sid=1011", 
+                      icon => "welcome-icon dashicons-screenoptions",
+                      name => "Manage Properties" 
+                    ),
+               array( url => "https://app.instamanager.com/SummaryV2.aspx?sid=2014", 
+                      icon => 'welcome-icon dashicons-search',
+                      name => 'Set up Property Finders',
+                    ),
+               array( url => "https://app.instamanager.com/SummaryV2.aspx?sid=1010", 
+                      icon => "welcome-icon dashicons-location-alt",
+                      name => "Set up Attractions" 
+                    ),
+				array( url => "https://app.instamanager.com/SummaryV2.aspx?sid=9023", 
+                      icon => "welcome-icon dashicons-awards",
+                      name => "Add Specials for your visitors" 
+                    ),
+				array( url => "https://app.instamanager.com/marketing/optionalservices/", 
+                      icon => "welcome-icon dashicons-plus",
+                      name => "See Optional Services" 
+                    ),
+				array( url => "https://app.instamanager.com/", 
+                      icon => "button button-primary button-hero load-customize hide-if-no-customize",
+                      name => "Go To InstaApp" 
+                    )		
+             );	
+	// Display the container
+	echo '<div class="welcome-panel rss-widget custom">';
+echo '<ul>';
+   for($i = 0; $i < count($items) ; $i++ ){		
+				echo '<li>';
+				echo '<a href="'.$items[$i]['url'].'" class="'.$items[$i]['icon'].'">';
+				echo $items[$i]['name'];
+				echo '</a>';
+				echo '</li>';
+	}
+	echo '</ul></div>';
+}
+function register_action_box() {	
+/* Advanced Options Metabox */
+	$items = array( array( url => "options-general.php?page=mr_social_sharing", 
+                      icon => "welcome-icon dashicons-facebook-alt",
+                      name => "Setup social media" 
+                    ),
+               array( url => "options-general.php?page=googlelanguagetranslator-menu-options", 
+                      icon => 'welcome-icon dashicons-translation',
+                      name => 'Add Google Translate',
+                    ),
+               array( url => "admin.php?page=bookt-api/setup-sitesettings.php", 
+                      icon => "welcome-icon dashicons-admin-generic",
+                      name => "Change your site settings" 
+                    ),
+				array( url => "themes.php?page=theme_options", 
+                      icon => "welcome-icon dashicons-art",
+                      name => "Add Custom CSS or Scripts" 
+                    ),
+				array( url => "themes.php?page=theme_options", 
+                      icon => "welcome-icon dashicons-format-image",
+                      name => "Change Logo Size or Add a Favicon" 
+                    )		
+             );	
+	// Display the container
+	echo '<div class="welcome-panel rss-widget custom">';
+echo '<ul>';
+   for($i = 0; $i < count($items) ; $i++ ){		
+				echo '<li>';
+				echo '<a href="'.admin_url($items[$i]['url']).'" class="'.$items[$i]['icon'].'">';
+				echo $items[$i]['name'];
+				echo '</a>';
+				echo '</li>';
+	}
+	echo '</ul></div>';
+}
+function register_tips_box() {	
+/* Tips Metabox */
+	$items = array( array( url => "https://codex.wordpress.org/WordPress_Widgets", 
+                      icon => "welcome-icon dashicons-editor-help",
+                      name => "What are widgets" 
+                    ),
+               array( url => "http://support.bookt.com/customer/portal/articles/1200398-managing-seo-and-keywords-for-your-instasite", 
+                      icon => 'welcome-icon dashicons-analytics',
+                      name => 'Manager SEO',
+                    ),
+               array( url => "http://support.bookt.com/", 
+                      icon => "welcome-icon welcome-view-site",
+                      name => "Visit Support" 
+                    ),
+				array( url => "http://support.bookt.com/customer/portal/emails/new", 
+                      icon => "welcome-icon dashicons-sos",
+                      name => "Stuck? Contact Support" 
+                    )	
+             );	
+	// Display the container
+	echo '<div class="welcome-panel rss-widget custom">';
+echo '<ul>';
+   echo '<li><div class="welcome-icon dashicons-welcome-learn-more">How to create a <a href="http://codex.wordpress.org/Writing_Posts">blog</a> or <a href="http://codex.wordpress.org/Pages">page</a></div></li>';
+   for($i = 0; $i < count($items) ; $i++ ){		
+				echo '<li>';
+				echo '<a href="'.$items[$i]['url'].'" class="'.$items[$i]['icon'].'">';
+				echo $items[$i]['name'];
+				echo '</a>';
+				echo '</li>';
+	}
+	echo '</ul></div>';
+}
 ?>
