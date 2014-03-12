@@ -377,9 +377,6 @@ class BAPI_Inquiry_Form extends WP_Widget {
 		extract( $args );
 		$title = apply_filters( 'widget_title', $instance['title'] );
 		
-		if(isset( $instance[ 'inquiryModeTitle' ])){$inquiryModeTitle =  $instance['inquiryModeTitle'];}
-		else{ $inquiryModeTitle = "Inquire for Booking Details";}
-		
 		/* Do we show the phone field ? */
 		if(isset( $instance[ 'showPhoneField' ])){$bShowPhoneField =  $instance['showPhoneField'];}
 		else{ $bShowPhoneField = true;}
@@ -409,8 +406,6 @@ class BAPI_Inquiry_Form extends WP_Widget {
 		echo $before_widget;
 		if ( ! empty( $title ) )
 			echo $before_title . $title . $after_title;
-		if ( ! empty( $inquiryModeTitle ) )
-			echo '<div class="inquirymodetitle hide">'. $inquiryModeTitle . '</div>';
 		?>
 		<div id="bapi-inquiryform" class="bapi-inquiryform" data-templatename="tmpl-leadrequestform-propertyinquiry" data-log="0" data-showphonefield="<?= $bShowPhoneField ? 1 : 0; ?>" data-phonefieldrequired="<?= $bPhoneFieldRequired ? 1 : 0; ?>" data-showdatefields="<?= $bShowDateFields ? 1 : 0; ?>" data-shownumberguestsfields="<?= $bShowNumberGuestsFields ? 1 : 0; ?>" data-showleadsourcedropdown="<?= $bShowLeadSourceDropdown ? 1 : 0; ?>" data-leadsourcedropdownrequired="<?= $bLeadSourceDropdownRequired ? 1 : 0; ?>" data-showcommentsfield="<?= $bShowCommentsField ? 1 : 0; ?>" ></div>
         <?php
@@ -435,7 +430,6 @@ function googleConversionTrack(){
 	public function update( $new_instance, $old_instance ) {
 		$instance = array();
 		$instance['title'] = strip_tags( $new_instance['title'] );
-		$instance['inquiryModeTitle'] = strip_tags( $new_instance['inquiryModeTitle'] );
 		/* we sanitize the values, either 1 or nothing */
 		$instance['showPhoneField'] =  strip_tags($new_instance['showPhoneField']);
 		$instance['phoneFieldRequired'] =  strip_tags($new_instance['phoneFieldRequired']);
@@ -455,13 +449,7 @@ function googleConversionTrack(){
 		else {
 			$title = __( 'Contact Us', 'text_domain' );
 		}
-		if ( isset( $instance[ 'inquiryModeTitle' ] ) ) {
-			$inquiryModeTitle = $instance[ 'inquiryModeTitle' ];
-		}
-		else {
-			$inquiryModeTitle = __( 'Inquire for Booking Details', 'text_domain' );
-		}
-		
+				
 		// Show phone field checkbox
 		if ( isset( $instance[ 'showPhoneField' ] ) ) { $bShowPhoneField = esc_attr($instance[ 'showPhoneField' ]); }
 		else{ $bShowPhoneField = true;}
@@ -494,10 +482,6 @@ function googleConversionTrack(){
 <p>
 <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
 <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
-</p>
-<p>
-<label for="<?php echo $this->get_field_id( 'inquiryModeTitle' ); ?>"><?php _e( 'Inquire Mode Title:' ); ?></label> 
-<input class="widefat" id="<?php echo $this->get_field_id( 'inquiryModeTitle' ); ?>" name="<?php echo $this->get_field_name( 'inquiryModeTitle' ); ?>" type="text" value="<?php echo esc_attr( $inquiryModeTitle ); ?>" />
 </p>
 
 <p>
