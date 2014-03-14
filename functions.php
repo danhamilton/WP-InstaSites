@@ -861,19 +861,19 @@ function register_started_box() {
 }
 function register_instaapp_box() {	
 /* Instaapp Options Metabox */
-	$items = array( array( url => "https://app.instamanager.com/SummaryV2.aspx?sid=1011", 
+	$items = array( array( url => "https://app.instamanager.com/marketing/properties/", 
                       icon => "welcome-icon dashicons-screenoptions",
                       name => "Manage Properties" 
                     ),
-               array( url => "https://app.instamanager.com/SummaryV2.aspx?sid=2014", 
+               array( url => "https://app.instamanager.com/marketing/propertyfinders/", 
                       icon => 'welcome-icon dashicons-search',
                       name => 'Set up Property Finders',
                     ),
-               array( url => "https://app.instamanager.com/SummaryV2.aspx?sid=1010", 
+               array( url => "https://app.instamanager.com/marketing/attractions/", 
                       icon => "welcome-icon dashicons-location-alt",
                       name => "Set up Attractions" 
                     ),
-				array( url => "https://app.instamanager.com/SummaryV2.aspx?sid=9023", 
+				array( url => "https://app.instamanager.com/booking/mgr/setup/specials/", 
                       icon => "welcome-icon dashicons-awards",
                       name => "Add Specials for your visitors" 
                     ),
