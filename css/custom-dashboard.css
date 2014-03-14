@@ -1,4 +1,5 @@
 #welcome-panel{background:none;border:none;box-shadow:none;-moz-box-shadow:none;-webkit-box-shadow:none;padding:0;}
+#welcome-panel .welcome-panel-content,#welcome-panel .welcome-panel-close{display:none;}
 .wrap.custom h2{color:#000;font-size:25px;font-weight:normal;}
 .wrap.custom h2 .big{font-size:32px;font-weight:bold;}
 .wrap.custom h2 .blue{color:#248CCC;}

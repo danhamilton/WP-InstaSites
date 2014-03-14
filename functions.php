@@ -827,11 +827,11 @@ function register_started_box() {
 /* Getting Started Metabox */
 	$items = array( array( url => "themes.php", 
                       icon => "welcome-icon dashicons-images-alt2",
-                      name => "Choose your Theme" 
+                      name => "Choose your theme" 
                     ),
                array( url => "themes.php?page=theme_options", 
                       icon => 'welcome-icon dashicons-admin-appearance',
-                      name => 'Change your theme',
+                      name => 'Change your theme style',
                     ),
 			   array( url => "admin.php?page=bookt-api/setup-slideshow.php", 
                       icon => "welcome-icon dashicons-format-gallery",
@@ -902,7 +902,7 @@ function register_action_box() {
 /* Advanced Options Metabox */
 	$items = array( array( url => "options-general.php?page=mr_social_sharing", 
                       icon => "welcome-icon dashicons-facebook-alt",
-                      name => "Setup social media" 
+                      name => "Set up Social Media" 
                     ),
                array( url => "options-general.php?page=googlelanguagetranslator-menu-options", 
                       icon => 'welcome-icon dashicons-translation',
@@ -914,8 +914,12 @@ function register_action_box() {
                     ),
 				array( url => "themes.php?page=theme_options", 
                       icon => "welcome-icon dashicons-art",
-                      name => "Add Custom CSS or Scripts" 
+                      name => "Add Custom CSS" 
                     ),
+				array( url => "admin.php?page=bookt-api/setup-advanced.php", 
+                      icon => "welcome-icon dashicons-welcome-write-blog",
+                      name => "Add Custom Scripts" 
+                    ),	
 				array( url => "themes.php?page=theme_options", 
                       icon => "welcome-icon dashicons-format-image",
                       name => "Change Logo Size or Add a Favicon" 
@@ -941,7 +945,7 @@ function register_tips_box() {
                     ),
                array( url => "http://support.bookt.com/customer/portal/articles/1200398-managing-seo-and-keywords-for-your-instasite", 
                       icon => 'welcome-icon dashicons-analytics',
-                      name => 'Manager SEO',
+                      name => 'How to Manage SEO',
                     ),
                array( url => "http://support.bookt.com/", 
                       icon => "welcome-icon welcome-view-site",
@@ -955,7 +959,7 @@ function register_tips_box() {
 	// Display the container
 	echo '<div class="welcome-panel rss-widget custom">';
 echo '<ul>';
-   echo '<li><div class="welcome-icon dashicons-welcome-learn-more">How to create a <a href="http://codex.wordpress.org/Writing_Posts">blog</a> or <a href="http://codex.wordpress.org/Pages">page</a></div></li>';
+   echo '<li><div class="welcome-icon dashicons-welcome-learn-more">How to create a <a href="http://codex.wordpress.org/Writing_Posts">Blog</a> or <a href="http://codex.wordpress.org/Pages">Page</a></div></li>';
    for($i = 0; $i < count($items) ; $i++ ){		
 				echo '<li>';
 				echo '<a href="'.$items[$i]['url'].'" class="'.$items[$i]['icon'].'">';
