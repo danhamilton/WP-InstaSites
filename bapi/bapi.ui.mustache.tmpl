@@ -180,10 +180,10 @@
 		{{#IsBookable}}
 		<button class="book-btn btn btn-large btn-warning bapi-booknow" type="button">{{textdata.Book Now}}</button>
 		{{/IsBookable}}
-		{{^IsBookable}}
+	{{/ContextData.Quote.IsValid}}
+	{{^IsBookable}}
 		<button class="book-btn btn btn-large btn-warning bapi-inquirynow" type="button">{{textdata.Inquire Now}}</button>
-		{{/IsBookable}}
-	{{/ContextData.Quote.IsValid}}			
+	{{/IsBookable}}
 	<hr />  
 
 <div class="row-fluid">
