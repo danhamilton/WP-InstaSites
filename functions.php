@@ -757,7 +757,6 @@ function getTextDataArray(){
 	{
 		echo '<div style="background-color:#FCF8E3;border:1px solid #FBEED5;border-radius:4px;padding:8px 35px 8px 14px;text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);color: #C09853;">This page is synced with InstaManager. Editing content, URL and page attributes is disabled.<br/> <a href="//support.bookt.com/customer/portal/articles/1455747-missing-attributes-on-shared-pages" target="_blank">Learn More</a></div>';  
 	}
-
 /* Custom Instasite Dashboard */
 
 function bapi_welcome_panel() {
@@ -856,7 +855,7 @@ function register_started_box() {
 				echo '</a>';
 				echo '</li>';
 	}
-	echo '<li><a class="button button-primary button-hero load-customize hide-if-no-customize" href="'.home_url( '/' ).'">View your site</a></li>';
+	echo '<li><a class="button button-primary button-hero" href="'.home_url( '/' ).'" target="_blank">View your site</a></li>';
 	echo '</ul></div>';
 }
 function register_instaapp_box() {	
@@ -880,22 +879,19 @@ function register_instaapp_box() {
 				array( url => "https://app.instamanager.com/marketing/optionalservices/", 
                       icon => "welcome-icon dashicons-plus",
                       name => "See Optional Services" 
-                    ),
-				array( url => "https://app.instamanager.com/", 
-                      icon => "button button-primary button-hero load-customize hide-if-no-customize",
-                      name => "Go To InstaApp" 
-                    )		
+                    )	
              );	
 	// Display the container
 	echo '<div class="welcome-panel rss-widget custom">';
 echo '<ul>';
    for($i = 0; $i < count($items) ; $i++ ){		
 				echo '<li>';
-				echo '<a href="'.$items[$i]['url'].'" class="'.$items[$i]['icon'].'">';
+				echo '<a href="'.$items[$i]['url'].'" class="'.$items[$i]['icon'].'" target="_blank">';
 				echo $items[$i]['name'];
 				echo '</a>';
 				echo '</li>';
 	}
+	echo '<li><a class="button button-primary button-hero" href="https://app.instamanager.com/" target="_blank">Go To InstaApp</a></li>';
 	echo '</ul></div>';
 }
 function register_action_box() {	
@@ -912,7 +908,7 @@ function register_action_box() {
                       icon => "welcome-icon dashicons-admin-generic",
                       name => "Change your site settings" 
                     ),
-				array( url => "themes.php?page=theme_options", 
+				array( url => "themes.php?page=theme_options#tabs-3", 
                       icon => "welcome-icon dashicons-art",
                       name => "Add Custom CSS" 
                     ),
@@ -920,7 +916,7 @@ function register_action_box() {
                       icon => "welcome-icon dashicons-welcome-write-blog",
                       name => "Add Custom Scripts" 
                     ),	
-				array( url => "themes.php?page=theme_options", 
+				array( url => "themes.php?page=theme_options#tabs-2", 
                       icon => "welcome-icon dashicons-format-image",
                       name => "Change Logo Size or Add a Favicon" 
                     )		
@@ -936,6 +932,8 @@ echo '<ul>';
 				echo '</li>';
 	}
 	echo '</ul></div>';
+?>
+<?php	
 }
 function register_tips_box() {	
 /* Tips Metabox */
@@ -947,22 +945,26 @@ function register_tips_box() {
                       icon => 'welcome-icon dashicons-analytics',
                       name => 'How to Manage SEO',
                     ),
+			   array( url => "http://support.bookt.com/customer/portal/articles/1394482-featured-properties-widget", 
+                      icon => "welcome-icon dashicons-admin-post",
+                      name => "Change your Featured Properties settings" 
+                    ),
+			   array( url => "http://support.bookt.com/customer/portal/topics/566455-instasites/articles", 
+                      icon => "welcome-icon dashicons-sos",
+                      name => "View All InstaSite Help Topics" 
+                    ),	
                array( url => "http://support.bookt.com/", 
                       icon => "welcome-icon welcome-view-site",
                       name => "Visit Support" 
-                    ),
-				array( url => "http://support.bookt.com/customer/portal/emails/new", 
-                      icon => "welcome-icon dashicons-sos",
-                      name => "Stuck? Contact Support" 
-                    )	
+                    )
              );	
 	// Display the container
 	echo '<div class="welcome-panel rss-widget custom">';
 echo '<ul>';
-   echo '<li><div class="welcome-icon dashicons-welcome-learn-more">How to create a <a href="http://codex.wordpress.org/Writing_Posts">Blog</a> or <a href="http://codex.wordpress.org/Pages">Page</a></div></li>';
+   echo '<li><div class="welcome-icon dashicons-welcome-learn-more">How to create a <a href="http://codex.wordpress.org/Writing_Posts" target="_blank">Blog</a> or <a href="http://codex.wordpress.org/Pages" target="_blank">Page</a></div></li>';
    for($i = 0; $i < count($items) ; $i++ ){		
 				echo '<li>';
-				echo '<a href="'.$items[$i]['url'].'" class="'.$items[$i]['icon'].'">';
+				echo '<a href="'.$items[$i]['url'].'" class="'.$items[$i]['icon'].'" target="_blank">';
 				echo $items[$i]['name'];
 				echo '</a>';
 				echo '</li>';
