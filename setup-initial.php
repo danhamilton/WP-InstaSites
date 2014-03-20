@@ -11,6 +11,7 @@
 		update_option('bapi_baseurl', $_POST['bapi_baseurl']);
 		update_option('bapi_secureurl', $securl);
 		update_option('bapi_cloudfronturl', $_POST['bapi_cloudfronturl']);
+		update_option('bapi_cloudfrontid', $_POST['bapi_cloudfrontid']);
 		
 		echo '<div id="message" class="updated"><p><strong>Settings saved.</strong></p></div>';
 	}
@@ -26,6 +27,7 @@
 	if(get_option('bapi_secureurl')){ $surl = get_option('bapi_secureurl'); }
 	
 	$cloudfronturl = get_option('bapi_cloudfronturl');		
+	$cloudfrontid = get_option('bapi_cloudfrontid');		
 	
 	$lang = get_option('bapi_language');
 	if((get_option('bapi_language')=='')&&(get_option('api_key')=='')){
@@ -105,6 +107,10 @@
 <tr valign="top" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">
 	<td scope="row">Cloudfront URL:</td>
 	<td><input type="text" name="bapi_cloudfronturl" size="60" value="<?php echo $cloudfronturl; ?>" /></td>
+</tr>
+<tr valign="top" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">
+	<td scope="row">Cloudfront ID:</td>
+	<td><input type="text" name="bapi_cloudfrontid" size="60" value="<?php echo $cloudfrontid; ?>" /></td>
 </tr>
 <tr>
 	<td colspan="2"><em>If you do not already have an API key for Bookt, please contact <a href="mailto:support@bookt.com?subject=API%20Key%20-%20Wordpress%20Plugin">support@bookt.com</a> to obtain an API key.</em></td>

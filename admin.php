@@ -41,7 +41,8 @@ function bapi_options_init(){
 	register_setting('bapi_options','bapi_textdata');
 	register_setting('bapi_options','bapi_textdata_lastmod');
 	register_setting('bapi_options','bapi_site_cdn_domain'); 
-	register_setting('bapi_options','bapi_cloudfronturl'); 
+	register_setting('bapi_options','bapi_cloudfronturl');
+	register_setting('bapi_options','bapi_cloudfrontid'); 
 	register_setting('bapi_options','bapi_global_header'); 
 	register_setting('bapi_options','bapi_sitesettings');
 	register_setting('bapi_options','bapi_google_webmaster_htmltag');
@@ -122,14 +123,14 @@ function bapi_settings_page() {
 	<td><?php echo get_option('bapi_language'); ?></td>	
 </tr>
 <tr valign="top">
-	<td scope="row">Solution Data Last Sync:</td>
+	<th scope="row">Solution Data Last Sync:</th>
 	<td><?php echo $lastmod_soldata; ?>
 		<a href="javascript:void(0)" id="viewraw-soldata" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">View Raw</a>
 		<a href="javascript:void(0)" id="reset-soldata" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">Reset</a>
 	</td>
 </tr>
 <tr valign="top">
-	<td scope="row">SEO Last Sync:</td>
+	<th scope="row">SEO Last Sync:</th>
 	<td><?php echo $lastmod_seodata; ?>
 		<a href="javascript:void(0)" id="viewraw-seodata" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">View Raw</a>
 		<a href="javascript:void(0)" id="reset-seodata" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">Reset</a>
