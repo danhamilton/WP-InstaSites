@@ -828,7 +828,7 @@ function register_started_box() {
                       icon => "welcome-icon dashicons-images-alt2",
                       name => "Choose your theme" 
                     ),
-               array( url => "themes.php?page=theme_options", 
+               array( url => "themes.php?page=theme_options#tabs-1", 
                       icon => 'welcome-icon dashicons-admin-appearance',
                       name => 'Change your theme style',
                     ),
@@ -904,9 +904,13 @@ function register_action_box() {
                       icon => 'welcome-icon dashicons-translation',
                       name => 'Add Google Translate',
                     ),
-               array( url => "admin.php?page=bookt-api/setup-sitesettings.php", 
+                array( url => "admin.php?page=bookt-api/setup-sitesettings.php", 
                       icon => "welcome-icon dashicons-admin-generic",
-                      name => "Change your site settings" 
+                      name => "Property Search Settings" 
+                    ),
+			   array( url => "admin.php?page=bookt-api/setup-golive.php", 
+                      icon => "welcome-icon dashicons-admin-site",
+                      name => "Take Me Live" 
                     ),
 				array( url => "themes.php?page=theme_options#tabs-3", 
                       icon => "welcome-icon dashicons-art",
