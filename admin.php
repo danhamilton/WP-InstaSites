@@ -194,7 +194,6 @@ add_action('admin_notices','bapi_notify_blog_public');
 //Mantis Ticket 5408 compatible permalinks
 function bapi_notify_incompatible_permalinks(){
 	$currentPermalinkStructure = get_option('permalink_structure');
-	var_dump($currentPermalinkStructure);
 	if($currentPermalinkStructure != "/%year%/%monthnum%/%day%/%postname%/" && $currentPermalinkStructure != "/%year%/%monthnum%/%postname%/" && $currentPermalinkStructure != "/%postname%/" ){
 		echo '<div id="incompatiblepermalink" class="error"><p>The Permalink settings for your site are not compatible with the InstaSites Plugin. Please <a href="/wp-admin/options-permalink.php">CLICK HERE</a> and select \'Day and name\', \'Month and name\', or \'Post name\'.</p></div>';
 	}
