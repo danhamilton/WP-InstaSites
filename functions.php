@@ -908,10 +908,6 @@ function register_action_box() {
                       icon => "welcome-icon dashicons-admin-generic",
                       name => "Property Search Settings" 
                     ),
-			   array( url => "admin.php?page=bookt-api/setup-golive.php", 
-                      icon => "welcome-icon dashicons-admin-site",
-                      name => "Take Me Live" 
-                    ),
 				array( url => "themes.php?page=theme_options#tabs-3", 
                       icon => "welcome-icon dashicons-art",
                       name => "Add Custom CSS" 
@@ -923,7 +919,11 @@ function register_action_box() {
 				array( url => "themes.php?page=theme_options#tabs-2", 
                       icon => "welcome-icon dashicons-format-image",
                       name => "Change Logo Size or Add a Favicon" 
-                    )		
+                    ),
+               array( url => "admin.php?page=bookt-api/setup-golive.php", 
+                  icon => "welcome-icon dashicons-admin-site",
+                  name => "Take Me Live" 
+                )
              );	
 	// Display the container
 	echo '<div class="welcome-panel rss-widget custom">';
