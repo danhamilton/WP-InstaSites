@@ -747,15 +747,26 @@ function getTextDataArray(){
 					/* this is not a super admin and the page is a BAPI page we remove the metabox*/
 					remove_meta_box( 'pageparentdiv', 'page', 'normal' );
 					/* lets add a metabox with a message as to why there is no page Attributes metabox */
-					add_meta_box( 'pageattributesmessage_meta_box_id', 'Page Attributes', 'create_pageattributesmessage_meta_box', 'page', 'side', 'high' );
+					if(!array_key_exists('bapi_page_id', $metaArray)){
+						add_meta_box( 'pageattributesmessage_meta_box_id', 'Page Attributes', 'create_DataDriventDetailPagesmessage_meta_box', 'page', 'side', 'high' );
+						remove_post_type_support('page', 'title');
+						remove_post_type_support('page', 'editor');
+					}else{
+						add_meta_box( 'pageattributesmessage_meta_box_id', 'Page Attributes', 'create_BAPIInitializedPagesmessage_meta_box', 'page', 'side', 'high' );
+					}
+					
 				}
 			}
 		}
 	}
 	
-	function create_pageattributesmessage_meta_box()
+	function create_DataDriventDetailPagesmessage_meta_box()
 	{
-		echo '<div style="background-color:#FCF8E3;border:1px solid #FBEED5;border-radius:4px;padding:8px 35px 8px 14px;text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);color: #C09853;">This page is synced with InstaManager. Editing content, URL and page attributes is disabled.<br/> <a href="//support.bookt.com/customer/portal/articles/1455747-missing-attributes-on-shared-pages" target="_blank">Learn More</a></div>';  
+		echo '<div class="updated inline"><p>This page is synchronized with InstaManager. All editing has been disabled.</p> <a href="//support.bookt.com/customer/portal/articles/1455747-missing-attributes-on-shared-pages" target="_blank">Learn More</a></div>';  
+	}
+	function create_BAPIInitializedPagesmessage_meta_box()
+	{
+		echo '<div class="updated inline"><p>This page is synchronized with InstaManager. You may only edit the page content. All other editing functions have been disabled.</p> <a href="//support.bookt.com/customer/portal/articles/1455747-missing-attributes-on-shared-pages" target="_blank">Learn More</a></div>';  
 	}
 /* Custom Instasite Dashboard */
 
