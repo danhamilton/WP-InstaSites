@@ -25,7 +25,7 @@ getconfig();
 
 <div class="wrap sitesettings-wrapper" style="display: none;">
 <h1><a href="http://www.bookt.com" target="_blank"><img src="<?= plugins_url('/img/logo-im.png', __FILE__) ?>" /></a></h1>
-<h2>InstaSite Plugin - Site Settings</h2>
+<h2>InstaSite Plugin - Property Search Settings</h2>
 <form method="post">
 
 <h3>Search Result Display Modes</h3>
