@@ -19,7 +19,7 @@ function bapi_create_menu() {
 	add_menu_page('InstaSite Plugin Settings', 'InstaSite', 'administrator', __FILE__, 'bapi_settings_page', plugins_url('/img/icon.png', __FILE__));	
 	
 	add_submenu_page($parent, 'General','General', 'administrator', get_adminurl('admin.php'));	
-	add_submenu_page($parent, 'Site Settings','Site Settings', 'administrator', get_adminurl('setup-sitesettings.php'));
+	add_submenu_page($parent, 'Property Search Settings','Property Search Settings', 'administrator', get_adminurl('setup-sitesettings.php'));
 	add_submenu_page($parent, 'Slideshow','Slideshow', 'administrator', get_adminurl('setup-slideshow.php'));	
 	add_submenu_page($parent, 'Take me Live','Take me Live', 'administrator', get_adminurl('setup-golive.php'));
 	add_submenu_page($parent, 'Data Sync','Data Sync', 'administrator', get_adminurl('setup-sync.php'));	
