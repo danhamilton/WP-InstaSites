@@ -2094,13 +2094,13 @@
 <div class="control-group">
 	<label class="control-label inline" for="ccexpr">{{textdata.Expiration}}:</label>
 	<div class="controls controls-row">
-		<select class="span5 bookingfield required" data-field="CreditCard[ExpiryMonth]" required>
+		<select id="ccmonth" class="span5 bookingfield required" data-field="CreditCard[ExpiryMonth]" required>
 			<option value="">-{{textdata.Month}}-</option>
 			{{#config.ccmonths.values}}
 			<option value="{{Data}}">{{Label}}</option>
 			{{/config.ccmonths.values}}
 		</select>
-		<select class="span5 bookingfield required"  data-field="CreditCard[ExpiryYear]" required>
+		<select id="ccyear" class="span5 bookingfield required"  data-field="CreditCard[ExpiryYear]" required>
 			<option value="">-{{textdata.Year}}-</option>
 			{{#config.ccyears.values}}
 			<option value="{{Data}}">{{Label}}</option>
@@ -2138,15 +2138,15 @@
 <div class="control-group">
 	<label class="control-label" for="billingcity">{{textdata.City}}/{{textdata.Town}}:</label>
 	<div class="controls">
-		<input type="text" id="billingcity" class="span10 bookingfield bapi-city" data-field="CreditCard[City]" />
+		<input type="text" id="billingcity" class="span10 bookingfield required bapi-city" data-field="CreditCard[City]" required />
 	</div>
 </div>
 <div class="control-group">
 	<label class="control-label inline" for="billingstate">{{textdata.State}}/{{textdata.Province}}:</label>
 	<div class="controls controls-row">
-		<input type="text" id="billingstate" class="span4 bookingfield bapi-state" data-field="CreditCard[State]" />
+		<input type="text" id="billingstate" class="span4 bookingfield required bapi-state" data-field="CreditCard[State]" required />
 		<label class="control-label span3 row-fluid">{{textdata.Postal Code}}:</label>
-		<input type="text" class="span3 row-fluid bookingfield" data-field="CreditCard[PostalCode]" />
+		<input type="text" id="billingpostalcode" class="span3 row-fluid required bookingfield" data-field="CreditCard[PostalCode]" required />
 	</div>
 </div>
 <hr />
@@ -2162,7 +2162,7 @@
 		<label class="checkbox span6">	
 			<small>
 			<em>
-				<input type="checkbox" class="required checkbox">{{textdata.I have read and accept the terms and conditions}}:</input>&nbsp;
+				<input id="accepptermscbx" type="checkbox" class="required checkbox">{{textdata.I have read and accept the terms and conditions}}:</input>&nbsp;
 				<a target="_blank" href="/rentalpolicy">{{textdata.Rental Policy}}</a>&nbsp;
 				<a target="_blank" href="/termsofuse">{{textdata.Terms of Service}}</a>
 			</em>
