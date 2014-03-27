@@ -268,7 +268,7 @@
 </div>	
 </header>
 <div class="map-view-page">
-<div id="prop-map" class="bapi-map" data-loc-selector='.prop-map-location' data-link-selector='.prop-map-item' style="width:100%; height:650px; float:left;"></div>
+<div id="prop-map" class="bapi-map" data-loc-selector='.prop-map-location' data-link-selector='.prop-map-item' ></div>
 <div id="map-locations">
 {{#result}}
 <div class="prop-map-location hide" data-id="{{ContextData.ItemIndex}}" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}} }, "category": "poi-{{ContextData.ItemIndex}}"}'>
@@ -283,12 +283,13 @@
 		<div class="prop-location pull-left">
 			<span>
 			<b>{{textdata.Category}}: </b>{{Type}}<br/>
-			<b>{{textdata.City}}: </b>{{&City}}{{#Bedrooms}}&nbsp;|&nbsp;<b>{{textdata.Beds}}: </b>{{&Bedrooms}}{{/Bedrooms}}{{#Bathrooms}}&nbsp;|&nbsp;<b>{{textdata.Baths}}: </b>{{&Bathrooms}}{{/Bathrooms}}{{#Sleeps}}&nbsp;|&nbsp;<b>{{textdata.Sleeps}}: </b>{{&Sleeps}}{{/Sleeps}}
+			<b>{{textdata.City}}: </b>{{&City}}{{#Bedrooms}}&nbsp;|&nbsp;<span class="phone-delimiter"></span><b>{{textdata.Beds}}: </b>{{&Bedrooms}}{{/Bedrooms}}{{#Bathrooms}}&nbsp;|&nbsp;<span class="phone-delimiter"></span><b>{{textdata.Baths}}: </b>{{&Bathrooms}}{{/Bathrooms}}{{#Sleeps}}&nbsp;|&nbsp;<span class="phone-delimiter"></span><b>{{textdata.Sleeps}}: </b>{{&Sleeps}}{{/Sleeps}}
 			</span>
 		</div>
 		<div class="rate-value pull-right">
 		{{ContextData.Quote.QuoteDisplay.value}}
 		</div>
+		<div class="clearfix"></div>
 		</div>
 	</div>
 	</div>	
