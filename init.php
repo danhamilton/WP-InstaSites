@@ -325,8 +325,9 @@
 			$cpath = get_local(plugins_url($content,__FILE__));
 			$t = file_get_contents($cpath);
 			$m = new Mustache_Engine();
-		
-			$wrapper = getbapisolutiondata();			
+			/* we need to call this function so the $bapi_all_options gets populated */
+			bapi_wp_site_options();
+			$wrapper = getbapisolutiondata();
 			$string = $m->render($t, $wrapper);
 			}else{
 				/* if not is pointing to a json object */				
