@@ -139,6 +139,17 @@
 		exit();
 	}
 	
+	function urlHandler_timthumb() {
+		$url = get_relative($_SERVER['REQUEST_URI']);		
+		$url = strtolower($url);
+		$url = substr($url, 0, 8);
+		
+		if ($url == "/img.php") {
+			include('thumbs/timthumb.php');
+			exit();
+		}
+	}
+	
 	
 	/* Converted a url to a physical file path */
 	function get_local($url) {
