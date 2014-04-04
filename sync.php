@@ -180,13 +180,6 @@
 			return $string;
 		}
 	}
-	function getTitle($entity,$pkid){
-		$bapi = getBAPIObj();
-		if (!$bapi->isvalid()) { return ""; }
-		$c = $bapi->get($entity,array(intval($pkid)),null,true,0);
-		if($entity == "property" || $c["result"][0]["Name"] == "" || $c["result"][0]["Name"] == null ){return $c["result"][0]["Headline"];}
-		return $c["result"][0]["Name"];
-	}
 	
 	function bapi_sync_entity($wp) {
 		$debugmode = 0; //added by jacob for mantis #4115
@@ -224,9 +217,9 @@
 		if (!empty($seo) && (empty($seo["entity"]) || empty($seo["pkid"])) && empty($staticpagekey)) {
 			$seo = null; // ignore seo info if it doesn't point to a valid entity
 		}
+		
 		/*we get the property headline*/
 		$page_title = $seo["PageTitle"];
-		if($page_title == "" || $page_title == null){$page_title = $seo["PageTitle"];}
 
 		$do_page_update = false;
 		$do_meta_update = false;
@@ -287,9 +280,33 @@
 			if ($meta['bapi_meta_description'][0] != $seo["MetaDescrip"]) { $changes = $changes."|meta_description"; $do_meta_update = true; }
 			if ($meta['bapi_meta_title'][0] != $seo["PageTitle"]) { $changes = $changes."|meta_title"; $do_meta_update = true; }
 			// check for difference in meta keywords
-			if ($meta['bapi_meta_keywords'][0] != $seo["MetaKeywords"]) { $changes = $changes."|meta_keywords"; $do_meta_update = true; }	
-			// check for different in title
+			if ($meta['bapi_meta_keywords'][0] != $seo["MetaKeywords"]) { $changes = $changes."|meta_keywords"; $do_meta_update = true; }
+			/*check if this is a bapi defined page*/
+			if(!empty($pagekey) || $pagekey != null){
+				$dom = new DomDocument();
+				   libxml_use_internal_errors(true);
+				   $dom->loadHTML("<!DOCTYPE html><html><head></head><body>".$post->post_content."</body></html>");
+				   libxml_use_internal_errors(false);
+				   $xpath = new DOMXpath($dom);
+				   $xpathq = "//h2[@class='title']";
+				   $elements = $xpath->query($xpathq);
+				   if (!is_null($elements)) {
+					$resultarray=array();
+					foreach ($elements as $element) {
+					 $nodes = $element->childNodes;
+					 foreach ($nodes as $node) {
+					   $resultarray[] = $node->nodeValue;
+					 }
+					}
+					$entity_title = $resultarray;
+					if(strlen($entity_title[0])>0){
+					 $page_title = $entity_title[0];
+					}
+				}
+			}
+				// check for different in title
 			if ($post->post_title != $page_title) { $changes = $changes."|post_title"; $do_page_update = true; }
+			
 			// check for difference in post name
 			if ($post->post_name != BAPISync::clean_post_name($seo["DetailURL"])) { $changes = $changes."|post_name"; $do_page_update = true; }
 		}
@@ -320,6 +337,30 @@
 			$template = $bapisync->getMustacheTemplate($seo["entity"]);		
 			$post->post_content = $bapisync->getMustache($seo["entity"],$seo["pkid"],$template,$debugmode);
 			//print_r($post); exit();
+			//if we have a bapikey
+			if(!empty($pagekey) || $pagekey != null){
+				$dom = new DomDocument();
+				   libxml_use_internal_errors(true);
+				   $dom->loadHTML("<!DOCTYPE html><html><head></head><body>".$post->post_content."</body></html>");
+				   libxml_use_internal_errors(false);
+				   $xpath = new DOMXpath($dom);
+				   $xpathq = "//h2[@class='title']";
+				   $elements = $xpath->query($xpathq);
+				   if (!is_null($elements)) {
+					$resultarray=array();
+					foreach ($elements as $element) {
+					 $nodes = $element->childNodes;
+					 foreach ($nodes as $node) {
+					   $resultarray[] = $node->nodeValue;
+					 }
+					}
+					$entity_title = $resultarray;
+					if(strlen($entity_title[0])>0){
+					 $page_title = $entity_title[0];
+					}
+				   }
+			}
+			
 			$post->post_title = $page_title;
 			$post->post_name = BAPISync::clean_post_name($seo["DetailURL"]);
 			$post->post_parent = get_page_by_path(BAPISync::getRootPath($seo["entity"]))->ID;
@@ -344,7 +385,7 @@
 			does_meta_exist("_wp_page_template", $meta) ? update_post_meta($post->ID, "_wp_page_template", BAPISync::getPageTemplate($seo["entity"])) : add_post_meta($post->ID, "_wp_page_template", BAPISync::getPageTemplate($seo["entity"]), true);
 			does_meta_exist("bapikey", $meta) ? update_post_meta($post->ID, "bapikey", BAPISync::getPageKey($seo["entity"],$seo["pkid"])) : add_post_meta($post->ID, "bapikey", BAPISync::getPageKey($seo["entity"],$seo["pkid"]), true);
 			does_meta_exist("bapi_meta_title", $meta) ? update_post_meta($post->ID, 'bapi_meta_title', $seo["PageTitle"]) : add_post_meta($post->ID, 'bapi_meta_title', $seo["PageTitle"], true);
-		}		
+		}
 	}
 	
 	function does_meta_exist($name, $meta) {
