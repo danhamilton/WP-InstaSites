@@ -9,11 +9,16 @@ class BAPI
 	public $getopts = array(
 		'http'=>array(
 			'method'=>"GET",
-			'header'=>"User-Agent: InstaSites Agent"
+			'header'=>''
 		)
 	);
 	
-	public function __construct($apikey, $language="en-US", $baseURL='connect.bookt.com', $getopts=array('http'=>array('method'=>"GET",'header'=>"User-Agent: InstaSites Agent"))) {
+	public function __construct(
+			$apikey, 
+			$language="en-US", 
+			$baseURL='connect.bookt.com'
+	) {
+		$getopts=array('http'=>array('method'=>"GET",'header'=>"User-Agent: InstaSites Agent\r\nReferer: http://" . $_SERVER[HTTP_HOST] . $_SERVER[REQUEST_URI] . "\r\n"));
 		$this->apikey = $apikey;
 		$this->language = $language;
 		$this->baseURL = $baseURL;

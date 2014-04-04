@@ -225,7 +225,7 @@
 			$seo = null; // ignore seo info if it doesn't point to a valid entity
 		}
 		/*we get the property headline*/
-		$page_title = getTitle($seo["entity"],$seo["pkid"]);
+		$page_title = $seo["PageTitle"];
 		if($page_title == "" || $page_title == null){$page_title = $seo["PageTitle"];}
 
 		$do_page_update = false;
