@@ -262,9 +262,6 @@
 			$siteurl = str_replace("http://", "", $siteurl);
 			$sitesettings = $bapi_all_options['bapi_sitesettings'];
 ?>
-<script type="text/javascript">
-window.Muscula = { settings: { logId: "2d835166-5e05-4073-817c-c7d0bf477ff4", suppressErrors: false, branding: "none" } }; (function () { var m = document.createElement("script"); m.type = "text/javascript"; m.async = true; m.src = (window.location.protocol == "https:" ? "https:" : "http:") + "//musculahq.appspot.com/Muscula2.js"; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(m, s); window.Muscula.run = function (c) { eval(c); window.Muscula.run = function () { } }; window.Muscula.errors = []; window.onerror = function () { window.Muscula.errors.push(arguments); return window.Muscula.settings.suppressErrors === undefined } })();
-</script>
 <link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/jquery.ui.all.css" rel="stylesheet" />
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
