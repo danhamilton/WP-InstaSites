@@ -577,7 +577,7 @@ class BAPI_Featured_Properties extends WP_Widget {
 		if(!empty($title))
 			echo $before_title.$title.$after_title;
 		?>
-		<div id="featuredproperties" class="bapi-summary featuredproperties row-fluid" data-log="0" data-templatename="tmpl-featuredproperties-quickview" data-ignoresession="1" data-entity="property" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }' data-rowfixselector=".fp-featured" data-rowfixcount="<?= $rowsize ?>"></div>
+		<div id="featuredproperties" class="bapi-summary featuredproperties row-fluid" data-log="0" data-templatename="tmpl-featuredproperties-quickview" data-ignoreconfigsort="1" data-ignoresession="1" data-entity="property" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }' data-rowfixselector=".fp-featured" data-rowfixcount="<?= $rowsize ?>"></div>
         <?php
 		echo $after_widget;
 	}
