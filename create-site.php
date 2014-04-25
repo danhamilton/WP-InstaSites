@@ -4,7 +4,10 @@ function bapi_create_site(){
 	if ( ! preg_match( '/bapi-signup\.php$/', $_SERVER['REQUEST_URI'] ) ) {
 		return;
 	}
-	
+	if (extension_loaded('newrelic')) {
+		newrelic_start_transaction ('WP InstaSites');
+		newrelic_name_transaction ('create-instasite');
+	}
 	if(isset($_POST['blogid'])&&$_POST['blogid']!=0){
 		header('Content-Type: application/javascript');	
 		$d = get_blog_details($_POST['blogid']);
@@ -17,6 +20,9 @@ function bapi_create_site(){
 				)
 			);
 			echo json_encode($new_site);
+			if (extension_loaded('newrelic')) {
+				newrelic_end_transaction();
+			}
 			exit();
 		}
 		switch_to_blog($_POST['blogid']);
@@ -30,6 +36,9 @@ function bapi_create_site(){
 				)
 			);
 			echo json_encode($new_site);
+			if (extension_loaded('newrelic')) {
+				newrelic_end_transaction();
+			}
 			exit();
 		}
 		//Do Update Stuff Here
@@ -68,6 +77,9 @@ function bapi_create_site(){
 				)
 			);
 			echo json_encode($new_site);
+			if (extension_loaded('newrelic')) {
+				newrelic_end_transaction();
+			}
 			exit();
 		}
 		
@@ -86,6 +98,9 @@ function bapi_create_site(){
 			)
 		);
 		echo json_encode($new_site);
+		if (extension_loaded('newrelic')) {
+			newrelic_end_transaction();
+		}
 		exit();
 	}
 	
@@ -120,6 +135,9 @@ function bapi_create_site(){
 			)
 		);
 		echo json_encode($new_site);
+		if (extension_loaded('newrelic')) {
+			newrelic_end_transaction();
+		}
 		exit();
 	}
 	
@@ -136,6 +154,9 @@ function bapi_create_site(){
 			)
 		);
 		echo json_encode($new_site);
+		if (extension_loaded('newrelic')) {
+			newrelic_end_transaction();
+		}
 		exit();
 	}
 	$meta = array(
@@ -186,6 +207,9 @@ function bapi_create_site(){
 				)
 			);
 			echo json_encode($new_site);
+			if (extension_loaded('newrelic')) {
+				newrelic_end_transaction();
+			}
 		}
 		else{
 			//fail
@@ -196,6 +220,9 @@ function bapi_create_site(){
 				"data" => $s
 			);
 			echo json_encode($new_site);
+			if (extension_loaded('newrelic')) {
+				newrelic_end_transaction();
+			}
 			exit();
 		}
 	}
@@ -209,6 +236,9 @@ function bapi_create_site(){
 			)
 		);
 		echo json_encode($new_site);
+		if (extension_loaded('newrelic')) {
+			newrelic_end_transaction();
+		}
 		exit();
 	}
 	exit();
