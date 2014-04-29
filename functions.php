@@ -164,7 +164,9 @@
 	
 	function get_adminurl($url) {
 		$url = get_relative( plugins_url($url, __FILE__) );
-		return str_replace("/wp-content/plugins","",$url);	
+		$siteurl = parse_url(site_url());
+		$str = $siteurl['path']."/wp-content/plugins";
+		return str_replace($str,"",$url);	
 	}	
 	
 	/* BAPI Helpers */	
