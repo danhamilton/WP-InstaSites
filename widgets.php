@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Adds BAPI_Footer widget.
+ * Adds BAPI_Header widget.
  */
 class BAPI_Header extends WP_Widget {
 
@@ -146,7 +146,44 @@ class BAPI_HP_Slideshow extends WP_Widget {
 } // class BAPI_HP_Slideshow
 
 
+/**
+ * Adds BAPI_SiteSelector widget.
+ */
+ class BAPI_SiteSelector extends WP_Widget {
 
+	public function __construct() {
+		parent::__construct(
+	 		'bapi_multisites', // Base ID
+			'Insta Site Selector', // Name
+			array( 'description' => __( 'Displays Flags for each Site', 'text_domain' ), ) // Args
+		);
+	}
+
+	public function widget( $args, $instance ) {
+		extract( $args );
+		$title = apply_filters( 'widget_title', $instance['title'] );
+
+		//echo $before_widget;
+		$apikey = getbapiapikey();
+		if (!empty($apikey)) {
+			$t = '{{#site.HasMultiSites}}<span class="siteselector widget">{{#site.Sites}}&nbsp;<a href="http://{{Url}}"><i class="flag flag-{{Language}}"><span style="display:none">{{RegionInfo.DisplayName}}</span></i></a>{{/site.Sites}}</span>{{/site.HasMultiSites}}';
+			$m = new Mustache_Engine();
+			$wrapper = getbapisolutiondata();
+			$string = $m->render($t, $wrapper);
+			echo $string;
+		}
+		//echo $after_widget;
+	}
+
+	public function update( $new_instance, $old_instance ) {
+		$instance = array();
+		$instance['title'] = strip_tags( $new_instance['title'] );
+
+		return $instance;
+	}	
+
+} // class BAPI_Header
+ 
 
 /**
  * Adds BAPI_HP_LogoWithTagline widget.
