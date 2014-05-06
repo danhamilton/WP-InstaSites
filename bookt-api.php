@@ -3,7 +3,7 @@
 Plugin Name: Bookt API Wordpress Plugin
 Plugin URI: http://www.bookt.com
 Description: This plugin is intended for use by Bookt and Instamanager customers to display property and booking tools on their WP-hosted sites on any platform.
-Version: 0.1
+Version: 1.0.20140506
 Author: Bookt LLC
 Author URI: http://bookt.com
 License: GPL2
