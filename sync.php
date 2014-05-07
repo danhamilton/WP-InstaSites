@@ -447,7 +447,7 @@
 		// check if we need to refresh seo data
 		$data = BAPISync::getSEODataRaw();
 		$lastmod = BAPISync::getSEODataLastModRaw();
-		if(empty($data) || empty($lastmod) || ((time()-$lastmod)>3600) || $do_core_update) {					
+		if(empty($data) || empty($lastmod) || ((time()-$lastmod)>300) || $do_core_update) {					
 			$data = $bapi->getseodata(true,$syncdebugmode);
 			if (!empty($data)) {
 				$data = $data['result']; // just get the result part
