@@ -275,7 +275,7 @@
 			//Move from trashcan to publish if exists and no published
 			if($post->post_status=='trash'){ $post->post_status='publish'; $do_page_update = true; } 
 			//print_r("case 2");
-			if(empty($meta['bapi_last_update'])||((time()-$meta['bapi_last_update'][0])>3600)){	$changes = $changes."|bapi_last_update"; $do_page_update = true; }
+			if(empty($meta['bapi_last_update'])||((time()-$meta['bapi_last_update'][0])>300)){	$changes = $changes."|bapi_last_update"; $do_page_update = true; }
 			// check for difference in meta description
 			if ($meta['bapi_meta_description'][0] != $seo["MetaDescrip"]) { $changes = $changes."|meta_description"; $do_meta_update = true; }
 			if ($meta['bapi_meta_title'][0] != $seo["PageTitle"]) { $changes = $changes."|meta_title"; $do_meta_update = true; }
