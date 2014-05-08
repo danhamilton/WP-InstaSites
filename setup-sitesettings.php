@@ -256,17 +256,29 @@ getconfig();
 	<td scope="row">Display Property Review Tab:</td>
 	<td><input class="propdetail-reviewtab-cbx" type="checkbox" checked="" />
 	<input type="hidden" id="propdetail-reviewtab" name="propdetail-reviewtab" data-prevalue="BAPI.config().hasreviews=" value="" />
-	</td>	
+	</td>
+</tr>
+</table>
+
+<h3>Attractions Settings</h3>
+<table class="form-table">
+<tr valign="top">
+	<td scope="row">Attraction Type Filter:</td>
+	<td><input class="poitypefilter-cbx" type="checkbox" checked="" />
+	<input type="hidden" id="poitypefilter" name="poitypefilter" data-prevalue="BAPI.config().haspoitypefilter={}; BAPI.config().haspoitypefilter.enabled=" value="" />
+	</td>
 </tr>
 </table>
 
 <?php submit_button(); ?>
 </form>
 </div>
+
+
+
 <script type="text/javascript" src="<?= get_relative(plugins_url('/js/jquery.ibutton.min.js', __FILE__)) ?>" ></script>
 <link type="text/css" href="<?= get_relative(plugins_url('/css/jquery.ibutton.min.css', __FILE__)) ?>" rel="stylesheet" media="all" />
 <?php //var_dump(BAPISync::getSolutionData()); ?>
-
 <script type="text/javascript">
 <?php
 $bapiSolutionData = BAPISync::getSolutionData();
@@ -281,6 +293,7 @@ $headlinesearch = ($bapiSolutionDataConfig["headline"]["enabled"]) ? 'true' : 'f
 $propdetailavailcal = ($bapiSolutionDataConfig["displayavailcalendar"]) ? 'true' : 'false';
 $availcalendarmonths = $bapiSolutionDataConfig["availcalendarmonths"];
 $propdetailreviewtab = ($bapiSolutionDataConfig["hasreviews"]) ? 'true' : 'false';
+$poitypefilter = ($bapiSolutionDataConfig["haspoitypefilter"]) ? 'true' : 'false';
 $checkin = ($bapiSolutionDataConfig["checkin"]["enabled"]) ? 'true' : 'false';
 $checkout = ($bapiSolutionDataConfig["checkout"]["enabled"]) ? 'true' : 'false';
 $los = ($bapiSolutionDataConfig["los"]["enabled"]) ? 'true' : 'false';
@@ -306,14 +319,15 @@ $searchsort = $bapiSolutionData["BizRules"]["Search Sort Order Option"];
             ByHeadline = 6
             ByImages = 7*/
             
-
-	
 	if (!empty($sitesettings)) {
-		echo 'var settings=' . stripslashes($sitesettings) . ';';
+		echo 'var settings=' . stripslashes($sitesettings).';';
+		/* new settings after the initial settings */
+		if(strpos($sitesettings,'BAPI.config().haspoitypefilter') == false){
+			console.log("i am here");
+			echo 'settings.poitypefilter = "BAPI.config().haspoitypefilter={}; BAPI.config().haspoitypefilter.enabled=false;";';
+		}
 	} else {
-		
 		echo '
-		
 		var locsearch = "BAPI.config().city.enabled=false; BAPI.config().location.enabled=false;";
 		if('.$city.' && '.$location.'==false )
 		{
@@ -375,6 +389,7 @@ $searchsort = $bapiSolutionData["BizRules"]["Search Sort Order Option"];
 			"searchsortorder": "BAPI.config().sortdesc=false;",
 			"propdetail-availcal": "BAPI.config().displayavailcalendar='.$propdetailavailcal.';  BAPI.config().availcalendarmonths='.$availcalendarmonths.';",
 			"propdetail-reviewtab": "BAPI.config().hasreviews='.$propdetailreviewtab.';",
+			"poitypefilter": "BAPI.config().haspoitypefilter={}; BAPI.config().haspoitypefilter.enabled='.$poitypefilter.';",
 			"checkinoutmode": "BAPI.config().checkin.enabled='.$checkin.'; BAPI.config().checkout.enabled='.$checkout.'; BAPI.config().los.enabled='.$los.';",
 			"deflos": "BAPI.config().los.defaultval='.$losdefaultval.'; BAPI.config().los.minval='.$losminval.';",
 			"categorysearch": "BAPI.config().category.enabled='.$categorysearch.';",
@@ -438,7 +453,7 @@ settings["roomsearch"] = "BAPI.config().rooms.enabled=false;";
 			/* we check if the value is valid */
 			if (typeof (value) !== "undefined" && value != ''){
 				
-				/* check if this i a checkbox */
+				/* check if this is a checkbox */
 				if(jQuery(theKey).is(':checkbox'))
 				{
 					jQuery(theKey).change(function(){
@@ -448,7 +463,8 @@ settings["roomsearch"] = "BAPI.config().rooms.enabled=false;";
 					
 					var arr = value.split('=');
 					var whereIsBool = 1;
-					if(theKey == '.minsleepsearch-cbx' || theKey == '.minbedsearch-cbx')
+					/*settings that create an object first*/
+					if(theKey == '.minsleepsearch-cbx' || theKey == '.minbedsearch-cbx' || theKey == '.poitypefilter-cbx')
 					{
 						whereIsBool = 2;
 					}
