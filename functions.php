@@ -758,13 +758,14 @@ function getTextDataArray(){
 					remove_meta_box( 'pageparentdiv', 'page', 'normal' );
 					/* lets add a metabox with a message as to why there is no page Attributes metabox */
 					if(!array_key_exists('bapi_page_id', $metaArray)){
-						add_meta_box( 'pageattributesmessage_meta_box_id', 'Page Attributes', 'create_DataDriventDetailPagesmessage_meta_box', 'page', 'side', 'high' );
+						add_meta_box( 'pageattributesmessage_meta_box_id', 'Type: Data-Drivent', 'create_DataDriventDetailPagesmessage_meta_box', 'page', 'side', 'high' );
 						remove_post_type_support('page', 'title');
 						remove_post_type_support('page', 'editor');
 					}else{
-						add_meta_box( 'pageattributesmessage_meta_box_id', 'Page Attributes', 'create_BAPIInitializedPagesmessage_meta_box', 'page', 'side', 'high' );
+						add_meta_box( 'pageattributesmessage_meta_box_id', 'Type: BAPI-Initialized', 'create_BAPIInitializedPagesmessage_meta_box', 'page', 'side', 'high' );
 					}
-					
+				}else{
+					add_meta_box( 'pageattributesmessage_meta_box_id', 'Type: Static', 'create_StaticPagesmessage_meta_box', 'page', 'side', 'high' );
 				}
 			}
 		}
@@ -776,8 +777,13 @@ function getTextDataArray(){
 	}
 	function create_BAPIInitializedPagesmessage_meta_box()
 	{
-		echo '<div class="updated inline"><p>This page is synchronized with InstaManager. You may only edit the page content. All other editing functions have been disabled.</p> <a href="//support.bookt.com/customer/portal/articles/1455747-missing-attributes-on-shared-pages" target="_blank">Learn More</a></div>';  
+		echo '<div class="updated inline"><p>This page is synchronized with InstaManager. You may only edit the page content. All other editing functions have been disabled.</p> <a href="//support.bookt.com/customer/portal/articles/1455747-missing-attributes-on-shared-pages" target="_blank">Learn More</a></div>';
 	}
+	function create_StaticPagesmessage_meta_box()
+	{
+		echo '<div class="updated inline"><p>This page is a WordPress Page. All editing its enabled.</p> <a href="//support.bookt.com/customer/portal/articles/1455747-missing-attributes-on-shared-pages" target="_blank">Learn More</a></div>';
+	}
+	
 /* Custom Instasite Dashboard */
 
 function bapi_welcome_panel() {
