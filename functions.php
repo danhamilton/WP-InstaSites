@@ -758,7 +758,7 @@ function getTextDataArray(){
 					remove_meta_box( 'pageparentdiv', 'page', 'normal' );
 					/* lets add a metabox with a message as to why there is no page Attributes metabox */
 					if(!array_key_exists('bapi_page_id', $metaArray)){
-						add_meta_box( 'pageattributesmessage_meta_box_id', 'Type: Data-Drivent', 'create_DataDriventDetailPagesmessage_meta_box', 'page', 'side', 'high' );
+						add_meta_box( 'pageattributesmessage_meta_box_id', 'Type: Data-Driven', 'create_DataDriventDetailPagesmessage_meta_box', 'page', 'side', 'high' );
 						remove_post_type_support('page', 'title');
 						remove_post_type_support('page', 'editor');
 					}else{
