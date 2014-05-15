@@ -462,8 +462,8 @@ function get_doc_template($docname,$setting){
 	global $bapi_all_options;
 	$docmod = $bapi_all_options[$setting.'_lastmod']; //settings must be registered w/ this consistent format.
 	$doctext = $bapi_all_options[$setting];
-	if((time()-$docmod)>0){
-		$url = getbapiurl().'/ws/?method=get&ids=0&entity=doctemplate&docname='.urlencode($docname).'&apikey='.getbapiapikey().'&language='.getbapilanguage();
+	if(((time()+60)-$docmod)>0){
+		$url = getbapiurl().'/ws/?method=get&ids=0&entity=doctemplate&docname='.urlencode($docname).'&apikey='.getbapiapikey();
 		$d = file_get_contents($url);
 		$darr = json_decode($d);
 		$doctext = $darr->result[0]->DocText;
