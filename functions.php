@@ -270,15 +270,15 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-migrate/1.2.1/jquery-migrate.min.js" type="text/javascript"></script>    
 <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js" type="text/javascript"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/i18n/jquery-ui-i18n.min.js" type="text/javascript"></script>
-<!--[if gt IE 7]>
-<script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/pickadate.min.js', __FILE__)) ?>" ></script>			
+<!--[if lt IE 8]>
+<script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/legacy.js', __FILE__)) ?>" ></script>
 <![endif]-->
-<![if !IE]>
-<script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/pickadate.min.js', __FILE__)) ?>" ></script>			
-<![endif]>
-<!--[if lte IE 8]>
-<script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/pickadate.legacy.min.js', __FILE__)) ?>" ></script>			
+<!--[if gte IE 8]>
+<script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/pickadate.min.js', __FILE__)) ?>" ></script>
 <![endif]-->
+<!--[if !IE]> -->
+<script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/pickadate.min.js', __FILE__)) ?>" ></script>
+<!-- <![endif]-->
 <script type="text/javascript" src="<?= getbapijsurl($apiKey) ?>"></script>
 <script type="text/javascript" src="<?= getbapiuijsurl() ?>" ></script>		
 <script type="text/javascript" src="/bapi.textdata.js" ></script>
