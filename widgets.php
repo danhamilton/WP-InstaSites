@@ -608,13 +608,22 @@ class BAPI_Featured_Properties extends WP_Widget {
 		$title = apply_filters('widget_title',$instance['title']);
 		$pagesize = esc_textarea($instance['text']);
 		$rowsize = intval($instance['rowsize']);
-		if($rowsize<=0) { $rowsize=1; }
+		$bfpicons = intval($instance['fpicons']);
+		$bfpiconswhite = intval($instance['fpiconswhite']);
+		if($rowsize<=0) { $rowsize=1; }		
+		/* we show icons instead of text */
+		if(isset( $instance[ 'fpicons' ])){$bfpicons =  $instance['fpicons'];}
+		else{ $bfpicons = true;}		
+		/* show the icons in white color */
+		if(isset( $instance[ 'fpiconswhite' ])){$bfpiconswhite =  $instance['fpiconswhite'];}
+		else{ $bfpiconswhite = true;}
+		
 		
 		echo $before_widget;
 		if(!empty($title))
 			echo $before_title.$title.$after_title;
 		?>
-		<div id="featuredproperties" class="bapi-summary featuredproperties row-fluid" data-log="0" data-templatename="tmpl-featuredproperties-quickview" data-ignoreconfigsort="1" data-ignoresession="1" data-entity="property" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random" }' data-rowfixselector=".fp-featured" data-rowfixcount="<?= $rowsize ?>"></div>
+		<div id="featuredproperties" class="bapi-summary featuredproperties row-fluid <?php if($bfpicons == 1){ if($bfpiconswhite == 1){echo 'fp-icons white';}else echo 'fp-icons';} ?>" data-log="0" data-templatename="tmpl-featuredproperties-quickview" data-ignoreconfigsort="1" data-ignoresession="1" data-entity="property" data-searchoptions='{ "pagesize": <?= $pagesize ?>, "sort": "random", "icons": <?= $bfpicons ? 1 : 0; ?>, "iconswhite": <?= $bfpiconswhite ? 1 : 0; ?>}' data-rowfixselector=".fp-featured" data-rowfixcount="<?= $rowsize ?>"></div>
         <?php
 		echo $after_widget;
 	}
@@ -627,6 +636,8 @@ class BAPI_Featured_Properties extends WP_Widget {
 		else
 			$instance['text'] = stripslashes( wp_filter_post_kses( addslashes($new_instance['text']) ) ); // wp_filter_post_kses() expects slashed
 		$instance['rowsize'] = $new_instance['rowsize'];
+		$instance['fpicons'] = strip_tags($new_instance['fpicons']);
+		$instance['fpiconswhite'] = strip_tags($new_instance['fpiconswhite']);
 		return $instance;
 	}
 
@@ -637,14 +648,31 @@ class BAPI_Featured_Properties extends WP_Widget {
 		else { $pagesize = __( '4', 'text_domain' ); }
 		if ( isset( $instance[ 'rowsize' ] ) ) { $rowsize =  $instance['rowsize']; }
 		else { $rowsize = '1'; }
+		if(isset( $instance[ 'fpicons' ])){$bfpicons =  $instance['fpicons'];}
+		else{ $bfpicons = true;}
+		if(isset( $instance[ 'fpiconswhite' ])){$bfpiconswhite =  $instance['fpiconswhite'];}
+		else{ $bfpiconswhite = true;}
 		?>
 		<p>
 		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
 		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+        </p>
+        <p>
         <label for="<?php echo $this->get_field_id( 'text' ); ?>"><?php _e( '# of Properties:' ); ?></label>
         <input id="<?php echo $this->get_field_id( 'text' ); ?>" name="<?php echo $this->get_field_name( 'text' ); ?>" type="text" value="<?php echo esc_attr( $pagesize ); ?>" />
+        </p>
+        <p>
         <label for="<?php echo $this->get_field_id( 'rowsize' ); ?>"><?php _e( 'Row Size:' ); ?></label>
         <input id="<?php echo $this->get_field_id( 'rowsize' ); ?>" name="<?php echo $this->get_field_name( 'rowsize' ); ?>" type="text" value="<?php echo esc_attr( $rowsize ); ?>" />
+		</p>
+        <p>
+        <label for="<?php echo $this->get_field_id( 'fpicons' ); ?>"><?php _e( 'Show Icons:' ); ?></label>        
+        <input id="<?php echo $this->get_field_id('fpicons'); ?>" name="<?php echo $this->get_field_name('fpicons'); ?>" class="checkbox" type="checkbox" value="1" <?php checked( '1', $bfpicons ); ?>/>
+		</p>
+        <p <?php if(!$bfpicons ){echo 'style="display:none;"';} ?>>&nbsp;&nbsp;&nbsp;&nbsp;<input id="<?php echo $this->get_field_id('fpiconswhite'); ?>" name="<?php echo $this->get_field_name('fpiconswhite'); ?>" class="checkbox" type="checkbox" value="1" <?php checked( '1', $bfpiconswhite ); ?>/>
+		<label for="<?php echo $this->get_field_id( 'fpiconswhite' ); ?>">
+  		<?php _e( 'Show icons in white color' ); ?>
+		</label>
 		</p>
 		<?php 
 	}
