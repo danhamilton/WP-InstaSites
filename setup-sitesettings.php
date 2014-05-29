@@ -12,7 +12,7 @@
 		}*/
 		
 		$sitesettings = json_encode($_POST);
-		update_option('bapi_sitesettings',  $sitesettings);		
+		update_option('bapi_sitesettings',  $sitesettings);
 		echo '<div id="message" class="updated"><p><strong>Settings saved.</strong></p></div>';		
 	}
 	else {
@@ -217,6 +217,7 @@ getconfig();
 	<td scope="row">Include # of Rooms/Units Search:</td>
 	<td><input class="roomsearch-cbx" type="checkbox" checked="" />
 	<input type="hidden" id="roomsearch" name="roomsearch" data-prevalue="BAPI.config().rooms.enabled=" value="BAPI.config().rooms.enabled=false" />
+	</td>
 </tr>
 <tr valign="top">
 	<td scope="row">Location Search:</td>
@@ -236,9 +237,15 @@ getconfig();
 <h3>Property Detail Screen Settings</h3>
 <table class="form-table">
 <tr valign="top">
+	<td scope="row">Hide Rates &amp; Availability Tab:</td>
+	<td><input class="propdetailrateavailtab-cbx" type="checkbox" checked="" />
+	<input type="hidden" id="propdetailrateavailtab" name="propdetailrateavailtab" data-prevalue="BAPI.config().hideratesandavailabilitytab=" value="" />
+	</td>
+</tr>
+<tr valign="top">
 	<td scope="row">Availability Calendar:</td>
 	<td><select name="propdetail-availcal" id="propdetail-availcal">
-		<option value="BAPI.config().displayavailcalendar=false;  BAPI.config().availcalendarmonths=0;">Disabled</option>
+		<option value="BAPI.config().displayavailcalendar=false;  BAPI.config().availcalendarmonths=0;">Hide Availability Calendars</option>
 		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=3;">Show 3 Months</option>
 		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=6;">Show 6 Months</option>
 		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=9;">Show 9 Months</option>
@@ -247,6 +254,12 @@ getconfig();
 		<option value="BAPI.config().displayavailcalendar=true;  BAPI.config().availcalendarmonths=18;">Show 18 Months</option>
 	    </select>
 	</td>	
+</tr>
+<tr valign="top">
+	<td scope="row">Hide Rates Table:</td>
+	<td><input class="propdetailratestable-cbx" type="checkbox" checked="" />
+	<input type="hidden" id="propdetailratestable" name="propdetailratestable" data-prevalue="BAPI.config().hideratestable=" value="" />
+	</td>
 </tr>
 <tr valign="top" style="display:none">
 	<td scope="row">Show Split Days in Availability Calendars:</td>
@@ -293,6 +306,8 @@ $headlinesearch = ($bapiSolutionDataConfig["headline"]["enabled"]) ? 'true' : 'f
 $propdetailavailcal = ($bapiSolutionDataConfig["displayavailcalendar"]) ? 'true' : 'false';
 $availcalendarmonths = $bapiSolutionDataConfig["availcalendarmonths"];
 $propdetailreviewtab = ($bapiSolutionDataConfig["hasreviews"]) ? 'true' : 'false';
+$propdetailrateavailtab = ($bapiSolutionDataConfig["hideratesandavailabilitytab"]) ? 'true' : 'false';
+$propdetailratestable = ($bapiSolutionDataConfig["hideratestable"]) ? 'true' : 'false';
 $poitypefilter = ($bapiSolutionDataConfig["haspoitypefilter"]) ? 'true' : 'false';
 $checkin = ($bapiSolutionDataConfig["checkin"]["enabled"]) ? 'true' : 'false';
 $checkout = ($bapiSolutionDataConfig["checkout"]["enabled"]) ? 'true' : 'false';
@@ -319,12 +334,31 @@ $searchsort = $bapiSolutionData["BizRules"]["Search Sort Order Option"];
             ByHeadline = 6
             ByImages = 7*/
             
-	if (!empty($sitesettings)) {
+	if (!empty($sitesettings)){
 		echo 'var settings=' . stripslashes($sitesettings).';';
 		/* new settings after the initial settings */
 		if(strpos($sitesettings,'BAPI.config().haspoitypefilter') == false){
-			console.log("i am here");
 			echo 'settings.poitypefilter = "BAPI.config().haspoitypefilter={}; BAPI.config().haspoitypefilter.enabled=false;";';
+		}
+		if(strpos($sitesettings,'BAPI.config().hideratesandavailabilitytab') == false){
+			//we need to add the new property settings since its totally new only 1 time
+			$search = "}";
+			$replace = ',"propdetailrateavailtab":"BAPI.config().hideratesandavailabilitytab=false;"}';
+			$newSiteSettings = get_option('bapi_sitesettings');
+			$pos = strrpos($newSiteSettings, $search);
+			if($pos !== false){$newSiteSettings = substr_replace($newSiteSettings, $replace, $pos, strlen($search));}
+			update_option('bapi_sitesettings', $newSiteSettings);
+			echo 'settings.propdetailrateavailtab = "BAPI.config().hideratesandavailabilitytab=false;";';
+		}
+		if(strpos($sitesettings,'BAPI.config().hideratestable') == false){
+			//we need to add the new property settings since its totally new only 1 time
+			$search = "}";
+			$replace = ',"propdetailratestable":"BAPI.config().hideratestable=false;"}';
+			$newSiteSettings = get_option('bapi_sitesettings');
+			$pos = strrpos($newSiteSettings, $search);
+			if($pos !== false){$newSiteSettings = substr_replace($newSiteSettings, $replace, $pos, strlen($search));}
+			update_option('bapi_sitesettings', $newSiteSettings);
+			echo 'settings.propdetailratestable = "BAPI.config().hideratestable=false;";';
 		}
 	} else {
 		echo '
@@ -389,6 +423,8 @@ $searchsort = $bapiSolutionData["BizRules"]["Search Sort Order Option"];
 			"searchsortorder": "BAPI.config().sortdesc=false;",
 			"propdetail-availcal": "BAPI.config().displayavailcalendar='.$propdetailavailcal.';  BAPI.config().availcalendarmonths='.$availcalendarmonths.';",
 			"propdetail-reviewtab": "BAPI.config().hasreviews='.$propdetailreviewtab.';",
+			"propdetailrateavailtab": "BAPI.config().hideratesandavailabilitytab=false;",
+			"propdetailratestable": "BAPI.config().hideratestable=false;",
 			"poitypefilter": "BAPI.config().haspoitypefilter={}; BAPI.config().haspoitypefilter.enabled='.$poitypefilter.';",
 			"checkinoutmode": "BAPI.config().checkin.enabled='.$checkin.'; BAPI.config().checkout.enabled='.$checkout.'; BAPI.config().los.enabled='.$los.';",
 			"deflos": "BAPI.config().los.defaultval='.$losdefaultval.'; BAPI.config().los.minval='.$losminval.';",
@@ -438,7 +474,17 @@ settings["roomsearch"] = "BAPI.config().rooms.enabled=false;";
 		populatedefaultviewddp($('.searchmode-listview-cbx').is(":checked"),$('.searchmode-photoview-cbx').is(":checked"),$('.searchmode-mapview-cbx').is(":checked"));
 	});
 
-		
+	function setHideRatesAndAvailTab(){
+		if($('.propdetailratestable-cbx').is(":checked") && $('#propdetail-availcal').val() == "BAPI.config().displayavailcalendar=false;  BAPI.config().availcalendarmonths=0;"){
+			$('.propdetailrateavailtab-cbx').iButton("toggle", true);
+		}else{
+			$('.propdetailrateavailtab-cbx').iButton("toggle", false);
+		}
+	}
+	$('#propdetail-availcal,.propdetailratestable-cbx').change(function(){
+		setHideRatesAndAvailTab();
+	});
+	
 	/*$.each(BAPI.config().beds.values,function(key,value) {
         $("#maxbedsearch").append('<option value="BAPI.config().beds.values=BAPI.config().beds.values.splice(0,'+ value.Data +');">' + value.Label  + '</option>');
 	});*/
@@ -475,7 +521,7 @@ settings["roomsearch"] = "BAPI.config().rooms.enabled=false;";
 						jQuery(theKey).iButton("toggle", true)
 					}else{
 						jQuery(theKey).prop('checked', false);
-						jQuery(theKey).iButton("toggle", false)
+						jQuery(theKey).iButton("toggle", false);
 					}
 				}
 				/* this will still populate the hidden inputs */

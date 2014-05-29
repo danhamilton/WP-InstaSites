@@ -681,13 +681,30 @@
 	<div class="tabbable">
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="#tab1" data-toggle="tab">{{textdata.General}}</a></li>
-		{{#config.displayavailcalendar}}
-		<li><a href="#tab2" data-toggle="tab">{{textdata.Rates & Availability}}</a></li>
-		{{/config.displayavailcalendar}}
+		{{^config.hideratesandavailabilitytab}}
+			{{#config.displayavailcalendar}}
+				{{^HideAvailability}}
+					{{^config.hideratestable}}
+						<li><a href="#tab2" data-toggle="tab">{{textdata.Rates & Availability}}</a></li>
+					{{/config.hideratestable}}
+					{{#config.hideratestable}}
+						<li><a href="#tab2" data-toggle="tab">{{textdata.Availability}}</a></li>
+					{{/config.hideratestable}}
+				{{/HideAvailability}}
+				{{#HideAvailability}}
+					{{^config.hideratestable}}
+						<li><a href="#tab2" data-toggle="tab">{{textdata.Rates}}</a></li>
+					{{/config.hideratestable}}
+				{{/HideAvailability}}
+			{{/config.displayavailcalendar}}
+			{{^config.displayavailcalendar}}
+				<li><a href="#tab2" data-toggle="tab">{{textdata.Rates}}</a></li>
+			{{/config.displayavailcalendar}}
+		{{/config.hideratesandavailabilitytab}}
 		<li><a href="#tab3" data-toggle="tab">{{textdata.Amenities}}</a></li>
 		<li><a href="#tab4" id="tabs4" data-toggle="tab">{{textdata.Attractions}}</a></li>
 		{{#config.hasreviews}}		
-		<li><a href="#tab5" data-toggle="tab">{{textdata.Reviews}}</a></li>		
+		<li><a href="#tab5" data-toggle="tab">{{textdata.Reviews}}</a></li>
 		{{/config.hasreviews}}
 	</ul>			
 	<div class="tab-content">
@@ -719,25 +736,43 @@
 		</div>
 		</div>
 		</div>
-		{{#config.displayavailcalendar}}
-		<div class="tab-pane" id="tab2">					
+		{{^config.hideratesandavailabilitytab}}
+		<div class="tab-pane" id="tab2">
 		<div class="row-fluid">
-		<div class="span12 box-sides">		
-		<h3>{{textdata.Rates & Availability}}</h3>
-		<div id="avail" class="bapi-availcalendar" data-options='{ "availcalendarmonths": {{config.availcalendarmonths}}, "numinrow": 3 }' data-pkid="{{ID}}" data-rateselector="bapi-ratetable"></div>
-		<hr/>
-		<div class="bapi-ratetable"></div>		
-		</div>
-		</div>
-		</div>
+		<div class="span12 box-sides">
+		{{#config.displayavailcalendar}}
+			{{^HideAvailability}}
+				{{^config.hideratestable}}
+				<h3>{{textdata.Rates & Availability}}</h3>
+				<div id="avail" class="bapi-availcalendar" data-options='{ "availcalendarmonths": {{config.availcalendarmonths}}, "numinrow": 3 }' data-pkid="{{ID}}" data-rateselector="bapi-ratetable"></div>
+				<hr/>
+				{{/config.hideratestable}}
+				{{#config.hideratestable}}
+				<h3>{{textdata.Availability}}</h3>
+				<div id="avail" class="bapi-availcalendar" data-options='{ "availcalendarmonths": {{config.availcalendarmonths}}, "numinrow": 3 }' data-pkid="{{ID}}" data-rateselector="bapi-ratetable"></div>
+				{{/config.hideratestable}}
+			{{/HideAvailability}}
+			{{#HideAvailability}}
+				<h3>{{textdata.Rates}}</h3>
+			{{/HideAvailability}}
 		{{/config.displayavailcalendar}}
-		<div class="tab-pane" id="tab3">			
+		{{^config.displayavailcalendar}}
+			<h3>{{textdata.Rates}}</h3>
+		{{/config.displayavailcalendar}}
+		{{^config.hideratestable}}
+		<div id="ratetable" class="bapi-ratetable" data-pkid="{{ID}}"></div>
+		{{/config.hideratestable}}
+		</div>
+		</div>
+		</div>
+		{{/config.hideratesandavailabilitytab}}
+		<div class="tab-pane" id="tab3">
 		<div class="row-fluid">
 		<div class="span12 box-sides">
 		<h3>{{textdata.Amenities}}</h3>
 		{{#Amenities}}		
 		<ul class="amenities-list unstyled clearfix">
-		<li class="category-title">{{Key}}</li> 	
+		<li class="category-title">{{Key}}</li>
 		{{#Values}}
 			<li><span class="halflings ok-sign"><i></i>{{Label}}</span></li>
 		{{/Values}}		

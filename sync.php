@@ -169,11 +169,27 @@
 					$c["config"]["displayavailcalendar"] = ($displayavailcalendar === 'true');
 					$c["config"]["availcalendarmonths"] =  $availcalendarmonths;
 				}
+				/* the same as review but for the rates and availability tab */
+				$hiderateavailtab = $sitesettings["propdetailrateavailtab"];
+				if (!empty($hiderateavailtab)){
+					$hiderateavailtab = split('[=;]', $hiderateavailtab);
+					/* we assign the value to var in the config array */
+					$hiderateavailtab = $hiderateavailtab[1];
+					$c["config"]["hideratesandavailabilitytab"] = ($hiderateavailtab === 'true');
+				}
+				/* the same as review but for the rates table */
+				$hideratestable = $sitesettings["propdetailratestable"];
+				if (!empty($hideratestable)){
+					$hideratestable = split('[=;]', $hideratestable);
+					/* we assign the value to var in the config array */
+					$hideratestable = $hideratestable[1];
+					$c["config"]["hideratestable"] = ($hideratestable === 'true');
+				}
 			}
 			
 			$c["textdata"] = BAPISync::getTextData();
 			$m = new Mustache_Engine();
-			$string = $m->render($template, $c);				
+			$string = $m->render($template, $c);
 			$string = str_replace("\t", '', $string); // remove tabs
 			$string = str_replace("\n", '', $string); // remove new lines
 			$string = str_replace("\r", '', $string); // remove carriage returns
