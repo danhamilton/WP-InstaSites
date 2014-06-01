@@ -16,10 +16,6 @@
 		echo '<div id="message" class="updated"><p><strong>Settings saved.</strong></p></div>';
 	}
 	
-	$bapi_baseurl = 'connect.bookt.com';
-	if(get_option('bapi_baseurl')){ $bapi_baseurl = get_option('bapi_baseurl'); }
-	if(empty($bapi_baseurl)){ $bapi_baseurl = 'connect.bookt.com'; }
-	
 	$cdn_url = get_option('home');
 	if(get_option('bapi_site_cdn_domain')){ $cdn_url = get_option('bapi_site_cdn_domain'); }
 	
@@ -95,10 +91,6 @@
 	<td><input type="text" name="api_key" id="apikey" size="60" value="<?php echo get_option('api_key'); ?>" />
 		<a href="javascript:void(0)" id="validate-apikey">Validate</a>
 	</td>
-</tr>
-<tr valign="top" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">
-	<td scope="row">BAPI Base URL:</td>
-	<td><input type="text" name="bapi_baseurl" size="60" value="<?php echo $bapi_baseurl; ?>" /></td>
 </tr>
 <tr valign="top" style="<?php if(!is_super_admin()){echo 'display:none;'; } ?>">
 	<td scope="row">Secure Site URL:</td>
