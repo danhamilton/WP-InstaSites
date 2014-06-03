@@ -8,7 +8,6 @@
 		}
 		update_option('bapi_site_cdn_domain', $_POST['bapi_site_cdn_domain']);
 		update_option('api_key', $_POST['api_key']);
-		update_option('bapi_baseurl', $_POST['bapi_baseurl']);
 		update_option('bapi_secureurl', $securl);
 		update_option('bapi_cloudfronturl', $_POST['bapi_cloudfronturl']);
 		update_option('bapi_cloudfrontid', $_POST['bapi_cloudfrontid']);
