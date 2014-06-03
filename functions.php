@@ -28,6 +28,9 @@
 		if(!isset($bapi_all_options['bapi_baseurl'])){
 			$bapi_all_options['bapi_baseurl'] = 'connect.bookt.com';
 		}
+		if(defined('BAPI_BASEURL')){
+			$bapi_all_options['bapi_baseurl'] = BAPI_BASEURL;
+		}
 		if(!isset($bapi_all_options['bapi_first_look'])){
 			$bapi_all_options['bapi_first_look'] = 0;
 		}
