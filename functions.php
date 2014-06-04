@@ -181,7 +181,7 @@
 			$bapi_baseurl = BAPI_BASEURL;
 		}
 		if($bapi_all_options['bapi_baseurl']){
-			$bapi_baseurl = get_option('bapi_baseurl');
+			$bapi_baseurl = $bapi_all_options['bapi_baseurl'];
 		}
 		if(empty($bapi_baseurl) || $bapi_baseurl=='connect.bookt.com'){
 			$bapi_baseurl = 'd2kqqk9digjl80.cloudfront.net';  
