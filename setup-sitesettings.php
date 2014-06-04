@@ -481,8 +481,16 @@ settings["roomsearch"] = "BAPI.config().rooms.enabled=false;";
 			$('.propdetailrateavailtab-cbx').iButton("toggle", false);
 		}
 	}
-	$('#propdetail-availcal,.propdetailratestable-cbx').change(function(){
-		setHideRatesAndAvailTab();
+	jQuery(window).load(function (){
+		$('#propdetail-availcal,.propdetailratestable-cbx').change(function(){
+			setHideRatesAndAvailTab();
+		});
+		$('.propdetailrateavailtab-cbx').change(function(){
+			if($('.propdetailrateavailtab-cbx').is(":checked")){
+				alert("This Setting requires data synchronization, there could be a delay of up to one hour for the changes to appear on all property detail pages.");
+			}
+		});
+		
 	});
 	
 	/*$.each(BAPI.config().beds.values,function(key,value) {
@@ -517,6 +525,7 @@ settings["roomsearch"] = "BAPI.config().rooms.enabled=false;";
 					var arrBolean = arr[whereIsBool].slice(0,-1);
 					if( arrBolean == 'true')
 					{
+						//console.log("its true");
 						jQuery(theKey).prop('checked',true );
 						jQuery(theKey).iButton("toggle", true)
 					}else{
