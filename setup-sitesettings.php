@@ -220,7 +220,7 @@ getconfig();
 	</td>
 </tr>
 <tr valign="top">
-	<td scope="row">Location Search:</td>
+	<td style="vertical-align:top;" scope="row">Location Search:</td>
 	<td>
 		<select name="locsearch" id="locsearch">
 		<option value="BAPI.config().city.enabled=false; BAPI.config().location.enabled=false;">Disabled</option>
@@ -229,6 +229,7 @@ getconfig();
 		<option value="BAPI.config().city.enabled=false; BAPI.config().location.enabled=true; BAPI.config().location.autocomplete=false;">Market Area Drop Down List</option>
 		<option value="BAPI.config().city.enabled=false; BAPI.config().location.enabled=true; BAPI.config().location.autocomplete=true;">Market Area Autocomplete</option>
 		</select>
+		<p class="description">Market Area search options are for Enterprise solutions.</p>
 	</td>
 </tr>	
 </table>
