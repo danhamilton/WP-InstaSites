@@ -613,10 +613,10 @@ class BAPI_Featured_Properties extends WP_Widget {
 		if($rowsize<=0) { $rowsize=1; }		
 		/* we show icons instead of text */
 		if(isset( $instance[ 'fpicons' ])){$bfpicons =  $instance['fpicons'];}
-		else{ $bfpicons = false;}		
+		else{ $bfpicons = true;}		
 		/* show the icons in white color */
 		if(isset( $instance[ 'fpiconswhite' ])){$bfpiconswhite =  $instance['fpiconswhite'];}
-		else{ $bfpiconswhite = false;}
+		else{ $bfpiconswhite = true;}
 		
 		
 		echo $before_widget;
@@ -649,9 +649,9 @@ class BAPI_Featured_Properties extends WP_Widget {
 		if ( isset( $instance[ 'rowsize' ] ) ) { $rowsize =  $instance['rowsize']; }
 		else { $rowsize = '1'; }
 		if(isset( $instance[ 'fpicons' ])){$bfpicons =  $instance['fpicons'];}
-		else{ $bfpicons = false;}
+		else{ $bfpicons = true;}
 		if(isset( $instance[ 'fpiconswhite' ])){$bfpiconswhite =  $instance['fpiconswhite'];}
-		else{ $bfpiconswhite = false;}
+		else{ $bfpiconswhite = true;}
 		?>
 		<p>
 		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
