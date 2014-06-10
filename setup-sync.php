@@ -4,6 +4,7 @@
 		//update_option('bapi_slideshow_image1', $_POST['bapi_slideshow_image1']);
 		//echo '<div id="message" class="updated"><p><strong>Settings saved.</strong></p></div>';
 	}	
+	loadscriptjquery();
 	getconfig(); // need this to update detail pages
 	
 	$soldata = json_decode(get_option('bapi_solutiondata'),TRUE);
