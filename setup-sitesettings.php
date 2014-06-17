@@ -55,6 +55,12 @@ getconfig();
 	<input type="hidden" id="searchmode-mapview" name="searchmode-mapview" data-prevalue="BAPI.config().searchmodes.mapview=" value="" />
 	</td>	
 </tr>
+<tr valign="top">
+ <td scope="row">Hide Avg Stars Reviews:</td>
+ <td><input class="averagestarsreviews-cbx" type="checkbox" checked="" />
+ <input type="hidden" id="averagestarsreviews" name="averagestarsreviews" data-prevalue="BAPI.config().hidestarsreviews=" value="" />
+ </td>
+</tr>
 <!--<tr valign="top">
 	<td scope="row">Hotel View:</td>
 	<td><input class="searchmode-hotelview-cbx" type="checkbox" checked="" />
@@ -123,6 +129,7 @@ getconfig();
 	    </select>
 	</td>	
 </tr>
+
 <!--<tr valign="top">
 	<td scope="row">Default Check-In Date X # of days Out (0 means no default):</td>
 	<td><input id="" type="numeric" name=""></td>
@@ -273,6 +280,7 @@ getconfig();
 	<input type="hidden" id="propdetail-reviewtab" name="propdetail-reviewtab" data-prevalue="BAPI.config().hasreviews=" value="" />
 	</td>
 </tr>
+
 </table>
 
 <h3>Attractions Settings</h3>
@@ -323,6 +331,7 @@ $maxbedsearch = $bapiSolutionDataConfig["beds"]["maxval"];
 $roomsearch = ($bapiSolutionDataConfig["rooms"]["enabled"]) ? 'true' : 'false';
 $city = ($bapiSolutionDataConfig["city"]["enabled"]) ? 'true' : 'false';
 $location = ($bapiSolutionDataConfig["location"]["enabled"]) ? 'true' : 'false';
+$averagestarsreviews = ($bapiSolutionDataConfig["hidestarsreviews"]) ? 'true' : 'false';
 
 $showunavailunits = ($bapiSolutionData["BizRules"]["Search By Availability"]) ? 'true' : 'false';
 $searchsort = $bapiSolutionData["BizRules"]["Search Sort Order Option"];
@@ -415,7 +424,8 @@ $searchsort = $bapiSolutionData["BizRules"]["Search Sort Order Option"];
 			"searchmode-hotelview": "BAPI.config().searchmodes.hotelview=false;",
 			"searchmode-mapview": "BAPI.config().searchmodes.mapview=true;",
 			"amenitysearch": "BAPI.config().amenity.enabled='.$amenitysearch.';",
-			"devsearch": "BAPI.config().dev.enabled='.$devsearch.';",
+			"averagestarsreviews": "BAPI.config().hidestarsreviews=false;",
+			"devsearch": "BAPI.config().dev.enabled='.$devsearch.';",s
 			"adultsearch": "BAPI.config().adults.enabled='.$adultsearch.';",
 			"childsearch": "BAPI.config().children.enabled='.$childsearch.';",
 			"headlinesearch": "BAPI.config().headline.enabled='.$headlinesearch.';",
@@ -483,7 +493,10 @@ settings["roomsearch"] = "BAPI.config().rooms.enabled=false;";
 			$('.propdetailrateavailtab-cbx').iButton("toggle", false);
 		}
 	}
+	
+	
 	jQuery(window).load(function (){
+		
 		$('#propdetail-availcal,.propdetailratestable-cbx').change(function(){
 			setHideRatesAndAvailTab();
 		});
@@ -492,6 +505,7 @@ settings["roomsearch"] = "BAPI.config().rooms.enabled=false;";
 				alert("This Setting requires data synchronization, there could be a delay of up to one hour for the changes to appear on all property detail pages.");
 			}
 		});
+		
 		
 	});
 	

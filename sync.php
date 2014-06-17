@@ -177,6 +177,14 @@
 					$hiderateavailtab = $hiderateavailtab[1];
 					$c["config"]["hideratesandavailabilitytab"] = ($hiderateavailtab === 'true');
 				}
+				/* the same as review but for star reviews */
+				$hidestarsreviews = $sitesettings["averagestarsreviews"];
+				if (!empty($hidestarsreviews)){
+					$hidestarsreviews = split('[=;]', $hidestarsreviews);
+					/* we assign the value to var in the config array */
+					$hidestarsreviews = $hidestarsreviews[1];
+					$c["config"]["hidestarsreviews"] = ($hidestarsreviews === 'true');
+				}
 				/* the same as review but for the rates table */
 				$hideratestable = $sitesettings["propdetailratestable"];
 				if (!empty($hideratestable)){
