@@ -96,17 +96,15 @@
 			}
 			//print_r($v);
 		}
-		/* we check if the healine field its enabled. if not dont do a thing*/
+		/* we check if the headline field its enabled. if not dont do a thing*/
 		if (strpos($sitesettings,'BAPI.config().headline.enabled=true;') !== false){
-			/*we get the ID of All Rentals which is the parent page of all the property pages*/
-			$parentPage = get_posts(array('meta_key' => 'bapi_page_id', 'meta_value' => 'bapi_property_grid','post_type' => 'page', 'post_status' => 'publish'));
-			if(count($parentPage) == 1){
-				$theParentID = $parentPage[0]->ID;
-				$pages = get_children(array( 'post_parent' => $theParentID,'post_type' => 'page', 'order' => 'asc' ) );
+			/*we get the pages that use our property-detail template */
+			$pages = get_pages(array('post_type'  => 'page','meta_key' => '_wp_page_template', 'meta_value' => 'page-templates/property-detail.php','hierarchical' => 0));
+			if(count($pages) > 0){
 				echo "BAPI.config().headline.values=["; 
 				  foreach ( $pages as $page ){
-					$option = $page->post_title;
-					echo '{"Label":"'.$option.'"}';
+					$title = $page->post_title;
+					echo '{"Label":"'.$title.'"}';
 					if(end($pages) != $page){
 						echo ","; // not the last element
 					}
