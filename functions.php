@@ -1,5 +1,7 @@
 <?php	
 	/* Pre-Load Site Options - Utilizes Built-in Cache Functions */
+	include_once 'bapi-php/bapi.php';
+	 include_once 'sync.php';
 	global $bapi_all_options; 
 	function bapi_wp_site_options(){
 		global $bapi_all_options;
@@ -96,7 +98,7 @@
 			}
 			//print_r($v);
 		}
-		/* we check if the healine field its enabled. if not dont do a thing*/
+				/* we check if the healine field its enabled. if not dont do a thing*/
 		if (strpos($sitesettings,'BAPI.config().headline.enabled=true;') !== false){
 			/*we get the ID of All Rentals which is the parent page of all the property pages*/
 			$parentPage = get_posts(array('meta_key' => 'bapi_page_id', 'meta_value' => 'bapi_property_grid','post_type' => 'page', 'post_status' => 'publish'));
@@ -114,8 +116,10 @@
 				echo "]";
 			}
 		}
+		
 		exit();
 	}
+	
 	
 	function urlHandler_bapitemplates() {
 		$url = get_relative($_SERVER['REQUEST_URI']);
@@ -264,25 +268,26 @@
 		$args = array('meta_key' => 'bapikey', 'meta_value' => $pagekey, 'child_of' => $parentid);
 		return get_pages($args);		
 	}
-	/* Load jquery script */
-	function loadscriptjquery(){	
-	?>
-		<link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/jquery.ui.all.css" rel="stylesheet" />    
-		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-migrate/1.2.1/jquery-migrate.min.js" type="text/javascript"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js" type="text/javascript"></script>
-		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/i18n/jquery-ui-i18n.min.js" type="text/javascript"></script>
-<!--[if lt IE 8]>
-<script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/legacy.js', __FILE__)) ?>" ></script>
-<![endif]-->
-<!--[if gte IE 8]>
-<script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/pickadate.min.js', __FILE__)) ?>" ></script>
-<![endif]-->
-<!--[if !IE]> -->
-		<script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/pickadate.min.js', __FILE__)) ?>" ></script>
-<!-- <![endif]-->     
-	<?php	
-	}
+			/* Load jquery script */
+		function loadscriptjquery(){	
+		?>
+			<link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/jquery.ui.all.css" rel="stylesheet" />    
+			<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+			<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-migrate/1.2.1/jquery-migrate.min.js" type="text/javascript"></script>
+			<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js" type="text/javascript"></script>
+			<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/i18n/jquery-ui-i18n.min.js" type="text/javascript"></script>
+	<!--[if lt IE 8]>
+	<script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/legacy.js', __FILE__)) ?>" ></script>
+	<![endif]-->
+	<!--[if gte IE 8]>
+	<script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/pickadate.min.js', __FILE__)) ?>" ></script>
+	<![endif]-->
+	<!--[if !IE]> -->
+			<script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/pickadate.min.js', __FILE__)) ?>" ></script>
+	<!-- <![endif]-->     
+		<?php	
+		}
+	
 	/* Common include files needed for BAPI */
 	function getconfig() {	
 		global $bapi_all_options;	
@@ -300,6 +305,7 @@
 			if($bapi_all_options['bapi_site_cdn_domain']){
 				$siteurl = $bapi_all_options['bapi_site_cdn_domain'];
 			}
+			
 			$siteurl = str_replace("http://", "", $siteurl);
 			$sitesettings = $bapi_all_options['bapi_sitesettings'];
 ?>
@@ -1042,3 +1048,151 @@ echo '<ul>';
 	echo '</ul></div>';
 }
 ?>
+<?php
+//add meta box to  wp backend
+function myplugin_add_meta_box() {
+	 $plugings_url = plugins_url( 'setup-advanced.php' , __FILE__ ); 
+			  $newUrlray = explode("/", $plugings_url);
+			  $url_master = $newUrlray[5];
+			  $url_setUp =  $newUrlray[6];
+			  $newUrl = '/wp-admin/admin.php?page=/'.$url_master.'/'.$url_setUp;
+	$screens = array( 'post', 'page' );
+	foreach ( $screens as $screen ) {
+		add_meta_box(
+			'myplugin_sectionid',
+			__( 'SEO Attributes &nbsp;&nbsp;&nbsp;<a href="'.$newUrl.'">Google Adwords Code</a>', 'myplugin_textdomain' ),
+			'myplugin_meta_box_callback',
+			$screen
+		);
+	}
+}
+//adds the information inside the mata seo meta box
+add_action( 'add_meta_boxes', 'myplugin_add_meta_box' );
+function myplugin_meta_box_callback( $metaId ) {
+	wp_nonce_field( 'insta_seo_metabox ', 'myplugin_meta_box_nonce' );
+	 $pageId = get_the_ID();
+	 $url = get_permalink($pageId);
+	 $newUrlray = split('http://localhost', $url);
+	 $relpermalink = $newUrlray[1];
+	 $meta_words = get_post_custom($post->ID, '', true);
+	 $keyword_meta = get_post_meta($pid,'bapi_meta_keywords',true);
+	?>
+	<!--  creats the live snippet preview box -->
+	<script>
+		jQuery(document).ready(function($) {
+   			$("#Descript_prev").text("<?php echo $meta_words['bapi_meta_description'][0];?>");
+   			$("#seoTitle").text("<?php echo $meta_words['bapi_meta_title'][0]; ?>");
+		$("#bapi_meta_description").keyup(function(){
+			var prevDesc = $("#bapi_meta_description").val();
+			var desc_length = prevDesc.length;
+			var totLeft = 156 - desc_length;
+			$("#Descript_prev").text(prevDesc).css({"width":"100%"});
+			
+			if(prevDesc == ""){
+				$("#Descript_prev").text("New Description");
+			}
+			var charColor = $("#descrip_lenght").text(totLeft).css({"color":"green"});
+			if(totLeft <= 0){
+				$("#descrip_lenght").text(totLeft).css("color", "red");
+			}
+		});
+		$("#bapi_meta_title").keyup(function(){
+			var prevTitle = $("#bapi_meta_title").val();
+			var title_length = prevTitle.length;
+			var charleft = 70 - title_length;
+			$("#seoTitle").text(prevTitle);
+			var color = $("#Title_lenght").text(charleft).css("color", "green");
+			if(charleft <= 0){
+				$("#Title_lenght").text(charleft).css("color", "red");
+			}
+			if(prevTitle == ""){
+				$("#seoTitle").text("New SEO Title");
+			}
+		});
+	});
+	</script>
+	<!-- meta box fields -->
+	<table style="max-width: 95%;">
+	<tr>
+	<td class="left" style="width:30%;">Snippet Preview: </td>
+	<td><u><span style="color:#0000CF;" id="seoTitle"></span></u></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td style="color: #006621;"><?php  echo $cdn_url = get_option('bapi_site_cdn_domain').$relpermalink;?></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td style="padding-bottom: 40px;max-width: 300px;color: #808080;" ><div style="word-wrap: break-word;width:100%;" id="Descript_prev"></div></td>
+	</tr>
+	<tr >
+		<td><label for="bapi_meta_keywords">Keywords:</label></td>
+		<td><input  style="width:100%;" id="bapi_meta_keywords" class="input" type="text" name="bapi_meta_keywords" value="<?php echo $meta_words['bapi_meta_keywords'][0];?>"></td>
+	</tr>
+	<tr >
+		<td><label for="bapi_meta_title">SEO Title:</label></td>
+		<td><input style="width:100%;"id="bapi_meta_title" class="input" type="text" name="bapi_meta_title" value="<?php echo $meta_words['bapi_meta_title'][0]; ?>" >
+			<br />Title display in search engines is limited to 70 chars, <span id="Title_lenght"></span> chars left.
+		</td>
+	</tr>  
+	<tr>
+		<td><label for="bapi_meta_description">Meta Description: </label></td>
+		<td><textarea style="width:100%;" name="bapi_meta_description" id="bapi_meta_description" rows="5" cols="30" value="testing"><?php echo $meta_words['bapi_meta_description'][0];?></textarea>
+			<br > The meta description will be limited  to 156 chars. <span id="descrip_lenght"></span> chars left.
+		</td>
+	</tr>
+	</table>
+<?php
+}
+//this function is triggered when save or update
+ function save_seo_meta( $postid ) {		
+	$bapisync = new BAPISync();
+	$bapisync->init();
+	$perma = get_permalink();
+	$relativePerma = get_relative($perma);
+	$seo = $bapisync->getSEOFromUrl($relativePerma); 
+	$meta_words = get_post_custom($post->ID, '', true);
+	$myPageId = $seo['ID'];
+	$myType = $seo['entity'];
+	$myPkId = $seo['pkid'];
+	if($myType === null){$myType = 0;}
+	if($myPageId === null){$myPageId = 0;}
+	if($myPkId === null){$myPkId = 0;}
+	$apiKey = getbapiapikey();
+ 	$bapi = getBAPIObj();	
+	if (!$bapi->isvalid()) { return; }
+	$keywor = sanitize_text_field( $_POST[ 'bapi_meta_keywords' ]);
+	$metle = sanitize_text_field( $_POST[ 'bapi_meta_title' ]);
+	$meta_desc = sanitize_text_field( $_POST[ 'bapi_meta_description' ]);
+	// save old value if keyword empty or null
+	If($metle === null || empty($metle)){
+		$metle = $meta_words['bapi_meta_title'][0];
+	}
+	If($meta_desc === null || empty($meta_desc)){
+		$meta_desc = $meta_words['bapi_meta_description'][0];
+	}
+	if($keywor === null || empty($keywor)){
+		$keywor = $meta_words['bapi_meta_keywords'][0];
+	}
+	//saves to wordpress database
+	if(isset($_POST['bapi_meta_keywords'])){
+		if($_POST['bapi_meta_keywords'] !== $meta_words['bapi_meta_keywords'][0]){		
+		}
+		update_post_meta( $postid, 'bapi_meta_keywords', sanitize_text_field( $_POST[ 'bapi_meta_keywords' ]) );
+	}	
+	if(isset($_POST['bapi_meta_title']) && $_POST['bapi_meta_title'] !== $meta_words['bapi_meta_title'][0]){
+		update_post_meta( $postid, 'bapi_meta_title', sanitize_text_field( $_POST[ 'bapi_meta_title' ]) );		
+	}
+	if(isset($_POST['bapi_meta_description']) && $_POST['bapi_meta_description'] !== $meta_words['bapi_meta_description'][0]){
+		update_post_meta( $postid, 'bapi_meta_description', sanitize_text_field( $_POST[ 'bapi_meta_description' ]) );				
+	}
+	$metaArr = array('MetaKeywords'=>$keywor,'PageTitle'=>$metle,'MetaDescrip'=>$meta_desc, 'ID'=> $myPageId,'pkid'=>$myPkId, 'Keyword'=>$relativePerma, 'entity'=>$myType);
+	$jsify = json_encode($metaArr);
+	$jsonObj = 'data='.(string)$jsify;
+	// entety: tyoe and language  needs to be 
+	//print_r($jsonObj);exit();
+	$saveBapi = $bapi->save($jsonObj, $apiKey);
+	update_option( 'bapi_keywords_lastmod', 0 );
+	bapi_sync_coredata();
+}
+add_action( 'save_post',  'save_seo_meta');

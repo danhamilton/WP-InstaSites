@@ -116,23 +116,50 @@ class BAPI
 	public function del($entity,$ids,$options,$jsondecode=true) {
 		if (!$this->isvalid()) { return null; }
 		$optionsURL = implode("&", $options);
-		//$url = $this->getBaseURL . "/ws/?method=get&apikey=" . $this->apikey . "&entity=" . $entity . '&ids' . implode(",", $ids);
-		//echo $url; exit();
-		//$json = file_get_contents($url);
-		//$data = json_decode($json, TRUE);
-		//return $data;		
+		$url = $this->getBaseURL . "/ws/?method=get&apikey=" . $this->apikey . "&entity=" . $entity . '&ids' . implode(",", $ids);
+		echo $url; exit();
+		$json = file_get_contents($url);
+		$data = json_decode($json, TRUE);
+		return $data;		
 		return null;
 	}
-	
-	public function save($entity,$postdata,$jsondecode=true) {
+	//erro testing for send objects to the api
+	public function error($response){
+		if( is_wp_error( $response ) ) {
+   		$error_message = $response->get_error_message();
+   		echo "Something went wrong: $error_message";
+		echo $response;
+		} else {
+	   		echo "Something went right";
+			echo $response;
+ 		}
+	}
+	//saves to our api
+	public function save($jsonObj, $apiKey) {
 		if (!$this->isvalid()) { return null; }
-		$optionsURL = implode("&", $options);
-		//$url = $this->baseURL . "/ws/?method=get&apikey=" . $this->apikey . "&entity=" . $entity . '&ids' . implode(",", $ids);
-		//echo $url; exit();
-		//$json = file_get_contents($url);
-		//$data = json_decode($json, TRUE);
-		//return $data;		
-		return null;
+		$url =$this->getBaseURL()."/ws/?method=save&apikey=".$apiKey."&entity=seo";
+		//print_r($url); exit();
+		$response = wp_remote_post( $url, array(
+		'method' => 'POST',
+		'timeout' => 45,
+		'redirection' => 5,
+		'httpversion' => '1.0',
+		'blocking' => true,
+		'headers' => array('content-type'=>'application/x-www-form-urlencoded'),
+		'body' => $jsonObj,
+		'cookies' => array()
+    	)
+		);
+		if( is_wp_error( $response ) ) {
+   		$error_message = $response->get_error_message();
+   		echo "Something went wrong: $error_message";
+		echo $response;
+		} else {
+			 // print_r($jsonObj);
+	   		 // print_r($response);
+			 // exit();
+ 		}
+		
 	}
 }
 ?>
