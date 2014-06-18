@@ -19,7 +19,6 @@
 		$sitesettings = $bapi_all_options['bapi_sitesettings'];
 	}
 /* we get BAPI */
-loadscriptjquery();
 getconfig();
 ?> 
 
