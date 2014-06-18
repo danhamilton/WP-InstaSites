@@ -95,23 +95,7 @@
 				echo stripslashes($v); echo "\r\n";
 			}
 			//print_r($v);
-		}
-		/* we check if the headline field its enabled. if not dont do a thing*/
-		if (strpos($sitesettings,'BAPI.config().headline.enabled=true;') !== false){
-			/*we get the pages that use our property-detail template */
-			$pages = get_pages(array('post_type'  => 'page','meta_key' => '_wp_page_template', 'meta_value' => 'page-templates/property-detail.php','hierarchical' => 0));
-			if(count($pages) > 0){
-				echo "BAPI.config().headline.values=["; 
-				  foreach ( $pages as $page ){
-					$title = $page->post_title;
-					echo '{"Label":"'.$title.'"}';
-					if(end($pages) != $page){
-						echo ","; // not the last element
-					}
-				  }
-				echo "]";
-			}
-		}
+		}	
 		exit();
 	}
 	
