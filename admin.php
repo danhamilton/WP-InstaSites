@@ -11,6 +11,8 @@ if(isset($_POST['reset-data'])){
 	if($ent=='textdata'){
 		update_option( 'bapi_textdata_lastmod', 0 );
 	}
+	
+	
 }
 
 function bapi_create_menu() {
@@ -199,7 +201,24 @@ function bapi_notify_incompatible_permalinks(){
 	}
 }
 add_action('admin_notices','bapi_notify_incompatible_permalinks');
-// this function removes the error notice if the permalink structure is saved
+// Mantis  Ticket: 5859 Display error notice if site config in InstaSite is mis-matched with InstaApp
+function site_config_error(){
+	$bapi_solutiondata = json_decode(get_option('bapi_solutiondata'),true);
+	$bapi_cdn_domain = get_option('bapi_site_cdn_domain');
+	$bapi_secure_url = get_option('bapi_secureurl');
+	$primaryUrl = 'http://'.$bapi_solutiondata['PrimaryURL'];
+	$secureUrl = 'www.'.$bapi_solutiondata['SecureURL'];
+	//bapi_solutiondata.PrimaryURL must equal get_option('bapi_site_cdn_domain')
+	if($primaryUrl !== $bapi_cdn_domain){
+			echo '<div id="mis-match-config" class="error"><p> config in InstaSite is mis-matched with InstaApp Plugin. Please <a href="/wp-admin/admin.php?page=WP-InstaSites/setup-initial.php ">CLICK HERE</a> please enter the correct Site URL.</p></div>';			
+	}
+	if($secureUrl == '' || $secureUrl !== $bapi_secure_url){
+		echo '<div id="mis-match-config" class="error"><p> config in InstaSite is mis-matched with InstaApp Plugin. Please <a href="/wp-admin/admin.php?page=WP-InstaSites/setup-initial.php ">CLICK HERE</a> please enter the correct Secure Site URL.</p></div>';
+	}	
+}
+// this function Display error notice if site config in InstaSite is mis-matched 
+add_action('admin_notices','site_config_error');
+
 function bapi_update_incompatible_permalinks_error_notice($oldvalue, $_newvalue){
 	if($_newvalue == "/%year%/%monthnum%/%day%/%postname%/" || $_newvalue == "/%year%/%monthnum%/%postname%/" || $_newvalue == "/%postname%/" ){
 		?>
