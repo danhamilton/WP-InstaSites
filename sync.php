@@ -275,7 +275,7 @@
 			//print_r($pktest); exit();
 			if((strlen($pktest[0])==0)||(strlen($pktest[1])==0)){
 				//To Delete Meta or Page, that is the question.
-				wp_delete_post($post->ID,true);  //Going w/ deleting post for now - I think this will work because if page should exist it will ge recreated.
+				//wp_delete_post($post->ID,true);  //Going w/ deleting post for now - I think this will work because if page should exist it will ge recreated.
 				//delete_post_meta($post->ID,'bapikey');
 			}
 			//Check for non-initialized market area page (-1) and set correct bapikey
@@ -292,7 +292,7 @@
 			//print_r("case 1");
 			// Action: Set current page to "unpublished"
 			// $post->post_status = "unpublish";
-			wp_delete_post($post->ID,true); //optional 2nd parameter can be added -> if true then page will be deleted immediately instead of going to trash.
+			//wp_delete_post($post->ID,true); //optional 2nd parameter can be added -> if true then page will be deleted immediately instead of going to trash.
 		}
 		// case 2: pages exists in wp and in Bookt
 		else if ($page_exists_in_wp && !empty($seo)) {
