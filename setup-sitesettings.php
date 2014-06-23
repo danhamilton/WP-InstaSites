@@ -185,12 +185,12 @@ getconfig();
 	    </select>
 	</td>	
 </tr>
-<!--<tr valign="top">
+<tr valign="top">
 	<td scope="row">Amenity Search:</td>
 	<td><input class="amenitysearch-cbx" type="checkbox" checked="" />
 	<input type="hidden" id="amenitysearch" name="amenitysearch" data-prevalue="BAPI.config().amenity.enabled=" value="" />
 	</td>
-</tr>-->
+</tr>
 <tr valign="top">
 	<td scope="row">Development Search:</td>
 	<td><input class="devsearch-cbx" type="checkbox" checked="" />
@@ -371,6 +371,9 @@ $searchsort = $bapiSolutionData["BizRules"]["Search Sort Order Option"];
 			update_option('bapi_sitesettings', $newSiteSettings);
 			echo 'settings.propdetailratestable = "BAPI.config().hideratestable=false;";';
 		}
+		if(strpos($sitesettings,'BAPI.config().amenity.enabled') == false){
+			echo 'settings.amenitysearch = "BAPI.config().amenity.enabled=false;";';
+		}
 	} else {
 		echo '
 		var locsearch = "BAPI.config().city.enabled=false; BAPI.config().location.enabled=false;";
@@ -423,9 +426,9 @@ $searchsort = $bapiSolutionData["BizRules"]["Search Sort Order Option"];
 			"searchmode-widephotoview": "BAPI.config().searchmodes.widephotoview=false;",
 			"searchmode-hotelview": "BAPI.config().searchmodes.hotelview=false;",
 			"searchmode-mapview": "BAPI.config().searchmodes.mapview=true;",
-			"amenitysearch": "BAPI.config().amenity.enabled='.$amenitysearch.';",
+			"amenitysearch": "BAPI.config().amenity.enabled=false;",
 			"averagestarsreviews": "BAPI.config().hidestarsreviews=false;",
-			"devsearch": "BAPI.config().dev.enabled='.$devsearch.';",s
+			"devsearch": "BAPI.config().dev.enabled='.$devsearch.';",
 			"adultsearch": "BAPI.config().adults.enabled='.$adultsearch.';",
 			"childsearch": "BAPI.config().children.enabled='.$childsearch.';",
 			"headlinesearch": "BAPI.config().headline.enabled='.$headlinesearch.';",

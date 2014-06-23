@@ -26,6 +26,15 @@
 </div>
 {{/config.los.enabled}}
 {{/config.checkin.enabled}}
+{{#config.amenity.enabled}}
+<div class="category-block" >
+	{{#config.amenity.values}}
+	<label class="checkbox">
+      <input type="checkbox" class="quicksearch amenity" data-field="amenities" data-value="{{&Data}}" value="{{&Data}}"> {{&Label}}
+    </label>
+    {{/config.amenity.values}}
+</div>
+{{/config.amenity.enabled}}
 {{#config.adults.enabled}}
 <div class="category-block">
 	<select class="span12 property-search-input quicksearch sessionadultsmin" data-field="adults[min]">
