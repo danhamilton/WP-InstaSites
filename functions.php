@@ -100,16 +100,14 @@
 		}
 				/* we check if the healine field its enabled. if not dont do a thing*/
 		if (strpos($sitesettings,'BAPI.config().headline.enabled=true;') !== false){
-			/*we get the ID of All Rentals which is the parent page of all the property pages*/
-			$parentPage = get_posts(array('meta_key' => 'bapi_page_id', 'meta_value' => 'bapi_property_grid','post_type' => 'page', 'post_status' => 'publish'));
-			if(count($parentPage) == 1){
-				$theParentID = $parentPage[0]->ID;
-				$pages = get_children(array( 'post_parent' => $theParentID,'post_type' => 'page', 'order' => 'asc' ) );
+			$bapi = getBAPIObj();
+			$theProperty = $bapi->quicksearch("property",null,false);
+			$headlinesArray = $theProperty["result"];
+			if(count($headlinesArray) > 0){
 				echo "BAPI.config().headline.values=["; 
-				  foreach ( $pages as $page ){
-					$option = $page->post_title;
-					echo '{"Label":"'.$option.'"}';
-					if(end($pages) != $page){
+				  foreach ( $headlinesArray as $page ){
+					echo '{"Label":"'.str_replace('"',"&quot;",$page["obj"]).'"}';
+					if(end($headlinesArray) != $page){
 						echo ","; // not the last element
 					}
 				  }

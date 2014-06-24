@@ -98,6 +98,14 @@ class BAPI
 		if (empty($jsondecode) || $jsondecode) { return json_decode($c,TRUE); }
 		return $c;
 	}
+	public function quicksearch($entity,$options=null,$jsondecode=true) {
+		if (!$this->isvalid()) { return null; }
+		$url = $this->getBaseURL() . "/ws/?method=quicksearch&apikey=" . $this->apikey . "&entity=" . $entity;
+		if (!empty($options)) { $url = $url . "&" . http_build_query($options); }		
+		$c = file_get_contents($url,FALSE,$this->getOptions) or wp_die('Error Retrieving Search Results','Oops!');		
+		if (empty($jsondecode) || $jsondecode) { return json_decode($c,TRUE); }
+		return $c;
+	}
 	
 	public function get($entity,$ids,$options=null,$jsondecode=true,$debugmode=0) {
 		if (!$this->isvalid()) { return null; }
