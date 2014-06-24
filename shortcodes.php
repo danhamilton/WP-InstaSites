@@ -31,7 +31,7 @@ add_shortcode( 'doctemplate', 'doc_template_sc' );
 
 //Property Search
 function search_page_sc(){
-	$d = '<div id="results" class="bapi-summary" data-log="0" data-defaultsearchresultview="1" data-templatename="tmpl-propertysearch-listview" data-entity="property" data-applyfixers="1" data-rowfixselector=".gallery-view-page%20%3E%20.span6" data-rowfixcount="2" data-showallresults="1"></div>';
+	$d = '<div id="results" class="bapi-summary" data-log="0" data-defaultsearchresultview="1" data-templatename="tmpl-propertysearch-listview" data-entity="property" data-applyfixers="1" data-rowfixselector=".gallery-view-page%20%3E%20.span6" data-rowfixcount="2" data-showallresults="1"></div>';	
 	return $d;
 }
 add_shortcode( 'searchpage', 'search_page_sc' );
@@ -40,14 +40,19 @@ add_shortcode( 'searchpage', 'search_page_sc' );
 //All Properties
 function all_properties_sc(){
 	$td = getbapisolutiondata();
-	$d = '<header class="pagination-centered"><h1>'.$td['textdata']['All Rentals'].'</h1></header><div id="results" class="bapi-summary" data-log="0" data-templatename="tmpl-allproperties" data-entity="property" data-ignoresession="1"></div>';
+	$d = '<header class="pagination-centered"><h1>'.$td['textdata']['All Rentals'].'</h1></header><div id="results" class="bapi-summary" data-log="0" data-templatename="tmpl-allproperties" data-entity="property" data-ignoresession="1"></div>';	
 	return $d;
+	
 }
+
 add_shortcode( 'allproperties', 'all_properties_sc' );
 
 
 //Predefined Searches
-function predefined_searches_sc($atts, $content){
+function predefined_searches_sc($atts, $content ){
+	if(empty($content)){
+		$content = "Search Bucket";
+	}
 	$d = '<header class="pagination-centered"><h1>'.$content.'</h1></header><div id="results" class="propertyfinders-results bapi-summary" data-log="0" data-templatename="tmpl-searches-summary" data-entity="searches" data-rowfixselector=".pfrowfix" data-rowfixcount="3"></div>';
 	return $d;
 }
