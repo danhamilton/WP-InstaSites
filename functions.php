@@ -1,7 +1,5 @@
 <?php	
 	/* Pre-Load Site Options - Utilizes Built-in Cache Functions */
-	include_once 'bapi-php/bapi.php';
-	 include_once 'sync.php';
 	global $bapi_all_options; 
 	function bapi_wp_site_options(){
 		global $bapi_all_options;
