@@ -48,9 +48,6 @@ add_shortcode( 'allproperties', 'all_properties_sc' );
 
 //Predefined Searches
 function predefined_searches_sc($atts, $content){
-	if($content == ""){
-			$content = "Search Buckets"; 	
-	}
 	$d = '<header class="pagination-centered"><h1>'.$content.'</h1></header><div id="results" class="propertyfinders-results bapi-summary" data-log="0" data-templatename="tmpl-searches-summary" data-entity="searches" data-rowfixselector=".pfrowfix" data-rowfixcount="3"></div>';
 	return $d;
 }
