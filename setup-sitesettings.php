@@ -56,7 +56,7 @@ getconfig();
 	</td>	
 </tr>
 <tr valign="top">
- <td scope="row">Hide Avg Stars Reviews:</td>
+ <td scope="row">Avg Review Stars:</td>
  <td><input class="averagestarsreviews-cbx" type="checkbox" checked="" />
  <input type="hidden" id="averagestarsreviews" name="averagestarsreviews" data-prevalue="BAPI.config().hidestarsreviews=" value="" />
  </td>
