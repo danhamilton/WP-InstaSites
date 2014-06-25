@@ -337,7 +337,7 @@
 		<div class="portal-info">
 			<h2 class="property-title">{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}{{Headline}}{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}</h2>
 			{{^config.hidestarsreviews}}
-						<div class="starsreviews"><div id="propstar-{{AvgReview}}"><span class="stars"></span></div></div>
+						<div class="starsreviews"><div id="propstar-{{AvgReview}}"><span class="stars"></span><i class="starsvalue"></i></div></div>
 			{{/config.hidestarsreviews}}
 			<div class="location">
 			<span class="hidden-phone"><b>{{textdata.City}}:</b> {{City}}</span> {{#Bedrooms}}| <b>{{textdata.Beds}}</b>: {{Bedrooms}} | {{/Bedrooms}}{{#Bathrooms}}<b>{{textdata.Baths}}</b>: {{Bathrooms}} | {{/Bathrooms}}{{#Sleeps}}<b>{{textdata.Sleeps}}</b>: {{Sleeps}}{{/Sleeps}}
@@ -406,7 +406,7 @@
 			{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 		</h2>
 			{{^config.hidestarsreviews}}		
-						<div class="starsreviews"><div id="propstar-{{AvgReview}}"><span class="stars"></span></div></div>
+						<div class="starsreviews"><div id="propstar-{{AvgReview}}"><span class="stars"></span><i class="starsvalue"></i></div></div>
 			{{/config.hidestarsreviews}}
 		<div class="location"><span><b>{{textdata.City}}:</b> {{City}}</span>  {{#Bedrooms}}<span class="hidden-phone">| </span><b>{{textdata.Beds}}</b>: {{Bedrooms}} | {{/Bedrooms}}{{#Bathrooms}}<b>{{textdata.Baths}}</b>: {{Bathrooms}} | {{/Bathrooms}}{{#Sleeps}}<b>{{textdata.Sleeps}}</b>: {{Sleeps}}{{/Sleeps}}</div>
 		<div class="brick-wrap">
@@ -639,7 +639,7 @@
 		<h2 class="title">{{Headline}}</h2>
 		<p class="location"><span><b>{{textdata.City}}:</b> {{City}}</span> {{#Bedrooms}}<b>{{textdata.Beds}}</b>: {{Bedrooms}} | {{/Bedrooms}}{{#Bathrooms}}<b>{{textdata.Baths}}</b>: {{Bathrooms}} | {{/Bathrooms}}<b>{{#Sleeps}}{{textdata.Sleeps}}</b>: {{Sleeps}}{{/Sleeps}}		
 		{{^config.hidestarsreviews}}			
-				<div class="starsreviews"><div id="propstar-{{AvgReview}}"><span class="stars"></span></div></div>
+				<div class="starsreviews"><div id="propstar-{{AvgReview}}"><span class="stars"></span><i class="starsvalue"></i></div></div>
 		{{/config.hidestarsreviews}}
 		</p>                
 		</div>	
@@ -737,7 +737,7 @@
 						{{#AdjLivingSpace}}<li>{{textdata.Unit Size}}: <span>{{AdjLivingSpace}} {{AdjLivingSpaceUnit}}</span></li>{{/AdjLivingSpace}}
 						{{#LotSize}}<li>{{textdata.Lot Size}}: <span>{{LotSize}} {{LotSizeUnit}}</span></li>{{/LotSize}}
 						{{^config.hidestarsreviews}}
-							<div class="starsreviews"><div id="propstar-{{AvgReview}}"><span class="stars"></span></div></div>
+							<div class="starsreviews"><div id="propstar-{{AvgReview}}"><span class="stars"></span><i class="starsvalue"></i></div></div>
 						{{/config.hidestarsreviews}}
 					</ul>
 					</div>
@@ -970,7 +970,7 @@
 	<div class="clearfix"></div>
 	</div>
 </div>
-{{/result}}
+{{/result}}	
 </script>
 
 /* Consumer Site: Property Detail - Attractions */
@@ -1625,7 +1625,9 @@
 	Group: Predefined Searches 
 */
 <script id="tmpl-searches-summary" type="text/html">
-
+<header class="pagination-centered">
+	
+</header>
 {{#result}}
 <div class="pfrowfix span4">
   <div class="item-result">
