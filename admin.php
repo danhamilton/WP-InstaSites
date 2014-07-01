@@ -201,22 +201,46 @@ function bapi_notify_incompatible_permalinks(){
 	}
 }
 add_action('admin_notices','bapi_notify_incompatible_permalinks');
-// Mantis  Ticket: 5859 Display error notice if site config in InstaSite is mis-matched with InstaApp
+//Mantis  Ticket: 5859 Display error notice if site config in InstaSite is mis-matched with InstaApp
 function site_config_error(){
+	
 	$bapi_solutiondata = json_decode(get_option('bapi_solutiondata'),true);
+	//gets  the value from the input field name=bapi_site_cdn_domain wich is the site URL
 	$bapi_cdn_domain = get_option('bapi_site_cdn_domain');
+	//gets  the value from the input field name=bapi_securerul wich is hte Secure site URL
 	$bapi_secure_url = get_option('bapi_secureurl');
-	$primaryUrl = 'http://'.$bapi_solutiondata['PrimaryURL'];
-	$secureUrl = 'www.'.$bapi_solutiondata['SecureURL'];
+	
+	$bapi_unique_prefx = 'www'.$bapi_solutiondata['UniquePrefix'].'.com';
+	$primaryUrl = $bapi_solutiondata['PrimaryURL'];
+	$secureUrl = $bapi_solutiondata['SecureURL'];
+	$plugUrl = plugins_url();
+	$setUpErr =  array();
+	   
+	
+	
 	//bapi_solutiondata.PrimaryURL must equal get_option('bapi_site_cdn_domain')
-	if($primaryUrl !== $bapi_cdn_domain){
-			echo '<div id="mis-match-config" class="error"><p> config in InstaSite is mis-matched with InstaApp Plugin. Please <a href="/wp-admin/admin.php?page=WP-InstaSites/setup-initial.php ">CLICK HERE</a> please enter the correct Site URL.</p></div>';			
+	if($bapi_cdn_domain != $primaryUrl){
+			
+		echo '<div id="mis-match-config" class="error"><p> InstaSite configuration is mis-matched with InstaApp Plugin. Please <a href="/admin.php?page=bookt-api/setup-initial.php">CLICK HERE</a> please enter the correct Site URL.</p></div>';			
+		
 	}
-	if($secureUrl == '' || $secureUrl !== $bapi_secure_url){
-		echo '<div id="mis-match-config" class="error"><p> config in InstaSite is mis-matched with InstaApp Plugin. Please <a href="/wp-admin/admin.php?page=WP-InstaSites/setup-initial.php ">CLICK HERE</a> please enter the correct Secure Site URL.</p></div>';
-	}	
+	if($bapi_secure_url == $primaryUrl){
+			
+	}elseif(empty($bapi_secure_url)){
+		
+	}elseif($bapi_secure_url == $bapi_unique_prefxs){
+		
+	}elseif($bapi_secure_url == "www.lodgingcloud.com"){
+		
+	}elseif($bapi_secure_url == "www.app.bookt.biz"){
+		
+	}
+	else{
+		echo '<div id="mis-match-config" class="error"><p> InstaSite configuration is mis-matched with InstaApp Plugin. Please <a href="/admin.php?page=bookt-api/setup-initial.php">CLICK HERE</a> please enter the Secure Site URL:</p></div>';			
+	}
+		
 }
-// this function Display error notice if site config in InstaSite is mis-matched 
+//this function Display error notice if site config in InstaSite is mis-matched 
 add_action('admin_notices','site_config_error');
 
 function bapi_update_incompatible_permalinks_error_notice($oldvalue, $_newvalue){
