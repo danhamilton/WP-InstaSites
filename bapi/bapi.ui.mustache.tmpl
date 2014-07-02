@@ -280,7 +280,7 @@
 	  <a href="#" class="prop-map-item"><div class="number-tag">{{&ContextData.ItemIndex}}</div></a>
 	<div class="info-html">
 	<div class="marker-infowindow"> 		
-		<div class="prop-image">{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}<img src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=370&h=211&q=85" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}" />{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}</div>
+		<div class="prop-image">{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}<img src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}" />{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}</div>
 		<div class="prop-title">{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
 			<b>{{Headline}}</b>
 			{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}</div>
@@ -402,7 +402,7 @@
 <div class="portal-inner row-fluid shadow">
 	<div class="portal-images span4">
 		<div id="slider"">
-		{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}<img alt="{{PrimaryImage.Caption}}" src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=244&h=183&q=90" />{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
+		{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" />{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 		</div>
 	</div>
 	<div class="portal-info span8">
@@ -501,7 +501,7 @@
 <div class="portal-inner row-fluid shadow">
 	<div class="portal-images span4">
 		<div id="slider"">
-		{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}<img alt="{{PrimaryImage.Caption}}" src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=244&h=183&q=70" />{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
+		{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" />{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 		</div>
 	</div>
 	<div class="portal-info span8">
@@ -673,7 +673,7 @@
 		<div id="carousel" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "itemWidth": 50, "itemMargin": 10, "asNavFor": "#slider" }'>
 		<ul class="slides">
 		{{#Images}}
-			<li><img alt="" src="/wp-content/plugins/bookt-api/img/loading.gif" data-src="/img.php?src=http:{{&OriginalURL}}&w=100&h=75&q=70" /></li>
+			<li><img alt="" src="/wp-content/plugins/bookt-api/img/loading.gif" data-src="{{&ThumbnailURL}}" /></li>
 		{{/Images}}
 		</ul>
 		</div>
@@ -830,7 +830,7 @@
 					<a class="poi-map-item mapmarker-prop" href="#">Property</a>
 					<div class="info-html">
 						<div class="marker-infowindow">
-							<span class="prop-image pull-left"><img src="/wp-content/plugins/bookt-api/img/loading.gif" data-src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=175&h=131&q=85" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>
+							<span class="prop-image pull-left"><img src="/wp-content/plugins/bookt-api/img/loading.gif" data-src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>
 							<span class="prop-location pull-left">
 								<span>
 								{{#ContextData.SEO.Keyword}}<a target="_blank" href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
@@ -858,7 +858,7 @@
 					<a class="poi-map-item mapmarker-{{ContextData.ItemIndex}}" href="#">{{ContextData.ItemIndex}}</a>
 					<div class="info-html">
 						<div class="marker-infowindow"> 
-							<span class="prop-image pull-left"><img src="/wp-content/plugins/bookt-api/img/loading.gif" data-src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=175&h=131&q=85&zc=2" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>
+							<span class="prop-image pull-left"><img src="/wp-content/plugins/bookt-api/img/loading.gif" data-src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>
 							<span class="prop-location pull-left">
 								<span>
 								{{#ContextData.SEO.Keyword}}<a target="_blank" href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
@@ -956,7 +956,7 @@
 <div class="fp-featured">    
 	<div class="fp-image">
 		{{#ContextData.SEO.Keyword}}<a href="{{ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
-		<img src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=400&h=200&q=75" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />
+		<img src="{{&PrimaryImage.ThumbnailURL}}" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />
 		{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 	</div>
 	<div class="fp-outer"> 
@@ -1018,12 +1018,12 @@
 <div class="portal-result">
 <div class="portal-inner row-fluid shadow">
   <div class="portal-images span4">
-  {{^Images.0.OriginalURL}}
-	<img alt="{{PrimaryImage.Caption}}" src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=259&h=194&q=75" />
-  {{/Images.0.OriginalURL}}
-  {{#Images.0.OriginalURL}}
-	<img alt="{{Images.0.Caption}}" src="/img.php?src=http:{{&Images.0.OriginalURL}}&a=c&w=259&h=194&q=75" />
-  {{/Images.0.OriginalURL}}
+  {{^Images.0.MediumURL}}
+	<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" />
+  {{/Images.0.MediumURL}}
+  {{#Images.0.MediumURL}}
+	<img alt="{{Images.0.Caption}}" src="{{&Images.0.MediumURL}}" />
+  {{/Images.0.MediumURL}}
   </div>
   <div class="portal-info span8">
 	  <h2 class="title">{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}{{Name}}{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}</h2>
@@ -1077,10 +1077,10 @@
                 <div id="carousel" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "itemWidth": 50, "itemMargin": 10, "asNavFor": "#slider" }'>
                   <ul class="slides">
 				  {{^Images}}
-				  	<li><img alt="" src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&w=100&h=75&q=70&zc=2" /></li>	
+				  	<li><img alt="" src="{{&PrimaryImage.ThumbnailURL}}" /></li>	
 				  {{/Images}}
                   {{#Images}}
-                    <li><img alt="" src="/img.php?src=http:{{&OriginalURL}}&w=100&h=75&q=70&zc=2" /></li>
+                    <li><img alt="" src="{{&ThumbnailURL}}" /></li>
                   {{/Images}}
                   </ul>
                 </div>
@@ -1133,7 +1133,7 @@
 <div class="development-holder">
 	<div class="development-image">
 	<a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}">
-		<img alt="{{PrimaryImage.Caption}}" src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&w=400&h=300&q=60&a=c" caption="{{PrimaryImage.Caption}}" />
+		<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" />
 	</a>
 	</div>
 	<div class="development-description">
@@ -1168,12 +1168,12 @@
 <div class="portal-result">
 <div class="portal-inner row-fluid shadow">
   <div class="portal-images span4">
-  {{^Images.0.OriginalURL}}
-	<img alt="{{PrimaryImage.Caption}}" src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=259&h=194&q=75" />
-  {{/Images.0.OriginalURL}}
-  {{#Images.0.OriginalURL}}
-	<img alt="{{Images.0.Caption}}" src="/img.php?src=http:{{&Images.0.OriginalURL}}&a=c&w=259&h=194&q=75" />
-  {{/Images.0.OriginalURL}}
+  {{^Images.0.MediumURL}}
+	<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" />
+  {{/Images.0.MediumURL}}
+  {{#Images.0.MediumURL}}
+	<img alt="{{Images.0.Caption}}" src="{{&Images.0.MediumURL}}" />
+  {{/Images.0.MediumURL}}
   </div>
   <div class="portal-info span8">
 	  <h2 class="title">{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}{{Name}}{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}</h2>
@@ -1226,10 +1226,10 @@
                 <div id="carousel" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "itemWidth": 50, "itemMargin": 10, "asNavFor": "#slider" }'>
                   <ul class="slides">
 				  {{^Images}}
-				  	<li><img alt="" src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&w=100&h=75&q=70" /></li>	
+				  	<li><img alt="" src="{{&PrimaryImage.ThumbnailURL}}" /></li>	
 				  {{/Images}}
                   {{#Images}}
-                    <li><img alt="" src="/img.php?src=http:{{&OriginalURL}}&w=100&h=75&q=70" /></li>
+                    <li><img alt="" src="{{&ThumbnailURL}}" /></li>
                   {{/Images}}
                   </ul>
                 </div>
@@ -1312,7 +1312,7 @@
 	  <a href="#" class="poi-map-item"><div class="number-tag">{{&ContextData.ItemIndex}}</div></a>
 	  <div class="info-html">
 	<div class="marker-infowindow">
-		<span class="prop-image pull-left"><img style="max-height:175px; max-width:175px" src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=175&h=131&q=85" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>
+		<span class="prop-image pull-left"><img style="max-height:175px; max-width:175px" src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>
 		<span class="prop-location pull-left">
 			<span>
 			{{#ContextData.SEO.Keyword}}<a target="_blank" href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
@@ -1326,7 +1326,7 @@
 	</div>	
 	  </div>	  
 	  {{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
-	  <img alt="{{PrimaryImage.Caption}}" src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=348&h=261&q=85" />
+	  <img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" />
 	  {{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 	  </div>
 	  <div class="item-info shadow">
@@ -1345,7 +1345,7 @@
 	  <a href="#" class="poi-map-item">{{site.solutionnameinformal}}</a>
 	<div class="info-html">
 	<div class="marker-infowindow">
-		<span class="prop-image pull-left"><img style="max-height:175px; max-width:175px" src="/img.php?src=http:{{&site.logo}}&a=c&w=175&h=131&q=85&zc=2" alt="{{site.tagline}}"></span>
+		<span class="prop-image pull-left"><img style="max-height:175px; max-width:175px" src="{{&site.logo}}" alt="{{site.tagline}}"></span>
 		<span class="prop-location pull-left">
 			<span>
 			<a target="_blank" href="mailto:{{&site.email}}">
@@ -1392,10 +1392,10 @@
 		<div id="carousel" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "itemWidth": 50, "itemMargin": 10, "asNavFor": "#slider" }'>
 			<ul class="slides">
 			{{^Images}}
-				<li class="primary"><img alt="" src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&w=100&h=75&q=70" /></li> 
+				<li class="primary"><img alt="" src="{{&PrimaryImage.ThumbnailURL}}" /></li> 
 			{{/Images}}
 			{{#Images}}
-				<li><img alt="" src="/img.php?src=http:{{&OriginalURL}}&w=100&h=75&q=70" /></li>
+				<li><img alt="" src="{{&ThumbnailURL}}" /></li>
 			{{/Images}}
 			</ul>
 		</div>
@@ -1421,7 +1421,7 @@
 							<div class="info-html">
 <div class="gmap-poi">
 								<div class="gmap-img">
-									<img src='/img.php?src=http:{{&PrimaryImage.OriginalURL}}&w=150&h=112&q=70&zc=2' alt='{{PrimaryImage.Caption}}' title='{{PrimaryImage.Caption}}' width="195"/>
+									<img src='{{&PrimaryImage.ThumbnailURL}}' alt='{{PrimaryImage.Caption}}' title='{{PrimaryImage.Caption}}' width="195"/>
 								</div>
 								<div class="gmap-text">
 									<p><b>{{Name}}</b></p>
@@ -1440,7 +1440,7 @@
 								{{#ContextData.SEO.DetailURL}}
 								<a href="{{ContextData.SEO.DetailURL}}">
 								{{/ContextData.SEO.DetailURL}}
-									<img src='/img.php?src=http:{{&PrimaryImage.OriginalURL}}&w=150&h=112&q=70&zc=2' alt='{{PrimaryImage.Caption}}' title='{{PrimaryImage.Caption}}' />
+									<img src='{{&PrimaryImage.ThumbnailURL}}' alt='{{PrimaryImage.Caption}}' title='{{PrimaryImage.Caption}}' />
 								{{#ContextData.SEO.DetailURL}}
 								</a>
 								{{/ContextData.SEO.DetailURL}}
@@ -1516,7 +1516,7 @@
 	  {{#ContextData.SEO.Keyword}}
 	  <a href="{{&ContextData.SEO.DetailURL}}">
 	  {{/ContextData.SEO.Keyword}}
-	  <img alt="{{PrimaryImage.Caption}}" src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=348&h=261&q=85&zc=2" />
+	  <img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" />
 	  {{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 	  </div>
 	  <div class="item-info shadow">
@@ -1569,10 +1569,10 @@
                 <div id="carousel" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "itemWidth": 50, "itemMargin": 10, "asNavFor": "#slider" }'>
                   <ul class="slides">
 				  {{^Images}}
-				  	<li><img alt="" src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&w=100&h=75&q=70" /></li>	
+				  	<li><img alt="" src="{{&PrimaryImage.ThumbnailURL}}" /></li>	
 				  {{/Images}}
                   {{#Images}}
-                    <li><img alt="" src="/img.php?src=http:{{&OriginalURL}}&w=100&h=75&q=70" /></li>
+                    <li><img alt="" src="{{&ThumbnailURL}}" /></li>
                   {{/Images}}                   
                   </ul>
                 </div>                    
@@ -1623,7 +1623,7 @@
 <div class="special-holder">
 	<div class="special-image">
 	<a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}">
-		<img alt="{{PrimaryImage.Caption}}" src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&w=222&h=166&q=70&zc=2" caption="{{PrimaryImage.Caption}}" />	
+		<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" />	
 	</a>
 	</div>
 	<div class="special-description">
@@ -1649,7 +1649,7 @@
 	  {{#ContextData.SEO.Keyword}}
 	  <a href="{{&ContextData.SEO.DetailURL}}">
 	  {{/ContextData.SEO.Keyword}}
-	  	<img alt="{{PrimaryImage.Caption}}" src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=348&h=261&q=85" />
+	  	<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" />
 	  {{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 	  </div>
 	  <div class="item-info shadow">
@@ -1702,10 +1702,10 @@
 		<div id="carousel" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "itemWidth": 50, "itemMargin": 10, "asNavFor": "#slider" }'>
 		  <ul class="slides">
 		  {{^Images}}
-			<li><img alt="" src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&w=100&h=75&q=70" /></li>	
+			<li><img alt="" src="{{&PrimaryImage.ThumbnailURL}}" /></li>	
 		  {{/Images}}
 		  {{#Images}}
-			<li><img alt="" src="/img.php?src=http:{{&OriginalURL}}&w=100&h=75&q=70" /></li>
+			<li><img alt="" src="{{&ThumbnailURL}}" /></li>
 		  {{/Images}}                   
 		  </ul>
 		</div>			
@@ -1731,7 +1731,7 @@
 <div class="pf-featured">    
 <div class="pf-image">
 	{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
-		<img src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=400&h=300&q=85" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />
+		<img src="{{&PrimaryImage.ThumbnailURL}}" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />
 	{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 </div>
 <div class="pf-outer">	
