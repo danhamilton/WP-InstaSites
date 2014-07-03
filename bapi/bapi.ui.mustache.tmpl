@@ -2193,7 +2193,6 @@
 	</div>
 </div>
 <hr />
-
 <legend>3. {{textdata.Billing Address}}</legend>
 <div class="control-group">
 	<label class="control-label" for="cccvv">{{textdata.Country}}:</label>
@@ -2227,7 +2226,6 @@
 		<input type="text" id="billingpostalcode" class="span3 row-fluid required bookingfield" data-field="CreditCard[PostalCode]" required />
 	</div>
 </div>
-<hr />
 </script>
 
 <script id="tmpl-booking-makebooking-accept" type="text/html">
@@ -2285,8 +2283,6 @@
 	<div class="booking-page bordersolid">
 		<article class="span8 booking-form">
 		<div class="form-horizontal pd">
-			<div id="renter"></div>
-			<hr />
 			<div id="creditcard"></div>
 			<hr />
 			<div id="accept"></div>
@@ -2296,73 +2292,117 @@
 		<aside class="property-info span4 pd">
 		<div class="row-fluid">
 			<div class="span12 pd">
-				<div id="stayinfo"></div>		
-				<div id="statement"></div>	
+				<div id="stayinfo"></div>
+				<div id="statement"></div>
 				<div id="question-support" class="item row-fluid">
 					<span class="glyphicons module headset"><i></i>{{textdata.Have a Question?}}</span>
 					<p>{{textdata.Phone}}: <span class="pull-right">{{site.phone}}</span></p>
-					<p>{{textdata.Email}}: <span class="pull-right">{{site.email}}</span></p>					
-				</div>				
+					<p>{{textdata.Email}}: <span class="pull-right">{{site.email}}</span></p>
+				</div>
 			</div>
 		</div>
 		</aside>
 		<div class="clearfix"></div>
-	</div>				
+	</div>
 </div>
 </div>
 </div>
 {{/result}}
 </script>
 
-<script id="tmpl-booking-makepayment-renter" type="text/html">
-{{#result}}
-<legend>1. {{textdata.Guest Information}}</legend>
-<div class="control-group">
-	<label class="control-label" for="renterfirstname">{{textdata.First Name}}:*</label>
-	<div class="controls">
-		<input value="{{Renter.FirstName}}" type="text" id="renterfirstname" class="span10 bookingfield required" data-field="Renter[FirstName]" required />
-	</div>
-</div>
-<div class="control-group">
-	<label class="control-label" for="renterlastname">{{textdata.Last Name}}:*</label>
-	<div class="controls">
-		<input type="text" value={{Renter.LastName}} id="renterlastname" class="span10 bookingfield required" data-field="Renter[LastName]" required />
-	</div>
-</div>
-<div class="control-group">
-	<label class="control-label" for="renteremail">{{textdata.Email}}:*</label>
-	<div class="controls">
-		<input type="text" value="{{{Renter.PrimaryEmail}}}" id="renteremail" class="span10 bookingfield required" data-validity="email" data-field="Renter[PrimaryEmail]" required />
-	</div>
-</div>
-<div class="control-group">
-	<label class="control-label" for="renterphone">{{textdata.Phone}}:*</label>
-	<div class="controls">
-		<input type="text" value={{Renter.HomePhone}} id="renterphone" class="span10 bookingfield required" data-field="Renter[HomePhone]" required />
-	</div>
-</div>
-<div class="control-group">
-	<label class="control-label" for="renterls">{{config.leadsources.prompt}}:</label>
-	<div class="controls controls-row">
-		<div class="btn-group span10">
-		<select id="renterls" class="span12 bookingfield" data-field="Renter[LeadSourceID]">
-			<option value="0">-{{config.leadsources.prompt}}-</option>		
-			{{#config.leadsources.values}}<option value="{{Data}}">{{Label}}</option>{{/config.leadsources.values}}
-		</select>					
+<script id="tmpl-booking-makepayment-creditcard" type="text/html">
+<legend>
+	<div class="control controls-row">
+		<span class="span8">1. {{textdata.Credit Card Information}}</span>
+		<div class="credit-icon span4">
+		{{#config.ccconfig.visa}}
+		<span class="creditcard-visa"></span>
+		{{/config.ccconfig.visa}}
+		{{#config.ccconfig.mastercard}}
+		<span class="creditcard-mastercard"></span>
+		{{/config.ccconfig.mastercard}}
+		{{#config.ccconfig.discover}}
+		<span class="creditcard-discover"></span>
+		{{/config.ccconfig.discover}}
+		{{#config.ccconfig.amex}}
+		<span class="creditcard-amex"></span>
+		{{/config.ccconfig.amex}}
+		{{#config.ccconfig.dinersclub}}
+		<span class="creditcard-dinersclub"></span>
+		{{/config.ccconfig.dinersclub}}
 		</div>
 	</div>
-</div>
+</legend>
 <div class="control-group">
-	<label class="control-label" for="publicnotes">{{textdata.Special Requests}}:</label>
+	<label class="control-label" for="noc">{{textdata.Name on Card}}:</label>
 	<div class="controls">
-		<textarea id="publicnotes" rows="3" class="span10 bookingfield" data-field="PublicNotes" />
+		<input type="text" id="noc" class="span10 bookingfield required autofullname" data-field="CreditCard[NameOnCard]" required />
 	</div>
 </div>
-{{/result}}
+<div class="control-group">
+	<label class="control-label" for="ccnum">{{textdata.Card Number}}:</label>
+	<div class="controls">
+		<input type="text" id="ccnum" class="span10 bookingfield required ccverify" data-isvalid="0" data-field="CreditCard[CardNumber]" required />
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label inline" for="ccexpr">{{textdata.Expiration}}:</label>
+	<div class="controls controls-row">
+		<select id="ccmonth" class="span5 bookingfield required" data-field="CreditCard[ExpiryMonth]" required>
+			<option value="">-{{textdata.Month}}-</option>
+			{{#config.ccmonths.values}}
+			<option value="{{Data}}">{{Label}}</option>
+			{{/config.ccmonths.values}}
+		</select>
+		<select id="ccyear" class="span5 bookingfield required"  data-field="CreditCard[ExpiryYear]" required>
+			<option value="">-{{textdata.Year}}-</option>
+			{{#config.ccyears.values}}
+			<option value="{{Data}}">{{Label}}</option>
+			{{/config.ccyears.values}}
+		</select>		
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label" for="cccvv">{{textdata.Security Code}}:</label>
+	<div class="controls controls-row">
+		<input type="text" id="cccvv" class="span5 bookingfield required" data-field="CreditCard[SecurityCode]" required />
+	</div>
+</div>
+<hr />
+<legend>2. {{textdata.Billing Address}}</legend>
+<div class="control-group">
+	<label class="control-label" for="cccvv">{{textdata.Country}}:</label>
+	<div class="controls">
+		<input type="text" id="billingcountry" class="span10 bookingfield required bapi-country" data-field="CreditCard[Country]" required />						
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label" for="billingaddress">{{textdata.Street Line 1}}:</label>
+	<div class="controls">
+		<input type="text" id="billingaddress" class="span10 bookingfield required" data-field="CreditCard[Address]" required />
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label" for="billingaddress2">{{textdata.Street Line 2}}:</label>
+	<div class="controls">
+		<input type="text" id="billingaddress2" class="span10 bookingfield" data-field="CreditCard[Address2]" />
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label" for="billingcity">{{textdata.City}}/{{textdata.Town}}:</label>
+	<div class="controls">
+		<input type="text" id="billingcity" class="span10 bookingfield required bapi-city" data-field="CreditCard[City]" required />
+	</div>
+</div>
+<div class="control-group">
+	<label class="control-label inline" for="billingstate">{{textdata.State}}/{{textdata.Province}}:</label>
+	<div class="controls controls-row">
+		<input type="text" id="billingstate" class="span4 bookingfield required bapi-state" data-field="CreditCard[State]" required />
+		<label class="control-label span3 row-fluid">{{textdata.Postal Code}}:</label>
+		<input type="text" id="billingpostalcode" class="span3 row-fluid required bookingfield" data-field="CreditCard[PostalCode]" required />
+	</div>
+</div>
 </script>
-
-
-
 
 <script id="tmpl-booking-rentalpolicy" type="text/html">
 <div style="padding:10px;">
@@ -2457,7 +2497,6 @@
 <hr />
 {{#result}}
 {{#Statement}}
-
 <div id="charges" class="item row-fluid">
 <h5>{{textdata.Charges}}<span class="glyphicons circle_question_mark"><a href="#statement-details" data-toggle="modal"><i></i></a></span></h5>
 <p>
@@ -2488,20 +2527,16 @@
 {{#OptionalFees.length}}
 </div>
 {{/OptionalFees.length}}
-
+{{#Discounts.length}}
 <div id="discount" class="item row-fluid">
 <hr />
+{{/Discounts.length}}
 {{#Discounts}}
 <p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
 {{/Discounts}}
 {{#Discounts.length}}
 </div>
 {{/Discounts.length}}
-<label>
-	<input type="text" placeholder="{{textdata.Coupon Code}}" class="span6 revisedates" value="{{session.searchparams.coupon}}" data-field="Coupon" />
-	<small><a href"javascript:void(0)" class="bapi-applyspecial">{{textdata.Apply}}</a></small>
-	<span class="pull-right">----</span>
-</label>
 </div>
 <div id="msgs" class="item row-fluid">
 	<div class="msg-yellow">
@@ -2543,9 +2578,8 @@
 {{#Fees.length}}
 </div>
 {{/Fees.length}}
-<hr />
-
 {{#Taxes.length}}
+<hr />
 <div id="taxes" class="item row-fluid">
 <h5>{{textdata.Taxes}}</h5>
 {{/Taxes.length}}
@@ -2555,9 +2589,8 @@
 {{#Taxes.length}}
 </div>
 {{/Taxes.length}}
-<hr />
-
 {{#OptionalFees.length}}
+<hr />
 <div id="ofees" class="item row-fluid">
 <h5>{{textdata.Optional Fees & Services}}</h5>
 {{/OptionalFees.length}}
@@ -2565,9 +2598,11 @@
 {{#OptionalFees.length}}
 </div>
 {{/OptionalFees.length}}
+{{#Discounts.length}}
 <hr />
-
-<div id="taxes" class="item row-fluid">
+<div id="discounts" class="item row-fluid">
+<h5>{{textdata.Discounts}}</h5>
+{{/Discounts.length}}
 {{#Discounts}}
 <p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
 {{/Discounts}}
@@ -2596,12 +2631,11 @@
 	<p><span class="glyphicons group"><i></i>{{textdata.Children}}</span><span class="pull-right">{{NumChildren}}</span></p>
 </div>
 {{/result}}
-
-
 </script>
+
 <script id="tmpl-booking-makepayment-pay" type="text/html">
 {{#result}}
-<legend>4. {{textdata.Accept Terms and Conditions}}</legend>
+<legend>3. {{textdata.Accept Terms and Conditions}}</legend>
 <div class="control-group">
 	<p style="display:none">{{config.rentalpolicysummary}}</p>
 	<div class="controls-rows">
@@ -2626,9 +2660,9 @@
 		{{#result}}
 		<div class="amount-bk span4">
 			<h5>{{textdata.Amount to Pay Now}}:</h5>
-			{{#Statement}}
-			<h3 style='white-space:nowrap' >{{AmountPaid.CurrencySymbol}}&nbsp;<input id="txtAmountToCharge" type="text" class="row-fluid bookingfield span5" value="{{TotalDueNow.Value}}"/></h3>
-			{{/Statement}}
+			{{#TotalDueNow}}
+			<h3 style='white-space:nowrap' >{{Statement.AmountPaid.CurrencySymbol}}&nbsp;<input id="txtAmountToCharge1" type="text" class="row-fluid bookingfield span4" value="{{sTotalDueNow.Integer}}"/>.<input id="txtAmountToCharge2" type="text" class="row-fluid bookingfield span3" value="{{sTotalDueNow.Decimal}}"/></h3>
+			{{/TotalDueNow}}
 		</div>
 		{{/result}}
 	</div>
