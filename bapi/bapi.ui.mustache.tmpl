@@ -280,7 +280,7 @@
 	  <a href="#" class="prop-map-item"><div class="number-tag">{{&ContextData.ItemIndex}}</div></a>
 	<div class="info-html">
 	<div class="marker-infowindow"> 		
-		<div class="prop-image">{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}<img src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=370&h=211&q=85" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}" />{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}</div>
+		<div class="prop-image">{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}<img src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}" />{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}</div>
 		<div class="prop-title">{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
 			<b>{{Headline}}</b>
 			{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}</div>
@@ -332,9 +332,9 @@
 		{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
 			<div id="slider" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false }'>
 			  <ul class="slides">
-				  <li><img alt="{{PrimaryImage.Caption}}" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=398&h=264&q=60" /></li>
-				  {{#Images.1}}<li><img alt="{{Caption}}" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&OriginalURL}}&a=c&w=398&h=264&q=60" /></li>{{/Images.1}}
-				  {{#Images.2}}<li><img alt="{{Caption}}" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&OriginalURL}}&a=c&w=398&h=264&q=60" /></li>{{/Images.2}} 
+				  <li><img alt="{{PrimaryImage.Caption}}" src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=398&h=264&q=60" /></li>
+				  {{#Images.1}}<li><img alt="{{Caption}}" src="/img.php?src=http:{{&OriginalURL}}&a=c&w=398&h=264&q=60" /></li>{{/Images.1}}
+				  {{#Images.2}}<li><img alt="{{Caption}}" src="/img.php?src=http:{{&OriginalURL}}&a=c&w=398&h=264&q=60" /></li>{{/Images.2}} 
 			  </ul>		  
 			</div>
 			{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
@@ -402,7 +402,7 @@
 <div class="portal-inner row-fluid shadow">
 	<div class="portal-images span4">
 		<div id="slider"">
-		{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}<img alt="{{PrimaryImage.Caption}}" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=244&h=183&q=90" />{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
+		{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" />{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 		</div>
 	</div>
 	<div class="portal-info span8">
@@ -458,7 +458,7 @@
     <div class="portal-inner">
         <div class="portal-images">
 		{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
-			<img alt="{{PrimaryImage.Caption}}" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&w=810&h=540&q=85&zc=2" />
+			<img alt="{{PrimaryImage.Caption}}" src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&w=810&h=540&q=85&zc=2" />
 			{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 		</div>
 		<div class="portal-info">
@@ -501,7 +501,7 @@
 <div class="portal-inner row-fluid shadow">
 	<div class="portal-images span4">
 		<div id="slider"">
-		{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}<img alt="{{PrimaryImage.Caption}}" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=244&h=183&q=70" />{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
+		{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" />{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 		</div>
 	</div>
 	<div class="portal-info span8">
@@ -663,18 +663,18 @@
 		<div id="slider" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "sync": "#carousel" }'>
 		<ul class="slides">
 		{{#Images}}
-			<li><img alt="{{Caption}}" title="Open Slideshow" src="/wp-content/plugins/bookt-api/img/loading.gif" data-src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&OriginalURL}}&w=816&h=600&q=75&zc=2" />
+			<li><img alt="{{Caption}}" title="Open Slideshow" src="/wp-content/plugins/bookt-api/img/loading.gif" data-src="/img.php?src=http:{{&OriginalURL}}&w=816&h=600&q=75&zc=2" />
 			{{#Caption}}
 			<p class="flex-caption">{{Caption}}</p></li>
 			{{/Caption}}
-		{{/Images}}                    
+		{{/Images}}
 		</ul>
 		</div>
 		<div id="carousel" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "itemWidth": 50, "itemMargin": 10, "asNavFor": "#slider" }'>
 		<ul class="slides">
 		{{#Images}}
-			<li><img alt="" src="/wp-content/plugins/bookt-api/img/loading.gif" data-src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&OriginalURL}}&w=100&h=75&q=70" /></li>
-		{{/Images}}                   
+			<li><img alt="" src="/wp-content/plugins/bookt-api/img/loading.gif" data-src="{{&ThumbnailURL}}" /></li>
+		{{/Images}}
 		</ul>
 		</div>
  
@@ -829,8 +829,8 @@
 				<div class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}} }, "category" : "property"}'>
 					<a class="poi-map-item mapmarker-prop" href="#">Property</a>
 					<div class="info-html">
-						<div class="marker-infowindow"> 		
-							<span class="prop-image pull-left"><img src="/wp-content/plugins/bookt-api/img/loading.gif" data-src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=175&h=131&q=85" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>
+						<div class="marker-infowindow">
+							<span class="prop-image pull-left"><img src="/wp-content/plugins/bookt-api/img/loading.gif" data-src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>
 							<span class="prop-location pull-left">
 								<span>
 								{{#ContextData.SEO.Keyword}}<a target="_blank" href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
@@ -843,13 +843,13 @@
 								{{#Sleeps}}<b>{{textdata.Sleeps}}: </b>{{Sleeps}}{{/Sleeps}}
 								</span>
 							</span>
-						</div>					
+						</div>
 					</div>
 				</div>
 				</td>
 				<td>{{Headline}}</td>
 				<td>{{Type}}</td>
-				<td>-</td>  			
+				<td>-</td>
 			</tr>
 			{{#ContextData.Attractions}}
 			<tr>
@@ -858,17 +858,17 @@
 					<a class="poi-map-item mapmarker-{{ContextData.ItemIndex}}" href="#">{{ContextData.ItemIndex}}</a>
 					<div class="info-html">
 						<div class="marker-infowindow"> 
-							<span class="prop-image pull-left"><img src="/wp-content/plugins/bookt-api/img/loading.gif" data-src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=175&h=131&q=85&zc=2" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>					
+							<span class="prop-image pull-left"><img src="/wp-content/plugins/bookt-api/img/loading.gif" data-src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>
 							<span class="prop-location pull-left">
 								<span>
 								{{#ContextData.SEO.Keyword}}<a target="_blank" href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
 								<b>{{Name}}</b>
-								{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}<br/>			
+								{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}<br/>
 								{{#Type}}<b>{{textdata.Category}}:</b>{{Type}}<br/>{{/Type}}
 								{{#Location}}<b>{{textdata.Address}}: </b>{{&Location}}{{/Location}}
 								</span>
-							</span>						
-					  </div>					
+							</span>
+					  </div>
 					</div>
 				</td>
 				<td>{{#ContextData.SEO.Keyword}}<a target="_blank" href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}{{Name}}{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}</td>
@@ -956,14 +956,14 @@
 <div class="fp-featured">    
 	<div class="fp-image">
 		{{#ContextData.SEO.Keyword}}<a href="{{ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
-		<img src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=400&h=200&q=75" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />
+		<img src="{{&PrimaryImage.ThumbnailURL}}" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />
 		{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 	</div>
 	<div class="fp-outer"> 
 	<div class="fp-title">{{#ContextData.SEO.Keyword}}<a href='{{ContextData.SEO.DetailURL}}'>{{/ContextData.SEO.Keyword}}{{Headline}}{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}</div>
 			{{^config.hidestarsreviews}}
 				{{#NumReviews}}
-				 	<div class="starsreviews"><div id="propstar-{{AvgReview}}"><span class="stars"></span><i class="starsvalue"></i></div></div>	
+				 	<div class="starsreviews"><div id="propstar-{{AvgReview}}"><span class="stars"></span><i class="starsvalue"></i></div></div>
 				 {{/NumReviews}}
 			{{/config.hidestarsreviews}}
 	<div class="fp-details">
@@ -1018,14 +1018,14 @@
 <div class="portal-result">
 <div class="portal-inner row-fluid shadow">
   <div class="portal-images span4">
-  {{^Images.0.OriginalURL}}
-	<img alt="{{PrimaryImage.Caption}}" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=259&h=194&q=75" />
-  {{/Images.0.OriginalURL}}
-  {{#Images.0.OriginalURL}}
-	<img alt="{{Images.0.Caption}}" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&Images.0.OriginalURL}}&a=c&w=259&h=194&q=75" />
-  {{/Images.0.OriginalURL}}                
+  {{^Images.0.MediumURL}}
+	<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" />
+  {{/Images.0.MediumURL}}
+  {{#Images.0.MediumURL}}
+	<img alt="{{Images.0.Caption}}" src="{{&Images.0.MediumURL}}" />
+  {{/Images.0.MediumURL}}
   </div>
-  <div class="portal-info span8">                
+  <div class="portal-info span8">
 	  <h2 class="title">{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}{{Name}}{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}</h2>
 	  <div class="location"><span class="type">{{Type}}</span>{{#Region}}, {{Region}}{{/Region}}{{#State}}, {{State}}{{/State}}</div>
 	  <div class="brick-wrap">
@@ -1033,7 +1033,6 @@
 		<hr/>        
 		<div class="description bapi-truncate" data-trunclen="200">{{&Summary}}</div>         
 	  </div>
-	  
 	  <a class="detail-link pull-right" href="{{&ContextData.SEO.DetailURL}}">Details <span>&rarr;</span></a>                                   
   </div>             
 </div>
@@ -1062,30 +1061,30 @@
                 <div id="slider" class="flexslider bapi-flexslider" data-options='{	"animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "sync": "#carousel" }'>
                   <ul class="slides">
 				  {{^Images}}
-				  	<li><img alt="{{PrimaryImage.Caption}}" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&w=816&h=600&q=75&zc=2" />
+				  	<li><img alt="{{PrimaryImage.Caption}}" src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&w=816&h=600&q=75&zc=2" />
 					{{#PrimaryImage.Caption}}
 					<p class="flex-caption">{{PrimaryImage.Caption}}</p></li>
 					{{/PrimaryImage.Caption}}
 				  {{/Images}}
 				  {{#Images}}
-                    <li><img alt="{{Caption}}" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&OriginalURL}}&w=816&h=700&q=60" />
+                    <li><img alt="{{Caption}}" src="/img.php?src=http:{{&OriginalURL}}&w=816&h=700&q=60" />
 					{{#Caption}}
 					<p class="flex-caption">{{Caption}}</p></li>
 					{{/Caption}}
-                  {{/Images}}                    
+                  {{/Images}}
                   </ul>
                 </div>
                 <div id="carousel" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "itemWidth": 50, "itemMargin": 10, "asNavFor": "#slider" }'>
                   <ul class="slides">
 				  {{^Images}}
-				  	<li><img alt="" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&w=100&h=75&q=70&zc=2" /></li>	
+				  	<li><img alt="" src="{{&PrimaryImage.ThumbnailURL}}" /></li>	
 				  {{/Images}}
                   {{#Images}}
-                    <li><img alt="" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&OriginalURL}}&w=100&h=75&q=70&zc=2" /></li>
-                  {{/Images}}                   
+                    <li><img alt="" src="{{&ThumbnailURL}}" /></li>
+                  {{/Images}}
                   </ul>
-                </div>                   
-            </div>        
+                </div>
+            </div>
         </div>
 </section>
 
@@ -1134,7 +1133,7 @@
 <div class="development-holder">
 	<div class="development-image">
 	<a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}">
-		<img alt="{{PrimaryImage.Caption}}" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&w=400&h=300&q=60&a=c" caption="{{PrimaryImage.Caption}}" />	
+		<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" />
 	</a>
 	</div>
 	<div class="development-description">
@@ -1169,19 +1168,19 @@
 <div class="portal-result">
 <div class="portal-inner row-fluid shadow">
   <div class="portal-images span4">
-  {{^Images.0.OriginalURL}}
-	<img alt="{{PrimaryImage.Caption}}" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=259&h=194&q=75" />
-  {{/Images.0.OriginalURL}}
-  {{#Images.0.OriginalURL}}
-	<img alt="{{Images.0.Caption}}" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&Images.0.OriginalURL}}&a=c&w=259&h=194&q=75" />
-  {{/Images.0.OriginalURL}}                
+  {{^Images.0.MediumURL}}
+	<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" />
+  {{/Images.0.MediumURL}}
+  {{#Images.0.MediumURL}}
+	<img alt="{{Images.0.Caption}}" src="{{&Images.0.MediumURL}}" />
+  {{/Images.0.MediumURL}}
   </div>
-  <div class="portal-info span8">                
+  <div class="portal-info span8">
 	  <h2 class="title">{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}{{Name}}{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}</h2>
 	  <div class="location"><span class="type">{{Type}}</span>{{#Region}}, {{Region}}{{/Region}}{{#State}}, {{State}}{{/State}}</div>
 	  <div class="brick-wrap">
 		<strong>{{textdata.Amenities}}:</strong> <span>{{TopAmenities}}</span>
-		<hr/>        
+		<hr/>
 		<div class="description bapi-truncate" data-trunclen="200">{{&Summary}}</div>         
 	  </div>
 	  <a class="detail-link pull-right" href="{{&ContextData.SEO.DetailURL}}">Details <span>&rarr;</span></a>                                   
@@ -1211,13 +1210,13 @@
                 <div id="slider" class="flexslider bapi-flexslider" data-options='{	"animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "sync": "#carousel" }'>
                   <ul class="slides">
 				  {{^Images}}
-				  	<li><img alt="{{PrimaryImage.Caption}}" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&w=816&h=600&q=75&zc=2" />
+				  	<li><img alt="{{PrimaryImage.Caption}}" src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&w=816&h=600&q=75&zc=2" />
 					{{#PrimaryImage.Caption}}
 					<p class="flex-caption">{{PrimaryImage.Caption}}</p></li>
 					{{/PrimaryImage.Caption}}
 				  {{/Images}}
 				  {{#Images}}
-                    <li><img alt="{{Caption}}" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&OriginalURL}}&w=816&h=600&q=75&zc=2" />
+                    <li><img alt="{{Caption}}" src="/img.php?src=http:{{&OriginalURL}}&w=816&h=600&q=75&zc=2" />
 					{{#Caption}}
 					<p class="flex-caption">{{Caption}}</p></li>
 					{{/Caption}}
@@ -1227,14 +1226,14 @@
                 <div id="carousel" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "itemWidth": 50, "itemMargin": 10, "asNavFor": "#slider" }'>
                   <ul class="slides">
 				  {{^Images}}
-				  	<li><img alt="" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&w=100&h=75&q=70" /></li>	
+				  	<li><img alt="" src="{{&PrimaryImage.ThumbnailURL}}" /></li>	
 				  {{/Images}}
                   {{#Images}}
-                    <li><img alt="" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&OriginalURL}}&w=100&h=75&q=70" /></li>
-                  {{/Images}}                   
+                    <li><img alt="" src="{{&ThumbnailURL}}" /></li>
+                  {{/Images}}
                   </ul>
-                </div>                   
-            </div>        
+                </div>
+            </div>
         </div>
 </section>
 
@@ -1312,8 +1311,8 @@
 	  <div class="poi-map-location" data-id="{{ContextData.ItemIndex}}" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}} }, "category": "poi-{{ContextData.ItemIndex}}"}'>
 	  <a href="#" class="poi-map-item"><div class="number-tag">{{&ContextData.ItemIndex}}</div></a>
 	  <div class="info-html">
-	<div class="marker-infowindow"> 		
-		<span class="prop-image pull-left"><img style="max-height:175px; max-width:175px" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=175&h=131&q=85" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>
+	<div class="marker-infowindow">
+		<span class="prop-image pull-left"><img style="max-height:175px; max-width:175px" src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" alt="{{PrimaryImage.Caption}}"></span>
 		<span class="prop-location pull-left">
 			<span>
 			{{#ContextData.SEO.Keyword}}<a target="_blank" href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
@@ -1327,7 +1326,7 @@
 	</div>	
 	  </div>	  
 	  {{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
-	  <img alt="{{PrimaryImage.Caption}}" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=348&h=261&q=85" />
+	  <img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" />
 	  {{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 	  </div>
 	  <div class="item-info shadow">
@@ -1345,8 +1344,8 @@
 <div class="poi-map-location hide" data-id="{{site.solutionid}}" data-jmapping='{ "id": {{site.solutionid}}, "point": { "lng": {{site.office.Longitude}}, "lat": {{site.office.Latitude}} }, "category": "pinOffice}"}'>
 	  <a href="#" class="poi-map-item">{{site.solutionnameinformal}}</a>
 	<div class="info-html">
-	<div class="marker-infowindow"> 		
-		<span class="prop-image pull-left"><img style="max-height:175px; max-width:175px" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&site.logo}}&a=c&w=175&h=131&q=85&zc=2" alt="{{site.tagline}}"></span>
+	<div class="marker-infowindow">
+		<span class="prop-image pull-left"><img style="max-height:175px; max-width:175px" src="{{&site.logo}}" alt="{{site.tagline}}"></span>
 		<span class="prop-location pull-left">
 			<span>
 			<a target="_blank" href="mailto:{{&site.email}}">
@@ -1381,11 +1380,11 @@
 		<div id="slider" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "sync": "#carousel" }'>
 			<ul class="slides">
 			{{^Images}}
-				<li><img alt="{{PrimaryImage.Caption}}" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&w=816&h=600&q=75&zc=2" />
+				<li><img alt="{{PrimaryImage.Caption}}" src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&w=816&h=600&q=75&zc=2" />
 					{{#PrimaryImage.Caption}}<p class="flex-caption">{{PrimaryImage.Caption}}</p></li>{{/PrimaryImage.Caption}}
 			{{/Images}}
 			{{#Images}}
-				<li><img alt="{{Caption}}" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&OriginalURL}}&w=816&h=600&q=75&zc=2" />
+				<li><img alt="{{Caption}}" src="/img.php?src=http:{{&OriginalURL}}&w=816&h=600&q=75&zc=2" />
 					{{#Caption}}<p class="flex-caption">{{Caption}}</p></li>{{/Caption}}
 			{{/Images}}                    
 			</ul>
@@ -1393,13 +1392,13 @@
 		<div id="carousel" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "itemWidth": 50, "itemMargin": 10, "asNavFor": "#slider" }'>
 			<ul class="slides">
 			{{^Images}}
-				<li class="primary"><img alt="" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&w=100&h=75&q=70" /></li> 
+				<li class="primary"><img alt="" src="{{&PrimaryImage.ThumbnailURL}}" /></li> 
 			{{/Images}}
 			{{#Images}}
-				<li><img alt="" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&OriginalURL}}&w=100&h=75&q=70" /></li>
-			{{/Images}}                   
+				<li><img alt="" src="{{&ThumbnailURL}}" /></li>
+			{{/Images}}
 			</ul>
-		</div>                    
+		</div>
 	</div>
 </div>
 </section>
@@ -1413,16 +1412,16 @@
 		</ul>                
 		<div class="tab-content">
 			<div class="tab-pane active" id="tab1">
-				<div class="row-fluid wrap-boxes">				
-					<div class="span6 box-left">                
-						<h3>{{textdata.Nearby Rentals}}</h3>						
+				<div class="row-fluid wrap-boxes">
+					<div class="span6 box-left">
+						<h3>{{textdata.Nearby Rentals}}</h3>
 						<div id="map-locations">
 						<div class="poi-map-location" data-jmapping='{ "id": {{ID}}, "point": { "lng": {{Longitude}}, "lat": {{Latitude}}}, "category": "mainPoi"}'>
 						- &nbsp;<a href="#" class="poi-map-item">{{Name}}</a>
 							<div class="info-html">
 <div class="gmap-poi">
 								<div class="gmap-img">
-									<img src='/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&w=150&h=112&q=70&zc=2' alt='{{PrimaryImage.Caption}}' title='{{PrimaryImage.Caption}}' width="195"/>
+									<img src='{{&PrimaryImage.ThumbnailURL}}' alt='{{PrimaryImage.Caption}}' title='{{PrimaryImage.Caption}}' width="195"/>
 								</div>
 								<div class="gmap-text">
 									<p><b>{{Name}}</b></p>
@@ -1441,7 +1440,7 @@
 								{{#ContextData.SEO.DetailURL}}
 								<a href="{{ContextData.SEO.DetailURL}}">
 								{{/ContextData.SEO.DetailURL}}
-									<img src='/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&w=150&h=112&q=70&zc=2' alt='{{PrimaryImage.Caption}}' title='{{PrimaryImage.Caption}}' />
+									<img src='{{&PrimaryImage.ThumbnailURL}}' alt='{{PrimaryImage.Caption}}' title='{{PrimaryImage.Caption}}' />
 								{{#ContextData.SEO.DetailURL}}
 								</a>
 								{{/ContextData.SEO.DetailURL}}
@@ -1456,15 +1455,15 @@
 							</div>
 						</div>
 						{{/ContextData.NearbyProperties}}
-						</div>																							
-					</div>			
-					<div class="span6 box-right">                
+						</div>
+					</div>
+					<div class="span6 box-right">
 					<h3>{{textdata.Map}}</h3>
 					<div id="poi-map-prop" class="bapi-map" data-loc-selector='.poi-map-location' data-link-selector='.poi-map-item' style="width:100%; height:350px; float:left;"></div>
 					</div>
 				</div>
 			</div>
-			<div class="tab-pane" id="tab2">			
+			<div class="tab-pane" id="tab2">
 				<div class="row-fluid">
 					<div class="span12 box-sides">
 					{{&Description}}
@@ -1517,10 +1516,10 @@
 	  {{#ContextData.SEO.Keyword}}
 	  <a href="{{&ContextData.SEO.DetailURL}}">
 	  {{/ContextData.SEO.Keyword}}
-	  <img alt="{{PrimaryImage.Caption}}" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=348&h=261&q=85&zc=2" />
+	  <img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.MediumURL}}" />
 	  {{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 	  </div>
-	  <div class="item-info shadow">		
+	  <div class="item-info shadow">
 			{{#ContextData.SEO.Keyword}}
 	  <a href="{{&ContextData.SEO.DetailURL}}">
 	  {{/ContextData.SEO.Keyword}}
@@ -1554,13 +1553,13 @@
                 <div id="slider" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "sync": "#carousel" }'>
                   <ul class="slides">
 				  {{^Images}}
-				  	<li><img alt="{{PrimaryImage.Caption}}" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&w=816&h=600&q=75&zc=2" />
+				  	<li><img alt="{{PrimaryImage.Caption}}" src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&w=816&h=600&q=75&zc=2" />
 					{{#PrimaryImage.Caption}}
 					<p class="flex-caption">{{PrimaryImage.Caption}}</p></li>
 					{{/PrimaryImage.Caption}}
 				  {{/Images}}
 				  {{#Images}}
-                    <li><img alt="{{Caption}}" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&OriginalURL}}&w=816&h=600&q=75&zc=2" />
+                    <li><img alt="{{Caption}}" src="/img.php?src=http:{{&OriginalURL}}&w=816&h=600&q=75&zc=2" />
 					{{#Caption}}
 					<p class="flex-caption">{{Caption}}</p></li>
 					{{/Caption}}
@@ -1570,10 +1569,10 @@
                 <div id="carousel" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "itemWidth": 50, "itemMargin": 10, "asNavFor": "#slider" }'>
                   <ul class="slides">
 				  {{^Images}}
-				  	<li><img alt="" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&w=100&h=75&q=70" /></li>	
+				  	<li><img alt="" src="{{&PrimaryImage.ThumbnailURL}}" /></li>	
 				  {{/Images}}
                   {{#Images}}
-                    <li><img alt="" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&OriginalURL}}&w=100&h=75&q=70" /></li>
+                    <li><img alt="" src="{{&ThumbnailURL}}" /></li>
                   {{/Images}}                   
                   </ul>
                 </div>                    
@@ -1624,7 +1623,7 @@
 <div class="special-holder">
 	<div class="special-image">
 	<a href="{{#ContextData.SEO.Keyword}}{{&ContextData.SEO.DetailURL}}{{/ContextData.SEO.Keyword}}">
-		<img alt="{{PrimaryImage.Caption}}" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&w=222&h=166&q=70&zc=2" caption="{{PrimaryImage.Caption}}" />	
+		<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" caption="{{PrimaryImage.Caption}}" />	
 	</a>
 	</div>
 	<div class="special-description">
@@ -1650,10 +1649,10 @@
 	  {{#ContextData.SEO.Keyword}}
 	  <a href="{{&ContextData.SEO.DetailURL}}">
 	  {{/ContextData.SEO.Keyword}}
-	  	<img alt="{{PrimaryImage.Caption}}" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=348&h=261&q=85" />
+	  	<img alt="{{PrimaryImage.Caption}}" src="{{&PrimaryImage.ThumbnailURL}}" />
 	  {{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 	  </div>
-	  <div class="item-info shadow">					
+	  <div class="item-info shadow">
 			{{#ContextData.SEO.Keyword}}
 	  <a href="{{&ContextData.SEO.DetailURL}}">
 	  {{/ContextData.SEO.Keyword}}
@@ -1687,26 +1686,26 @@
 		<div id="slider" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "sync": "#carousel" }'>
 		  <ul class="slides">
 		  {{^Images}}
-			<li><img alt="{{PrimaryImage.Caption}}" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&w=816&h=600&q=75&zc=2" />
+			<li><img alt="{{PrimaryImage.Caption}}" src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&w=816&h=600&q=75&zc=2" />
 			{{#PrimaryImage.Caption}}
 			<p class="flex-caption">{{PrimaryImage.Caption}}</p></li>
 			{{/PrimaryImage.Caption}}
 		  {{/Images}}
 		  {{#Images}}
-			<li><img alt="{{Caption}}" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&OriginalURL}}&w=816&h=600&q=75&zc=2" />
+			<li><img alt="{{Caption}}" src="/img.php?src=http:{{&OriginalURL}}&w=816&h=600&q=75&zc=2" />
 			{{#Caption}}
 			<p class="flex-caption">{{Caption}}</p></li>
 			{{/Caption}}
-		  {{/Images}}                    
+		  {{/Images}}
 		  </ul>
 		</div>
 		<div id="carousel" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "itemWidth": 50, "itemMargin": 10, "asNavFor": "#slider" }'>
 		  <ul class="slides">
 		  {{^Images}}
-			<li><img alt="" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&w=100&h=75&q=70" /></li>	
+			<li><img alt="" src="{{&PrimaryImage.ThumbnailURL}}" /></li>	
 		  {{/Images}}
 		  {{#Images}}
-			<li><img alt="" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&OriginalURL}}&w=100&h=75&q=70" /></li>
+			<li><img alt="" src="{{&ThumbnailURL}}" /></li>
 		  {{/Images}}                   
 		  </ul>
 		</div>			
@@ -1732,7 +1731,7 @@
 <div class="pf-featured">    
 <div class="pf-image">
 	{{#ContextData.SEO.Keyword}}<a href="{{&ContextData.SEO.DetailURL}}">{{/ContextData.SEO.Keyword}}
-		<img src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&a=c&w=400&h=300&q=85" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />
+		<img src="{{&PrimaryImage.ThumbnailURL}}" alt="{{&PrimaryImage.ThumbnailURL}}" title="{{PrimaryImage.Caption}}" />
 	{{#ContextData.SEO.Keyword}}</a>{{/ContextData.SEO.Keyword}}
 </div>
 <div class="pf-outer">	
@@ -1825,7 +1824,7 @@
 			{{#Sleeps}}&nbsp;/&nbsp;{{textdata.Sleeps}}&nbsp;{{Sleeps}}{{/Sleeps}}</span>
 		</p>
 		<div class="booking-prop-img">
-			<a href="{{&ContextData.SEO.DetailURL}}"><img alt="{{PrimaryImage.Caption}}" src="/wp-content/plugins/bookt-api/thumbs/timthumb.php?src=http:{{&PrimaryImage.OriginalURL}}&w=1074&h=400&q=60&zc=2" caption="{{PrimaryImage.Captions}}" title="Back to the Property Detail Page" /></a>
+			<a href="{{&ContextData.SEO.DetailURL}}"><img alt="{{PrimaryImage.Caption}}" src="/img.php?src=http:{{&PrimaryImage.OriginalURL}}&w=1074&h=400&q=60&zc=2" caption="{{PrimaryImage.Captions}}" title="Back to the Property Detail Page" /></a>
 		</div>
 	</header>	
 	<div class="booking-page bordersolid">
@@ -1842,18 +1841,18 @@
 		<aside class="property-info span4 pd">
 		<div class="row-fluid">
 			<div class="span12 pd">
-				<div id="stayinfo"></div>		
-				<div id="statement"></div>	
+				<div id="stayinfo"></div>
+				<div id="statement"></div>
 				<div id="question-support" class="item row-fluid">
 					<span class="glyphicons module headset"><i></i>{{textdata.Have a Question?}}</span>
 					<p>{{textdata.Phone}}: <span class="pull-right">{{site.phone}}</span></p>
 					<p>{{textdata.Email}}: <span class="pull-right">{{site.email}}</span></p>					
-				</div>				
+				</div>
 			</div>
 		</div>
 		</aside>
 		<div class="clearfix"></div>
-	</div>				
+	</div>
 </div>
 </div>
 </div>
