@@ -47,8 +47,8 @@ add_filter('get_sample_permalink_html', 'perm', '',4); //Remove Edit Button for 
 add_filter('page_row_actions', 'remove_quickedit_for_nonsuperusers', 10, 2 );
 add_action('admin_menu', 'remove_pageattributes_meta_box' );
 add_action('template_redirect', 'do_ossdl_off_ob_start',10);
-add_action('wp_head','loadscriptjquery',1);
-add_action('wp_footer','getconfig',1);
+add_action('wp_footer','loadinfooter',1);
+add_action('wp_head','getconfig');
 add_action('wp_head','bapi_getmeta',1);
 add_action('wp_head','display_global_header',10);
 add_action('wp_head','display_gw_verification',10);
