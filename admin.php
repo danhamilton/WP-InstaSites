@@ -191,7 +191,7 @@ function bapi_notify_blog_public(){
 		echo '<div class="error"><p>Your site is currently hidden to search engines. <a href="/wp-admin/options-reading.php">CLICK HERE</a> to enable <em>Search Engine Visibility</em> and fix this problem.</p></div>';
 	}
 }
-//add_action('admin_notices','bapi_notify_blog_public');
+add_action('admin_notices','bapi_notify_blog_public');
 
 //Mantis Ticket 5408 compatible permalinks
 function bapi_notify_incompatible_permalinks(){
