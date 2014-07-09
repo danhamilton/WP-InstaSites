@@ -191,7 +191,7 @@ function bapi_notify_blog_public(){
 		echo '<div class="error"><p>Your site is currently hidden to search engines. <a href="/wp-admin/options-reading.php">CLICK HERE</a> to enable <em>Search Engine Visibility</em> and fix this problem.</p></div>';
 	}
 }
-add_action('admin_notices','bapi_notify_blog_public');
+//add_action('admin_notices','bapi_notify_blog_public');
 
 //Mantis Ticket 5408 compatible permalinks
 function bapi_notify_incompatible_permalinks(){
@@ -200,7 +200,7 @@ function bapi_notify_incompatible_permalinks(){
 		echo '<div id="incompatiblepermalink" class="error"><p>The Permalink settings for your site are not compatible with the InstaSites Plugin. Please <a href="/wp-admin/options-permalink.php">CLICK HERE</a> and select \'Day and name\', \'Month and name\', or \'Post name\'.</p></div>';
 	}
 }
-add_action('admin_notices','bapi_notify_incompatible_permalinks');
+//add_action('admin_notices','bapi_notify_incompatible_permalinks');
 //Mantis  Ticket: 5859 Display error notice if site config in InstaSite is mis-matched with InstaApp
 function site_config_error(){
 	
@@ -241,7 +241,7 @@ function site_config_error(){
 		
 }
 //this function Display error notice if site config in InstaSite is mis-matched 
-add_action('admin_notices','site_config_error');
+//add_action('admin_notices','site_config_error');
 
 function bapi_update_incompatible_permalinks_error_notice($oldvalue, $_newvalue){
 	if($_newvalue == "/%year%/%monthnum%/%day%/%postname%/" || $_newvalue == "/%year%/%monthnum%/%postname%/" || $_newvalue == "/%postname%/" ){
