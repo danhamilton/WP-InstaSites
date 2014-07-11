@@ -161,7 +161,7 @@
 	}
 	
 	function urlHandler_timthumb() {
-		$url = get_relative($_SERVER['REQUEST_URI']);		
+		$url = $_SERVER['REQUEST_URI'];		
 		$url = strtolower($url);
 		$url = substr($url, 0, 8);
 		
