@@ -13,9 +13,10 @@ if(isset($_POST['reset-data'])){
 	}
 	
 	
-}
+}   
 
 function bapi_create_menu() {
+	
 	//create new top-level menu
 	$parent = get_adminurl('admin.php');
 	add_menu_page('InstaSite Plugin Settings', 'InstaSite', 'administrator', __FILE__, 'bapi_settings_page', plugins_url('/img/icon.png', __FILE__));	
@@ -200,48 +201,70 @@ function bapi_notify_incompatible_permalinks(){
 		echo '<div id="incompatiblepermalink" class="error"><p>The Permalink settings for your site are not compatible with the InstaSites Plugin. Please <a href="/wp-admin/options-permalink.php">CLICK HERE</a> and select \'Day and name\', \'Month and name\', or \'Post name\'.</p></div>';
 	}
 }
-//add_action('admin_notices','bapi_notify_incompatible_permalinks');
+add_action('admin_notices','bapi_notify_incompatible_permalinks');
 //Mantis  Ticket: 5859 Display error notice if site config in InstaSite is mis-matched with InstaApp
+function saveInitUrls(){
+	if(isset($_POST['submit'])){
+		if(!empty($_POST['bapi_secureurl'])){ //In case client-side validation is not triggered, prevent protocol from being included in secure url.
+			$securl = $_POST['bapi_secureurl'];
+			$securl = str_replace("http://","",$securl);
+			$securl = str_replace("https://","",$securl);
+		}
+		$updated1 = update_option('bapi_site_cdn_domain', $_POST['bapi_site_cdn_domain']);
+		
+		$updated2 = update_option('bapi_secureurl', $securl);
+		echo 'this is the updated true or flase. ='.$updated1;
+		$getupdate1 = get_option('bapi_site_cdn_domain');
+		echo 'this is the update ='.$getupdate1;
+	}
+}
 function site_config_error(){
+	global $bapi_all_options;
+	bapi_wp_site_options();
 	
-	$bapi_solutiondata = json_decode(get_option('bapi_solutiondata'),true);
-	//gets  the value from the input field name=bapi_site_cdn_domain wich is the site URL
-	$bapi_cdn_domain = get_option('bapi_site_cdn_domain');
-	//gets  the value from the input field name=bapi_securerul wich is hte Secure site URL
-	$bapi_secure_url = get_option('bapi_secureurl');
+	$bapi_solutiondata = json_decode($bapi_all_options['bapi_solutiondata'],true);
+	//values saved in our bapi options array our old values	
+
+	//print_r($bapi_solutiondata); exit();
+	$bapi_unique_prefx = $bapi_solutiondata['UniquePrefix'];  //Unique prefix DOES NOT need to match to domain!!!
 	
-	$bapi_unique_prefx = 'www'.$bapi_solutiondata['UniquePrefix'].'.com';
-	$primaryUrl = $bapi_solutiondata['PrimaryURL'];
+	$primaryUrl = 'http://'.$bapi_solutiondata['PrimaryURL'];
 	$secureUrl = $bapi_solutiondata['SecureURL'];
 	$plugUrl = plugins_url();
 	$setUpErr =  array();
-	   
+	//update fields
+	
+	$bapi_cdn_domain = $bapi_all_options['bapi_site_cdn_domain'];
+	$bapi_secure_url = $bapi_all_options['bapi_secureurl'];
+	$contains = strpos($bapi_secure_url, "lodgingcloud.com");
 	
 	
-	//bapi_solutiondata.PrimaryURL must equal get_option('bapi_site_cdn_domain')
-	if($bapi_cdn_domain != $primaryUrl){
-			
-		echo '<div id="mis-match-config" class="error"><p> InstaSite configuration is mis-matched with InstaApp Plugin. Please <a href="/admin.php?page=bookt-api/setup-initial.php">CLICK HERE</a> please enter the correct Site URL.</p></div>';			
-		
+	if($bapi_unique_prefx != array_shift(explode(".",$_SERVER['HTTP_HOST']))){ //throw error - ""
+		echo '<div id="mis-match-config" class="error"><p>InstaSite domain prefix (<em>"' . array_shift(explode(".",$_SERVER['HTTP_HOST'])) . '"</em>) is mis-matched with InstaApp (<em>"' . $bapi_unique_prefx . '"</em>). Please contact support@instamanager and provide this error message for expedited assistance.</p></div>';
 	}
-	if($bapi_secure_url == $primaryUrl){
+	if($bapi_cdn_domain != $primaryUrl){
+		echo '<div id="mis-match-config" class="error"><p>InstaSite URL configuration does not match the InstaApp settings.  Please <a href="admin.php?page='.str_replace('/admin.php', '', plugin_basename(__FILE__)).'/setup-initial.php">CLICK HERE</a> to change your Site URL to <em>"'.$primaryUrl.'"</em> or contact support@instamanager.com to continue using <em>"'.$bapi_cdn_domain.'"</em>.</p></div>';
+	
+	}
+	if($bapi_secure_url == $bapi_solutiondata['PrimaryURL']){
 			
 	}elseif(empty($bapi_secure_url)){
 		
-	}elseif($bapi_secure_url == $bapi_unique_prefxs){
+	}elseif($bapi_secure_url == $bapi_solutiondata['PrimaryURL']){
 		
-	}elseif($bapi_secure_url == "www.lodgingcloud.com"){
-		
-	}elseif($bapi_secure_url == "www.app.bookt.biz"){
-		
+	}elseif($contains){ //this should test if secureurl CONTAINS 'lodgingcloud.com' - not if the url is www.lodgingcloud.com
+			
 	}
 	else{
-		echo '<div id="mis-match-config" class="error"><p> InstaSite configuration is mis-matched with InstaApp Plugin. Please <a href="/admin.php?page=bookt-api/setup-initial.php">CLICK HERE</a> please enter the Secure Site URL:</p></div>';			
+	
+		echo '<div id="mis-match-config" class="error"><p>InstaSite plugin (<em>"'.$bapi_all_options['bapi_secureurl'].'"</em>) configuration is mis-matched with InstaApp (<em>"'.$secureUrl.'"</em>). Please <a href="admin.php?page='.str_replace('/admin.php', '', plugin_basename(__FILE__)).'/setup-initial.php">CLICK HERE</a> to correct the Secure Site URL. Secure Site URL must be set to <em>"'.$secureUrl.'"</em>, <em>"'.$bapi_solutiondata['PrimaryURL'].'"</em> or left blank.</p></div>';			
 	}
+
 		
 }
+
 //this function Display error notice if site config in InstaSite is mis-matched 
-//add_action('admin_notices','site_config_error');
+add_action('admin_init','site_config_error');
 
 function bapi_update_incompatible_permalinks_error_notice($oldvalue, $_newvalue){
 	if($_newvalue == "/%year%/%monthnum%/%day%/%postname%/" || $_newvalue == "/%year%/%monthnum%/%postname%/" || $_newvalue == "/%postname%/" ){
