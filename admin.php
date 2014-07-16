@@ -229,7 +229,6 @@ function site_config_error(){
 	$bapi_unique_prefx = $bapi_solutiondata['UniquePrefix'];  //Unique prefix DOES NOT need to match to domain!!!
 	
 	$primaryUrl = 'http://'.get_option('PrimaryURL');
-	$secureUrl = get_option('SecureURL');
 	$secureUrl = get_option('SecureURL');
 	$plugUrl = plugins_url();
 	$setUpErr =  array();
