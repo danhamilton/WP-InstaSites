@@ -161,7 +161,8 @@ function bapi_create_site(){
 	}
 	$meta = array(
 		'api_key' => $apikey, 
-		'bapi_secureurl' => $prefix.'.imbookingsecure.com', 
+		//'bapi_secureurl' => $prefix.'.imbookingsecure.com', 
+		'bapi_secureurl' => '', 
 		'bapi_site_cdn_domain' => $liveurl, 
 		'bapi_cloudfronturl' => $cf['DomainName'], 
 		'bapi_cloudfrontid' => $cf['Id'], 
