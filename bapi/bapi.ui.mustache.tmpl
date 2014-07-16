@@ -2274,6 +2274,40 @@
 {{/result}}
 </script>
 
+<script id="tmpl-booking-makepayment-verify-user" type="text/html">
+<div class="module shadow-border">
+<div class="row-fluid">
+<div class="verify-user text-center">
+<div class="span12">
+<h3>Make a Payment</h3>
+<p>Please verify this payment belongs to you</p>
+<div class="greybox">
+<div id="verifybookingid-block" class="control-group hide">
+	<div class="controls">
+		<input type="text" id="verifyBookingId" class="span12 required" placeholder="Booking ID" required />
+	</div>
+</div>
+<div class="control-group">
+	<div class="controls">
+		<input type="text" id="verifyLastName" class="span12 required" placeholder="{{textdata.Last Name}}" required />
+	</div>
+</div>
+<div class="control-group">
+	<div class="controls">
+		<input type="text" id="verifyEmail" class="span12 required" data-validity="email" placeholder="{{textdata.Email}}" required />
+	</div>
+</div>
+<div class="control-group">
+	<button id="submitVerifyUser" class="btn btn-large btn-primary span12">{{textdata.Submit}}</button>
+	<div class="clearfix"></div>
+</div>
+</div>
+</div>
+<div class="clearfix"></div>
+</div>
+</div>
+</div>
+</script>
 
 <script id="tmpl-booking-makepayment-masterlayout" type="text/html">
 {{#result}}
