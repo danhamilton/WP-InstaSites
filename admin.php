@@ -237,6 +237,7 @@ function site_config_error(){
 	$bapi_cdn_domain = $bapi_all_options['bapi_site_cdn_domain'];
 	$bapi_secure_url = $bapi_all_options['bapi_secureurl'];
 	$contains = strpos($bapi_secure_url, "lodgingcloud.com");
+	$contains2 = strpos($bapi_secure_url, "imbookingsecure.com");
 	
 	
 	if($bapi_unique_prefx != array_shift(explode(".",$_SERVER['HTTP_HOST']))){ //throw error - ""
@@ -250,9 +251,9 @@ function site_config_error(){
 			
 	}elseif(empty($bapi_secure_url)){
 		
-	}elseif($bapi_secure_url == $bapi_solutiondata['PrimaryURL']){
-		
-	}elseif($contains){ //this should test if secureurl CONTAINS 'lodgingcloud.com' - not if the url is www.lodgingcloud.com
+	}elseif($contains){
+			
+	}elseif($contains2){ 
 			
 	}
 	else{
