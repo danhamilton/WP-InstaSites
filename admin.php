@@ -228,14 +228,14 @@ function site_config_error(){
 	//print_r($bapi_solutiondata); exit();
 	$bapi_unique_prefx = $bapi_solutiondata['UniquePrefix'];  //Unique prefix DOES NOT need to match to domain!!!
 	
-	$primaryUrl = 'http://'.get_option('PrimaryURL');
-	$secureUrl = get_option('SecureURL');
+	$primaryUrl = 'http://'.$bapi_solutiondata['PrimaryURL'];
+	$secureUrl = $bapi_solutiondata['SecureURL'];
 	$plugUrl = plugins_url();
 	$setUpErr =  array();
 	//update fields
 	
-	$bapi_cdn_domain = get_option('bapi_site_cdn_domain');
-	$bapi_secure_url = get_option('bapi_secureurl');
+	$bapi_cdn_domain = $bapi_all_options['bapi_site_cdn_domain'];
+	$bapi_secure_url = $bapi_all_options['bapi_secureurl'];
 	$contains = strpos($bapi_secure_url, "lodgingcloud.com");
 	$contains2 = strpos($bapi_secure_url, "imbookingsecure.com");
 	
