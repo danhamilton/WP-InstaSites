@@ -1145,7 +1145,12 @@ function myplugin_meta_box_callback( $metaId ) {
 	$bapisync = new BAPISync();
 	$bapisync->init();
 	$perma = get_permalink();
+	$permaPath = parse_url($perma);
 	$relativePerma = get_relative($perma);
+	$pageID = get_post_meta(get_the_ID(),'bapi_page_id');
+	if($relativePerma=='/' && $pageID[0]!='bapi_home'){
+		return;
+	}
 	$seo = $bapisync->getSEOFromUrl($relativePerma); 
 	$meta_words = get_post_custom($post->ID, '', true);
 	$myPageId = $seo['ID'];
@@ -1191,4 +1196,6 @@ function myplugin_meta_box_callback( $metaId ) {
 	update_option( 'bapi_keywords_lastmod', 0 );
 	bapi_sync_coredata();
 }
-add_action( 'save_post',  'save_seo_meta');
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+	add_action( 'wp_insert_post',  'save_seo_meta');
+}

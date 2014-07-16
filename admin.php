@@ -262,9 +262,8 @@ function site_config_error(){
 
 		
 }
-
 //this function Display error notice if site config in InstaSite is mis-matched 
-add_action('admin_init','site_config_error');
+add_action('admin_notices','site_config_error');
 
 function bapi_update_incompatible_permalinks_error_notice($oldvalue, $_newvalue){
 	if($_newvalue == "/%year%/%monthnum%/%day%/%postname%/" || $_newvalue == "/%year%/%monthnum%/%postname%/" || $_newvalue == "/%postname%/" ){
