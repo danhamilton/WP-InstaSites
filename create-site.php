@@ -72,7 +72,7 @@ function bapi_create_site(){
 			$new_site = array(
 				"status" => "error",
 				"data" => array(
-					"errors" => array("cloudfront_distrib" => $cf['DomainName']),
+					"errors" => array("cloudfront_distrib" => $cf),
 					"error_data" => ""
 				)
 			);
@@ -149,7 +149,7 @@ function bapi_create_site(){
 		$new_site = array(
 			"status" => "error",
 			"data" => array(
-				"errors" => array("cloudfront_distrib" => $cf['DomainName']),
+				"errors" => array("cloudfront_distrib" => $cf),
 				"error_data" => ""
 			)
 		);
