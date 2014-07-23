@@ -9,7 +9,7 @@ function create_cf_distro($origin,$cname){
 		'key'    => AWS_ACCESS_KEY,
 		'secret' => AWS_SECRET_KEY,
 	));
-	
+	try {
 	$result = $client->createDistribution(array(
 		'Aliases' => array('Quantity' => 1, 'Items' => array($cname)),
 		'CacheBehaviors' => array('Quantity' => 0),
@@ -62,7 +62,9 @@ function create_cf_distro($origin,$cname){
 		),
 		'PriceClass' => 'PriceClass_All',
 	));
-	
+	} catch (Exception $e) {
+		echo 'Caught exception: ',  $e->getMessage(), "\n";
+	}
 	//printf('%s - %s - %s', $result['Status'], $result['Location'], $result['DomainName']) . "\n";
 	if($result['Status']=="InProgress"){
 		return $result;
@@ -87,7 +89,7 @@ function modify_cf_distro($origin,$cname){
 	$cref = $r['CallerReference'];
 	$od = $r['Origins']['Items'][0]['DomainName'];
 	//print_r($r);exit();
-	
+	try{
 	$result = $client->updateDistribution(array(
 		'CallerReference' => $cref,
 		'Aliases' => array('Quantity' => 1, 'Items' => array($cname)),
@@ -145,7 +147,9 @@ function modify_cf_distro($origin,$cname){
 		'Id' => $did, 
 		'IfMatch' => $etag
 	));
-	
+	} catch (Exception $e) {
+		echo 'Caught exception: ',  $e->getMessage(), "\n";
+	}
 	//printf('%s - %s - %s', $result['Status'], $result['Location'], $result['DomainName']) . "\n";
 	if($result['Status']=="InProgress"){
 		//print_r($result);exit();
