@@ -65,14 +65,13 @@ function bapi_create_site(){
 		$cf_origin = str_replace('http://','',$siteurl);
 		
 		$cf = modify_cf_distro($cf_origin,$cf_url);
-		if($cf===false){
-			$cf = 'Error Creating CloudFront Distribution';
-			
+		if($cf['CreatingDistrib']===false){
 			header('Content-Type: application/javascript');	
 			$new_site = array(
 				"status" => "error",
 				"data" => array(
-					"errors" => array("cloudfront_distrib" => $cf),
+					"errors" => array("cloudfront_distrib" => 'Error Creating CloudFront Distribution'),
+					"message" => $cf['Message'],
 					"error_data" => ""
 				)
 			);
@@ -142,14 +141,13 @@ function bapi_create_site(){
 	}
 	
 	$cf = create_cf_distro($cf_origin,$cf_url);
-	if($cf===false){
-		$cf = 'Error Creating CloudFront Distribution';
-		
+	if($cf['CreatingDistrib']===false){
 		header('Content-Type: application/javascript');	
 		$new_site = array(
 			"status" => "error",
 			"data" => array(
-				"errors" => array("cloudfront_distrib" => $cf),
+				"errors" => array("cloudfront_distrib" => 'Error Creating CloudFront Distribution'),
+				"message" => $cf['Message'],
 				"error_data" => ""
 			)
 		);

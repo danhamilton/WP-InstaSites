@@ -9,6 +9,7 @@ function create_cf_distro($origin,$cname){
 		'key'    => AWS_ACCESS_KEY,
 		'secret' => AWS_SECRET_KEY,
 	));
+	$exceptionMessage = "";
 	try {
 	$result = $client->createDistribution(array(
 		'Aliases' => array('Quantity' => 1, 'Items' => array($cname)),
@@ -63,13 +64,18 @@ function create_cf_distro($origin,$cname){
 		'PriceClass' => 'PriceClass_All',
 	));
 	} catch (Exception $e) {
-		echo 'Caught exception: ',  $e->getMessage(), "\n";
+		$exceptionMessage =  $e->getMessage();
 	}
 	//printf('%s - %s - %s', $result['Status'], $result['Location'], $result['DomainName']) . "\n";
 	if($result['Status']=="InProgress"){
 		return $result;
 	}
-	return false;
+	//we check if the exceptionMessage was updated meaning there was an exception
+	if($exceptionMessage != ''){
+		$resultException = array('CreatingDistrib' => false, 'Message' => $exceptionMessage);
+		return $resultException;
+	}
+	//return false;
 }
 
 function modify_cf_distro($origin,$cname){	
@@ -89,6 +95,7 @@ function modify_cf_distro($origin,$cname){
 	$cref = $r['CallerReference'];
 	$od = $r['Origins']['Items'][0]['DomainName'];
 	//print_r($r);exit();
+	$exceptionMessage = "";
 	try{
 	$result = $client->updateDistribution(array(
 		'CallerReference' => $cref,
@@ -155,6 +162,11 @@ function modify_cf_distro($origin,$cname){
 		//print_r($result);exit();
 		return $result;
 	}
-	return false;
+	//we check if the exceptionMessage was updated meaning there was an exception
+	if($exceptionMessage != ''){
+		$resultException = array('CreatingDistrib' => false, 'Message' => $exceptionMessage);
+		return $resultException;
+	}
+	//return false;
 }
 ?>
