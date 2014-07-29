@@ -49,11 +49,8 @@ add_shortcode( 'allproperties', 'all_properties_sc' );
 
 
 //Predefined Searches
-function predefined_searches_sc($atts, $content ){
-	if(empty($content)){
-		$content = "Search Bucket";
-	}
-	$d = '<header class="pagination-centered"><h1>'.$content.'</h1></header><div id="results" class="propertyfinders-results bapi-summary" data-log="0" data-templatename="tmpl-searches-summary" data-entity="searches" data-rowfixselector=".pfrowfix" data-rowfixcount="3"></div>';
+function predefined_searches_sc(){
+	$d = '<header class="pagination-centered"><h1>'.$td['textdata']['Search Buckets'].'</h1></header><div id="results" class="propertyfinders-results bapi-summary" data-log="0" data-templatename="tmpl-searches-summary" data-entity="searches" data-rowfixselector=".pfrowfix" data-rowfixcount="3"></div>';
 	return $d;
 }
 add_shortcode( 'predefined-searches', 'predefined_searches_sc' );
