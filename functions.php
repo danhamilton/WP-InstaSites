@@ -171,6 +171,19 @@
 		}
 	}
 	
+	function urlHandler_bapi_ui_min() {
+		$url = $_SERVER['REQUEST_URI'];		
+		$url = strtolower($url);
+		if ($url == "/bapi.ui.min.js") {
+			header('Content-Type: application/javascript');	
+			header('Cache-Control: public');
+			$js = file_get_contents('bapi/bapi.ui.js', true);
+			$minifiedCode = \JShrink\Minifier::minify($js);
+			echo $minifiedCode;
+			exit();
+		}
+	}
+	
 	
 	/* Converted a url to a physical file path */
 	function get_local($url) {
