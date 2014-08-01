@@ -184,7 +184,6 @@
 		}
 	}
 	
-	
 	/* Converted a url to a physical file path */
 	function get_local($url) {
 		$urlParts = parse_url($url);
@@ -277,31 +276,46 @@
 		$args = array('meta_key' => 'bapikey', 'meta_value' => $pagekey, 'child_of' => $parentid);
 		return get_pages($args);		
 	}
-			/* Load jquery script */
-		function loadscriptjquery(){	
-		?>
-			<link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/jquery.ui.all.css" rel="stylesheet" />    
-			<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
-			<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-migrate/1.2.1/jquery-migrate.min.js" type="text/javascript"></script>
-			<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js" type="text/javascript"></script>
-			<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/i18n/jquery-ui-i18n.min.js" type="text/javascript"></script>
-	<!--[if lt IE 8]>
-	<script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/legacy.js', __FILE__)) ?>" ></script>
-	<![endif]-->
-	<!--[if gte IE 8]>
-	<script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/pickadate.min.js', __FILE__)) ?>" ></script>
-	<![endif]-->
-	<!--[if !IE]> -->
-			<script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/pickadate.min.js', __FILE__)) ?>" ></script>
-	<!-- <![endif]-->     
-		<?php	
+	
+	function enqueue_and_register_my_scripts_in_head(){
+		wp_register_script( 'jquery-min', '//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js',false,'1.9.1' );
+		wp_enqueue_script( 'jquery-min' );
+		
+		wp_register_script( 'jquery-migrate-min', '//cdnjs.cloudflare.com/ajax/libs/jquery-migrate/1.2.1/jquery-migrate.min.js',array( 'jquery-min'),'1.2.1' );
+		wp_enqueue_script( 'jquery-migrate-min' );
+		
+		wp_register_script( 'jquery-ui-min', '//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js',array( 'jquery-min'),'1.10.3' );
+		wp_enqueue_script( 'jquery-ui-min' );
+		
+		wp_register_script( 'jquery-ui-i18n-min', '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/i18n/jquery-ui-i18n.min.js',array( 'jquery-min'),'1.10.3' );
+		wp_enqueue_script( 'jquery-ui-i18n-min' );
+	}
+	
+	function enqueue_and_register_my_scripts_in_admin_head($hook) {
+		if('bookt-api/setup-sitesettings.php' == $hook ||'bookt-api/setup-sync.php' == $hook){
+			enqueue_and_register_my_scripts_in_head();
 		}
+	}
+	
+	/* Load conditional script */
+	function loadscriptjquery(){	
+	?>
+		<link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/jquery.ui.all.css" rel="stylesheet" />    
+		<!--[if lt IE 8]>
+		<script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/legacy.js', __FILE__)) ?>" ></script>
+		<![endif]-->
+		<!--[if gte IE 8]>
+		<script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/pickadate.min.js', __FILE__)) ?>" ></script>
+		<![endif]-->
+		<!--[if !IE]> -->
+		<script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/pickadate.min.js', __FILE__)) ?>" ></script>
+		<!-- <![endif]-->     
+	<?php	
+	}
 	
 	/* Common include files needed for BAPI */
-	function getconfig() {	
-		global $bapi_all_options;	
-		//echo 'getconfig';
-		//echo get_option('api_key');
+	function getconfig() {
+		global $bapi_all_options;
 		if($bapi_all_options['api_key']){
 			$apiKey = $bapi_all_options['api_key'];
 			$language = getbapilanguage();			
@@ -317,44 +331,28 @@
 			
 			$siteurl = str_replace("http://", "", $siteurl);
 			$sitesettings = $bapi_all_options['bapi_sitesettings'];
-?>
-<link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/jquery.ui.all.css" rel="stylesheet" />
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-migrate/1.2.1/jquery-migrate.min.js" type="text/javascript"></script>    
-<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js" type="text/javascript"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/i18n/jquery-ui-i18n.min.js" type="text/javascript"></script>
-<!--[if lt IE 8]>
-<script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/legacy.js', __FILE__)) ?>" ></script>
-<![endif]-->
-<!--[if gte IE 8]>
-<script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/pickadate.min.js', __FILE__)) ?>" ></script>
-<![endif]-->
-<!--[if !IE]> -->
-<script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/pickadate.min.js', __FILE__)) ?>" ></script>
-<!-- <![endif]-->
-<script type="text/javascript" src="<?= getbapijsurl($apiKey) ?>"></script>
-<script type="text/javascript" src="<?= getbapiuijsurl() ?>" ></script>		
-<script type="text/javascript" src="/bapi.textdata.js" ></script>
-<script type="text/javascript" src="/bapi.templates.js" ></script>
-<?php if (!empty($sitesettings) && $sitesettings!='') { ?>
-<script type="text/javascript" src="/bapi.config.js" ></script>
-<?php } ?>
-<script type="text/javascript">
-    preload_image = new Image(66,66); 
-    preload_image.src="<?= get_relative(plugins_url("/img/loading.gif", __FILE__)) ?>"; 
-	BAPI.UI.loading.setLoadingImgUrl('<?= get_relative(plugins_url("/img/loading.gif", __FILE__)) ?>');
-	BAPI.site.url =  '<?= $siteurl ?>';
-	<?php if ($secureurl!='') { ?>
-	BAPI.site.secureurl = '<?= $secureurl ?>';
-	<?php } ?>
-	BAPI.init();
-	BAPI.UI.jsroot = '<?= plugins_url("/", __FILE__) ?>';
-	BAPI.defaultOptions.logpageviews = true;
-	$(document).ready(function () { BAPI.UI.init(); });
-</script>
-
-<?php			
+			?>
+			<script type="text/javascript" src="<?= getbapijsurl($apiKey) ?>"></script>
+			<script type="text/javascript" src="/bapi.ui.min.js" ></script>		
+			<script type="text/javascript" src="/bapi.textdata.js" ></script>
+			<script type="text/javascript" src="/bapi.templates.js" ></script>
+			<?php if (!empty($sitesettings) && $sitesettings!='') { ?>
+				<script type="text/javascript" src="/bapi.config.js" ></script>
+			<?php } ?>
+			<script type="text/javascript">
+				preload_image = new Image(66,66); 
+				preload_image.src="<?= get_relative(plugins_url("/img/loading.gif", __FILE__)) ?>"; 
+				BAPI.UI.loading.setLoadingImgUrl('<?= get_relative(plugins_url("/img/loading.gif", __FILE__)) ?>');
+				BAPI.site.url =  '<?= $siteurl ?>';
+				<?php if ($secureurl!='') { ?>
+				BAPI.site.secureurl = '<?= $secureurl ?>';
+				<?php } ?>
+				BAPI.init();
+				BAPI.UI.jsroot = '<?= plugins_url("/", __FILE__) ?>';
+				BAPI.defaultOptions.logpageviews = true;
+				$(document).ready(function () { BAPI.UI.init(); });
+			</script>
+			<?php			
 		}
 	}
 
@@ -755,19 +753,7 @@ function display_gw_verification(){
 }
 
 function getTextDataArray(){
-	bapi_wp_site_options();
-	global $bapi_all_options;
-	$apikey = $bapi_all_options["api_key"];
-	$connecturl = $bapi_all_options["bapi_baseurl"];
-	//var_dump($connecturl);
-	$dataurl = 'https://'.$connecturl.'/ws/?method=get&entity=textdata&apikey='.$apikey;
-	$data = file_get_contents($dataurl);
-	$textDataArray = json_decode($data,TRUE);
-	$textDataArray = $textDataArray["result"];
-	if($textDataArray === null){
-		$textDataArray = '';
-	}
-	return $textDataArray;
+	return BAPISync::getTextData();
 }
 	/**
 	* Remove quick edit link in the list of all pages for non super users.
