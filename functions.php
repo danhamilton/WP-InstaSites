@@ -236,7 +236,7 @@
 					$minifiedCode = \JShrink\Minifier::minify($js);
 					fwrite($fp, $minifiedCode);
 					fclose($fp);
-					include($cacheFile);
+					echo $minifiedCode;
 				}
 				exit();
 			}
