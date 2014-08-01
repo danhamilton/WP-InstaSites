@@ -70,6 +70,7 @@ if($blog->deleted != '1' && $blog->archived != '1'){ //Only load the plugin if t
 	add_action('init','urlHandler_sitelist',4);	// handler for /sitelist (possible warmup list)
 	add_action('init','urlHandler_timthumb',1);	// handler for /img.php 
 	add_action('init','urlHandler_bapi_ui_min',1);	// handler for /bapi.ui.min.js
+	add_action('init','urlHandler_bapi_js_combined',1);	// handler for /bapi.ui.min.js
 	add_action('init','disable_kses_content',20);
 	add_action('template_redirect', 'google_sitemap'); // sitemap handler
 	add_action('wp_login','bapi_reset_first_look');

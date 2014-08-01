@@ -55,7 +55,6 @@
 	}
 	
 	function urlHandler_bapitextdata() {
-		global $bapi_all_options; 
 		$url = get_relative($_SERVER['REQUEST_URI']);
 		if (strtolower($url) != "/bapi.textdata.js")
 			return; // not our handler
@@ -67,14 +66,20 @@
 		$expires = gmdate('D, d M Y H:i:s \G\M\T', $expires);
 		header( 'Expires: ' . $expires );
 		
-		$js = $bapi_all_options['bapi_textdata']; // core data should have been synced prior to this
-		echo "/*\r\n";
-		echo "	BAPI TextData\r\n";
-		echo "	Last updated: " . date('r',$lastupdatetime) . "\r\n";	
-		echo "	Language: " . getbapilanguage() . "\r\n";
-		echo "*/\r\n\r\n";
-		echo "BAPI.textdata = " . $js . ";\r\n";
+		echo urlHandler_bapitextdata_helper();
 		exit();
+	}
+	
+	function urlHandler_bapitextdata_helper() {
+		global $bapi_all_options; 
+		$js = $bapi_all_options['bapi_textdata']; // core data should have been synced prior to this
+		$jsn = "/*\r\n";
+		$jsn .= "	BAPI TextData\r\n";
+		$jsn .= "	Last updated: " . date('r',$lastupdatetime) . "\r\n";	
+		$jsn .= "	Language: " . getbapilanguage() . "\r\n";
+		$jsn .= "*/\r\n\r\n";
+		$jsn .= "BAPI.textdata = " . $js . ";\r\n";	
+		return $jsn;
 	}
 	
 	function urlHandler_bapiconfig() {
@@ -85,14 +90,19 @@
 		header('Content-Type: application/javascript');	
 		header('Cache-Control: public');
 		//header( 'Expires: Sat, 26 Jul 1997 05:00:00 GMT' );
-		
-		echo 'BAPI.config().searchmodes={}||BAPI.config().searchmodes'; echo "\r\n";
+		echo urlHandler_bapiconfig_helper();
+		exit();
+	}
+	
+	function urlHandler_bapiconfig_helper() {
+		$js = '';
+		$js .= 'BAPI.config().searchmodes={}||BAPI.config().searchmodes'; echo "\r\n";
 		global $bapi_all_options;
 		$sitesettings = $bapi_all_options['bapi_sitesettings'];
 		$array = json_decode($sitesettings, TRUE);
 		foreach($array as $v) {
 			if (strpos($v, 'BAPI.config()') === 0) {
-				echo stripslashes($v); echo "\r\n";
+				$js .= stripslashes($v); echo "\r\n";
 			}
 			//print_r($v);
 		}
@@ -102,18 +112,17 @@
 			$theProperty = $bapi->quicksearch("property",null,false);
 			$headlinesArray = $theProperty["result"];
 			if(count($headlinesArray) > 0){
-				echo "BAPI.config().headline.values=["; 
+				$js .= "BAPI.config().headline.values=["; 
 				  foreach ( $headlinesArray as $page ){
-					echo '{"Label":"'.str_replace('"',"&quot;",$page["obj"]).'"}';
+					$js .= '{"Label":"'.str_replace('"',"&quot;",$page["obj"]).'"}';
 					if(end($headlinesArray) != $page){
-						echo ","; // not the last element
+						$js .= ","; // not the last element
 					}
 				  }
-				echo "]";
+				$js .= "]";
 			}
 		}
-		
-		exit();
+		return $js;
 	}
 	
 	
@@ -125,20 +134,25 @@
 		header('Content-Type: application/javascript');	
 		header('Cache-Control: public');
 		//header( 'Expires: Sat, 26 Jul 1997 05:00:00 GMT' );
-				 
+		echo urlHandler_bapitemplates_helper();
+		exit();
+	}
+	
+	function urlHandler_bapitemplates_helper() {		 
 		$c = file_get_contents(BAPISync::getMustacheLocation());
 		$j2 = rawurlencode($c); //addslashes($c);		
+		$js = "";
 		
 		if (BAPISync::isMustacheOverriden()) {
-			echo "// custom bapi template file\r\n";
+			$js .= "// custom bapi template file\r\n";
 		} else {
-			echo "// baseline bapi template file\r\n";
+			$js .= "// baseline bapi template file\r\n";
 		}
 		
-		echo "var t = '" . $j2 . "';\r\n";	
-		echo "t = decodeURIComponent(t);\r\n";
-		echo "BAPI.templates.set(t);\r\n";	
-		exit();
+		$js .= "var t = '" . $j2 . "';\r\n";	
+		$js .= "t = decodeURIComponent(t);\r\n";
+		$js .= "BAPI.templates.set(t);\r\n";	
+		return $js;
 	}
 	
 	function urlHandler_sitelist() {
@@ -182,6 +196,51 @@
 			echo $minifiedCode;
 			exit();
 		}
+	}
+	
+	function urlHandler_bapi_js_combined() {
+		global $bapi_all_options;
+		if($bapi_all_options['api_key']){
+			$apiKey = $bapi_all_options['api_key'];
+			$language = getbapilanguage();			
+			
+			$secureurl = '';
+			if($bapi_all_options['bapi_secureurl']){
+				$secureurl = $bapi_all_options['bapi_secureurl'];
+			}
+			$siteurl = $bapi_all_options['home'];
+			if($bapi_all_options['bapi_site_cdn_domain']){
+				$siteurl = $bapi_all_options['bapi_site_cdn_domain'];
+			}
+			
+			$siteurl = str_replace("http://", "", $siteurl);
+			$sitesettings = $bapi_all_options['bapi_sitesettings'];
+			$url = $_SERVER['REQUEST_URI'];		
+			$url = strtolower($url);
+			$url = substr($url, 0, 21);
+			if ($url == "/bapi.combined.min.js") {	
+				header('Content-Type: application/javascript');	
+				header('Cache-Control: public');
+				$js = urlHandler_bapi_js_combined_helper();
+				$minifiedCode = \JShrink\Minifier::minify($js);
+				echo $minifiedCode;
+				exit();
+			}
+		}
+	}
+	
+	function urlHandler_bapi_js_combined_helper() {
+		$js = '';
+		//$getopts=array('http'=>array('method'=>"GET",'header'=>"User-Agent: InstaSites Agent\r\nReferer: http://" . $_SERVER[HTTP_HOST] . $_SERVER[REQUEST_URI] . "\r\n"));
+		//$stream = stream_context_create($getopts);
+		//$js .= file_get_contents(getbapijsurl($apiKey),FALSE,$stream);
+		$js .= file_get_contents('bapi/bapi.ui.js', true);
+		$js .= urlHandler_bapitextdata_helper();
+		$js .= urlHandler_bapitemplates_helper();
+		if (!empty($sitesettings) && $sitesettings!='') {
+			$js .= urlHandler_bapiconfig_helper();
+		}
+		return $js;
 	}
 	
 	/* Converted a url to a physical file path */
@@ -332,13 +391,8 @@
 			$siteurl = str_replace("http://", "", $siteurl);
 			$sitesettings = $bapi_all_options['bapi_sitesettings'];
 			?>
-			<script type="text/javascript" src="<?= getbapijsurl($apiKey) ?>"></script>
-			<script type="text/javascript" src="/bapi.ui.min.js" ></script>		
-			<script type="text/javascript" src="/bapi.textdata.js" ></script>
-			<script type="text/javascript" src="/bapi.templates.js" ></script>
-			<?php if (!empty($sitesettings) && $sitesettings!='') { ?>
-				<script type="text/javascript" src="/bapi.config.js" ></script>
-			<?php } ?>
+			<script type="text/javascript" src="<?= getbapijsurl($apiKey) ?>" ></script>
+			<script type="text/javascript" src="/bapi.combined.min.js?ver=<?= md5(urlHandler_bapi_js_combined_helper()) ?>" ></script>
 			<script type="text/javascript">
 				preload_image = new Image(66,66); 
 				preload_image.src="<?= get_relative(plugins_url("/img/loading.gif", __FILE__)) ?>"; 
