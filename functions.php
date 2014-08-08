@@ -256,7 +256,6 @@
 		if (!empty($sitesettings) && $sitesettings!='') {
 			$js .= urlHandler_bapiconfig_helper();
 		}
-		echo $js; exit();
 		return $js;
 	}
 	
