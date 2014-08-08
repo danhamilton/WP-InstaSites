@@ -244,6 +244,8 @@
 	}
 	
 	function urlHandler_bapi_js_combined_helper() {
+		global $bapi_all_options;
+		$sitesettings = $bapi_all_options['bapi_sitesettings'];
 		$js = '';
 		//$getopts=array('http'=>array('method'=>"GET",'header'=>"User-Agent: InstaSites Agent\r\nReferer: http://" . $_SERVER[HTTP_HOST] . $_SERVER[REQUEST_URI] . "\r\n"));
 		//$stream = stream_context_create($getopts);
