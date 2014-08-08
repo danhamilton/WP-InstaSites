@@ -96,7 +96,8 @@
 	
 	function urlHandler_bapiconfig_helper() {
 		$js = '';
-		$js .= 'BAPI.config().searchmodes={}||BAPI.config().searchmodes'; echo "\r\n";
+		$js .= 'BAPI.config().searchmodes={}||BAPI.config().searchmodes'; 
+		$js .= "\r\n";
 		global $bapi_all_options;
 		$sitesettings = $bapi_all_options['bapi_sitesettings'];
 		$array = json_decode($sitesettings, TRUE);
