@@ -2506,5 +2506,6 @@ function loadRaitingStars() {
 		$('i.starsvalue',this).html('('+review+')');
 	});	
 }
+loadRaitingStars();
 })(BAPI.UI); 
 
