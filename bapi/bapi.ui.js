@@ -119,12 +119,19 @@ context.inithelpers = {
 		});	
 	},
 	loadRaitingStars: function(options){
+		function roundHalf(num) {
+    		num = Math.round(num*2)/2;
+    		return num;
+			}
 		 $('.starsreviews div').each(function(i,item) {
     		var stars = $(item).attr('ID');
 				stars = stars.split('-');
 				stars = stars[1];
 				/* we rounded the avg review to 2 decimals (x,xx) */
-				var review = parseFloat( stars ).toFixed( 2 );
+				var floatstars = parseFloat( stars ).toFixed( 2 );
+				var rounded = roundHalf(floatstars);
+				var review = rounded;
+				
         		// value is in 0 - 5 range, multiply to get width of image
         		var widthsize = Math.max(0, (Math.min(5, review))) * 16;
         		var $span = $('<span />').width(widthsize);
