@@ -1020,7 +1020,7 @@ context.createAvailabilityWidget = function (targetid, data, options) {
 	if (typeof (options.maxbookingdays) === "undefined" || options.maxbookingdays === null) {
 		//based on months now
 	options.maxbookingdays = BAPI.config().maxbookingdays; }
-	if (typeof (options.languageISO) === "undefined" || options.languageISO === null) { options.languageISO = ''; }
+	if (typeof (options.languageISO) === "undefined" || options.languageISO === null) { options.languageISO = BAPI.site.language; }
 	if (typeof(options.numinrow)==="undefined" || options.numinrow===null || options.numinrows<=0) { options.numinrow = 1; }
 	options.numberOfMonths = [ Math.ceil(options.availcalendarmonths / options.numinrow), options.numinrow ];
 	
