@@ -141,7 +141,7 @@ getconfig();
 	</td>	
 </tr>
 <!--<tr valign="top">
-	<td scope="row">Sleeps Search (Exact):</td>
+	<td scope="row">Sleeps Search (Exactly):</td>
 	<td><input class="sleepsearch-cbx" type="checkbox" checked="" />
 	<input type="hidden" id="sleepsearch" name="sleepsearch" data-prevalue="BAPI.config().sleeps.enabled=" value="" />
 	</td>	
@@ -152,10 +152,10 @@ getconfig();
 	<input type="hidden" id="minsleepsearch" name="minsleepsearch" data-prevalue="BAPI.config().minsleeps={}; BAPI.config().minsleeps.enabled=" value="" />
 	</td>	
 </tr>
-<tr valign="top" style="display:none">
-	<td scope="row">Bedroom Search (Exact):</td>
+<tr valign="top">
+	<td scope="row">Bedroom Search (Exactly):</td>
 	<td><input class="bedsearch-cbx" type="checkbox" checked="" />
-	<input type="hidden" id="bedsearch" name="bedsearch" data-prevalue="BAPI.config().beds.enabled=" value="BAPI.config().beds.enabled=false;" />
+	<input type="hidden" id="bedsearch" name="bedsearch" data-prevalue="BAPI.config().beds.enabled=" value="" />
 	</td>
 </tr>
 <tr valign="top">
@@ -301,42 +301,10 @@ getconfig();
 
 <script type="text/javascript" src="<?= get_relative(plugins_url('/js/jquery.ibutton.min.js', __FILE__)) ?>" ></script>
 <link type="text/css" href="<?= get_relative(plugins_url('/css/jquery.ibutton.min.css', __FILE__)) ?>" rel="stylesheet" media="all" />
-<?php //var_dump(BAPISync::getSolutionData()); ?>
 <script type="text/javascript">
 <?php
-$bapiSolutionData = BAPISync::getSolutionData();
-$bapiSolutionDataConfig = $bapiSolutionData["ConfigObj"];
-$maxratesearch = ($bapiSolutionDataConfig["rate"]["enabled"]) ? 'true' : 'false';
-$amenitysearch = ($bapiSolutionDataConfig["amenity"]["enabled"]) ? 'true' : 'false';
-$devsearch = ($bapiSolutionDataConfig["dev"]["enabled"]) ? 'true' : 'false';
-$adultsearch = ($bapiSolutionDataConfig["adults"]["enabled"]) ? 'true' : 'false';
-$adultsearch = ($bapiSolutionDataConfig["adults"]["enabled"]) ? 'true' : 'false';
-$childsearch = ($bapiSolutionDataConfig["children"]["enabled"]) ? 'true' : 'false';
-$headlinesearch = ($bapiSolutionDataConfig["headline"]["enabled"]) ? 'true' : 'false';
-$propdetailavailcal = ($bapiSolutionDataConfig["displayavailcalendar"]) ? 'true' : 'false';
-$availcalendarmonths = $bapiSolutionDataConfig["availcalendarmonths"];
-$propdetailreviewtab = ($bapiSolutionDataConfig["hasreviews"]) ? 'true' : 'false';
-$propdetailrateavailtab = ($bapiSolutionDataConfig["hideratesandavailabilitytab"]) ? 'true' : 'false';
-$propdetailratestable = ($bapiSolutionDataConfig["hideratestable"]) ? 'true' : 'false';
-$poitypefilter = ($bapiSolutionDataConfig["haspoitypefilter"]) ? 'true' : 'false';
-$checkin = ($bapiSolutionDataConfig["checkin"]["enabled"]) ? 'true' : 'false';
-$checkout = ($bapiSolutionDataConfig["checkout"]["enabled"]) ? 'true' : 'false';
-$los = ($bapiSolutionDataConfig["los"]["enabled"]) ? 'true' : 'false';
-$losdefaultval = $bapiSolutionDataConfig["los"]["defaultval"];
-$losminval = $bapiSolutionDataConfig["los"]["minval"];
-$categorysearch = ($bapiSolutionDataConfig["category"]["enabled"]) ? 'true' : 'false';
-$minsleepsearch = ($bapiSolutionDataConfig["sleeps"]["enabled"]) ? 'true' : 'false';
-$minbedsearch = ($bapiSolutionDataConfig["beds"]["enabled"]) ? 'true' : 'false';
-$maxbedsearch = $bapiSolutionDataConfig["beds"]["maxval"];
-$roomsearch = ($bapiSolutionDataConfig["rooms"]["enabled"]) ? 'true' : 'false';
-$city = ($bapiSolutionDataConfig["city"]["enabled"]) ? 'true' : 'false';
-$location = ($bapiSolutionDataConfig["location"]["enabled"]) ? 'true' : 'false';
-$averagestarsreviews = ($bapiSolutionDataConfig["hidestarsreviews"]) ? 'true' : 'false';
-
-$showunavailunits = ($bapiSolutionData["BizRules"]["Search By Availability"]) ? 'true' : 'false';
-$searchsort = $bapiSolutionData["BizRules"]["Search Sort Order Option"];
-
-/*		ByCategory = 0
+/* the sort options map:
+			ByCategory = 0
             ByBedrooms = 1
             ByPriceLoHi = 2
             ByPriceHiLo = 3
@@ -374,7 +342,41 @@ $searchsort = $bapiSolutionData["BizRules"]["Search Sort Order Option"];
 		if(strpos($sitesettings,'BAPI.config().amenity.enabled') == false){
 			echo 'settings.amenitysearch = "BAPI.config().amenity.enabled=false;";';
 		}
+		if(strpos($sitesettings,'BAPI.config().sleeps.enabled') == false){
+			echo 'settings.sleepsearch = "BAPI.config().sleeps.enabled=false;";';
+		}
 	} else {
+	/* this is the data from the app, this is in the database, the bizrules */
+	$bapiSolutionData = BAPISync::getSolutionData();
+	$bapiSolutionDataConfig = $bapiSolutionData["ConfigObj"];
+	$maxratesearch = ($bapiSolutionDataConfig["rate"]["enabled"]) ? 'true' : 'false';
+	$amenitysearch = ($bapiSolutionDataConfig["amenity"]["enabled"]) ? 'true' : 'false';
+	$devsearch = ($bapiSolutionDataConfig["dev"]["enabled"]) ? 'true' : 'false';
+	$adultsearch = ($bapiSolutionDataConfig["adults"]["enabled"]) ? 'true' : 'false';
+	$childsearch = ($bapiSolutionDataConfig["children"]["enabled"]) ? 'true' : 'false';
+	$headlinesearch = ($bapiSolutionDataConfig["headline"]["enabled"]) ? 'true' : 'false';
+	$propdetailavailcal = ($bapiSolutionDataConfig["displayavailcalendar"]) ? 'true' : 'false';
+	$availcalendarmonths = $bapiSolutionDataConfig["availcalendarmonths"];
+	$propdetailreviewtab = ($bapiSolutionDataConfig["hasreviews"]) ? 'true' : 'false';
+	$propdetailrateavailtab = ($bapiSolutionDataConfig["hideratesandavailabilitytab"]) ? 'true' : 'false';
+	$propdetailratestable = ($bapiSolutionDataConfig["hideratestable"]) ? 'true' : 'false';
+	$poitypefilter = ($bapiSolutionDataConfig["haspoitypefilter"]) ? 'true' : 'false';
+	$checkin = ($bapiSolutionDataConfig["checkin"]["enabled"]) ? 'true' : 'false';
+	$checkout = ($bapiSolutionDataConfig["checkout"]["enabled"]) ? 'true' : 'false';
+	$los = ($bapiSolutionDataConfig["los"]["enabled"]) ? 'true' : 'false';
+	$losdefaultval = $bapiSolutionDataConfig["los"]["defaultval"];
+	$losminval = $bapiSolutionDataConfig["los"]["minval"];
+	$categorysearch = ($bapiSolutionDataConfig["category"]["enabled"]) ? 'true' : 'false';
+	$sleepexactlysearch = ($bapiSolutionDataConfig["sleeps"]["enabled"]) ? 'true' : 'false';
+	$bedexactlysearch = ($bapiSolutionDataConfig["beds"]["enabled"]) ? 'true' : 'false';
+	$maxbedsearch = $bapiSolutionDataConfig["beds"]["maxval"];
+	$roomsearch = ($bapiSolutionDataConfig["rooms"]["enabled"]) ? 'true' : 'false';
+	$city = ($bapiSolutionDataConfig["city"]["enabled"]) ? 'true' : 'false';
+	$location = ($bapiSolutionDataConfig["location"]["enabled"]) ? 'true' : 'false';
+	$averagestarsreviews = ($bapiSolutionDataConfig["hidestarsreviews"]) ? 'true' : 'false';
+	$showunavailunits = ($bapiSolutionData["BizRules"]["Search By Availability"]) ? 'true' : 'false';
+	$searchsort = $bapiSolutionData["BizRules"]["Search Sort Order Option"];
+	
 		echo '
 		var locsearch = "BAPI.config().city.enabled=false; BAPI.config().location.enabled=false;";
 		if('.$city.' && '.$location.'==false )
@@ -444,20 +446,27 @@ $searchsort = $bapiSolutionData["BizRules"]["Search Sort Order Option"];
 			"checkinoutmode": "BAPI.config().checkin.enabled='.$checkin.'; BAPI.config().checkout.enabled='.$checkout.'; BAPI.config().los.enabled='.$los.';",
 			"deflos": "BAPI.config().los.defaultval='.$losdefaultval.'; BAPI.config().los.minval='.$losminval.';",
 			"categorysearch": "BAPI.config().category.enabled='.$categorysearch.';",
-			"minsleepsearch": "BAPI.config().minsleeps={}; BAPI.config().minsleeps.enabled='.$minsleepsearch.';",
-			"minbedsearch": "BAPI.config().minbeds={}; BAPI.config().minbeds.enabled='.$minbedsearch.';",
+			"minsleepsearch": "BAPI.config().minsleeps={}; BAPI.config().minsleeps.enabled=false;",
+			"sleepsearch": "BAPI.config().sleeps.enabled='.$sleepexactlysearch.';",
+			"minbedsearch": "BAPI.config().minbeds={}; BAPI.config().minbeds.enabled=false;",
 			"maxbedsearch": "BAPI.config().beds.values=BAPI.config().beds.values.splice(0,'.$maxbedsearch.');",
-			"bedsearch": "BAPI.config().beds.enabled='.$minbedsearch.';",
+			"bedsearch": "BAPI.config().beds.enabled='.$bedexactlysearch.';",
 			"roomsearch" : "BAPI.config().rooms.enabled='.$roomsearch.';"
 		};';
 	}	
 ?>
 
 jQuery(document).ready(function () {
-/* we already have min beds */
-settings["bedsearch"] = "BAPI.config().beds.enabled=false;";
 /* we are not showing this yet */
 settings["roomsearch"] = "BAPI.config().rooms.enabled=false;";
+
+/* there can be only 1 bedroom setting */
+$('.bedsearch-cbx').change(function(){
+	if($('.bedsearch-cbx').is(":checked")){$('.minbedsearch-cbx').iButton("toggle", false);}
+});
+$('.minbedsearch-cbx').change(function(){
+	if($('.minbedsearch-cbx').is(":checked")){$('.bedsearch-cbx').iButton("toggle", false);}
+});
 
 /* lets populate the dropdown */
 	$.each(BAPI.config().los.values,function(key,value) {
@@ -516,7 +525,7 @@ settings["roomsearch"] = "BAPI.config().rooms.enabled=false;";
         $("#maxbedsearch").append('<option value="BAPI.config().beds.values=BAPI.config().beds.values.splice(0,'+ value.Data +');">' + value.Label  + '</option>');
 	});*/
 	/* make all checkboxes iphone style */
-	$(":checkbox").iButton();
+	jQuery(":checkbox").iButton();
 	// update the settings
 	jQuery.each(settings, function( key, value ) {
 		//console.log(key + '=' + value);

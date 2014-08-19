@@ -2392,8 +2392,10 @@ function loadFormFromSession(s) {
 	$('.sessionaltid').val(s.altid);
 	if (!BAPI.isempty(s.adults)) { $('.sessionadultsmin').val(s.adults.min); }
 	if (!BAPI.isempty(s.children)) { $('.sessionchildrenmin').val(s.children.min); }
-	if (!BAPI.isempty(s.sleeps)) { $('.sessionsleepsmin').val(s.sleeps.min); }
-	if (!BAPI.isempty(s.beds)) { $('.sessionbedsmin').val(s.beds.min); }
+	if (!BAPI.isempty(s.sleeps) && !BAPI.isempty(s.sleeps.exactly)) { $('.sessionsleepsexactly').val(s.sleeps.exactly); }
+	if (!BAPI.isempty(s.sleeps) && !BAPI.isempty(s.sleeps.min)) { $('.sessionsleepsmin').val(s.sleeps.min); }
+	if (!BAPI.isempty(s.beds) && !BAPI.isempty(s.beds.exactly)) { $('.sessionbedsexactly').val(s.beds.exactly); }
+	if (!BAPI.isempty(s.beds) && !BAPI.isempty(s.beds.min)) { $('.sessionbedsmin').val(s.beds.min); }
 	if (!BAPI.isempty(s.baths)) { $('.sessionbathsmin').val(s.baths.min); }
 	if (!BAPI.isempty(s.maxrate)) { $('.sessionmaxratemax').val(s.maxrate.max); }
 	if (!BAPI.isempty(s.rooms)) { $('.sessionroomsmin').val(s.rooms.min); }

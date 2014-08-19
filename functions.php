@@ -100,27 +100,30 @@
 		$js .= "\r\n";
 		global $bapi_all_options;
 		$sitesettings = $bapi_all_options['bapi_sitesettings'];
-		$array = json_decode($sitesettings, TRUE);
-		foreach($array as $v) {
-			if (strpos($v, 'BAPI.config()') === 0) {
-				$js .= stripslashes($v); echo "\r\n";
+		/*do nothing if $sitesettings is null or empty*/
+		if($sitesettings != null && $sitesettings != ''){
+			$array = json_decode($sitesettings, TRUE);
+			foreach($array as $v) {
+				if (strpos($v, 'BAPI.config()') === 0) {
+					$js .= stripslashes($v); echo "\r\n";
+				}
+				//print_r($v);
 			}
-			//print_r($v);
-		}
-				/* we check if the healine field its enabled. if not dont do a thing*/
-		if (strpos($sitesettings,'BAPI.config().headline.enabled=true;') !== false){
-			$bapi = getBAPIObj();
-			$theProperty = $bapi->quicksearch("property",null,false);
-			$headlinesArray = $theProperty["result"];
-			if(count($headlinesArray) > 0){
-				$js .= "BAPI.config().headline.values=["; 
-				  foreach ( $headlinesArray as $page ){
-					$js .= '{"Label":"'.str_replace('"',"&quot;",$page["obj"]).'"}';
-					if(end($headlinesArray) != $page){
-						$js .= ","; // not the last element
-					}
-				  }
-				$js .= "]";
+			/* we check if the headline field its enabled. if not dont do a thing*/
+			if (strpos($sitesettings,'BAPI.config().headline.enabled=true;') !== false){
+				$bapi = getBAPIObj();
+				$theProperty = $bapi->quicksearch("property",null,false);
+				$headlinesArray = $theProperty["result"];
+				if(count($headlinesArray) > 0){
+					$js .= "BAPI.config().headline.values=["; 
+					  foreach ( $headlinesArray as $page ){
+						$js .= '{"Label":"'.str_replace('"',"&quot;",$page["obj"]).'"}';
+						if(end($headlinesArray) != $page){
+							$js .= ","; // not the last element
+						}
+					  }
+					$js .= "]";
+				}
 			}
 		}
 		return $js;
