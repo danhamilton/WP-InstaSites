@@ -66,7 +66,8 @@ context.init = function(options) {
 	context.inithelpers.applydotdotdot(options);
 	context.inithelpers.setupmapwidgets(options);
 	context.inithelpers.setupprintlisteners(options);
-	context.inithelpers.setupbapitracker(options);		
+	context.inithelpers.setupbapitracker(options);
+	context.inithelpers.loadRaitingStars(options);		
 	$("img").unveil();
 
 	// ensure that searchmodes exists
@@ -115,6 +116,27 @@ context.inithelpers = {
 			var selector = '#' + ctl.attr('id');
 			BAPI.log("Creating search widget for " + selector, 3);
 			context.createSearchWidget(selector, { "searchurl": searchurl, "template": BAPI.templates.get(templatename), "log": dologging });		
+		});	
+	},
+	loadRaitingStars: function(options){
+		function roundHalf(num) {
+    		num = Math.round(num*2)/2;
+    		return num;
+			}
+		 $('.starsreviews div').each(function(i,item) {
+    		var stars = $(item).attr('ID');
+				stars = stars.split('-');
+				stars = stars[1];
+				/* we rounded the avg review to 2 decimals (x,xx) */
+				var floatstars = parseFloat( stars ).toFixed( 2 );
+				var rounded = roundHalf(floatstars);
+				var review = rounded;
+				
+        		// value is in 0 - 5 range, multiply to get width of image
+        		var widthsize = Math.max(0, (Math.min(5, review))) * 16;
+        		var $span = $('<span />').width(widthsize);
+				$('span.stars',this).html($span);
+				$('i.starsvalue',this).html('('+review+')');
 		});	
 	},
 	setuprateblockwidgets: function(options) {
@@ -1113,8 +1135,7 @@ context.createSimilarPropertiesWidget = function (targetid, pid, options) {
 		data.textdata = BAPI.textdata;
 		$(targetid).html(Mustache.to_html(options.template, data));
 	});	
-	/* Load the raiting function */	
-	loadRaitingStars();
+	
 }
 
 context.createFeaturedPropertiesWidget = function (targetid, options) {
@@ -2310,7 +2331,7 @@ function doSearch(targetid, ids, entity, options, alldata, callback) {
 			loadmoreProperties(targetid, ids, entity, options, newAlldata, pagenumber, true, callback);
 		}
 	/* Load the raiting function */	
-	loadRaitingStars();
+	context.inithelpers.loadRaitingStars(options);
 	});
 	/*we remove the click event attached with live so we dont attach the vent more than 1 time, also we attach the event to the showmore of this targetid */
 	$(targetid+" .showmore").die( "click" );
@@ -2494,20 +2515,5 @@ function setRows(findThis,wrapthis,needFlex,needWrapRows,howManyWrap){
 function parseDate(jsonDateString) {
     return new Date(parseInt(jsonDateString.replace('/Date(', '')));
 }
-function loadRaitingStars() {	
-   $('.starsreviews div').each(function(i,item) {
-    var stars = $(item).attr('ID');
-		stars = stars.split('-');
-		stars = stars[1];
-		/* we rounded the avg review to 2 decimals (x,xx) */
-		var review = parseFloat( stars ).toFixed( 2 );
-        // value is in 0 - 5 range, multiply to get width of image
-        var widthsize = Math.max(0, (Math.min(5, review))) * 16;
-        var $span = $('<span />').width(widthsize);
-		$('span.stars',this).html($span);
-		$('i.starsvalue',this).html('('+review+')');
-	});	
-}
-loadRaitingStars();
 })(BAPI.UI); 
 
