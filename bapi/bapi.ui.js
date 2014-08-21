@@ -1042,16 +1042,31 @@ context.createAvailabilityWidget = function (targetid, data, options) {
 	if (typeof (options.maxbookingdays) === "undefined" || options.maxbookingdays === null) {
 		//based on months now
 	options.maxbookingdays = BAPI.config().maxbookingdays; }
-	if (typeof (options.languageISO) === "undefined" || options.languageISO === null) { options.languageISO = BAPI.site.language; }
+	var supLangs=["af", "ar-DZ", "ar", "az", "be", "bg", "bs", "ca", "cs", "cy-GB", "da", "de", "el","en-AU", "en-GB", 
+	"en-NZ", "en-US", "eo", "es", "et", "eu", "fa", "fi", "fo", "fr-CA", "fr-CH", "fr","gl", "he", "hi", "hr", "hu", 
+	"hy", "id", "is", "it", "ja", "ka", "kk", "km", "ko", "ky","lb", "lt", "lv", "mk", "ml", "ms", "nb", "nl-BE", "nl", 
+	"nn", "no", "pl", "pt-BR", "pt","rm", "ro", "ru", "sk", "sl", "sq", "sr-SR", "sr", "sv", "ta", "th", "tj", "tr", "uk", "vi", 
+	"zh-CN", "zh-HK", "zh-TW"];
+	
+	if (typeof (options.languageISO) === "undefined" || options.languageISO === null) { options.languageISO = BAPI.site.language;}
 	if (typeof(options.numinrow)==="undefined" || options.numinrow===null || options.numinrows<=0) { options.numinrow = 1; }
 	options.numberOfMonths = [ Math.ceil(options.availcalendarmonths / options.numinrow), options.numinrow ];
 	
+	var lang=options.languageISO;
+	if(lang == "pt-PT") {lang = "pt-BR"};
+    if (lang == "en-IE") {lang = "en-GB"};
+	if(supLangs.indexOf(lang)==-1 && lang.length==5){
+        lang=lang.substring(0,2);
+    }
+    if(supLangs.indexOf(lang)>-1){
+        lang='en-US';
+    }
 	var p = data.result[0];
-	if (options.languageISO=='en' && options.language!='en-AU' && options.language!='en-GB' && options.language!='en-NZ') {
+	if (lang=='en' ) {
 		$.datepicker.setDefaults( $.datepicker.regional[''] );
 	}
 	else {
-		$.datepicker.setDefaults( $.datepicker.regional[options.languageISO] );
+		$.datepicker.setDefaults( $.datepicker.regional[lang] );
 	}
 	/* Optimizing the availability array contiguos dates can be merged so they are not separated items in the array making the array smaller */
 	var notavailableArrayDays = [];
