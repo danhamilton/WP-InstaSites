@@ -16,28 +16,54 @@ Features
 - Unlimited Email & Phone Support
 - Comprehensive Report Suite
 
-Powered by InstaManager (http://www.instamanager.com)
-Requires an *API key* from InstaManager.  Go to http://www.instamanager.com/contactus to request a key.
+- Powered by InstaManager (http://www.instamanager.com)
+- Requires an *API key* from InstaManager. Go to http://www.instamanager.com/contactus to request a key.
 
 
 ============================
 Installation Considerations
 ============================
-• Apache mod_rewrite must be enabled.  Use command 'a2enmod rewrite' and then restart apache for this change to take effect.
 
-• `.htaccess` file must contain the following:
+Apache config
+-------------
+
+   • Apache `mod_rewrite` must be enabled.  Use command `a2enmod rewrite` and then restart apache for this change to take effect.
+
+Wordpress config
+----------------
+
+This plugin requires multiuser version of WP. To enable μWP after installation of WP do the following:
+
+   • go edit `wp-config.php` file to add the `define('WP_ALLOW_MULTISITE', true);` line. This will enable the option ‘Network’ under the ‘Tools’ menu in your administration area;
+   • create a new folder named `blogs.dir` inside your `wp-content` folder;
+   • navigate to **Tools⇒Network** and follow the instructions on the screen. Add following to your `wp-config.php` file:
 
 ```
-# BEGIN WordPress
-<IfModule mod_rewrite.c>
+define('MULTISITE', true);
+define('SUBDOMAIN_INSTALL', false);
+define('DOMAIN_CURRENT_SITE', 'localhost');
+define('PATH_CURRENT_SITE', '/');
+define('SITE_ID_CURRENT_SITE', 1);
+define('BLOG_ID_CURRENT_SITE', 1);
+```
+
+   • and the following to `.htaccess`:
+
+```
 RewriteEngine On
 RewriteBase /
 RewriteRule ^index\.php$ - [L]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /index.php [L]
-</IfModule>
-# END WordPress
+
+# add a trailing slash to /wp-admin
+RewriteRule ^([_0-9a-zA-Z-]+/)?wp-admin$ $1wp-admin/ [R=301,L]
+
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+RewriteRule ^([_0-9a-zA-Z-]+/)?(wp-(content|admin|includes).*) $2 [L]
+RewriteRule ^([_0-9a-zA-Z-]+/)?(.*\.php)$ $2 [L]
+RewriteRule . index.php [L]
 ```
 
-• We recommend using "Day and Name" for permalink settings at first.  Other modes may require different rewrite rules in `.htaccess` (Wordpress Requirement.)
+   • We recommend using “Day and Name” for permalink settings at first.  Other modes may require different rewrite rules in `.htaccess` (Wordpress Requirement.)
+
