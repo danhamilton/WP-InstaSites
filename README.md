@@ -35,7 +35,9 @@ Wordpress config
 This plugin requires multiuser version of WP. To enable μWP after installation of WP do the following:
 
    • go edit `wp-config.php` file to add the `define('WP_ALLOW_MULTISITE', true);` line. This will enable the option ‘Network’ under the ‘Tools’ menu in your administration area;
+
    • create a new folder named `blogs.dir` inside your `wp-content` folder;
+
    • navigate to **Tools⇒Network** and follow the instructions on the screen. Add following to your `wp-config.php` file:
 
 ```
