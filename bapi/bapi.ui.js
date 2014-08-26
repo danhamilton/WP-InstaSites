@@ -128,10 +128,10 @@ context.inithelpers = {
     		var stars = $(item).attr('ID');
 				stars = stars.split('-');
 				stars = stars[1];
+				stars = roundHalf(stars);
 				/* we rounded the avg review to 2 decimals (x,xx) */
 				var floatstars = parseFloat( stars ).toFixed( 2 );
-				var rounded = roundHalf(floatstars);
-				var review = rounded;
+				var review = floatstars;
 				
         		// value is in 0 - 5 range, multiply to get width of image
         		var widthsize = Math.max(0, (Math.min(5, review))) * 16;
@@ -1044,7 +1044,7 @@ context.createAvailabilityWidget = function (targetid, data, options) {
 		//based on months now
 	options.maxbookingdays = BAPI.config().maxbookingdays; }
 	var supLangs=["af", "ar-DZ", "ar", "az", "be", "bg", "bs", "ca", "cs", "cy-GB", "da", "de", "el","en-AU", "en-GB", 
-	"en-NZ", "en-US", "eo", "es", "et", "eu", "fa", "fi", "fo", "fr-CA", "fr-CH", "fr","gl", "he", "hi", "hr", "hu", 
+	"en-NZ", "en", "eo", "es", "et", "eu", "fa", "fi", "fo", "fr-CA", "fr-CH", "fr","gl", "he", "hi", "hr", "hu", 
 	"hy", "id", "is", "it", "ja", "ka", "kk", "km", "ko", "ky","lb", "lt", "lv", "mk", "ml", "ms", "nb", "nl-BE", "nl", 
 	"nn", "no", "pl", "pt-BR", "pt","rm", "ro", "ru", "sk", "sl", "sq", "sr-SR", "sr", "sv", "ta", "th", "tj", "tr", "uk", "vi", 
 	"zh-CN", "zh-HK", "zh-TW"];
@@ -1054,7 +1054,7 @@ context.createAvailabilityWidget = function (targetid, data, options) {
 	options.numberOfMonths = [ Math.ceil(options.availcalendarmonths / options.numinrow), options.numinrow ];
 	
 	var lang=options.languageISO;
-	if(lang == "pt-PT") {lang = "pt-BR"};
+	if(lang == "pt-PT") {lang = "pt-BR"}; 
     if (lang == "en-IE") {lang = "en-GB"};
 	if(supLangs.indexOf(lang)==-1 && lang.length==5){
         lang=lang.substring(0,2);
@@ -1064,7 +1064,7 @@ context.createAvailabilityWidget = function (targetid, data, options) {
     }
 	var p = data.result[0];
 	if (lang=='en' ) {
-		$.datepicker.setDefaults( $.datepicker.regional[''] );
+		$.datepicker.setDefaults( $.datepicker.regional['en-US'] );
 	}
 	else {
 		$.datepicker.setDefaults( $.datepicker.regional[lang] );
