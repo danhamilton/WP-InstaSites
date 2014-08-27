@@ -1065,7 +1065,7 @@ context.createAvailabilityWidget = function (targetid, data, options) {
 	var p = data.result[0];
 	if (lang=='en' || lang=="en-US" ) {
 		$.datepicker.setDefaults( $.datepicker.regional[''] );
-	else{
+	}else{
 		$.datepicker.setDefaults( $.datepicker.regional[lang] );
 	}
 	/* Optimizing the availability array contiguos dates can be merged so they are not separated items in the array making the array smaller */
