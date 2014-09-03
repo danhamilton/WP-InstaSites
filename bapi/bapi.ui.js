@@ -837,7 +837,7 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 	if(!BAPI.isempty(BAPI.config().amenity.enabled) && BAPI.config().amenity.enabled){
 		var arrayAmenitiesLength = BAPI.config().amenity.values.length;
 		var arrayAmenities = [];
-		var amenitiesInSession = !BAPI.isempty(BAPI.session.searchparams.amenities);
+		var amenitiesInSession = !BAPI.isempty(BAPI.session.searchparams) && !BAPI.isempty(BAPI.session.searchparams.amenities);
 		/* Are the amenities in Session ? */
 		if(amenitiesInSession){
 			/* array of the amenities from session */
@@ -953,7 +953,7 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 }
 
 function setCalendarsFromSession(session,checkinSelector,checkoutSelector){
-	if(session.checkin !== null && $(checkinSelector).length > 0){
+	if(!BAPI.isempty(session) && !BAPI.isempty(session.checkin) && $(checkinSelector).length > 0){
 		$(window).load(function() {
 			$(checkinSelector).data('pickadate').set('select',session.checkin,{format: BAPI.defaultOptions.dateFormatBAPI.toLowerCase() } );
 			if(session.checkout !== null && $(checkoutSelector).length > 0){
@@ -2402,6 +2402,8 @@ function loadmoreProperties(targetid, ids, entity, options, newAlldata, pagenumb
 }
 
 function loadFormFromSession(s) {
+	if (BAPI.isempty(s)) { return; }
+
 	/* this is only setting the input value not the calendar*/
 	$('.sessioncheckin').val(s.scheckin);
 	$('.sessioncheckout').val(s.scheckout);
