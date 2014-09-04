@@ -105,7 +105,7 @@
 			$array = json_decode($sitesettings, TRUE);
 			foreach($array as $v) {
 				if (strpos($v, 'BAPI.config()') === 0) {
-					$js .= stripslashes($v); echo "\r\n";
+					$js .= stripslashes($v)."\r\n";
 				}
 				//print_r($v);
 			}
@@ -251,9 +251,6 @@
 		global $bapi_all_options;
 		$sitesettings = $bapi_all_options['bapi_sitesettings'];
 		$js = '';
-		//$getopts=array('http'=>array('method'=>"GET",'header'=>"User-Agent: InstaSites Agent\r\nReferer: http://" . $_SERVER[HTTP_HOST] . $_SERVER[REQUEST_URI] . "\r\n"));
-		//$stream = stream_context_create($getopts);
-		//$js .= file_get_contents(getbapijsurl($apiKey),FALSE,$stream);
 		$js .= file_get_contents('bapi/bapi.ui.js', true);
 		$js .= urlHandler_bapitextdata_helper();
 		$js .= urlHandler_bapitemplates_helper();
