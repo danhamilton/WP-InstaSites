@@ -24,8 +24,10 @@ License: GPL2
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-$blog = get_blog_details();
-if($blog->deleted != '1' && $blog->archived != '1'){ //Only load the plugin if the site is active
+if(is_multisite()){
+	$blog = get_blog_details();
+}
+if(($blog->deleted != '1' && $blog->archived != '1')||!is_multisite()){ //Only load the plugin if the site is active.
 	include_once(dirname( __FILE__ ).'/functions.php');
 	include_once(dirname( __FILE__ ).'/admin.php');
 	include_once(dirname( __FILE__ ).'/widgets.php');
