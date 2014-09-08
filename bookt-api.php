@@ -2,14 +2,14 @@
 /*
 Plugin Name: Bookt API Wordpress Plugin
 Plugin URI: http://www.bookt.com
-Description: This plugin is intended for use by Bookt and Instamanager customers to display property and booking tools on their WP-hosted sites on any platform.
-Version: 1.0.20140506
+Description: This plugin is intended for use by Instamanager customers to display property and booking tools on their WP-hosted sites on any platform.
+Version: 1.0.20140908
 Author: Bookt LLC
 Author URI: http://bookt.com
 License: GPL2
 */
 
-/*  Copyright 2012  Bookt LLC  (email : support@bookt.com)
+/*  Copyright 2014  Bookt LLC  (email : support@bookt.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
@@ -24,8 +24,10 @@ License: GPL2
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-$blog = get_blog_details();
-if($blog->deleted != '1' && $blog->archived != '1'){ //Only load the plugin if the site is active
+if(is_multisite()){
+	$blog = get_blog_details();
+}
+if(($blog->deleted != '1' && $blog->archived != '1')||!is_multisite()){ //Only load the plugin if the site is active.
 	include_once(dirname( __FILE__ ).'/functions.php');
 	include_once(dirname( __FILE__ ).'/admin.php');
 	include_once(dirname( __FILE__ ).'/widgets.php');
