@@ -1204,11 +1204,9 @@ context.createInquiryForm = function (targetid, options) {
 		
 		/* data is valid we are processing now */
 		processing = true; // make sure we do not reenter
-		
-		var cur = BAPI.curentity;
-		var pkid = (cur===null) ? null : cur.ID;
+
 		var selname = $(this).attr('data-field-selector');
-		var reqdata = { "pid": pkid, "checkin": options.checkin, "checkout": options.checkout };
+		var reqdata = { "checkin": options.checkin, "checkout": options.checkout };
 		reqdata = $.extend({}, reqdata, BAPI.session.searchparams);
 		
 		/* we get the date formats */
