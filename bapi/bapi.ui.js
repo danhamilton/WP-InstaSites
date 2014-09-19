@@ -94,7 +94,7 @@ context.inithelpers = {
 			if(ctl.attr('data-defaultsearchresultview') == '1' && BAPI.config().defaultsearchresultview !== null && typeof(BAPI.config().defaultsearchresultview) !== 'undefined'){
 				templateName = BAPI.config().defaultsearchresultview;
 			}
-			context.createSummaryWidget(selector, { 
+			context.createSummaryWidget(selector, {
 					"searchoptions": searchoptions, 
 					"entity": ctl.attr('data-entity'), 
 					"template": BAPI.templates.get(templateName), 
@@ -1207,8 +1207,14 @@ context.createInquiryForm = function (targetid, options) {
 
 		var selname = $(this).attr('data-field-selector');
 		var reqdata = { "checkin": options.checkin, "checkout": options.checkout };
+		if(
+			null != BAPI.curentity &&
+			"property" == BAPI.curentity.entity
+		) {
+			reqdata.pid = BAPI.curentity.ID
+		}
 		reqdata = $.extend({}, reqdata, BAPI.session.searchparams);
-		
+
 		/* we get the date formats */
 		var dfparse = BAPI.defaultOptions.dateFormatMoment();
 		var df = BAPI.defaultOptions.dateFormatBAPI;
@@ -1257,6 +1263,7 @@ context.createInquiryForm = function (targetid, options) {
 				if ( typeof googleConversionTrack == 'function' ) { googleConversionTrack(); }
 				alert('Your request has been submitted.');
 				$('.' + selname).val('');
+				processing = false;
 			}
 			else { window.location.href = options.responseurl + '?personid=' + edata.result.Lead.ID; }			
 		});
