@@ -1207,10 +1207,7 @@ context.createInquiryForm = function (targetid, options) {
 
 		var selname = $(this).attr('data-field-selector');
 		var reqdata = { "checkin": options.checkin, "checkout": options.checkout };
-		if(
-			null != BAPI.curentity &&
-			"property" == BAPI.curentity.entity
-		) {
+		if( "property" == BAPI.curentity.entity ) {
 			reqdata.pid = BAPI.curentity.ID
 		}
 		reqdata = $.extend({}, reqdata, BAPI.session.searchparams);
@@ -1263,7 +1260,6 @@ context.createInquiryForm = function (targetid, options) {
 				if ( typeof googleConversionTrack == 'function' ) { googleConversionTrack(); }
 				alert('Your request has been submitted.');
 				$('.' + selname).val('');
-				processing = false;
 			}
 			else { window.location.href = options.responseurl + '?personid=' + edata.result.Lead.ID; }			
 		});
