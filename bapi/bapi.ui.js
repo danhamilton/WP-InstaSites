@@ -889,8 +889,8 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 	$(".bapi-locationsearch").live("focus", function() {
 		$(this).typeaheadmap({ 
 			"source": BAPI.config().city.values, 
-			"key": "Label", 
-			"value": "Data", 
+			"key": "Label",
+			"value": "Data",
 			"displayer": function(that, item, highlighted) {
 				return highlighted;
 			} 
@@ -899,8 +899,12 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 	$(".bapi-malocationsearch").live("focus", function() {
 		$(this).typeaheadmap({ 
 			"source": BAPI.config().location.values, 
-			"key": "Label", 
-			"value": "Data", 
+			"key": "Label",
+			"value": "Data",
+			"updater": function( item ) {
+				this.$element.attr( 'data-value', this.$menu.find('.active').attr('data-value') );
+				return item;
+			},
 			"displayer": function(that, item, highlighted) {
 				return highlighted;
 			}
@@ -2409,6 +2413,24 @@ function loadFormFromSession(s) {
 	$('.sessioncategory').val(s.category);
 	$('.sessiondevid').val(s.dev);
 	$('.sessionlocation').val(s.location);
+	if(
+		!BAPI.isempty( s.location ) &&
+		$('input.sessionlocation').length &&
+		$.isPlainObject( BAPI.config().location ) &&
+		$.isArray( BAPI.config().location.values )
+	) {
+		$.each(
+			BAPI.config().location.values,
+			function() {
+				if( this.Data === s.location ) {
+					$('.sessionlocation').val( this.Label );
+					$('.sessionlocation').attr( 'data-value', this.Data );
+					return false;
+				}
+			}
+		);
+	}
+
 	$('.sessionheadline').val(s.headline);
 	$('.sessionaltid').val(s.altid);
 	if (!BAPI.isempty(s.adults)) { $('.sessionadultsmin').val(s.adults.min); }
