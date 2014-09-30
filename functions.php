@@ -1,5 +1,66 @@
-<?php	
+<?php
+
+	/* PLUGIN VERSION-RELATED FUNCTIONS */
+
+	function kigo_plugin_activation() {
+
+		// This plugin requires a new table
+		if( !Kigo_Single_Sign_On::create_table() ) {
+			wp_die('Error activating Kigo Sites plugin');
+		}
+
+		add_site_option( 'wp_plugin_kigo_sites_current_version', KIGO_PLUGIN_VERSION );
+	}
+
+	function kigo_plugin_deactivation() {
+
+		if( !Kigo_Single_Sign_On::drop_table() ) {
+			wp_die('Error deactivating Kigo Sites plugin');
+		}
+
+		delete_site_option( 'wp_plugin_kigo_sites_current_version' );
+	}
+
+	// Version checker call the function update( <version_number> ). This allow doing action on version update.
+	// If the version format is changed please be ensure that the new format is compatible with the previous one and is higher when compared with strcmp()
+	function kigo_plugin_detect_update() {
+
+		$option_name = 'wp_plugin_kigo_sites_current_version';
+
+		if( !is_string( $current_version = get_site_option( $option_name ) ) ) {
+
+			// What if it's a WP single becoming WP MU? Options will be stored in different tables and we'll forget the plugin version?!
+			// Well, doc says: "Deactivate all active plugins [before creating the network!]".
+			// So problem solved.
+			// source: http://codex.wordpress.org/Create_A_Network
+
+			// For pre-existing and activated plugins that didn't have this version control, init version with 0
+			add_site_option( $option_name, $current_version = '0' );
+		}
+
+		if( strcmp( $current_version, KIGO_PLUGIN_VERSION ) < 0 ) {
+			if( !kigo_on_plugin_update( $current_version ) ) {
+				wp_die('An error occured while the Kigo Sites plugin was being updated. Please try again.');
+			}
+
+			update_site_option( $option_name, KIGO_PLUGIN_VERSION );
+		}
+	}
+
+	function kigo_on_plugin_update( $current_version ) {
+
+		if( strcmp( $current_version, '1.0.20141002' ) < 0 ) { // The auto sign on table was introduced in version 1.0.20141002 2014/10/02, every previous version should create it now!
+			if( !Kigo_Single_Sign_On::create_table() ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+
 	/* Pre-Load Site Options - Utilizes Built-in Cache Functions */
+
 	global $bapi_all_options; 
 	function bapi_wp_site_options(){
 		global $bapi_all_options;
@@ -36,7 +97,7 @@
 		}
 		//print_r($bapi_all_options); exit();
 	}
-	
+
 	/* BAPI url handlers */
 	function urlHandler_emailtrackingimage() {
 		$url = get_relative($_SERVER['REQUEST_URI']);		
@@ -262,7 +323,7 @@
 		}
 		return $js;
 	}
-	
+
 	/* Converted a url to a physical file path */
 	function get_local($url) {
 		$urlParts = parse_url($url);
@@ -329,7 +390,7 @@
 	}
 	
 	function getbapisolutiondata() {
-		$wrapper = array();	
+		$wrapper = array();
 		$wrapper['site'] = getbapicontext();
 		$wrapper['textdata'] = getbapitextdata();			
 		return $wrapper;
@@ -965,27 +1026,27 @@ add_action('wp_dashboard_setup', 'bapi_register_dashboard_metabox',2);
 
 function register_started_box() {	
 /* Getting Started Metabox */
-	$items = array( array( url => "themes.php", 
+	$items = array( array( url => "themes.php",
                       icon => "welcome-icon dashicons-images-alt2",
                       name => "Choose your theme" 
                     ),
-               array( url => "themes.php?page=theme_options#tabs-1", 
+               array( url => "themes.php?page=theme_options#tabs-1",
                       icon => 'welcome-icon dashicons-admin-appearance',
                       name => 'Change your theme style',
                     ),
-			   array( url => "admin.php?page=bookt-api/setup-slideshow.php", 
+			   array( url => "admin.php?page=bookt-api/setup-slideshow.php",
                       icon => "welcome-icon dashicons-format-gallery",
                       name => "Add a slideshow" 
-                    ),	 	
-               array( url => "nav-menus.php", 
+                    ),
+               array( url => "nav-menus.php",
                       icon => "welcome-icon dashicons-menu",
                       name => "Manage your menu" 
                     ),
-				array( url => "post-new.php?post_type=page", 
+				array( url => "post-new.php?post_type=page",
                       icon => "welcome-icon dashicons-welcome-add-page",
                       name => "Add a page" 
-                    )	
-             );	
+                    )
+             );
 	// Display the container
 	echo '<div class="welcome-panel rss-widget custom">';
    echo '<ul>';
@@ -1001,31 +1062,31 @@ function register_started_box() {
 }
 function register_instaapp_box() {	
 /* Instaapp Options Metabox */
-	$items = array( array( url => "https://app.instamanager.com/marketing/properties/", 
+	$items = array( array( url => "https://app.instamanager.com/marketing/properties/",
                       icon => "welcome-icon dashicons-screenoptions",
-                      name => "Manage Properties" 
+                      name => "Manage Properties"
                     ),
-               array( url => "https://app.instamanager.com/marketing/propertyfinders/", 
+               array( url => "https://app.instamanager.com/marketing/propertyfinders/",
                       icon => 'welcome-icon dashicons-search',
                       name => 'Set up Property Finders',
                     ),
-               array( url => "https://app.instamanager.com/marketing/attractions/", 
+               array( url => "https://app.instamanager.com/marketing/attractions/",
                       icon => "welcome-icon dashicons-location-alt",
-                      name => "Set up Attractions" 
+                      name => "Set up Attractions"
                     ),
-				array( url => "https://app.instamanager.com/booking/mgr/setup/specials/", 
+				array( url => "https://app.instamanager.com/booking/mgr/setup/specials/",
                       icon => "welcome-icon dashicons-awards",
-                      name => "Add Specials for your visitors" 
+                      name => "Add Specials for your visitors"
                     ),
-				array( url => "https://app.instamanager.com/marketing/optionalservices/", 
+				array( url => "https://app.instamanager.com/marketing/optionalservices/",
                       icon => "welcome-icon dashicons-plus",
-                      name => "See Optional Services" 
-                    )	
-             );	
+                      name => "See Optional Services"
+                    )
+             );
 	// Display the container
 	echo '<div class="welcome-panel rss-widget custom">';
 echo '<ul>';
-   for($i = 0; $i < count($items) ; $i++ ){		
+   for($i = 0; $i < count($items) ; $i++ ){
 				echo '<li>';
 				echo '<a href="'.$items[$i]['url'].'" class="'.$items[$i]['icon'].'" target="_blank">';
 				echo $items[$i]['name'];
@@ -1035,41 +1096,41 @@ echo '<ul>';
 	echo '<li><a class="button button-primary button-hero" href="https://app.instamanager.com/" target="_blank">Go To InstaApp</a></li>';
 	echo '</ul></div>';
 }
-function register_action_box() {	
+function register_action_box() {
 /* Advanced Options Metabox */
-	$items = array( array( url => "options-general.php?page=mr_social_sharing", 
+	$items = array( array( url => "options-general.php?page=mr_social_sharing",
                       icon => "welcome-icon dashicons-facebook-alt",
-                      name => "Set up Social Media" 
+                      name => "Set up Social Media"
                     ),
-               array( url => "options-general.php?page=googlelanguagetranslator-menu-options", 
+               array( url => "options-general.php?page=googlelanguagetranslator-menu-options",
                       icon => 'welcome-icon dashicons-translation',
                       name => 'Add Google Translate',
                     ),
-                array( url => "admin.php?page=bookt-api/setup-sitesettings.php", 
+                array( url => "admin.php?page=bookt-api/setup-sitesettings.php",
                       icon => "welcome-icon dashicons-admin-generic",
-                      name => "Property Search Settings" 
+                      name => "Property Search Settings"
                     ),
-				array( url => "themes.php?page=theme_options#tabs-3", 
+				array( url => "themes.php?page=theme_options#tabs-3",
                       icon => "welcome-icon dashicons-art",
-                      name => "Add Custom CSS" 
+                      name => "Add Custom CSS"
                     ),
-				array( url => "admin.php?page=bookt-api/setup-advanced.php", 
+				array( url => "admin.php?page=bookt-api/setup-advanced.php",
                       icon => "welcome-icon dashicons-welcome-write-blog",
-                      name => "Add Custom Scripts" 
-                    ),	
-				array( url => "themes.php?page=theme_options#tabs-2", 
-                      icon => "welcome-icon dashicons-format-image",
-                      name => "Change Logo Size or Add a Favicon" 
+                      name => "Add Custom Scripts"
                     ),
-               array( url => "admin.php?page=bookt-api/setup-golive.php", 
+				array( url => "themes.php?page=theme_options#tabs-2",
+                      icon => "welcome-icon dashicons-format-image",
+                      name => "Change Logo Size or Add a Favicon"
+                    ),
+               array( url => "admin.php?page=bookt-api/setup-golive.php",
                   icon => "welcome-icon dashicons-admin-site",
-                  name => "Take Me Live" 
+                  name => "Take Me Live"
                 )
-             );	
+             );
 	// Display the container
 	echo '<div class="welcome-panel rss-widget custom">';
 echo '<ul>';
-   for($i = 0; $i < count($items) ; $i++ ){		
+   for($i = 0; $i < count($items) ; $i++ ){
 				echo '<li>';
 				echo '<a href="'.admin_url($items[$i]['url']).'" class="'.$items[$i]['icon'].'">';
 				echo $items[$i]['name'];
@@ -1078,36 +1139,36 @@ echo '<ul>';
 	}
 	echo '</ul></div>';
 ?>
-<?php	
+<?php
 }
-function register_tips_box() {	
+function register_tips_box() {
 /* Tips Metabox */
-	$items = array( array( url => "https://codex.wordpress.org/WordPress_Widgets", 
+	$items = array( array( url => "https://codex.wordpress.org/WordPress_Widgets",
                       icon => "welcome-icon dashicons-editor-help",
-                      name => "What are widgets" 
+                      name => "What are widgets"
                     ),
-               array( url => "http://support.bookt.com/customer/portal/articles/1200398-managing-seo-and-keywords-for-your-instasite", 
+               array( url => "http://support.bookt.com/customer/portal/articles/1200398-managing-seo-and-keywords-for-your-instasite",
                       icon => 'welcome-icon dashicons-analytics',
                       name => 'How to Manage SEO',
                     ),
-			   array( url => "http://support.bookt.com/customer/portal/articles/1394482-featured-properties-widget", 
+			   array( url => "http://support.bookt.com/customer/portal/articles/1394482-featured-properties-widget",
                       icon => "welcome-icon dashicons-admin-post",
-                      name => "Change your Featured Properties settings" 
+                      name => "Change your Featured Properties settings"
                     ),
-			   array( url => "http://support.bookt.com/customer/portal/topics/566455-instasites/articles", 
+			   array( url => "http://support.bookt.com/customer/portal/topics/566455-instasites/articles",
                       icon => "welcome-icon dashicons-sos",
-                      name => "View All InstaSite Help Topics" 
-                    ),	
-               array( url => "http://support.bookt.com/", 
+                      name => "View All InstaSite Help Topics"
+                    ),
+               array( url => "http://support.bookt.com/",
                       icon => "welcome-icon welcome-view-site",
-                      name => "Visit Support" 
+                      name => "Visit Support"
                     )
-             );	
+             );
 	// Display the container
 	echo '<div class="welcome-panel rss-widget custom">';
 echo '<ul>';
    echo '<li><div class="welcome-icon dashicons-welcome-learn-more">How to create a <a href="http://codex.wordpress.org/Writing_Posts" target="_blank">Blog</a> or <a href="http://codex.wordpress.org/Pages" target="_blank">Page</a></div></li>';
-   for($i = 0; $i < count($items) ; $i++ ){		
+   for($i = 0; $i < count($items) ; $i++ ){
 				echo '<li>';
 				echo '<a href="'.$items[$i]['url'].'" class="'.$items[$i]['icon'].'" target="_blank">';
 				echo $items[$i]['name'];
@@ -1120,7 +1181,7 @@ echo '<ul>';
 <?php
 //add meta box to  wp backend
 function myplugin_add_meta_box() {
-	 $plugings_url = plugins_url( 'setup-advanced.php' , __FILE__ ); 
+	 $plugings_url = plugins_url( 'setup-advanced.php' , __FILE__ );
 			  $newUrlray = explode("/", $plugings_url);
 			  $url_master = $newUrlray[5];
 			  $url_setUp =  $newUrlray[6];
@@ -1156,7 +1217,7 @@ function myplugin_meta_box_callback( $metaId ) {
 			var desc_length = prevDesc.length;
 			var totLeft = 156 - desc_length;
 			$("#Descript_prev").text(prevDesc).css({"width":"100%"});
-			
+
 			if(prevDesc == ""){
 				$("#Descript_prev").text("New Description");
 			}
@@ -1203,7 +1264,7 @@ function myplugin_meta_box_callback( $metaId ) {
 		<td><input style="width:100%;"id="bapi_meta_title" class="input" type="text" name="bapi_meta_title" value="<?php echo $meta_words['bapi_meta_title'][0]; ?>" >
 			<br />Title display in search engines is limited to 70 chars, <span id="Title_lenght"></span> chars left.
 		</td>
-	</tr>  
+	</tr>
 	<tr>
 		<td><label for="bapi_meta_description">Meta Description: </label></td>
 		<td><textarea style="width:100%;" name="bapi_meta_description" id="bapi_meta_description" rows="5" cols="30" value="testing"><?php echo $meta_words['bapi_meta_description'][0];?></textarea>
@@ -1214,7 +1275,7 @@ function myplugin_meta_box_callback( $metaId ) {
 <?php
 }
 //this function is triggered when save or update
- function save_seo_meta( $postid ) {		
+ function save_seo_meta( $postid ) {
 	$bapisync = new BAPISync();
 	$bapisync->init();
 	$perma = get_permalink();
@@ -1224,7 +1285,7 @@ function myplugin_meta_box_callback( $metaId ) {
 	if($relativePerma=='/' && $pageID[0]!='bapi_home'){
 		return;
 	}
-	$seo = $bapisync->getSEOFromUrl($relativePerma); 
+	$seo = $bapisync->getSEOFromUrl($relativePerma);
 	$meta_words = get_post_custom($post->ID, '', true);
 	$myPageId = $seo['ID'];
 	$myType = $seo['entity'];
@@ -1233,7 +1294,7 @@ function myplugin_meta_box_callback( $metaId ) {
 	if($myPageId === null){$myPageId = 0;}
 	if($myPkId === null){$myPkId = 0;}
 	$apiKey = getbapiapikey();
- 	$bapi = getBAPIObj();	
+ 	$bapi = getBAPIObj();
 	if (!$bapi->isvalid()) { return; }
 	$keywor = sanitize_text_field( $_POST[ 'bapi_meta_keywords' ]);
 	$metle = sanitize_text_field( $_POST[ 'bapi_meta_title' ]);
@@ -1250,15 +1311,15 @@ function myplugin_meta_box_callback( $metaId ) {
 	}
 	//saves to wordpress database
 	if(isset($_POST['bapi_meta_keywords'])){
-		if($_POST['bapi_meta_keywords'] !== $meta_words['bapi_meta_keywords'][0]){		
+		if($_POST['bapi_meta_keywords'] !== $meta_words['bapi_meta_keywords'][0]){
 		}
 		update_post_meta( $postid, 'bapi_meta_keywords', sanitize_text_field( $_POST[ 'bapi_meta_keywords' ]) );
-	}	
+	}
 	if(isset($_POST['bapi_meta_title']) && $_POST['bapi_meta_title'] !== $meta_words['bapi_meta_title'][0]){
-		update_post_meta( $postid, 'bapi_meta_title', sanitize_text_field( $_POST[ 'bapi_meta_title' ]) );		
+		update_post_meta( $postid, 'bapi_meta_title', sanitize_text_field( $_POST[ 'bapi_meta_title' ]) );
 	}
 	if(isset($_POST['bapi_meta_description']) && $_POST['bapi_meta_description'] !== $meta_words['bapi_meta_description'][0]){
-		update_post_meta( $postid, 'bapi_meta_description', sanitize_text_field( $_POST[ 'bapi_meta_description' ]) );				
+		update_post_meta( $postid, 'bapi_meta_description', sanitize_text_field( $_POST[ 'bapi_meta_description' ]) );
 	}
 	$metaArr = array('MetaKeywords'=>$keywor,'PageTitle'=>$metle,'MetaDescrip'=>$meta_desc, 'ID'=> $myPageId,'pkid'=>$myPkId, 'Keyword'=>$relativePerma, 'entity'=>$myType);
 	$jsify = json_encode($metaArr);
