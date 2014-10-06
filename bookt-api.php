@@ -9,7 +9,7 @@ Author URI: http://bookt.com
 License: GPL2
 */
 
-define( 'KIGO_PLUGIN_VERSION', '1.0.20140709' ); // KEEP THIS IN SYNC WITH PLUGIN METADATA ABOVE !!!
+define( 'KIGO_PLUGIN_VERSION', '1.0.20141003' ); // KEEP THIS IN SYNC WITH PLUGIN METADATA ABOVE !!!
 
 
 /*  Copyright 2014  Bookt LLC  (email : support@bookt.com)
