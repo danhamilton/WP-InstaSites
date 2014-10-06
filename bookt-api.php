@@ -3,11 +3,14 @@
 Plugin Name: Bookt API Wordpress Plugin
 Plugin URI: http://www.bookt.com
 Description: This plugin is intended for use by Instamanager customers to display property and booking tools on their WP-hosted sites on any platform.
-Version: 1.0.20140908
+Version: 1.0.20141003
 Author: Bookt LLC
 Author URI: http://bookt.com
 License: GPL2
 */
+
+define( 'KIGO_PLUGIN_VERSION', '1.0.20140709' ); // KEEP THIS IN SYNC WITH PLUGIN METADATA ABOVE !!!
+
 
 /*  Copyright 2014  Bookt LLC  (email : support@bookt.com)
 
@@ -24,10 +27,11 @@ License: GPL2
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-if(is_multisite()){
-	$blog = get_blog_details();
-}
-if(($blog->deleted != '1' && $blog->archived != '1')||!is_multisite()){ //Only load the plugin if the site is active.
+
+if(
+	!is_multisite() ||
+	( ( $blog = get_blog_details() ) && $blog->deleted != '1' && $blog->archived != '1' ) // Only load the plugin if the blog is active on the site (network)
+) {
 	include_once(dirname( __FILE__ ).'/functions.php');
 	include_once(dirname( __FILE__ ).'/admin.php');
 	include_once(dirname( __FILE__ ).'/widgets.php');
@@ -37,8 +41,21 @@ if(($blog->deleted != '1' && $blog->archived != '1')||!is_multisite()){ //Only l
 	include_once(dirname( __FILE__ ).'/create-site.php');
 	include_once(dirname( __FILE__ ).'/shortcodes.php');
 	include_once(dirname( __FILE__ ).'/cloudfront.php');
+	require_once( dirname( __FILE__ ) . '/sso/class-kigo-single-sign-on.php' );
 	require_once('bapi-php/bapi.php');
 	require_once('init.php');
+
+	// Plugin version hooks
+	register_activation_hook( __FILE__, 'kigo_plugin_activation' );
+	register_deactivation_hook( __FILE__, 'kigo_plugin_deactivation' );
+	add_action( 'plugins_loaded', 'kigo_plugin_detect_update' );
+
+	// Single-sign-on hooks
+	add_action( 'wp_ajax_'.Kigo_Single_Sign_On::ACTION_CREATE_TOKEN, array( 'Kigo_Single_Sign_On', 'create_token' ) ); // during tests, in case we have a cookie
+	add_action( 'wp_ajax_nopriv_'.Kigo_Single_Sign_On::ACTION_CREATE_TOKEN, array( 'Kigo_Single_Sign_On', 'create_token' ) );
+	add_action( 'wp_ajax_'.Kigo_Single_Sign_On::ACTION_LOGIN, array( 'Kigo_Single_Sign_On', 'login' ) ); // for logged-in users
+	add_action( 'wp_ajax_nopriv_'.Kigo_Single_Sign_On::ACTION_LOGIN, array( 'Kigo_Single_Sign_On', 'login' ) ); // for NON-logged-in users
+
 
 	add_action('init','urlHandler_emailtrackingimage',1);	// handler for email images
 	add_filter('home_url','home_url_cdn',1,2);
