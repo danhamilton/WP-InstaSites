@@ -29,7 +29,7 @@ function google_sitemap() {
 		AND post_type <> 'nav_menu_item'
 		AND post_name <> 'hello-world'
 		AND post_password = ''
-		ORDER BY post_modified DESC
+		ORDER BY post_type DESC, post_modified DESC
 		LIMIT 50000"
 	);
 	header( "HTTP/1.1 200 OK" );
