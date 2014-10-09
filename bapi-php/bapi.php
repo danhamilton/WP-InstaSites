@@ -175,9 +175,9 @@ class BAPI
 		}
 
 		if(
-			200 !== $response['response']['code'] ||
-			!is_array( $returned =  json_decode($response['body'], true) ) ||
-			isset( $returned['error'] )
+			200 !== wp_remote_retrieve_response_code( $response ) ||
+			!is_array( $body =  json_decode( wp_remote_retrieve_body( $response ), true ) ) ||
+			isset( $body['error'] )
 		) {
 			wp_die( "An error occured while saving your setup. Please <a href='#' onclick='window.history.back(); return false;'>try again</a>." );
 		}
