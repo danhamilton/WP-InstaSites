@@ -1265,7 +1265,7 @@ function myplugin_meta_box_callback( $metaId ) {
 	$jsonObj = 'data='.(string)$jsify;
 	// entety: tyoe and language  needs to be 
 	//print_r($jsonObj);exit();
-	$saveBapi = $bapi->save($jsonObj, $apiKey);
+	$bapi->save($jsonObj);
 	update_option( 'bapi_keywords_lastmod', 0 );
 	bapi_sync_coredata();
 }

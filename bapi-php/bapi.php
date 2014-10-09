@@ -2,6 +2,9 @@
 
 class BAPI
 {
+	const BAPI_USER_AGENT = 'InstaSites Agent';
+	const WWW_FORM_URLENCODED = 'application/x-www-form-urlencoded';
+
 	public $apikey;
 	public $language = 'en-US';
     public $currency = 'USD';
@@ -143,30 +146,41 @@ class BAPI
  		}
 	}
 	//saves to our api
-	public function save($jsonObj, $apiKey) {
-		if (!$this->isvalid()) { return null; }
-		$url =$this->getBaseURL()."/ws/?method=save&apikey=".$apiKey."&entity=seo";
-		//print_r($url); exit();
-		$response = wp_remote_post( $url, array(
-		'method' => 'POST',
-		'timeout' => 45,
-		'redirection' => 5,
-		'httpversion' => '1.0',
-		'blocking' => true,
-		'headers' => array('content-type'=>'application/x-www-form-urlencoded'),
-		'body' => $jsonObj,
-		'cookies' => array()
-    	)
+	public function save($jsonObj) {
+		if (!$this->isvalid()) {
+			wp_die( "An error occured while saving your setup. Please <a href='#' onclick='window.history.back(); return false;'>try again</a>." );
+		}
+
+		$url = $this->getBaseURL() . "/ws/?method=save&entity=seo&apikey=" . $this->apikey;
+		$response = wp_remote_post(
+			$url,
+			array(
+				'method'		=> 'POST',
+				'timeout' 		=> 45,
+				'redirection'	=> 5,
+				'httpversion'	=> '1.0',
+				'blocking'		=> true,
+				'user-agent'	=> '',
+				'headers'		=> array(
+									'content-type'	=> self::WWW_FORM_URLENCODED,
+									'user-agent'	=> self::BAPI_USER_AGENT
+								),
+				'body'			=> $jsonObj,
+				'cookies'		=> array()
+			)
 		);
 		if( is_wp_error( $response ) ) {
-   		$error_message = $response->get_error_message();
-   		echo "Something went wrong: $error_message";
-		echo $response;
-		} else {
-			 // print_r($jsonObj);
-	   		 // print_r($response);
-			 // exit();
- 		}
+   			$error_message = $response->get_error_message();
+			wp_die( "An error occured while saving your setup. Please <a href='#' onclick='window.history.back(); return false;'>try again</a>.\n".$error_message );
+		}
+
+		if(
+			200 !== $response['response']['code'] ||
+			!is_array( $returned =  json_decode($response['body'], true) ) ||
+			isset( $returned['error'] )
+		) {
+			wp_die( "An error occured while saving your setup. Please <a href='#' onclick='window.history.back(); return false;'>try again</a>." );
+		}
 		
 	}
 }
