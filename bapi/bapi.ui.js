@@ -1836,9 +1836,13 @@ function BookingHelper_SetupFormHandlers() {
 	$(".ccverify").live('keyup', function() {
 		var ctl = $(this);
 		ctl.validateCreditCard(function(e) {
-			if (e.luhn_valid && e.length_valid) { ctl.attr('data-isvalid', '1'); } 
+			if(
+				e.luhn_valid &&
+				e.length_valid &&
+				$.isArray( ctl.val().match(/^\d+$/) ) //The creditcard field should only contain digits (no space or - etc.. )
+			) { ctl.attr('data-isvalid', '1'); }
 			else { ctl.attr('data-isvalid', '0'); }
-		})			
+		});
 	});
 	
 	// try to auto set the name on card
