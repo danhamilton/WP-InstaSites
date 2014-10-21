@@ -32,6 +32,7 @@ if(
 	!is_multisite() ||
 	( ( $blog = get_blog_details() ) && $blog->deleted != '1' && $blog->archived != '1' ) // Only load the plugin if the blog is active on the site (network)
 ) {
+	include_once(dirname( __FILE__ ).'/timthumb-config.php');
 	include_once(dirname( __FILE__ ).'/functions.php');
 	include_once(dirname( __FILE__ ).'/admin.php');
 	include_once(dirname( __FILE__ ).'/widgets.php');
