@@ -19,7 +19,7 @@ function bapi_create_menu() {
 	
 	//create new top-level menu
 	$parent = get_adminurl('admin.php');
-	add_menu_page('InstaSite Plugin Settings', 'InstaSite', 'administrator', __FILE__, 'bapi_settings_page', plugins_url('/img/icon.png', __FILE__));	
+	add_menu_page('InstaSite Plugin Settings', 'InstaSite', 'administrator', __FILE__, 'bapi_settings_page', plugins_url('/img/icon.png', __FILE__));
 	
 	add_submenu_page($parent, 'General','General', 'administrator', get_adminurl('admin.php'));	
 	add_submenu_page($parent, 'Property & Search Settings','Property & Search Settings', 'administrator', get_adminurl('setup-sitesettings.php'));

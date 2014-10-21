@@ -95,7 +95,7 @@ context.inithelpers = {
 			if(ctl.attr('data-defaultsearchresultview') == '1' && BAPI.config().defaultsearchresultview !== null && typeof(BAPI.config().defaultsearchresultview) !== 'undefined'){
 				templateName = BAPI.config().defaultsearchresultview;
 			}
-			context.createSummaryWidget(selector, { 
+			context.createSummaryWidget(selector, {
 					"searchoptions": searchoptions, 
 					"entity": ctl.attr('data-entity'), 
 					"template": BAPI.templates.get(templateName), 
@@ -1220,13 +1220,14 @@ context.createInquiryForm = function (targetid, options) {
 		
 		/* data is valid we are processing now */
 		processing = true; // make sure we do not reenter
-		
-		var cur = BAPI.curentity;
-		var pkid = (cur===null) ? null : cur.ID;
+
 		var selname = $(this).attr('data-field-selector');
-		var reqdata = { "pid": pkid, "checkin": options.checkin, "checkout": options.checkout };
+		var reqdata = { "checkin": options.checkin, "checkout": options.checkout };
+		if( "property" == BAPI.curentity.entity ) {
+			reqdata.pid = BAPI.curentity.ID
+		}
 		reqdata = $.extend({}, reqdata, BAPI.session.searchparams);
-		
+
 		/* we get the date formats */
 		var dfparse = BAPI.defaultOptions.dateFormatMoment();
 		var df = BAPI.defaultOptions.dateFormatBAPI;
