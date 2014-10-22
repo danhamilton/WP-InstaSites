@@ -1201,7 +1201,11 @@ function myplugin_meta_box_callback( $metaId ) {
 	 $url = get_permalink($pageId);
 	 $newUrlray = split('http://localhost', $url);
 	 $relpermalink = $newUrlray[1];
-	 $meta_words = get_post_custom($post->ID, '', true);
+	 $meta_words = get_post_custom($pageId, '', true);
+	 $post = get_post($pageId);
+	 if(empty($meta_words['bapi_meta_title'][0])){
+		$meta_words['bapi_meta_title'][0] = $post->post_title;
+	 }
 	 $keyword_meta = get_post_meta($pid,'bapi_meta_keywords',true);
 	?>
 	<!--  creats the live snippet preview box -->
@@ -1323,7 +1327,7 @@ function myplugin_meta_box_callback( $metaId ) {
 	$jsonObj = 'data='.(string)$jsify;
 	// entety: tyoe and language  needs to be 
 	//print_r($jsonObj);exit();
-	$bapi->save($jsonObj);
+	$bapi->save($jsonObj,$apiKey);
 	update_option( 'bapi_keywords_lastmod', 0 );
 	bapi_sync_coredata();
 }
