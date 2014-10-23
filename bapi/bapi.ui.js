@@ -1205,7 +1205,7 @@ context.createInquiryForm = function (targetid, options) {
 	$('.specialform').hide(); // hide the spam control
 	
 	var processing = false;	
-	$(".doleadrequest").on("click", function () { 		
+	$(".doleadrequest").on("click", function () {
 		BAPI.log("Processing lead request");
 		if (processing) { return; } // already in here
 		/* block the Inquiry form */
@@ -1276,6 +1276,7 @@ context.createInquiryForm = function (targetid, options) {
 			if (options.dologging==1) { BAPI.log("-> Response Data"); BAPI.log(edata); }
 			if (options.responseurl == '') {				
 				$(targetid).unblock();
+				processing = false;
 				/* Execute google adwords code if exists */
 				if ( typeof googleConversionTrack == 'function' ) { googleConversionTrack(); }
 				alert('Your request has been submitted.');
