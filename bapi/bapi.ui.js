@@ -1227,7 +1227,12 @@ context.createInquiryForm = function (targetid, options) {
 
 		var selname = $(this).attr('data-field-selector');
 		var reqdata = { "checkin": options.checkin, "checkout": options.checkout };
-		if( "property" == BAPI.curentity.entity ) {
+		if(
+			$.isPlainObject(BAPI) &&
+			$.isPlainObject(BAPI.curentity) &&
+			"string" === $.type(BAPI.curentity.entity) &&
+			"property" === BAPI.curentity.entity
+		) {
 			reqdata.pid = BAPI.curentity.ID
 		}
 		reqdata = $.extend({}, reqdata, BAPI.session.searchparams);
