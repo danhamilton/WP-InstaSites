@@ -1836,15 +1836,11 @@ function BookingHelper_SetupFormHandlers() {
 	$(".ccverify").live('keyup', function() {
 		var ctl = $(this);
 		ctl.validateCreditCard(function(e) {
-			if(
-				e.luhn_valid &&
-				e.length_valid &&
-				$.isArray( ctl.val().match(/^\d+$/) ) //The creditcard field should only contain digits (no space or - etc.. )
-			) { ctl.attr('data-isvalid', '1'); }
+			if (e.luhn_valid && e.length_valid) { ctl.attr('data-isvalid', '1'); }
 			else { ctl.attr('data-isvalid', '0'); }
-		});
+		})
 	});
-	
+
 	// try to auto set the name on card
 	$('.autofullname').live('focus', function() {
 		var c = $(this);
@@ -1873,10 +1869,18 @@ function BookingHelper_ValidateForm(reqfields) {
 			}
 			alert(BAPI.textdata['Please fill out all required fields']); rf.focus(); return false;
 		}
+
 		// special case for credit card field
-		if (rf.hasClass('ccverify') && rf.attr('data-isvalid')!='1') {
-			alert(BAPI.textdata['The entered credit card is invalid']); rf.focus(); return false;
+		if( rf.hasClass('ccverify') ) {
+			//The credit card field should only contain digits (no space or - etc.. ) It could also be auto-cleaned up by rf.val().replace(/[^\d]/g, '');
+			if( !$.isArray( rf.val().match( /^\d+$/ ) ) ) {
+				alert(BAPI.textdata['The credit card number should contain only digits']); rf.focus(); return false;
+			}
+			else if (rf.attr('data-isvalid')!='1') {
+				alert(BAPI.textdata['The entered credit card is invalid']); rf.focus(); return false;
+			}
 		}
+
 		if (rf.hasClass('checkbox')) {
 			BAPI.log(rf.attr('checked'));
 			if (!rf.attr('checked')) {
