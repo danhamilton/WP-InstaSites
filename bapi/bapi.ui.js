@@ -1686,6 +1686,70 @@ function bookingHelper_DoRedirect(u) {
 	return true;
 }
 
+function bookingHelper_get_description() {
+	if( $('#statement-details a.load_desc').length < 1 ) {
+		return;
+	}
+
+	// Build an object where keys are entities' name and value is an array of id. Ie. { 'entity_name1' = array(id1, id2), 'entity_name2' = array(id1, id2) ..}
+	var entities = new Object();
+	$.each(
+		$('#statement-details a.load_desc'),
+		function() {
+			// All link are hidden until we receive or not a description
+			$(this).hide();
+
+			if( !$.isArray( entities[ $(this).attr('data-entity') ] )  ) {
+				entities[ $(this).attr('data-entity') ] = new Array( $(this).attr('data-related-id') );
+			}
+			else {
+				entities[ $(this).attr('data-entity') ].push( $(this).attr('data-related-id') )
+			}
+		}
+	);
+
+	// This should only occur if the template is not correctly displaying data-entity and data-related-id
+	if( entities.length < 1 ) {
+		return;
+	}
+
+	$.each(
+		entities,
+		function( entity, ids ) {
+			BAPI.get(
+				ids,
+				entity,
+				{ 'page' : 1, 'pagesize' : ids.length }, // Default value of pagesize is 5 so it is need to be hable to receive as much response as ids are passed.
+				function ( data ) {
+					if(
+						!$.isPlainObject(data) ||
+						$.isPlainObject(data.error) ||
+						!$.isArray(data.result) ||
+						data.result.length < 1
+					) {
+						return;
+					}
+
+					$.each(
+						data.result,
+						function( key, value ) {
+							if(
+								!$.isPlainObject(value) ||
+								$.type( value.Description ) !== "string" ||
+								value.Description.length < 1
+							) {
+								return;
+							}
+							$('#statement-details #description'+ value.ID).html( value.Description );
+							$('#statement-details a.load_desc[data-related-id=' + value.ID + ']').show();
+						}
+					);
+				}
+			);
+		}
+	);
+}
+
 function bookingHelper_FullLoad(targetid,options,propid) {
 	var propoptions = { avail: 1, seo: 1 }
 	propoptions = $.extend({}, propoptions, BAPI.session.searchparams);
@@ -1699,38 +1763,6 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 		$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, data));
 		/* we render the statements mustache */
 		$(options.targetids.statement).html(Mustache.render(options.templates.statement, data));
-		if(data.result[0].ContextData.Quote.Statement != null){
-			/* function that gets the statement data for the provided array of statements */
-			function getStatementsDescriptions(arrayStatements,bapiEntity){
-				/* we check the parameters */
-				if(typeof (arrayStatements) !== "undefined" && arrayStatements != null && arrayStatements != '' && typeof (bapiEntity) !== "undefined" && bapiEntity != ''){
-					$.each(arrayStatements, function() {
-						var oStatement = this;
-						BAPI.get(oStatement.RelatedToID, bapiEntity, null, function (statementData) {
-							/* we check if the returned data is valid */
-							if(typeof (statementData) !== "undefined" && typeof (statementData.result[0].Description) !== "undefined"){
-								oStatement.Description = statementData.result[0].Description;
-								/* we render the mustache with the new data */
-								$(options.targetids.statement).html(Mustache.render(options.templates.statement, data));
-							}
-						});
-					});
-				}
-			}
-			/* we set the descriptions for each statement that we need*/		
-			/* the optional fees */
-			var arrayOptionalFees = data.result[0].ContextData.Quote.Statement.OptionalFees;
-			getStatementsDescriptions(arrayOptionalFees,BAPI.entities.fee);
-			/* the fees */
-			var arrayFees = data.result[0].ContextData.Quote.Statement.Fees;
-			getStatementsDescriptions(arrayFees,BAPI.entities.fee);
-			/* the taxes */
-			var arrayTaxes = data.result[0].ContextData.Quote.Statement.Taxes;
-			getStatementsDescriptions(arrayTaxes,BAPI.entities.tax);
-			/* the Deposits */
-			var arrayDeposits = data.result[0].ContextData.Quote.Statement.Deposits;
-			getStatementsDescriptions(arrayDeposits,BAPI.entities.fee);
-		}
 		$(options.targetids.renter).html(Mustache.render(options.templates.renter, data));
 		$(options.targetids.creditcard).html(Mustache.render(options.templates.creditcard, data));
 		$(options.targetids.accept).html(Mustache.render(options.templates.accept, data));
@@ -1751,40 +1783,20 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 			sdata.session = BAPI.session;	
 			/* we render the statements mustache */
 			$(options.targetids.statement).html(Mustache.render(options.templates.statement, sdata));
-			if(sdata.result[0].ContextData.Quote.Statement != null){
-				/* function that gets the statement data for the provided array of statements */
-				function getStatementsDescriptions(arrayStatements,bapiEntity){
-					/* we check the parameters */
-					if(typeof (arrayStatements) !== "undefined" && arrayStatements != null && arrayStatements != '' && typeof (bapiEntity) !== "undefined" && bapiEntity != ''){
-						$.each(arrayStatements, function() {
-							var oStatement = this;
-							BAPI.get(oStatement.RelatedToID, bapiEntity, null, function (statementData) {
-								/* we check if the returned data is valid */
-								if(typeof (statementData) !== "undefined" && typeof (statementData.result[0].Description) !== "undefined"){
-									oStatement.Description = statementData.result[0].Description;
-									/* we render the mustache with the new data */
-									$(options.targetids.statement).html(Mustache.render(options.templates.statement, sdata));
-								}
-							});
-						});
-					}
-				}
-				/* we set the descriptions for each statement that we need */
-				/* the optional fees */
-				var arrayOptionalFees = sdata.result[0].ContextData.Quote.Statement.OptionalFees;
-				getStatementsDescriptions(arrayOptionalFees,BAPI.entities.fee);
-				/* the fees */
-				var arrayFees = sdata.result[0].ContextData.Quote.Statement.Fees;
-				getStatementsDescriptions(arrayFees,BAPI.entities.fee);
-				/* the taxes */
-				var arrayTaxes = sdata.result[0].ContextData.Quote.Statement.Taxes;
-				getStatementsDescriptions(arrayTaxes,BAPI.entities.tax);
-			}
 			$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, sdata));
 			$(options.targetids.accept).html(Mustache.render(options.templates.accept, sdata));			
 			$(options.targetids.stayinfo).unblock();
 			context.createDatePicker('#makebookingcheckin', { "property": BAPI.curentity, "checkoutID": '#makebookingcheckout' });
 			context.createDatePicker('#makebookingcheckout', { "property": BAPI.curentity, "checkinID": '#makebookingcheckout' });	
+
+			// Invalidate the entity description: entities description need to be reloaded each time the template is re-rendered.
+			var entities_loaded = false; //Ensure that entities are loaded only once
+			$('#statement-details').on('show.bs.modal', function() {
+				if( !entities_loaded ) {
+					bookingHelper_get_description();
+					entities_loaded = true;
+				}
+			});
 		}
 		
 		$(".bapi-revisedates").live("click", function () {
@@ -1827,8 +1839,18 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 		$('.bapi-applyspecial').live('click', function() {
 			modifyStatement();
 		});
+
+		// Get entities description on modal show
+		var entities_loaded = false; //Ensure that entities are loaded only once
+		$('#statement-details').on('show.bs.modal', function() {
+			if( !entities_loaded ) {
+				bookingHelper_get_description();
+				entities_loaded = true;
+			}
+		});
+
 	});
-	
+
 }
 
 function BookingHelper_SetupFormHandlers() {
