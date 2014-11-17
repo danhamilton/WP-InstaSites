@@ -1693,8 +1693,7 @@ function bookingHelper_get_description() {
 
 	// Build an object where keys are entities' name and value is an array of id. Ie. { 'entity_name1' = array(id1, id2), 'entity_name2' = array(id1, id2) ..}
 	var entities = new Object();
-	$.each(
-		$('#statement-details a.load_desc'),
+	$('#statement-details a.load_desc').each(
 		function() {
 			// All link are hidden until we receive or not a description
 			$(this).hide();
@@ -1790,13 +1789,7 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 			context.createDatePicker('#makebookingcheckout', { "property": BAPI.curentity, "checkinID": '#makebookingcheckout' });	
 
 			// Invalidate the entity description: entities description need to be reloaded each time the template is re-rendered.
-			var entities_loaded = false; //Ensure that entities are loaded only once
-			$('#statement-details').on('show.bs.modal', function() {
-				if( !entities_loaded ) {
-					bookingHelper_get_description();
-					entities_loaded = true;
-				}
-			});
+			$('#statement-details').one('show.bs.modal', bookingHelper_get_description );
 		}
 		
 		$(".bapi-revisedates").live("click", function () {
@@ -1841,13 +1834,7 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 		});
 
 		// Get entities description on modal show
-		var entities_loaded = false; //Ensure that entities are loaded only once
-		$('#statement-details').on('show.bs.modal', function() {
-			if( !entities_loaded ) {
-				bookingHelper_get_description();
-				entities_loaded = true;
-			}
-		});
+		$('#statement-details').one('show.bs.modal', bookingHelper_get_description );
 
 	});
 
