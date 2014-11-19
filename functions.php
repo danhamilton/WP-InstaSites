@@ -426,6 +426,9 @@
 		
 		wp_register_script( 'jquery-ui-i18n-min', '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/i18n/jquery-ui-i18n.min.js',array( 'jquery-min'),'1.10.3' );
 		wp_enqueue_script( 'jquery-ui-i18n-min' );
+
+		wp_register_style( 'kigo-plugin-main', get_relative(plugins_url('/css/style.css', __FILE__)) );
+		wp_enqueue_style( 'kigo-plugin-main' );
 	}
 	
 	function enqueue_and_register_my_scripts_in_admin_head($hook) {

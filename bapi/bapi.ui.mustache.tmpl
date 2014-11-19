@@ -663,10 +663,14 @@
 		<div id="slider" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "sync": "#carousel" }'>
 		<ul class="slides">
 		{{#Images}}
-			<li><img alt="{{Caption}}" title="Open Slideshow" src="/wp-content/plugins/bookt-api/img/loading.gif" data-src="/img.php?src=http:{{&OriginalURL}}&w=816&h=600&q=75&zc=2" />
-			{{#Caption}}
-			<p class="flex-caption">{{Caption}}</p></li>
-			{{/Caption}}
+			<li>
+				<div>
+					<img alt="{{Caption}}" title="Open Slideshow" src="/wp-content/plugins/bookt-api/img/loading.gif" data-src="/img.php?src=http:{{&OriginalURL}}&w=816&h=600&q=75&zc=2" />
+					{{#Caption}}
+					<p class="flex-caption">&nbsp;&nbsp;&nbsp;&nbsp;{{Caption}}</p>
+					{{/Caption}}
+				</div>
+			</li>
 		{{/Images}}
 		</ul>
 		</div>

@@ -1,0 +1,7 @@
+/* slideshow on property pages */
+ul.slides > li, ul.slides > li > div {
+	position: relative;
+}
+ul.slides > li > div > p.flex-caption {
+	padding: 17px 0;
+}
