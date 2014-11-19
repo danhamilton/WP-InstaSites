@@ -1,5 +1,7 @@
 <?php
 
+	define( 'KIGO_PLUGIN_NAME', preg_replace( '#[\\\/].*$#', '', plugin_basename( __FILE__ ) ) );
+
 	/* PLUGIN VERSION-RELATED FUNCTIONS */
 
 	function kigo_plugin_activation() {
@@ -429,7 +431,7 @@
 	}
 	
 	function enqueue_and_register_my_scripts_in_admin_head($hook) {
-		if('bookt-api/setup-sitesettings.php' == $hook ||'bookt-api/setup-sync.php' == $hook){
+		if( preg_match( "#${KIGO_PLUGIN_NAME}\/setup\-(settings|sync)\.php$#", $hook ) ) {
 			enqueue_and_register_my_scripts_in_head();
 		}
 	}
@@ -1031,7 +1033,7 @@ function register_started_box() {
                       icon => 'welcome-icon dashicons-admin-appearance',
                       name => 'Change your theme style',
                     ),
-			   array( url => "admin.php?page=bookt-api/setup-slideshow.php",
+			   array( url => "admin.php?page=${KIGO_PLUGIN_NAME}/setup-slideshow.php",
                       icon => "welcome-icon dashicons-format-gallery",
                       name => "Add a slideshow" 
                     ),
@@ -1103,7 +1105,7 @@ function register_action_box() {
                       icon => 'welcome-icon dashicons-translation',
                       name => 'Add Google Translate',
                     ),
-                array( url => "admin.php?page=bookt-api/setup-sitesettings.php",
+                array( url => "admin.php?page=${KIGO_PLUGIN_NAME}/setup-sitesettings.php",
                       icon => "welcome-icon dashicons-admin-generic",
                       name => "Property Search Settings"
                     ),
@@ -1111,7 +1113,7 @@ function register_action_box() {
                       icon => "welcome-icon dashicons-art",
                       name => "Add Custom CSS"
                     ),
-				array( url => "admin.php?page=bookt-api/setup-advanced.php",
+				array( url => "admin.php?page=${KIGO_PLUGIN_NAME}/setup-advanced.php",
                       icon => "welcome-icon dashicons-welcome-write-blog",
                       name => "Add Custom Scripts"
                     ),
@@ -1119,7 +1121,7 @@ function register_action_box() {
                       icon => "welcome-icon dashicons-format-image",
                       name => "Change Logo Size or Add a Favicon"
                     ),
-               array( url => "admin.php?page=bookt-api/setup-golive.php",
+               array( url => "admin.php?page=${KIGO_PLUGIN_NAME}/setup-golive.php",
                   icon => "welcome-icon dashicons-admin-site",
                   name => "Take Me Live"
                 )
