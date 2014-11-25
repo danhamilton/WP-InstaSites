@@ -21,7 +21,7 @@
 /* we get BAPI */
 loadscriptjquery();
 getconfig();
-?> 
+?>
 
 
 <div class="wrap sitesettings-wrapper" style="display: none;">

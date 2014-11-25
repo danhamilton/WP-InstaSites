@@ -16,21 +16,19 @@ if(isset($_POST['reset-data'])){
 }   
 
 function bapi_create_menu() {
-	
 	//create new top-level menu
-	$parent = get_adminurl('admin.php');
-	add_menu_page('InstaSite Plugin Settings', 'InstaSite', 'administrator', __FILE__, 'bapi_settings_page', plugins_url('/img/icon.png', __FILE__));
-	
-	add_submenu_page($parent, 'General','General', 'administrator', get_adminurl('admin.php'));	
-	add_submenu_page($parent, 'Property & Search Settings','Property & Search Settings', 'administrator', get_adminurl('setup-sitesettings.php'));
-	add_submenu_page($parent, 'Slideshow','Slideshow', 'administrator', get_adminurl('setup-slideshow.php'));	
-	add_submenu_page($parent, 'Take me Live','Take me Live', 'administrator', get_adminurl('setup-golive.php'));
-	add_submenu_page($parent, 'Data Sync','Data Sync', 'administrator', get_adminurl('setup-sync.php'));	
-	add_submenu_page($parent, 'Initial Setup','Initial Setup', 'administrator', get_adminurl('setup-initial.php'));	
-	add_submenu_page($parent, 'Advanced Options','Advanced', 'administrator', get_adminurl('setup-advanced.php'));	
+	add_menu_page( 'InstaSite', 'InstaSite', 'administrator', 'bapi_settings_parent', 'bapi_settings_page', plugins_url( '/img/icon.png', __FILE__ ) );
+
+	add_submenu_page( 'bapi_settings_parent', 'General','General', 'administrator', 'bapi_settings_parent', 'bapi_settings_page' );
+	add_submenu_page( 'bapi_settings_parent', 'Property & Search Settings','Property & Search Settings', 'administrator', 'bapi_settings_propsearch', 'bapi_settings_propsearch' );
+	add_submenu_page( 'bapi_settings_parent', 'Slideshow','Slideshow', 'administrator', 'bapi_settings_slideshow', 'bapi_settings_slideshow' );
+	add_submenu_page( 'bapi_settings_parent', 'Take me Live','Take me Live', 'administrator', 'bapi_settings_golive', 'bapi_settings_golive' );
+	add_submenu_page( 'bapi_settings_parent', 'Data Sync','Data Sync', 'administrator', 'bapi_settings_sync', 'bapi_settings_sync' );
+	add_submenu_page( 'bapi_settings_parent', 'Initial Setup','Initial Setup', 'administrator', 'bapi_settings_initial', 'bapi_settings_initial' );
+	add_submenu_page( 'bapi_settings_parent', 'Advanced Options','Advanced', 'administrator', 'bapi_settings_advanced', 'bapi_settings_advanced' );
 	
 	//call register settings function
-	add_action('admin_init','bapi_options_init');
+	add_action( 'admin_init','bapi_options_init' );
 }
 
 function bapi_options_init(){
@@ -76,13 +74,41 @@ function bapi_options_init(){
 	register_setting('bapi_options','bapi_safe_harbor_lastmod');	
 }
 
+function bapi_settings_propsearch() {
+	include('setup-sitesettings.php');
+}
+
+function bapi_settings_slideshow() {
+	include('setup-slideshow.php');
+}
+
+function bapi_settings_golive() {
+	include('setup-golive.php');
+}
+
+function bapi_settings_sync() {
+	include('setup-sync.php');
+}
+
+function bapi_settings_initial() {
+	include('setup-initial.php');
+}
+
+function bapi_settings_advanced() {
+	include('setup-advanced.php');
+}
+
 function bapi_settings_page() {
 	$bapi = getBAPIObj();
-	if(!$bapi->isvalid()) {
-		$url = '/wp-admin/admin.php?page=' . get_adminurl('initialsetup.php');
-		//echo $url;
-		//echo '<script type="text/javascript">window.location.href="' . $url . '"</script>';
-		//exit();
+	if( !$bapi->isvalid() ) { // Unfortunately we can not use `wp_redirect` here because headers were already sent ⇒ use js hack instead
+		                      // We could validate BAPI key during menu creation, but this redirect is more safe:
+		                      //    the user could bookmark the link before ruining BAPI key
+?>
+		<script type="text/javascript">
+			window.location.href='<?php menu_page_url( 'bapi_settings_initial', true ); ?>';
+		</script>
+<?php
+		exit;
 	}
 	$lastmod_soldata = get_option('bapi_solutiondata_lastmod');
 	$lastmod_textdata = get_option('bapi_textdata_lastmod');
@@ -90,11 +116,10 @@ function bapi_settings_page() {
 	$lastmod_soldata = (!empty($lastmod_soldata) ? date('r',$lastmod_soldata) : "N/A");
 	$lastmod_textdata = (!empty($lastmod_textdata) ? date('r',$lastmod_textdata) : "N/A");
 	$lastmod_seodata = (!empty($lastmod_seodata) ? date('r',$lastmod_seodata) : "N/A");
-	
+
 	$soldata = is_super_admin() ? get_option('bapi_solutiondata') : 'N/A';
 	$textdata = is_super_admin() ? get_option('bapi_textdata') : 'N/A';
-	$seodata = is_super_admin() ? get_option('bapi_keywords_array') : 'N/A';		
-	
+	$seodata = is_super_admin() ? get_option('bapi_keywords_array') : 'N/A';
 ?>
 
 <link rel="stylesheet" type="text/css" href="<?= plugins_url('/css/jquery.ui/jquery-ui-1.10.2.min.css', __FILE__) ?>" />

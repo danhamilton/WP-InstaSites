@@ -431,9 +431,7 @@
 	}
 	
 	function enqueue_and_register_my_scripts_in_admin_head($hook) {
-		if( preg_match( "#${KIGO_PLUGIN_NAME}\/setup\-(settings|sync)\.php$#", $hook ) ) {
-			enqueue_and_register_my_scripts_in_head();
-		}
+		enqueue_and_register_my_scripts_in_head();
 	}
 	
 	/* Load conditional script */
@@ -482,6 +480,7 @@
 				BAPI.site.secureurl = '<?= $secureurl ?>';
 				<?php } ?>
 				BAPI.init();
+				BAPI.UI.WPIS_PATH = '<?php echo get_relative( plugins_url( '/', __FILE__ ) ); ?>';
 				BAPI.UI.jsroot = '<?= plugins_url("/", __FILE__) ?>';
 				BAPI.defaultOptions.logpageviews = true;
 				$(document).ready(function () { BAPI.UI.init(); });
@@ -1033,7 +1032,7 @@ function register_started_box() {
                       icon => 'welcome-icon dashicons-admin-appearance',
                       name => 'Change your theme style',
                     ),
-			   array( url => "admin.php?page=${KIGO_PLUGIN_NAME}/setup-slideshow.php",
+			   array( url => "admin.php?page=bapi_settings_slideshow",
                       icon => "welcome-icon dashicons-format-gallery",
                       name => "Add a slideshow" 
                     ),
@@ -1105,7 +1104,7 @@ function register_action_box() {
                       icon => 'welcome-icon dashicons-translation',
                       name => 'Add Google Translate',
                     ),
-                array( url => "admin.php?page=${KIGO_PLUGIN_NAME}/setup-sitesettings.php",
+                array( url => "admin.php?page=bapi_settings_propsearch",
                       icon => "welcome-icon dashicons-admin-generic",
                       name => "Property Search Settings"
                     ),
@@ -1113,7 +1112,7 @@ function register_action_box() {
                       icon => "welcome-icon dashicons-art",
                       name => "Add Custom CSS"
                     ),
-				array( url => "admin.php?page=${KIGO_PLUGIN_NAME}/setup-advanced.php",
+				array( url => "admin.php?page=bapi_settings_advanced",
                       icon => "welcome-icon dashicons-welcome-write-blog",
                       name => "Add Custom Scripts"
                     ),
@@ -1121,7 +1120,7 @@ function register_action_box() {
                       icon => "welcome-icon dashicons-format-image",
                       name => "Change Logo Size or Add a Favicon"
                     ),
-               array( url => "admin.php?page=${KIGO_PLUGIN_NAME}/setup-golive.php",
+               array( url => "admin.php?page=bapi_settings_golive",
                   icon => "welcome-icon dashicons-admin-site",
                   name => "Take Me Live"
                 )

@@ -17,8 +17,8 @@
 		
 		echo '<div id="message" class="updated"><p><strong>Settings saved.</strong></p></div>';
 	}
-	define( 'WPIS_URL', plugins_url( '', __FILE__ ) );
-?> 
+	define( 'WPIS_URL', get_relative( plugins_url( '', __FILE__ ) ) );
+?>
 <script type="text/javascript">
 	jQuery(document).ready(function($){
 		$('input#bapi_slideshow_image1,input#image-pick1').click(function(){
