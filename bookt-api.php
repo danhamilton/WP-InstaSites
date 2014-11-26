@@ -69,7 +69,7 @@ if(
 	add_action('admin_menu', 'remove_pageattributes_meta_box' );
 	add_action('template_redirect', 'do_ossdl_off_ob_start',10);
 	add_action('wp_enqueue_scripts', 'enqueue_and_register_my_scripts_in_head',1);//scripts that load in the head of the site
-	add_action('admin_enqueue_scripts', 'enqueue_and_register_my_scripts_in_admin_head',1 );//scripts that load in the admin pages in 2 particular pages
+	add_action('admin_enqueue_scripts', 'enqueue_and_register_my_scripts_in_head',1 );//scripts that load in the admin pages in 2 particular pages
 	add_action('wp_head','loadscriptjquery',10);//lets load this at the end of wp-head so the wp_enqueue runs first
 	add_action('wp_footer','getconfig',1);
 	add_action('wp_head','bapi_getmeta',1);

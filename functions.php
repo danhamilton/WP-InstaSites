@@ -430,10 +430,6 @@
 		wp_enqueue_script( 'jquery-ui-i18n-min' );
 	}
 	
-	function enqueue_and_register_my_scripts_in_admin_head($hook) {
-		enqueue_and_register_my_scripts_in_head();
-	}
-	
 	/* Load conditional script */
 	function loadscriptjquery(){	
 	?>
@@ -1024,23 +1020,23 @@ add_action('wp_dashboard_setup', 'bapi_register_dashboard_metabox',2);
 
 function register_started_box() {	
 /* Getting Started Metabox */
-	$items = array( array( url => "themes.php",
+	$items = array( array( url => admin_url( "themes.php" ),
                       icon => "welcome-icon dashicons-images-alt2",
                       name => "Choose your theme" 
                     ),
-               array( url => "themes.php?page=theme_options#tabs-1",
+               array( url => admin_url( "themes.php?page=theme_options#tabs-1" ),
                       icon => 'welcome-icon dashicons-admin-appearance',
                       name => 'Change your theme style',
                     ),
-			   array( url => "admin.php?page=bapi_settings_slideshow",
+			   array( url => menu_page_url( "bapi_settings_slideshow", false ),
                       icon => "welcome-icon dashicons-format-gallery",
                       name => "Add a slideshow" 
                     ),
-               array( url => "nav-menus.php",
+               array( url => admin_url( "nav-menus.php" ),
                       icon => "welcome-icon dashicons-menu",
                       name => "Manage your menu" 
                     ),
-				array( url => "post-new.php?post_type=page",
+				array( url => admin_url( "post-new.php?post_type=page" ),
                       icon => "welcome-icon dashicons-welcome-add-page",
                       name => "Add a page" 
                     )
@@ -1050,7 +1046,7 @@ function register_started_box() {
    echo '<ul>';
    for($i = 0; $i < count($items) ; $i++ ){		
 				echo '<li>';
-				echo '<a href="'.admin_url( $items[$i]['url'] ).'" class="'.$items[$i]['icon'].'">';
+				echo '<a href="' . $items[$i]['url'] . '" class="' . $items[$i]['icon'] . '">';
 				echo $items[$i]['name'];
 				echo '</a>';
 				echo '</li>';
@@ -1096,31 +1092,31 @@ echo '<ul>';
 }
 function register_action_box() {
 /* Advanced Options Metabox */
-	$items = array( array( url => "options-general.php?page=mr_social_sharing",
+	$items = array( array( url => admin_url( "options-general.php?page=mr_social_sharing" ),
                       icon => "welcome-icon dashicons-facebook-alt",
                       name => "Set up Social Media"
                     ),
-               array( url => "options-general.php?page=googlelanguagetranslator-menu-options",
+               array( url => admin_url( "options-general.php?page=googlelanguagetranslator-menu-options" ),
                       icon => 'welcome-icon dashicons-translation',
                       name => 'Add Google Translate',
                     ),
-                array( url => "admin.php?page=bapi_settings_propsearch",
+                array( url => menu_page_url( "bapi_settings_propsearch", false ),
                       icon => "welcome-icon dashicons-admin-generic",
                       name => "Property Search Settings"
                     ),
-				array( url => "themes.php?page=theme_options#tabs-3",
+				array( url => admin_url( "themes.php?page=theme_options#tabs-3" ),
                       icon => "welcome-icon dashicons-art",
                       name => "Add Custom CSS"
                     ),
-				array( url => "admin.php?page=bapi_settings_advanced",
+				array( url => menu_page_url( "bapi_settings_advanced", false ),
                       icon => "welcome-icon dashicons-welcome-write-blog",
                       name => "Add Custom Scripts"
                     ),
-				array( url => "themes.php?page=theme_options#tabs-2",
+				array( url => admin_url( "themes.php?page=theme_options#tabs-2" ),
                       icon => "welcome-icon dashicons-format-image",
                       name => "Change Logo Size or Add a Favicon"
                     ),
-               array( url => "admin.php?page=bapi_settings_golive",
+               array( url => menu_page_url( "bapi_settings_golive", false ),
                   icon => "welcome-icon dashicons-admin-site",
                   name => "Take Me Live"
                 )
@@ -1130,7 +1126,7 @@ function register_action_box() {
 echo '<ul>';
    for($i = 0; $i < count($items) ; $i++ ){
 				echo '<li>';
-				echo '<a href="'.admin_url($items[$i]['url']).'" class="'.$items[$i]['icon'].'">';
+				echo '<a href="' . $items[$i]['url'] . '" class="' . $items[$i]['icon'] . '">';
 				echo $items[$i]['name'];
 				echo '</a>';
 				echo '</li>';
