@@ -99,7 +99,6 @@ function bapi_settings_advanced() {
 }
 
 function bapi_settings_page() {
-	$bapi = getBAPIObj();
 	$lastmod_soldata = get_option('bapi_solutiondata_lastmod');
 	$lastmod_textdata = get_option('bapi_textdata_lastmod');
 	$lastmod_seodata = get_option('bapi_keywords_lastmod');
