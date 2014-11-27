@@ -1,4 +1,18 @@
 <?php
+
+if ( isset( $_POST['reset-data'] ) ) {
+	$ent = $_POST['reset-data'];
+	if ( $ent == 'soldata' ) {
+		update_option( 'bapi_solutiondata_lastmod', 0 );
+	}
+	if ( $ent == 'seodata' ) {
+		update_option( 'bapi_keywords_lastmod', 0 );
+	}
+	if ( $ent == 'textdata' ) {
+		update_option( 'bapi_textdata_lastmod', 0 );
+	}
+}
+
 $lastmod_soldata = get_option('bapi_solutiondata_lastmod');
 $lastmod_textdata = get_option('bapi_textdata_lastmod');
 $lastmod_seodata = get_option('bapi_keywords_lastmod');
