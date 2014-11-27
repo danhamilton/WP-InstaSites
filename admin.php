@@ -20,7 +20,7 @@ function bapi_create_menu() {
 	$parentSlug = 'site_settings_general';
 
 	//create new top-level menu
-	add_menu_page( 'InstaSite', 'InstaSite', 'administrator', $parentSlug, function(){ require('setup-general.php'); }, plugins_url( '/img/icon.png', __FILE__ ) );
+	add_menu_page( 'InstaSite', 'InstaSite', 'administrator', $parentSlug, '', plugins_url( '/img/icon.png', __FILE__ ) );
 
 	add_submenu_page( $parentSlug, 'General',                    'General',                    'administrator', 'site_settings_general',    function(){ require('setup-general.php'); }      );
 	add_submenu_page( $parentSlug, 'Property & Search Settings', 'Property & Search Settings', 'administrator', 'site_settings_propsearch', function(){ require('setup-sitesettings.php'); } );

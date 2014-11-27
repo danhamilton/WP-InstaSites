@@ -38,7 +38,6 @@ s=function(f){d=new Date;return r=new Date(d.toDateString()+" "+f)}})}})(jQuery)
 /* Bookt API */
 var BAPI = BAPI || {};
 BAPI.UI = BAPI.UI || {};
-BAPI.UI.WPIS_PATH = '/wp-content/plugins/bookt-api'; // FIXME this should go away after _MinifyJS task goes into master (we’ll set the constant through PHP then)
 
 (function(context) {
 
