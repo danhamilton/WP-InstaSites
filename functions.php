@@ -1175,16 +1175,10 @@ echo '<ul>';
 <?php
 //add meta box to  wp backend
 function myplugin_add_meta_box() {
-	 $plugings_url = plugins_url( 'setup-advanced.php' , __FILE__ );
-			  $newUrlray = explode("/", $plugings_url);
-			  $url_master = $newUrlray[5];
-			  $url_setUp =  $newUrlray[6];
-			  $newUrl = '/wp-admin/admin.php?page=/'.$url_master.'/'.$url_setUp;
-	$screens = array( 'post', 'page' );
-	foreach ( $screens as $screen ) {
+	foreach ( array( 'post', 'page' ) as $screen ) {
 		add_meta_box(
 			'myplugin_sectionid',
-			__( 'SEO Attributes &nbsp;&nbsp;&nbsp;<a href="'.$newUrl.'">Google Adwords Code</a>', 'myplugin_textdomain' ),
+			__( 'SEO Attributes &nbsp;&nbsp;&nbsp;<a href="'.menu_page_url( 'bapi_settings_advanced', false ).'">Google Adwords Code</a>', 'myplugin_textdomain' ),
 			'myplugin_meta_box_callback',
 			$screen
 		);

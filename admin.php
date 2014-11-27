@@ -100,16 +100,6 @@ function bapi_settings_advanced() {
 
 function bapi_settings_page() {
 	$bapi = getBAPIObj();
-	if( !$bapi->isvalid() ) { // Unfortunately we can not use `wp_redirect` here because headers were already sent ⇒ use js hack instead
-		                      // We could validate BAPI key during menu creation, but this redirect is more safe:
-		                      //    the user could bookmark the link before ruining BAPI key
-?>
-		<script type="text/javascript">
-			window.location.href='<?php menu_page_url( 'bapi_settings_initial', true ); ?>';
-		</script>
-<?php
-		exit;
-	}
 	$lastmod_soldata = get_option('bapi_solutiondata_lastmod');
 	$lastmod_textdata = get_option('bapi_textdata_lastmod');
 	$lastmod_seodata = get_option('bapi_keywords_lastmod');
@@ -269,7 +259,7 @@ function site_config_error(){
 		echo '<div id="mis-match-config" class="error"><p>InstaSite domain prefix (<em>"' . array_shift(explode(".",$_SERVER['HTTP_HOST'])) . '"</em>) is mis-matched with InstaApp (<em>"' . $bapi_unique_prefx . '"</em>). Please contact <a href="mailto:support@instamanager.com?subject=InstaSite%20Error%20Report%20for%20'.$bapi_cdn_domain.'&amp;body=InstaSite%20domain%20prefix%20%27' . array_shift(explode(".",$_SERVER['HTTP_HOST'])) . '%27%20is%20mis-matched%20with%20InstaApp%20%27' . $bapi_unique_prefx .'%27">support@instamanager.com</a> and provide this error message for expedited assistance.</p></div>';
 	}
 	if($bapi_cdn_domain != $primaryUrl){
-		echo '<div id="mis-match-config" class="error"><p>InstaSite URL configuration does not match the InstaApp settings.  Please <a href="admin.php?page='.str_replace('/admin.php', '', plugin_basename(__FILE__)).'/setup-initial.php">CLICK HERE</a> to change your Site URL to <em>"'.$primaryUrl.'"</em> or contact <a href="mailto:support@instamanager.com?subject=InstaSite%20Error%20Report%20for%20'.$bapi_cdn_domain.'&amp;body=InstaSite%20URL%20configuration%20does%20not%20match%20the%20InstaApp%20settings.%20Change%20your%20Site%20URL%20to%20%27'.$primaryUrl.'%27%20or%20contact%20support%20to%20continue%20using%20%27'.$bapi_cdn_domain.'%27">support@instamanager.com</a> to continue using <em>"'.$bapi_cdn_domain.'"</em>.</p></div>';
+		echo '<div id="mis-match-config" class="error"><p>InstaSite URL configuration does not match the InstaApp settings.  Please <a href="'.menu_page_url( 'bapi_settings_initial', false ).'">CLICK HERE</a> to change your Site URL to <em>"'.$primaryUrl.'"</em> or contact <a href="mailto:support@instamanager.com?subject=InstaSite%20Error%20Report%20for%20'.$bapi_cdn_domain.'&amp;body=InstaSite%20URL%20configuration%20does%20not%20match%20the%20InstaApp%20settings.%20Change%20your%20Site%20URL%20to%20%27'.$primaryUrl.'%27%20or%20contact%20support%20to%20continue%20using%20%27'.$bapi_cdn_domain.'%27">support@instamanager.com</a> to continue using <em>"'.$bapi_cdn_domain.'"</em>.</p></div>';
 	
 	}
 	if($bapi_secure_url == $bapi_solutiondata['PrimaryURL']){
@@ -283,7 +273,7 @@ function site_config_error(){
 	}
 	else{
 	
-		echo '<div id="mis-match-config" class="error"><p>InstaSite plugin (<em>"'.$bapi_all_options['bapi_secureurl'].'"</em>) configuration is mis-matched with InstaApp (<em>"'.$secureUrl.'"</em>). Please <a href="admin.php?page='.str_replace('/admin.php', '', plugin_basename(__FILE__)).'/setup-initial.php">CLICK HERE</a> to correct the Secure Site URL. Secure Site URL must be set to <em>"'.$secureUrl.'"</em>, <em>"'.$bapi_solutiondata['PrimaryURL'].'"</em> or left blank.</p></div>';			
+		echo '<div id="mis-match-config" class="error"><p>InstaSite plugin (<em>"'.$bapi_all_options['bapi_secureurl'].'"</em>) configuration is mis-matched with InstaApp (<em>"'.$secureUrl.'"</em>). Please <a href="'.menu_page_url( 'bapi_settings_initial', false ).'">CLICK HERE</a> to correct the Secure Site URL. Secure Site URL must be set to <em>"'.$secureUrl.'"</em>, <em>"'.$bapi_solutiondata['PrimaryURL'].'"</em> or left blank.</p></div>';
 	}
 
 		
