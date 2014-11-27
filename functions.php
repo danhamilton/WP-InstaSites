@@ -431,12 +431,6 @@
 		wp_enqueue_style( 'kigo-plugin-main' );
 	}
 	
-	function enqueue_and_register_my_scripts_in_admin_head($hook) {
-		if('bookt-api/setup-sitesettings.php' == $hook ||'bookt-api/setup-sync.php' == $hook){
-			enqueue_and_register_my_scripts_in_head();
-		}
-	}
-	
 	/* Load conditional script */
 	function loadscriptjquery(){	
 	?>
@@ -483,6 +477,7 @@
 				BAPI.site.secureurl = '<?= $secureurl ?>';
 				<?php } ?>
 				BAPI.init();
+				BAPI.UI.WPIS_PATH = '<?php echo get_relative( plugins_url( '/', __FILE__ ) ); ?>';
 				BAPI.UI.jsroot = '<?= plugins_url("/", __FILE__) ?>';
 				BAPI.defaultOptions.logpageviews = true;
 				$(document).ready(function () { BAPI.UI.init(); });
@@ -1026,33 +1021,34 @@ add_action('wp_dashboard_setup', 'bapi_register_dashboard_metabox',2);
 
 function register_started_box() {	
 /* Getting Started Metabox */
-	$items = array( array( url => "themes.php",
-                      icon => "welcome-icon dashicons-images-alt2",
-                      name => "Choose your theme" 
-                    ),
-               array( url => "themes.php?page=theme_options#tabs-1",
-                      icon => 'welcome-icon dashicons-admin-appearance',
-                      name => 'Change your theme style',
-                    ),
-			   array( url => "admin.php?page=bookt-api/setup-slideshow.php",
-                      icon => "welcome-icon dashicons-format-gallery",
-                      name => "Add a slideshow" 
-                    ),
-               array( url => "nav-menus.php",
-                      icon => "welcome-icon dashicons-menu",
-                      name => "Manage your menu" 
-                    ),
-				array( url => "post-new.php?post_type=page",
-                      icon => "welcome-icon dashicons-welcome-add-page",
-                      name => "Add a page" 
-                    )
-             );
+	$items = array(
+				array( 'url' => admin_url( "themes.php" ),
+					  'icon' => "welcome-icon dashicons-images-alt2",
+					  'name' => "Choose your theme"
+					),
+				array( 'url' => admin_url( "themes.php?page=theme_options#tabs-1" ),
+					  'icon' => 'welcome-icon dashicons-admin-appearance',
+					  'name' => 'Change your theme style',
+					),
+				array( 'url' => menu_page_url( "site_settings_slideshow", false ),
+					  'icon' => "welcome-icon dashicons-format-gallery",
+					  'name' => "Add a slideshow"
+					),
+				array( 'url' => admin_url( "nav-menus.php" ),
+					  'icon' => "welcome-icon dashicons-menu",
+					  'name' => "Manage your menu"
+					),
+				array( 'url' => admin_url( "post-new.php?post_type=page" ),
+					  'icon' => "welcome-icon dashicons-welcome-add-page",
+					  'name' => "Add a page"
+					)
+			 );
 	// Display the container
 	echo '<div class="welcome-panel rss-widget custom">';
    echo '<ul>';
    for($i = 0; $i < count($items) ; $i++ ){		
 				echo '<li>';
-				echo '<a href="'.admin_url( $items[$i]['url'] ).'" class="'.$items[$i]['icon'].'">';
+				echo '<a href="' . $items[$i]['url'] . '" class="' . $items[$i]['icon'] . '">';
 				echo $items[$i]['name'];
 				echo '</a>';
 				echo '</li>';
@@ -1062,25 +1058,26 @@ function register_started_box() {
 }
 function register_instaapp_box() {	
 /* Instaapp Options Metabox */
-	$items = array( array( url => "https://app.instamanager.com/marketing/properties/",
-                      icon => "welcome-icon dashicons-screenoptions",
-                      name => "Manage Properties"
+	$items = array(
+			   array( 'url' => "https://app.instamanager.com/marketing/properties/",
+                      'icon' => "welcome-icon dashicons-screenoptions",
+                      'name' => "Manage Properties"
                     ),
-               array( url => "https://app.instamanager.com/marketing/propertyfinders/",
-                      icon => 'welcome-icon dashicons-search',
-                      name => 'Set up Property Finders',
+               array( 'url' => "https://app.instamanager.com/marketing/propertyfinders/",
+                      'icon' => 'welcome-icon dashicons-search',
+                      'name' => 'Set up Property Finders',
                     ),
-               array( url => "https://app.instamanager.com/marketing/attractions/",
-                      icon => "welcome-icon dashicons-location-alt",
-                      name => "Set up Attractions"
+               array( 'url' => "https://app.instamanager.com/marketing/attractions/",
+                      'icon' => "welcome-icon dashicons-location-alt",
+                      'name' => "Set up Attractions"
                     ),
-				array( url => "https://app.instamanager.com/booking/mgr/setup/specials/",
-                      icon => "welcome-icon dashicons-awards",
-                      name => "Add Specials for your visitors"
+				array( 'url' => "https://app.instamanager.com/booking/mgr/setup/specials/",
+                      'icon' => "welcome-icon dashicons-awards",
+                      'name' => "Add Specials for your visitors"
                     ),
-				array( url => "https://app.instamanager.com/marketing/optionalservices/",
-                      icon => "welcome-icon dashicons-plus",
-                      name => "See Optional Services"
+				array( 'url' => "https://app.instamanager.com/marketing/optionalservices/",
+                      'icon' => "welcome-icon dashicons-plus",
+                      'name' => "See Optional Services"
                     )
              );
 	// Display the container
@@ -1098,41 +1095,42 @@ echo '<ul>';
 }
 function register_action_box() {
 /* Advanced Options Metabox */
-	$items = array( array( url => "options-general.php?page=mr_social_sharing",
-                      icon => "welcome-icon dashicons-facebook-alt",
-                      name => "Set up Social Media"
+	$items = array(
+				array( 'url' => admin_url( "options-general.php?page=mr_social_sharing" ),
+                      'icon' => "welcome-icon dashicons-facebook-alt",
+                      'name' => "Set up Social Media"
                     ),
-               array( url => "options-general.php?page=googlelanguagetranslator-menu-options",
-                      icon => 'welcome-icon dashicons-translation',
-                      name => 'Add Google Translate',
+               array( 'url' => admin_url( "options-general.php?page=googlelanguagetranslator-menu-options" ),
+                      'icon' => 'welcome-icon dashicons-translation',
+                      'name' => 'Add Google Translate',
                     ),
-                array( url => "admin.php?page=bookt-api/setup-sitesettings.php",
-                      icon => "welcome-icon dashicons-admin-generic",
-                      name => "Property Search Settings"
+                array( 'url' => menu_page_url( "site_settings_propsearch", false ),
+                      'icon' => "welcome-icon dashicons-admin-generic",
+                      'name' => "Property Search Settings"
                     ),
-				array( url => "themes.php?page=theme_options#tabs-3",
-                      icon => "welcome-icon dashicons-art",
-                      name => "Add Custom CSS"
+				array( 'url' => admin_url( "themes.php?page=theme_options#tabs-3" ),
+                      'icon' => "welcome-icon dashicons-art",
+                      'name' => "Add Custom CSS"
                     ),
-				array( url => "admin.php?page=bookt-api/setup-advanced.php",
-                      icon => "welcome-icon dashicons-welcome-write-blog",
-                      name => "Add Custom Scripts"
+				array( 'url' => menu_page_url( "site_settings_advanced", false ),
+                      'icon' => "welcome-icon dashicons-welcome-write-blog",
+                      'name' => "Add Custom Scripts"
                     ),
-				array( url => "themes.php?page=theme_options#tabs-2",
-                      icon => "welcome-icon dashicons-format-image",
-                      name => "Change Logo Size or Add a Favicon"
+				array( 'url' => admin_url( "themes.php?page=theme_options#tabs-2" ),
+                      'icon' => "welcome-icon dashicons-format-image",
+                      'name' => "Change Logo Size or Add a Favicon"
                     ),
-               array( url => "admin.php?page=bookt-api/setup-golive.php",
-                  icon => "welcome-icon dashicons-admin-site",
-                  name => "Take Me Live"
-                )
+               array( 'url' => menu_page_url( "site_settings_golive", false ),
+	                  'icon' => "welcome-icon dashicons-admin-site",
+	                  'name' => "Take Me Live"
+	                )
              );
 	// Display the container
 	echo '<div class="welcome-panel rss-widget custom">';
 echo '<ul>';
    for($i = 0; $i < count($items) ; $i++ ){
 				echo '<li>';
-				echo '<a href="'.admin_url($items[$i]['url']).'" class="'.$items[$i]['icon'].'">';
+				echo '<a href="' . $items[$i]['url'] . '" class="' . $items[$i]['icon'] . '">';
 				echo $items[$i]['name'];
 				echo '</a>';
 				echo '</li>';
@@ -1181,16 +1179,10 @@ echo '<ul>';
 <?php
 //add meta box to  wp backend
 function myplugin_add_meta_box() {
-	 $plugings_url = plugins_url( 'setup-advanced.php' , __FILE__ );
-			  $newUrlray = explode("/", $plugings_url);
-			  $url_master = $newUrlray[5];
-			  $url_setUp =  $newUrlray[6];
-			  $newUrl = '/wp-admin/admin.php?page=/'.$url_master.'/'.$url_setUp;
-	$screens = array( 'post', 'page' );
-	foreach ( $screens as $screen ) {
+	foreach ( array( 'post', 'page' ) as $screen ) {
 		add_meta_box(
 			'myplugin_sectionid',
-			__( 'SEO Attributes &nbsp;&nbsp;&nbsp;<a href="'.$newUrl.'">Google Adwords Code</a>', 'myplugin_textdomain' ),
+			__( 'SEO Attributes &nbsp;&nbsp;&nbsp;<a href="'.menu_page_url( 'site_settings_advanced', false ).'">Google Adwords Code</a>', 'myplugin_textdomain' ),
 			'myplugin_meta_box_callback',
 			$screen
 		);
