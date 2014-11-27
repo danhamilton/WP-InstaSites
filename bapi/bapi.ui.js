@@ -617,7 +617,7 @@ context.setupmapwidgetshelper = function() {
 			caticons = function(category){
 				/* no category specified lets show the default pin */
 					if (category == 'undefined' || category == '' || category == null || category == 'poi')
-					{return new google.maps.MarkerImage(BAPI.UI.WPIS_PATH + '/img/pin.png');}
+					{return new google.maps.MarkerImage(BAPI.UI.WPIS_PATH + 'img/pin.png');}
 					else{
 						/* this is a poi and is numbered */
 						if (category.indexOf('poi') == 0){
@@ -633,23 +633,23 @@ context.setupmapwidgetshelper = function() {
 							if (theIconNumber % 10 == 0){pointX = 198; pointY = (Math.floor(theIconNumber / 10)-1)* 39;}
 							//BAPI.log('point X '+pointX);
 							//BAPI.log('point Y '+pointY);
-							return new google.maps.MarkerImage(BAPI.UI.WPIS_PATH + '/img/pins-numbered.png', new google.maps.Size(22, 39), new google.maps.Point(pointX, pointY));
+							return new google.maps.MarkerImage(BAPI.UI.WPIS_PATH + 'img/pins-numbered.png', new google.maps.Size(22, 39), new google.maps.Point(pointX, pointY));
 							}else{
-								return new google.maps.MarkerImage(BAPI.UI.WPIS_PATH + '/img/pin.png');
+								return new google.maps.MarkerImage(BAPI.UI.WPIS_PATH + 'img/pin.png');
 							}
 							
 						} else if (category.indexOf('property') == 0){
 							/* this is a property pin */
-							return new google.maps.MarkerImage(BAPI.UI.WPIS_PATH + '/img/pin_properties.png');
+							return new google.maps.MarkerImage(BAPI.UI.WPIS_PATH + 'img/pin_properties.png');
 						} else if (category.indexOf('mainPoi') == 0){
 							/* this is an attraction poi */
-							return new google.maps.MarkerImage(BAPI.UI.WPIS_PATH + '/img/pin_attractions.png');
+							return new google.maps.MarkerImage(BAPI.UI.WPIS_PATH + 'img/pin_attractions.png');
 						} else if (category.indexOf('pinOffice') == 0){
 							/* this is an attraction poi */
-							return new google.maps.MarkerImage(BAPI.UI.WPIS_PATH + '/img/pin_office.png');
+							return new google.maps.MarkerImage(BAPI.UI.WPIS_PATH + 'img/pin_office.png');
 						} else{
 							/* none of the above lets use the default pin */
-							return new google.maps.MarkerImage(BAPI.UI.WPIS_PATH + '/img/pin.png');
+							return new google.maps.MarkerImage(BAPI.UI.WPIS_PATH + 'img/pin.png');
 						}
 					}
 					
