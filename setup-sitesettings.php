@@ -1,4 +1,11 @@
-<?php	
+<?php
+
+$bapi = getBAPIObj();
+if(!$bapi->isvalid()) {
+	echo '<script type="text/javascript">window.location.href="' . menu_page_url('site_settings_general', false) . '"</script>';
+	exit();
+}
+
 	global $bapi_all_options;	
 	// handle if this is a post
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {				
