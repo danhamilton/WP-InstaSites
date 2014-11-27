@@ -1,7 +1,5 @@
 <?php
 
-	define( 'KIGO_PLUGIN_NAME', preg_replace( '#[\\\/].*$#', '', plugin_basename( __FILE__ ) ) );
-
 	/* PLUGIN VERSION-RELATED FUNCTIONS */
 
 	function kigo_plugin_activation() {
