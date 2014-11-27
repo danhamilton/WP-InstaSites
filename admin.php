@@ -80,21 +80,7 @@ function bapi_notify_incompatible_permalinks(){
 }
 add_action('admin_notices','bapi_notify_incompatible_permalinks');
 //Mantis  Ticket: 5859 Display error notice if site config in InstaSite is mis-matched with InstaApp
-function saveInitUrls(){ // FIXME delete this leftover?
-	if(isset($_POST['submit'])){
-		if(!empty($_POST['bapi_secureurl'])){ //In case client-side validation is not triggered, prevent protocol from being included in secure url.
-			$securl = $_POST['bapi_secureurl'];
-			$securl = str_replace("http://","",$securl);
-			$securl = str_replace("https://","",$securl);
-		}
-		$updated1 = update_option('bapi_site_cdn_domain', $_POST['bapi_site_cdn_domain']);
-		
-		$updated2 = update_option('bapi_secureurl', $securl);
-		echo 'this is the updated true or flase. ='.$updated1;
-		$getupdate1 = get_option('bapi_site_cdn_domain');
-		echo 'this is the update ='.$getupdate1;
-	}
-}
+
 function site_config_error(){
 	global $bapi_all_options;
 	bapi_wp_site_options();
