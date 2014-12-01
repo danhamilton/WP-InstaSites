@@ -12,6 +12,7 @@
 		update_option('bapi_cloudfronturl', $_POST['bapi_cloudfronturl']);
 		update_option('bapi_cloudfrontid', $_POST['bapi_cloudfrontid']);
 		
+		BAPISync::updateLastSettingsUpdate();
 		echo '<div id="message" class="updated"><p><strong>Settings saved.</strong></p></div>';
 	}
 	

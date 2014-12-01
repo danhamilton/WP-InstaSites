@@ -20,6 +20,7 @@ if(!$bapi->isvalid()) {
 		
 		$sitesettings = json_encode($_POST);
 		update_option('bapi_sitesettings',  $sitesettings);
+		BAPISync::updateLastSettingsUpdate();
 		echo '<div id="message" class="updated"><p><strong>Settings saved.</strong></p></div>';		
 	}
 	else {

@@ -6,6 +6,7 @@
 		update_option('bapi_google_conversion_label', stripslashes($_POST['bapi_google_conversion_label']));
 		update_option('bapi_google_webmaster_htmltag', stripslashes(str_replace('"',"",$_POST['bapi_google_webmaster_htmltag'])));
 		bapi_wp_site_options();
+		BAPISync::updateLastSettingsUpdate();
 		echo '<div id="message" class="updated"><p><strong>Settings saved.</strong></p></div>';
 	}
 global $bapi_all_options;
