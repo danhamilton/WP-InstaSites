@@ -7,7 +7,7 @@ function bapi_create_menu() {
 	//create new top-level menu
 	add_menu_page( ( is_newapp_website() ? 'Kigo sites Plugin Settings' : 'InstaSite Plugin Settings' ), ( is_newapp_website() ? 'Kigo' : 'InstaSite' ), 'administrator', $parentSlug, '', plugins_url( is_newapp_website() ? '/img/icon_kigo.ico' : '/img/icon.png', __FILE__) );
 
-	add_submenu_page( $parentSlug, 'General',                    'General',                    'administrator', 'site_settings_general',    function(){ require('setup-general.php'); }      );
+	add_submenu_page( $parentSlug, 'General',                    'General',                    'administrator', $parentSlug,                function(){ require('setup-general.php'); }      );
 	add_submenu_page( $parentSlug, 'Property & Search Settings', 'Property & Search Settings', 'administrator', 'site_settings_propsearch', function(){ require('setup-sitesettings.php'); } );
 	add_submenu_page( $parentSlug, 'Slideshow',                  'Slideshow',                  'administrator', 'site_settings_slideshow',  function(){ require('setup-slideshow.php'); }    );
 	add_submenu_page( $parentSlug, 'Take me Live',               'Take me Live',               'administrator', 'site_settings_golive',     function(){ require('setup-golive.php'); }       );
