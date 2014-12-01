@@ -2017,7 +2017,7 @@
 <h5>{{textdata.Fees}}</h5>
 {{/Fees.length}}
 {{#Fees}}
-<p>{{{Notes}}} {{#Description}}<small class="charges-desc"><a data-toggle="collapse" data-target="#description{{RelatedToID}}">({{textdata.Description}})</a></small>{{/Description}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>{{#Description}}<div id="description{{RelatedToID}}" class="collapse">{{{Description}}}</div>{{/Description}}
+<p>{{{Notes}}} <span class="glyphicons circle_question_mark"><a data-toggle="collapse" data-target="#description{{RelatedToID}}" class="load_desc" data-entity="fee" data-related-id="{{RelatedToID}}"><i></i></a></span><span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p><div id="description{{RelatedToID}}" class="collapse charges-description">{{{Description}}}</div>
 {{/Fees}}
 {{#Fees.length}}
 </div>
@@ -2030,7 +2030,7 @@
 <h5>{{textdata.Taxes}}</h5>
 {{/Taxes.length}}
 {{#Taxes}}
-<p>{{{Notes}}} {{#Description}}<small class="charges-desc"><a data-toggle="collapse" data-target="#description{{RelatedToID}}">({{textdata.Description}})</a></small>{{/Description}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>{{#Description}}<div id="description{{RelatedToID}}" class="collapse">{{{Description}}}</div>{{/Description}}
+<p>{{{Notes}}} <span class="glyphicons circle_question_mark"><a data-toggle="collapse" data-target="#description{{RelatedToID}}" class="load_desc" data-entity="tax" data-related-id="{{RelatedToID}}"><i></i></a></span><span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p><div id="description{{RelatedToID}}" class="collapse charges-description">{{{Description}}}</div>
 {{/Taxes}}
 {{#Taxes.length}}
 </div>
@@ -2042,7 +2042,7 @@
 <h5>{{textdata.Optional Fees & Services}}</h5>
 {{/OptionalFees.length}}
 {{#OptionalFees}}
-<p>{{{Notes}}} {{#Description}}<small class="charges-desc"><a data-toggle="collapse" data-target="#description{{RelatedToID}}">({{textdata.Description}})</a></small>{{/Description}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>{{#Description}}<div id="description{{RelatedToID}}" class="collapse">{{{Description}}}</div>{{/Description}}
+<p>{{{Notes}}} <span class="glyphicons circle_question_mark"><a data-toggle="collapse" data-target="#description{{RelatedToID}}" class="load_desc" data-entity="fee" data-related-id="{{RelatedToID}}"><i></i></a></span><span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p><div id="description{{RelatedToID}}" class="collapse charges-description">{{{Description}}}</div>
 {{/OptionalFees}}
 {{#OptionalFees.length}}
 </div>
@@ -2064,7 +2064,7 @@
 <h5>{{textdata.Deposits}}</h5>
 {{/Deposits.length}}
 {{#Deposits}}
-<p>{{{Notes}}} {{#Description}}<small class="charges-desc"><a data-toggle="collapse" data-target="#description{{RelatedToID}}">({{textdata.Description}})</a></small>{{/Description}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>{{#Description}}<div id="description{{RelatedToID}}" class="collapse">{{{Description}}}</div>{{/Description}}
+<p>{{{Notes}}} <span class="glyphicons circle_question_mark"><a data-toggle="collapse" data-target="#description{{RelatedToID}}" class="load_desc" data-entity="fee" data-related-id="{{RelatedToID}}"><i></i></a></span><span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p><div id="description{{RelatedToID}}" class="collapse charges-description">{{{Description}}}</div>
 {{/Deposits}}
 {{#Deposits.length}}
 </div>
