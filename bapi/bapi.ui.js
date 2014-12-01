@@ -1833,6 +1833,28 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 			modifyStatement();
 		});
 
+		function renderValidUtil() {
+			var seconds_left = 15 * 60; // 15min
+			var interval = setInterval(
+				function() {
+					if( seconds_left < 1 ) {
+						clearInterval( interval );
+						alert( BAPI.textdata['This quote is not valid any more'] + '.' + '\n' + BAPI.textdata['The page will be automatically refreshed'] + '.' );
+						location.reload();
+					}
+
+					$( "#quote_ValidUntil_M" ).html( parseInt( seconds_left / 60 ) );
+					$( "#quote_ValidUntil_S" ).html( parseInt( seconds_left % 60 ) );
+
+					seconds_left -= 1;
+				},
+				1000
+			);
+
+		}
+		renderValidUtil();
+
+
 		// Get entities description on modal show
 		$('#statement-details').one('show.bs.modal', bookingHelper_get_description );
 

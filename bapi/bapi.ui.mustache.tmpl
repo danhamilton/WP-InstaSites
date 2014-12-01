@@ -2256,7 +2256,7 @@
 				<a href="javascript:void(0);" class="btn btn-large btn-primary span12 makebooking" data-field-selector="bookingfield">{{textdata.Reserve Now}}</a>
 			</span>
 			<span class="line2">
-				{{#result}}{{#ContextData.Quote.Statement.ValidUntil}}Quote is valid until: {{LongDateTime}}<br />{{/ContextData.Quote.Statement.ValidUntil}}{{/result}}
+				{{#result}}{{#ContextData.Quote.Statement.ValidUntil}}{{textdata.Quote is valid for}} <span id="quote_ValidUntil_M"></span> {{textdata.minute(s)}} <span id="quote_ValidUntil_S"></span> {{textdata.second(s)}}<br />{{/ContextData.Quote.Statement.ValidUntil}}{{/result}}
 				{{textdata.This page is secure}} - <a href="#SSL" data-toggle="collapse" data-target="#SSL">{{textdata.check here}}</a>
 			</span>
 			<div id="SSL" class="collapse"></div>
