@@ -77,8 +77,15 @@
 	}
 </script>
 <div class="wrap">
-<h1><a href="http://www.bookt.com" target="_blank"><img src="<?= plugins_url('/img/logo-im.png', __FILE__) ?>" /></a></h1>
-<h2>InstaSite Plugin - Initial Setup</h2>
+<?php
+if( is_newapp_website() ) {
+	echo '<h1><img src="' . plugins_url('/img/logo_kigo.png', __FILE__) . '"/></h1>';
+}
+else{
+	echo '<h1><a href="http://www.bookt.com" target="_blank"><img src="' . plugins_url('/img/logo-im.png', __FILE__) . '" /></a></h1>';
+}
+?>
+<h2><?php echo ( is_newapp_website() ? 'Initial Setup' : 'InstaSite Plugin - Initial Setup' ); ?></h2>
 <form method="post">
 <table class="form-table">
 <tr valign="top">
@@ -104,7 +111,14 @@
 	<td><input type="text" name="bapi_cloudfrontid" size="60" value="<?php echo $cloudfrontid; ?>" /></td>
 </tr>
 <tr>
-	<td colspan="2"><em>If you do not already have an API key for Bookt, please contact <a href="mailto:support@bookt.com?subject=API%20Key%20-%20Wordpress%20Plugin">support@bookt.com</a> to obtain an API key.</em></td>
+	<?php
+	if( is_newapp_website() ){
+		echo '<td colspan="2"><em>If you do not already have an API key for Kigo, please contact <a href="mailto:support@kigo.net?subject=API%20Key%20-%20Wordpress%20Plugin">support@kigo.net</a> to obtain an API key.</em></td>';
+	}
+	else{
+		echo '<td colspan="2"><em>If you do not already have an API key for Bookt, please contact <a href="mailto:support@bookt.com?subject=API%20Key%20-%20Wordpress%20Plugin">support@bookt.com</a> to obtain an API key.</em></td>';
+	}
+	?>
 </tr>
 </table>
 <div class="clear"></div>

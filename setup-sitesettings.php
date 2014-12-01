@@ -32,8 +32,15 @@ getconfig();
 
 
 <div class="wrap sitesettings-wrapper" style="display: none;">
-<h1><a href="http://www.bookt.com" target="_blank"><img src="<?= plugins_url('/img/logo-im.png', __FILE__) ?>" /></a></h1>
-<h2>InstaSite Plugin - Property &amp; Search Settings</h2>
+<?php
+if( is_newapp_website() ) {
+	echo '<h1><img src="' . plugins_url('/img/logo_kigo.png', __FILE__) . '"/></h1>';
+}
+else{
+	echo '<h1><a href="http://www.bookt.com" target="_blank"><img src="' . plugins_url('/img/logo-im.png', __FILE__) . '" /></a></h1>';
+}
+?>
+<h2><?php echo ( is_newapp_website() ? 'Property & Search Settings' : 'InstaSite Plugin - Property & Search Settings' ); ?></h2>
 <form method="post">
 
 <h3>Search Result Display Modes</h3>

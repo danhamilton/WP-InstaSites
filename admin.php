@@ -5,7 +5,7 @@ function bapi_create_menu() {
 	$parentSlug = 'site_settings_general';
 
 	//create new top-level menu
-	add_menu_page( 'InstaSite', 'InstaSite', 'administrator', $parentSlug, '', plugins_url( '/img/icon.png', __FILE__ ) );
+	add_menu_page( ( is_newapp_website() ? 'Kigo sites Plugin Settings' : 'InstaSite Plugin Settings' ), ( is_newapp_website() ? 'Kigo' : 'InstaSite' ), 'administrator', $parentSlug, '', plugins_url( is_newapp_website() ? '/img/icon_kigo.ico' : '/img/icon.png', __FILE__) );
 
 	add_submenu_page( $parentSlug, 'General',                    'General',                    'administrator', 'site_settings_general',    function(){ require('setup-general.php'); }      );
 	add_submenu_page( $parentSlug, 'Property & Search Settings', 'Property & Search Settings', 'administrator', 'site_settings_propsearch', function(){ require('setup-sitesettings.php'); } );
@@ -75,7 +75,7 @@ add_action('admin_notices','bapi_notify_blog_public');
 function bapi_notify_incompatible_permalinks(){
 	$currentPermalinkStructure = get_option('permalink_structure');
 	if($currentPermalinkStructure != "/%year%/%monthnum%/%day%/%postname%/" && $currentPermalinkStructure != "/%year%/%monthnum%/%postname%/" && $currentPermalinkStructure != "/%postname%/" ){
-		echo '<div id="incompatiblepermalink" class="error"><p>The Permalink settings for your site are not compatible with the InstaSites Plugin. Please <a href="/wp-admin/options-permalink.php">CLICK HERE</a> and select \'Day and name\', \'Month and name\', or \'Post name\'.</p></div>';
+		echo '<div id="incompatiblepermalink" class="error"><p>The Permalink settings for your site are not compatible with the ' . ( is_newapp_website() ? 'Kigo' : 'InstaSites' ) . ' Plugin. Please <a href="/wp-admin/options-permalink.php">CLICK HERE</a> and select \'Day and name\', \'Month and name\', or \'Post name\'.</p></div>';
 	}
 }
 add_action('admin_notices','bapi_notify_incompatible_permalinks');
@@ -104,11 +104,20 @@ function site_config_error(){
 
 
 	if($bapi_unique_prefx != array_shift(explode(".",$_SERVER['HTTP_HOST']))){ //throw error - ""
-		echo '<div id="mis-match-config" class="error"><p>InstaSite domain prefix (<em>"' . array_shift(explode(".",$_SERVER['HTTP_HOST'])) . '"</em>) is mis-matched with InstaApp (<em>"' . $bapi_unique_prefx . '"</em>). Please contact <a href="mailto:support@instamanager.com?subject=InstaSite%20Error%20Report%20for%20'.$bapi_cdn_domain.'&amp;body=InstaSite%20domain%20prefix%20%27' . array_shift(explode(".",$_SERVER['HTTP_HOST'])) . '%27%20is%20mis-matched%20with%20InstaApp%20%27' . $bapi_unique_prefx .'%27">support@instamanager.com</a> and provide this error message for expedited assistance.</p></div>';
+		if( is_newapp_website() ) {
+			echo '<div id="mis-match-config" class="error"><p>Kigo site domain prefix (<em>"' . array_shift(explode(".",$_SERVER['HTTP_HOST'])) . '"</em>) is mis-matched with Kigo app (<em>"' . $bapi_unique_prefx . '"</em>). Please contact <a href="mailto:support@kigo.net?subject=Kigo site%20Error%20Report%20for%20'.$bapi_cdn_domain.'&amp;body=Kigo%20site%20domain%20prefix%20%27' . array_shift(explode(".",$_SERVER['HTTP_HOST'])) . '%27%20is%20mis-matched%20with%20Kigo%20app%20%27' . $bapi_unique_prefx .'%27">support@kigo.net</a> and provide this error message for expedited assistance.</p></div>';
+		}
+		else {
+			echo '<div id="mis-match-config" class="error"><p>InstaSite domain prefix (<em>"' . array_shift(explode(".",$_SERVER['HTTP_HOST'])) . '"</em>) is mis-matched with InstaApp (<em>"' . $bapi_unique_prefx . '"</em>). Please contact <a href="mailto:support@instamanager.com?subject=InstaSite%20Error%20Report%20for%20'.$bapi_cdn_domain.'&amp;body=InstaSite%20domain%20prefix%20%27' . array_shift(explode(".",$_SERVER['HTTP_HOST'])) . '%27%20is%20mis-matched%20with%20InstaApp%20%27' . $bapi_unique_prefx .'%27">support@instamanager.com</a> and provide this error message for expedited assistance.</p></div>';
+		}
 	}
 	if($bapi_cdn_domain != $primaryUrl){
-		echo '<div id="mis-match-config" class="error"><p>InstaSite URL configuration does not match the InstaApp settings.  Please <a href="'.menu_page_url( 'site_settings_initial', false ).'">CLICK HERE</a> to change your Site URL to <em>"'.$primaryUrl.'"</em> or contact <a href="mailto:support@instamanager.com?subject=InstaSite%20Error%20Report%20for%20'.$bapi_cdn_domain.'&amp;body=InstaSite%20URL%20configuration%20does%20not%20match%20the%20InstaApp%20settings.%20Change%20your%20Site%20URL%20to%20%27'.$primaryUrl.'%27%20or%20contact%20support%20to%20continue%20using%20%27'.$bapi_cdn_domain.'%27">support@instamanager.com</a> to continue using <em>"'.$bapi_cdn_domain.'"</em>.</p></div>';
-	
+		if( is_newapp_website() ) {
+			echo '<div id="mis-match-config" class="error"><p>Kigo site URL configuration does not match the Kigo app settings.  Please <a href="'.menu_page_url( 'site_settings_initial', false ).'">CLICK HERE</a> to change your Site URL to <em>"'.$primaryUrl.'"</em> or contact <a href="mailto:support@kigo.net?subject=Kigo%20site%20Error%20Report%20for%20'.$bapi_cdn_domain.'&amp;body=Kigo%20site%20URL%20configuration%20does%20not%20match%20the%20Kigo%20app%20settings.%20Change%20your%20Site%20URL%20to%20%27'.$primaryUrl.'%27%20or%20contact%20support%20to%20continue%20using%20%27'.$bapi_cdn_domain.'%27">support@kigo.net</a> to continue using <em>"'.$bapi_cdn_domain.'"</em>.</p></div>';
+		}
+		else{
+			echo '<div id="mis-match-config" class="error"><p>InstaSite URL configuration does not match the InstaApp settings.  Please <a href="'.menu_page_url( 'site_settings_initial', false ).'">CLICK HERE</a> to change your Site URL to <em>"'.$primaryUrl.'"</em> or contact <a href="mailto:support@instamanager.com?subject=InstaSite%20Error%20Report%20for%20'.$bapi_cdn_domain.'&amp;body=InstaSite%20URL%20configuration%20does%20not%20match%20the%20InstaApp%20settings.%20Change%20your%20Site%20URL%20to%20%27'.$primaryUrl.'%27%20or%20contact%20support%20to%20continue%20using%20%27'.$bapi_cdn_domain.'%27">support@instamanager.com</a> to continue using <em>"'.$bapi_cdn_domain.'"</em>.</p></div>';
+		}
 	}
 	if($bapi_secure_url == $bapi_solutiondata['PrimaryURL']){
 			
@@ -120,14 +129,31 @@ function site_config_error(){
 			
 	}
 	else{
-
-		echo '<div id="mis-match-config" class="error"><p>InstaSite plugin (<em>"'.$bapi_all_options['bapi_secureurl'].'"</em>) configuration is mis-matched with InstaApp (<em>"'.$secureUrl.'"</em>). Please <a href="'.menu_page_url( 'site_settings_initial', false ).'">CLICK HERE</a> to correct the Secure Site URL. Secure Site URL must be set to <em>"'.$secureUrl.'"</em>, <em>"'.$bapi_solutiondata['PrimaryURL'].'"</em> or left blank.</p></div>';
+		if( is_newapp_website() ) {
+			echo '<div id="mis-match-config" class="error"><p>Kigo site plugin (<em>"'.$bapi_all_options['bapi_secureurl'].'"</em>) configuration is mis-matched with Kigo app (<em>"'.$secureUrl.'"</em>). Please <a href="'.menu_page_url( 'site_settings_initial', false ).'">CLICK HERE</a> to correct the Secure Site URL. Secure Site URL must be set to <em>"'.$secureUrl.'"</em>, <em>"'.$bapi_solutiondata['PrimaryURL'].'"</em> or left blank.</p></div>';
+		}
+		else{
+			echo '<div id="mis-match-config" class="error"><p>InstaSite plugin (<em>"'.$bapi_all_options['bapi_secureurl'].'"</em>) configuration is mis-matched with InstaApp (<em>"'.$secureUrl.'"</em>). Please <a href="'.menu_page_url( 'site_settings_initial', false ).'">CLICK HERE</a> to correct the Secure Site URL. Secure Site URL must be set to <em>"'.$secureUrl.'"</em>, <em>"'.$bapi_solutiondata['PrimaryURL'].'"</em> or left blank.</p></div>';
+		}
 	}
 
 
 }
 //this function Display error notice if site config in InstaSite is mis-matched
 add_action('admin_notices','site_config_error');
+
+
+function kigo_login_logo() { ?>
+    <style type="text/css">
+        body.login div#login h1 a {
+            background-image: url(<?php echo ( is_newapp_website() ? get_relative( plugins_url( 'img/logo_kigo.png', __FILE__ ) ) : get_relative( plugins_url( 'img/wp-login-im-logo.png', __FILE__ ) ) ) ?>);
+			background-size:auto auto;
+            width:auto;
+        }
+    </style>
+<?php }
+add_action( 'login_enqueue_scripts', 'kigo_login_logo', 11 );
+
 
 function bapi_update_incompatible_permalinks_error_notice($oldvalue, $_newvalue){
 	if($_newvalue == "/%year%/%monthnum%/%day%/%postname%/" || $_newvalue == "/%year%/%monthnum%/%postname%/" || $_newvalue == "/%postname%/" ){

@@ -39,14 +39,21 @@
 	});	
 </script>
 <div class="wrap">
-<h1><a href="http://www.bookt.com" target="_blank"><img src="<?= plugins_url('/img/logo-im.png', __FILE__) ?>" /></a></h1>
-<h2>InstaSite Plugin - Go Live!</h2>
+<?php
+if( is_newapp_website() ) {
+	echo '<h1><img src="' . plugins_url('/img/logo_kigo.png', __FILE__) . '"/></h1>';
+}
+else{
+	echo '<h1><a href="http://www.bookt.com" target="_blank"><img src="' . plugins_url('/img/logo-im.png', __FILE__) . '" /></a></h1>';
+}
+?>
+<h2><?php echo ( is_newapp_website() ? 'Take me Live!' : 'InstaSite Plugin - Go Live!' ); ?></h2>
 <form method="post">
 
 <br />
 <h3>Instructions</h3>
 <p>
-To go live, you must make changes with your DNS provider.  If you are unable to make these changes, please contact Bookt Support.
+To go live, you must make changes with your DNS provider.  If you are unable to make these changes, please contact <?php echo ( is_newapp_website() ? 'Kigo' : 'Bookt' ); ?> Support.
 <table class="form-table" border="1">
 <tr>
 	<th><strong>Record Type</strong></th>
@@ -74,7 +81,7 @@ To go live, you must make changes with your DNS provider.  If you are unable to 
 <br/>
 <div id="gdsetup" class="bapi_expand"><h4 title="Click Here to Show Instructions">GoDaddy DNS Setup Instructions</h4>
 	<div class="bapi_expand_hidden">
-	<em>Please note that these instructions are generated based on the current version of GoDaddy's website and DNS management tools. Please contact support@bookt.com to report any discrepancies.</em>
+	<em>Please note that these instructions are generated based on the current version of GoDaddy's website and DNS management tools. Please contact <?php echo ( is_newapp_website() ? 'support@kigo.net' : 'support@bookt.com' ); ?> to report any discrepancies.</em>
 	<ol>
 		<li>Go to <a href="http://dcc.godaddy.com">GoDaddy.com</a> and sign in to your account.</li>
 		<li>From the <em>Domains</em> management screen, click on the domain name you wish to update.<br/>
