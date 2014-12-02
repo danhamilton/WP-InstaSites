@@ -935,9 +935,9 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 		}
 		else { $(targetid).unblock(); }
 	});
-	
-	// handle user clicking Clear
-	$(".quicksearch-doclear").on("click", function() {
+
+	// handle user clicking Clear (not home page)
+	$(".widget_bapi__search .quicksearch-doclear").on("click", function() {
 		$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });		
 		BAPI.clearsession();
 		if (doSearchCallback) { doSearchCallback(); }
@@ -948,6 +948,13 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 			if (rurl[rurl.length-1]!='/') { rurl = rurl + '/'; }
 			window.location.href = rurl; 
 		}		
+	});
+
+	// handle user clicking Clear on home page
+	$(".widget_bapi_hp_search .quicksearch-doclear").on("click", function() {
+		BAPI.clearsession();
+		if (doSearchCallback) { doSearchCallback(); }
+		$('.' + options.dataselector).val('');
 	});
 	
 	$(".quicksearch-doadvanced").on("click", function() {
