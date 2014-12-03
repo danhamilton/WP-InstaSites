@@ -873,7 +873,7 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 		$("#amenitiesDropdownCheckbox").dropdownCheckbox({
 		  data: arrayAmenities,
 		  showNbSelected:true,
-		  templateButton: '<button class="dropdown-checkbox-toggle btn" data-toggle: "dropdown-checkbox">'+BAPI.config().amenity.prompt+' <span class="dropdown-checkbox-nbselected"></span><b class="caret"></b></button>'
+		  templateButton: '<button class="dropdown-checkbox-toggle btn" data-toggle="dropdown">'+BAPI.config().amenity.prompt+' <span class="dropdown-checkbox-nbselected"></span><b class="caret"></b></button>'
 		});
 	}
 
