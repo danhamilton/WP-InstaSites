@@ -617,7 +617,7 @@ context.setupmapwidgetshelper = function() {
 			caticons = function(category){
 				/* no category specified lets show the default pin */
 					if (category == 'undefined' || category == '' || category == null || category == 'poi')
-					{return new google.maps.MarkerImage('/wp-content/plugins/bookt-api/img/pin.png');}
+					{return new google.maps.MarkerImage(BAPI.UI.WPIS_PATH + 'img/pin.png');}
 					else{
 						/* this is a poi and is numbered */
 						if (category.indexOf('poi') == 0){
@@ -633,23 +633,23 @@ context.setupmapwidgetshelper = function() {
 							if (theIconNumber % 10 == 0){pointX = 198; pointY = (Math.floor(theIconNumber / 10)-1)* 39;}
 							//BAPI.log('point X '+pointX);
 							//BAPI.log('point Y '+pointY);
-							return new google.maps.MarkerImage("/wp-content/plugins/bookt-api/img/pins-numbered.png", new google.maps.Size(22, 39), new google.maps.Point(pointX, pointY));
+							return new google.maps.MarkerImage(BAPI.UI.WPIS_PATH + 'img/pins-numbered.png', new google.maps.Size(22, 39), new google.maps.Point(pointX, pointY));
 							}else{
-								return new google.maps.MarkerImage('/wp-content/plugins/bookt-api/img/pin.png');
+								return new google.maps.MarkerImage(BAPI.UI.WPIS_PATH + 'img/pin.png');
 							}
 							
 						} else if (category.indexOf('property') == 0){
 							/* this is a property pin */
-							return new google.maps.MarkerImage('/wp-content/plugins/bookt-api/img/pin_properties.png');
+							return new google.maps.MarkerImage(BAPI.UI.WPIS_PATH + 'img/pin_properties.png');
 						} else if (category.indexOf('mainPoi') == 0){
 							/* this is an attraction poi */
-							return new google.maps.MarkerImage('/wp-content/plugins/bookt-api/img/pin_attractions.png');
+							return new google.maps.MarkerImage(BAPI.UI.WPIS_PATH + 'img/pin_attractions.png');
 						} else if (category.indexOf('pinOffice') == 0){
 							/* this is an attraction poi */
-							return new google.maps.MarkerImage('/wp-content/plugins/bookt-api/img/pin_office.png');
+							return new google.maps.MarkerImage(BAPI.UI.WPIS_PATH + 'img/pin_office.png');
 						} else{
 							/* none of the above lets use the default pin */
-							return new google.maps.MarkerImage('/wp-content/plugins/bookt-api/img/pin.png');
+							return new google.maps.MarkerImage(BAPI.UI.WPIS_PATH + 'img/pin.png');
 						}
 					}
 					
@@ -838,7 +838,7 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 	if(!BAPI.isempty(BAPI.config().amenity.enabled) && BAPI.config().amenity.enabled){
 		var arrayAmenitiesLength = BAPI.config().amenity.values.length;
 		var arrayAmenities = [];
-		var amenitiesInSession = !BAPI.isempty(BAPI.session.searchparams.amenities);
+		var amenitiesInSession = !BAPI.isempty(BAPI.session.searchparams) && !BAPI.isempty(BAPI.session.searchparams.amenities);
 		/* Are the amenities in Session ? */
 		if(amenitiesInSession){
 			/* array of the amenities from session */
@@ -873,7 +873,7 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 		$("#amenitiesDropdownCheckbox").dropdownCheckbox({
 		  data: arrayAmenities,
 		  showNbSelected:true,
-		  templateButton: '<button class="dropdown-checkbox-toggle btn" data-toggle: "dropdown-checkbox">'+BAPI.config().amenity.prompt+' <span class="dropdown-checkbox-nbselected"></span><b class="caret"></b></button>'
+		  templateButton: '<button class="dropdown-checkbox-toggle btn" data-toggle="dropdown">'+BAPI.config().amenity.prompt+' <span class="dropdown-checkbox-nbselected"></span><b class="caret"></b></button>'
 		});
 	}
 
@@ -958,7 +958,7 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 }
 
 function setCalendarsFromSession(session,checkinSelector,checkoutSelector){
-	if(session.checkin !== null && $(checkinSelector).length > 0){
+	if(!BAPI.isempty(session) && !BAPI.isempty(session.checkin) && $(checkinSelector).length > 0){
 		$(window).load(function() {
 			$(checkinSelector).data('pickadate').set('select',session.checkin,{format: BAPI.defaultOptions.dateFormatBAPI.toLowerCase() } );
 			if(session.checkout !== null && $(checkoutSelector).length > 0){
@@ -1205,7 +1205,7 @@ context.createInquiryForm = function (targetid, options) {
 	$('.specialform').hide(); // hide the spam control
 	
 	var processing = false;	
-	$(".doleadrequest").on("click", function () { 		
+	$(".doleadrequest").on("click", function () {
 		BAPI.log("Processing lead request");
 		if (processing) { return; } // already in here
 		/* block the Inquiry form */
@@ -1281,6 +1281,7 @@ context.createInquiryForm = function (targetid, options) {
 			if (options.dologging==1) { BAPI.log("-> Response Data"); BAPI.log(edata); }
 			if (options.responseurl == '') {				
 				$(targetid).unblock();
+				processing = false;
 				/* Execute google adwords code if exists */
 				if ( typeof googleConversionTrack == 'function' ) { googleConversionTrack(); }
 				alert('Your request has been submitted.');
@@ -1685,6 +1686,69 @@ function bookingHelper_DoRedirect(u) {
 	return true;
 }
 
+function bookingHelper_get_description() {
+	if( $('#statement-details a.load_desc').length < 1 ) {
+		return;
+	}
+
+	// Build an object where keys are entities' name and value is an array of id. Ie. { 'entity_name1' = array(id1, id2), 'entity_name2' = array(id1, id2) ..}
+	var entities = new Object();
+	$('#statement-details a.load_desc').each(
+		function() {
+			// All link are hidden until we receive or not a description
+			$(this).hide();
+
+			if( !$.isArray( entities[ $(this).attr('data-entity') ] )  ) {
+				entities[ $(this).attr('data-entity') ] = new Array( $(this).attr('data-related-id') );
+			}
+			else {
+				entities[ $(this).attr('data-entity') ].push( $(this).attr('data-related-id') )
+			}
+		}
+	);
+
+	// This should only occur if the template is not correctly displaying data-entity and data-related-id
+	if( entities.length < 1 ) {
+		return;
+	}
+
+	$.each(
+		entities,
+		function( entity, ids ) {
+			BAPI.get(
+				ids,
+				entity,
+				{ 'page' : 1, 'pagesize' : ids.length }, // Default value of pagesize is 5 so it is need to be hable to receive as much response as ids are passed.
+				function ( data ) {
+					if(
+						!$.isPlainObject(data) ||
+						$.isPlainObject(data.error) ||
+						!$.isArray(data.result) ||
+						data.result.length < 1
+					) {
+						return;
+					}
+
+					$.each(
+						data.result,
+						function( key, value ) {
+							if(
+								!$.isPlainObject(value) ||
+								$.type( value.Description ) !== "string" ||
+								value.Description.length < 1
+							) {
+								return;
+							}
+							$('#statement-details #description'+ value.ID).html( value.Description );
+							$('#statement-details a.load_desc[data-related-id=' + value.ID + ']').show();
+						}
+					);
+				}
+			);
+		}
+	);
+}
+
 function bookingHelper_FullLoad(targetid,options,propid) {
 	var propoptions = { avail: 1, seo: 1 }
 	propoptions = $.extend({}, propoptions, BAPI.session.searchparams);
@@ -1698,38 +1762,6 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 		$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, data));
 		/* we render the statements mustache */
 		$(options.targetids.statement).html(Mustache.render(options.templates.statement, data));
-		if(data.result[0].ContextData.Quote.Statement != null){
-			/* function that gets the statement data for the provided array of statements */
-			function getStatementsDescriptions(arrayStatements,bapiEntity){
-				/* we check the parameters */
-				if(typeof (arrayStatements) !== "undefined" && arrayStatements != null && arrayStatements != '' && typeof (bapiEntity) !== "undefined" && bapiEntity != ''){
-					$.each(arrayStatements, function() {
-						var oStatement = this;
-						BAPI.get(oStatement.RelatedToID, bapiEntity, null, function (statementData) {
-							/* we check if the returned data is valid */
-							if(typeof (statementData) !== "undefined" && typeof (statementData.result[0].Description) !== "undefined"){
-								oStatement.Description = statementData.result[0].Description;
-								/* we render the mustache with the new data */
-								$(options.targetids.statement).html(Mustache.render(options.templates.statement, data));
-							}
-						});
-					});
-				}
-			}
-			/* we set the descriptions for each statement that we need*/		
-			/* the optional fees */
-			var arrayOptionalFees = data.result[0].ContextData.Quote.Statement.OptionalFees;
-			getStatementsDescriptions(arrayOptionalFees,BAPI.entities.fee);
-			/* the fees */
-			var arrayFees = data.result[0].ContextData.Quote.Statement.Fees;
-			getStatementsDescriptions(arrayFees,BAPI.entities.fee);
-			/* the taxes */
-			var arrayTaxes = data.result[0].ContextData.Quote.Statement.Taxes;
-			getStatementsDescriptions(arrayTaxes,BAPI.entities.tax);
-			/* the Deposits */
-			var arrayDeposits = data.result[0].ContextData.Quote.Statement.Deposits;
-			getStatementsDescriptions(arrayDeposits,BAPI.entities.fee);
-		}
 		$(options.targetids.renter).html(Mustache.render(options.templates.renter, data));
 		$(options.targetids.creditcard).html(Mustache.render(options.templates.creditcard, data));
 		$(options.targetids.accept).html(Mustache.render(options.templates.accept, data));
@@ -1750,40 +1782,14 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 			sdata.session = BAPI.session;	
 			/* we render the statements mustache */
 			$(options.targetids.statement).html(Mustache.render(options.templates.statement, sdata));
-			if(sdata.result[0].ContextData.Quote.Statement != null){
-				/* function that gets the statement data for the provided array of statements */
-				function getStatementsDescriptions(arrayStatements,bapiEntity){
-					/* we check the parameters */
-					if(typeof (arrayStatements) !== "undefined" && arrayStatements != null && arrayStatements != '' && typeof (bapiEntity) !== "undefined" && bapiEntity != ''){
-						$.each(arrayStatements, function() {
-							var oStatement = this;
-							BAPI.get(oStatement.RelatedToID, bapiEntity, null, function (statementData) {
-								/* we check if the returned data is valid */
-								if(typeof (statementData) !== "undefined" && typeof (statementData.result[0].Description) !== "undefined"){
-									oStatement.Description = statementData.result[0].Description;
-									/* we render the mustache with the new data */
-									$(options.targetids.statement).html(Mustache.render(options.templates.statement, sdata));
-								}
-							});
-						});
-					}
-				}
-				/* we set the descriptions for each statement that we need */
-				/* the optional fees */
-				var arrayOptionalFees = sdata.result[0].ContextData.Quote.Statement.OptionalFees;
-				getStatementsDescriptions(arrayOptionalFees,BAPI.entities.fee);
-				/* the fees */
-				var arrayFees = sdata.result[0].ContextData.Quote.Statement.Fees;
-				getStatementsDescriptions(arrayFees,BAPI.entities.fee);
-				/* the taxes */
-				var arrayTaxes = sdata.result[0].ContextData.Quote.Statement.Taxes;
-				getStatementsDescriptions(arrayTaxes,BAPI.entities.tax);
-			}
 			$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, sdata));
 			$(options.targetids.accept).html(Mustache.render(options.templates.accept, sdata));			
 			$(options.targetids.stayinfo).unblock();
 			context.createDatePicker('#makebookingcheckin', { "property": BAPI.curentity, "checkoutID": '#makebookingcheckout' });
 			context.createDatePicker('#makebookingcheckout', { "property": BAPI.curentity, "checkinID": '#makebookingcheckout' });	
+
+			// Invalidate the entity description: entities description need to be reloaded each time the template is re-rendered.
+			$('#statement-details').one('show.bs.modal', bookingHelper_get_description );
 		}
 		
 		$(".bapi-revisedates").live("click", function () {
@@ -1826,8 +1832,34 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 		$('.bapi-applyspecial').live('click', function() {
 			modifyStatement();
 		});
+
+		function renderValidUtil() {
+			var seconds_left = 15 * 60; // 15min
+			var interval = setInterval(
+				function() {
+					if( seconds_left < 1 ) {
+						clearInterval( interval );
+						alert( BAPI.textdata['This quote is not valid any more'] + '.' + '\n' + BAPI.textdata['The page will be automatically refreshed'] + '.' );
+						location.reload();
+					}
+
+					$( "#quote_ValidUntil_M" ).html( parseInt( seconds_left / 60 ) );
+					$( "#quote_ValidUntil_S" ).html( parseInt( seconds_left % 60 ) );
+
+					seconds_left -= 1;
+				},
+				1000
+			);
+
+		}
+		renderValidUtil();
+
+
+		// Get entities description on modal show
+		$('#statement-details').one('show.bs.modal', bookingHelper_get_description );
+
 	});
-	
+
 }
 
 function BookingHelper_SetupFormHandlers() {
@@ -1846,11 +1878,11 @@ function BookingHelper_SetupFormHandlers() {
 	$(".ccverify").live('keyup', function() {
 		var ctl = $(this);
 		ctl.validateCreditCard(function(e) {
-			if (e.luhn_valid && e.length_valid) { ctl.attr('data-isvalid', '1'); } 
+			if (e.luhn_valid && e.length_valid) { ctl.attr('data-isvalid', '1'); }
 			else { ctl.attr('data-isvalid', '0'); }
-		})			
+		})
 	});
-	
+
 	// try to auto set the name on card
 	$('.autofullname').live('focus', function() {
 		var c = $(this);
@@ -1879,10 +1911,18 @@ function BookingHelper_ValidateForm(reqfields) {
 			}
 			alert(BAPI.textdata['Please fill out all required fields']); rf.focus(); return false;
 		}
+
 		// special case for credit card field
-		if (rf.hasClass('ccverify') && rf.attr('data-isvalid')!='1') {
-			alert(BAPI.textdata['The entered credit card is invalid']); rf.focus(); return false;
+		if( rf.hasClass('ccverify') ) {
+			//The credit card field should only contain digits (no space or - etc.. ) It could also be auto-cleaned up by rf.val().replace(/[^\d]/g, '');
+			if( !$.isArray( rf.val().match( /^\d+$/ ) ) ) {
+				alert(BAPI.textdata['The credit card number should contain only digits']); rf.focus(); return false;
+			}
+			else if (rf.attr('data-isvalid')!='1') {
+				alert(BAPI.textdata['The entered credit card is invalid']); rf.focus(); return false;
+			}
 		}
+
 		if (rf.hasClass('checkbox')) {
 			BAPI.log(rf.attr('checked'));
 			if (!rf.attr('checked')) {
@@ -2428,6 +2468,8 @@ function loadmoreProperties(targetid, ids, entity, options, newAlldata, pagenumb
 }
 
 function loadFormFromSession(s) {
+	if (BAPI.isempty(s)) { return; }
+
 	/* this is only setting the input value not the calendar*/
 	$('.sessioncheckin').val(s.scheckin);
 	$('.sessioncheckout').val(s.scheckout);

@@ -663,10 +663,14 @@
 		<div id="slider" class="flexslider bapi-flexslider" data-options='{ "animation": "slide", "controlNav": false, "animationLoop": false, "slideshow": false, "sync": "#carousel" }'>
 		<ul class="slides">
 		{{#Images}}
-			<li><img alt="{{Caption}}" title="Open Slideshow" src="/wp-content/plugins/bookt-api/img/loading.gif" data-src="/img.php?src=http:{{&OriginalURL}}&w=816&h=600&q=75&zc=2" />
-			{{#Caption}}
-			<p class="flex-caption">{{Caption}}</p></li>
-			{{/Caption}}
+			<li>
+				<div>
+					<img alt="{{Caption}}" title="Open Slideshow" src="/wp-content/plugins/bookt-api/img/loading.gif" data-src="/img.php?src=http:{{&OriginalURL}}&w=816&h=600&q=75&zc=2" />
+					{{#Caption}}
+					<p class="flex-caption">&nbsp;&nbsp;&nbsp;&nbsp;{{Caption}}</p>
+					{{/Caption}}
+				</div>
+			</li>
 		{{/Images}}
 		</ul>
 		</div>
@@ -2013,7 +2017,7 @@
 <h5>{{textdata.Fees}}</h5>
 {{/Fees.length}}
 {{#Fees}}
-<p>{{{Notes}}} {{#Description}}<small class="charges-desc"><a data-toggle="collapse" data-target="#description{{RelatedToID}}">({{textdata.Description}})</a></small>{{/Description}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>{{#Description}}<div id="description{{RelatedToID}}" class="collapse">{{{Description}}}</div>{{/Description}}
+<p>{{{Notes}}} <span class="glyphicons circle_question_mark"><a data-toggle="collapse" data-target="#description{{RelatedToID}}" class="load_desc" data-entity="fee" data-related-id="{{RelatedToID}}"><i></i></a></span><span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p><div id="description{{RelatedToID}}" class="collapse charges-description">{{{Description}}}</div>
 {{/Fees}}
 {{#Fees.length}}
 </div>
@@ -2026,7 +2030,7 @@
 <h5>{{textdata.Taxes}}</h5>
 {{/Taxes.length}}
 {{#Taxes}}
-<p>{{{Notes}}} {{#Description}}<small class="charges-desc"><a data-toggle="collapse" data-target="#description{{RelatedToID}}">({{textdata.Description}})</a></small>{{/Description}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>{{#Description}}<div id="description{{RelatedToID}}" class="collapse">{{{Description}}}</div>{{/Description}}
+<p>{{{Notes}}} <span class="glyphicons circle_question_mark"><a data-toggle="collapse" data-target="#description{{RelatedToID}}" class="load_desc" data-entity="tax" data-related-id="{{RelatedToID}}"><i></i></a></span><span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p><div id="description{{RelatedToID}}" class="collapse charges-description">{{{Description}}}</div>
 {{/Taxes}}
 {{#Taxes.length}}
 </div>
@@ -2038,7 +2042,7 @@
 <h5>{{textdata.Optional Fees & Services}}</h5>
 {{/OptionalFees.length}}
 {{#OptionalFees}}
-<p>{{{Notes}}} {{#Description}}<small class="charges-desc"><a data-toggle="collapse" data-target="#description{{RelatedToID}}">({{textdata.Description}})</a></small>{{/Description}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>{{#Description}}<div id="description{{RelatedToID}}" class="collapse">{{{Description}}}</div>{{/Description}}
+<p>{{{Notes}}} <span class="glyphicons circle_question_mark"><a data-toggle="collapse" data-target="#description{{RelatedToID}}" class="load_desc" data-entity="fee" data-related-id="{{RelatedToID}}"><i></i></a></span><span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p><div id="description{{RelatedToID}}" class="collapse charges-description">{{{Description}}}</div>
 {{/OptionalFees}}
 {{#OptionalFees.length}}
 </div>
@@ -2060,7 +2064,7 @@
 <h5>{{textdata.Deposits}}</h5>
 {{/Deposits.length}}
 {{#Deposits}}
-<p>{{{Notes}}} {{#Description}}<small class="charges-desc"><a data-toggle="collapse" data-target="#description{{RelatedToID}}">({{textdata.Description}})</a></small>{{/Description}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>{{#Description}}<div id="description{{RelatedToID}}" class="collapse">{{{Description}}}</div>{{/Description}}
+<p>{{{Notes}}} <span class="glyphicons circle_question_mark"><a data-toggle="collapse" data-target="#description{{RelatedToID}}" class="load_desc" data-entity="fee" data-related-id="{{RelatedToID}}"><i></i></a></span><span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p><div id="description{{RelatedToID}}" class="collapse charges-description">{{{Description}}}</div>
 {{/Deposits}}
 {{#Deposits.length}}
 </div>
@@ -2252,7 +2256,7 @@
 				<a href="javascript:void(0);" class="btn btn-large btn-primary span12 makebooking" data-field-selector="bookingfield">{{textdata.Reserve Now}}</a>
 			</span>
 			<span class="line2">
-				{{#result}}{{#ContextData.Quote.Statement.ValidUntil}}Quote is valid until: {{LongDateTime}}<br />{{/ContextData.Quote.Statement.ValidUntil}}{{/result}}
+				{{#result}}{{#ContextData.Quote.Statement.ValidUntil}}{{textdata.Quote is valid for}} <span id="quote_ValidUntil_M"></span> {{textdata.minute(s)}} <span id="quote_ValidUntil_S"></span> {{textdata.second(s)}}<br />{{/ContextData.Quote.Statement.ValidUntil}}{{/result}}
 				{{textdata.This page is secure}} - <a href="#SSL" data-toggle="collapse" data-target="#SSL">{{textdata.check here}}</a>
 			</span>
 			<div id="SSL" class="collapse"></div>

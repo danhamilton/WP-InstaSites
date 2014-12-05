@@ -16,8 +16,9 @@
 		update_option('bapi_slideshow_caption6', $_POST['bapi_slideshow_caption6']);
 		
 		echo '<div id="message" class="updated"><p><strong>Settings saved.</strong></p></div>';
-	}	
-?> 
+	}
+	define( 'WPIS_URL', get_relative( plugins_url( '', __FILE__ ) ) );
+?>
 <script type="text/javascript">
 	jQuery(document).ready(function($){
 		$('input#bapi_slideshow_image1,input#image-pick1').click(function(){
@@ -100,14 +101,21 @@
 </script>
 <style>.button.clear-btn,.button.down-btn,.button.up-btn{padding-top:4px;}</style>
 <div class="wrap">
-<h1><a href="http://www.bookt.com" target="_blank"><img src="<?= plugins_url('/img/logo-im.png', __FILE__) ?>" /></a></h1>
-<h2>InstaSite Plugin - Slideshow Setup</h2>
+<?php
+if( is_newapp_website() ) {
+	echo '<h1><img src="' . plugins_url('/img/logo_kigo.png', __FILE__) . '"/></h1>';
+}
+else{
+	echo '<h1><a href="http://www.bookt.com" target="_blank"><img src="' . plugins_url('/img/logo-im.png', __FILE__) . '" /></a></h1>';
+}
+?>
+<h2><?php echo ( is_newapp_website() ? 'Slideshow Setup' : 'InstaSite Plugin - Slideshow Setup' ); ?></h2>
 <form method="post">
 <table class="form-table">
 <tr>
 	<th scope="row">Slide 1</th>
 	<td>
-		Image: <input type="text" id='bapi_slideshow_image1' name="bapi_slideshow_image1" size="60" value="<?php echo get_option('bapi_slideshow_image1'); ?>" /><input type="button" id="image-pick1" name="image-pick1" value="Select Image" class="button" /><a href="#" class="button clear-btn" data-for="bapi_slideshow_image1"><img alt="Clear" title="Clear Field" src="/wp-content/plugins/bookt-api/img/remove_2.png" /></a><a href="#" class="button down-btn" data-for="1"><img alt="Down" src="/wp-content/plugins/bookt-api/img/down_arrow.png" /></a>
+		Image: <input type="text" id='bapi_slideshow_image1' name="bapi_slideshow_image1" size="60" value="<?php echo get_option('bapi_slideshow_image1'); ?>" /><input type="button" id="image-pick1" name="image-pick1" value="Select Image" class="button" /><a href="#" class="button clear-btn" data-for="bapi_slideshow_image1"><img alt="Clear" title="Clear Field" src="<?php echo WPIS_URL; ?>/img/remove_2.png" /></a><a href="#" class="button down-btn" data-for="1"><img alt="Down" src="<?php echo WPIS_URL; ?>/img/down_arrow.png" /></a>
 		<br/>
 		Caption: <input type="text" id='bapi_slideshow_caption1' name="bapi_slideshow_caption1" size="58" value="<?php echo get_option('bapi_slideshow_caption1'); ?>" />
 	</td>
@@ -115,35 +123,35 @@
 	<tr>
 	<th scope="row">Slide 2</th>
 	<td>
-		Image: <input type="text" id='bapi_slideshow_image2' name="bapi_slideshow_image2" size="60" value="<?php echo get_option('bapi_slideshow_image2'); ?>" /><input type="button" id="image-pick2" name="image-pick2" value="Select Image" class="button" /><a href="#" class="button clear-btn" data-for="bapi_slideshow_image2"><img alt="Clear" title="Clear Field" src="/wp-content/plugins/bookt-api/img/remove_2.png" /></a><a href="#" class="button down-btn" data-for="2"><img alt="Down" src="/wp-content/plugins/bookt-api/img/down_arrow.png" /></a><a href="#" class="button up-btn" data-for="2"><img alt="Up" src="/wp-content/plugins/bookt-api/img/up_arrow.png" /></a><br/>
+		Image: <input type="text" id='bapi_slideshow_image2' name="bapi_slideshow_image2" size="60" value="<?php echo get_option('bapi_slideshow_image2'); ?>" /><input type="button" id="image-pick2" name="image-pick2" value="Select Image" class="button" /><a href="#" class="button clear-btn" data-for="bapi_slideshow_image2"><img alt="Clear" title="Clear Field" src="<?php echo WPIS_URL; ?>/img/remove_2.png" /></a><a href="#" class="button down-btn" data-for="2"><img alt="Down" src="<?php echo WPIS_URL; ?>/img/down_arrow.png" /></a><a href="#" class="button up-btn" data-for="2"><img alt="Up" src="<?php echo WPIS_URL; ?>/img/up_arrow.png" /></a><br/>
 		Caption: <input type="text" id='bapi_slideshow_caption2' name="bapi_slideshow_caption2" size="58" value="<?php echo get_option('bapi_slideshow_caption2'); ?>" />
 	</td>
 	</tr>
 	<tr>
 	<th scope="row">Slide 3</th>
 	<td>
-		Image: <input type="text" id='bapi_slideshow_image3' name="bapi_slideshow_image3" size="60" value="<?php echo get_option('bapi_slideshow_image3'); ?>" /><input type="button" id="image-pick3" name="image-pick3" value="Select Image" class="button" /><a href="#" class="button clear-btn" data-for="bapi_slideshow_image3"><img alt="Clear" title="Clear Field" src="/wp-content/plugins/bookt-api/img/remove_2.png" /></a><a href="#" class="button down-btn" data-for="3"><img alt="Down" src="/wp-content/plugins/bookt-api/img/down_arrow.png" /></a><a href="#" class="button up-btn" data-for="3"><img alt="Up" src="/wp-content/plugins/bookt-api/img/up_arrow.png" /></a><br/>
+		Image: <input type="text" id='bapi_slideshow_image3' name="bapi_slideshow_image3" size="60" value="<?php echo get_option('bapi_slideshow_image3'); ?>" /><input type="button" id="image-pick3" name="image-pick3" value="Select Image" class="button" /><a href="#" class="button clear-btn" data-for="bapi_slideshow_image3"><img alt="Clear" title="Clear Field" src="<?php echo WPIS_URL; ?>/img/remove_2.png" /></a><a href="#" class="button down-btn" data-for="3"><img alt="Down" src="<?php echo WPIS_URL; ?>/img/down_arrow.png" /></a><a href="#" class="button up-btn" data-for="3"><img alt="Up" src="<?php echo WPIS_URL; ?>/img/up_arrow.png" /></a><br/>
 		Caption: <input type="text" id='bapi_slideshow_caption3' name="bapi_slideshow_caption3" size="58" value="<?php echo get_option('bapi_slideshow_caption3'); ?>" />
 	</td>
 	</tr>
 	<tr>
 	<th scope="row">Slide 4</th>
 	<td>
-		Image: <input type="text" id='bapi_slideshow_image4' name="bapi_slideshow_image4" size="60" value="<?php echo get_option('bapi_slideshow_image4'); ?>" /><input type="button" id="image-pick4" name="image-pick4" value="Select Image" class="button" /><a href="#" class="button clear-btn" data-for="bapi_slideshow_image4"><img alt="Clear" title="Clear Field" src="/wp-content/plugins/bookt-api/img/remove_2.png" /></a><a href="#" class="button down-btn" data-for="4"><img alt="Down" src="/wp-content/plugins/bookt-api/img/down_arrow.png" /></a><a href="#" class="button up-btn" data-for="4"><img alt="Up" src="/wp-content/plugins/bookt-api/img/up_arrow.png" /></a><br/>
+		Image: <input type="text" id='bapi_slideshow_image4' name="bapi_slideshow_image4" size="60" value="<?php echo get_option('bapi_slideshow_image4'); ?>" /><input type="button" id="image-pick4" name="image-pick4" value="Select Image" class="button" /><a href="#" class="button clear-btn" data-for="bapi_slideshow_image4"><img alt="Clear" title="Clear Field" src="<?php echo WPIS_URL; ?>/img/remove_2.png" /></a><a href="#" class="button down-btn" data-for="4"><img alt="Down" src="<?php echo WPIS_URL; ?>/img/down_arrow.png" /></a><a href="#" class="button up-btn" data-for="4"><img alt="Up" src="<?php echo WPIS_URL; ?>/img/up_arrow.png" /></a><br/>
 		Caption: <input type="text" id='bapi_slideshow_caption4' name="bapi_slideshow_caption4" size="58" value="<?php echo get_option('bapi_slideshow_caption4'); ?>" />
 	</td>
 	</tr>
 	<tr>
 	<th scope="row">Slide 5</th>
 	<td>
-		Image: <input type="text" id='bapi_slideshow_image5' name="bapi_slideshow_image5" size="60" value="<?php echo get_option('bapi_slideshow_image5'); ?>" /><input type="button" id="image-pick5" name="image-pick5" value="Select Image" class="button" /><a href="#" class="button clear-btn" data-for="bapi_slideshow_image5"><img alt="Clear" title="Clear Field" src="/wp-content/plugins/bookt-api/img/remove_2.png" /></a><a href="#" class="button down-btn" data-for="5"><img alt="Down" src="/wp-content/plugins/bookt-api/img/down_arrow.png" /></a><a href="#" class="button up-btn" data-for="5"><img alt="Up" src="/wp-content/plugins/bookt-api/img/up_arrow.png" /></a><br/>
+		Image: <input type="text" id='bapi_slideshow_image5' name="bapi_slideshow_image5" size="60" value="<?php echo get_option('bapi_slideshow_image5'); ?>" /><input type="button" id="image-pick5" name="image-pick5" value="Select Image" class="button" /><a href="#" class="button clear-btn" data-for="bapi_slideshow_image5"><img alt="Clear" title="Clear Field" src="<?php echo WPIS_URL; ?>/img/remove_2.png" /></a><a href="#" class="button down-btn" data-for="5"><img alt="Down" src="<?php echo WPIS_URL; ?>/img/down_arrow.png" /></a><a href="#" class="button up-btn" data-for="5"><img alt="Up" src="<?php echo WPIS_URL; ?>/img/up_arrow.png" /></a><br/>
 		Caption: <input type="text" id='bapi_slideshow_caption5' name="bapi_slideshow_caption5" size="58" value="<?php echo get_option('bapi_slideshow_caption5'); ?>" />
 	</td>
 	</tr>
 	<tr>
 	<th scope="row">Slide 6</th>
 	<td>
-		Image: <input type="text" id='bapi_slideshow_image6' name="bapi_slideshow_image6" size="60" value="<?php echo get_option('bapi_slideshow_image6'); ?>" /><input type="button" id="image-pick6" name="image-pick6" value="Select Image" class="button" /><a href="#" class="button clear-btn" data-for="bapi_slideshow_image6"><img alt="Clear" title="Clear Field" src="/wp-content/plugins/bookt-api/img/remove_2.png" /></a><a href="#" class="button up-btn" data-for="6"><img alt="Up" src="/wp-content/plugins/bookt-api/img/up_arrow.png" /></a>
+		Image: <input type="text" id='bapi_slideshow_image6' name="bapi_slideshow_image6" size="60" value="<?php echo get_option('bapi_slideshow_image6'); ?>" /><input type="button" id="image-pick6" name="image-pick6" value="Select Image" class="button" /><a href="#" class="button clear-btn" data-for="bapi_slideshow_image6"><img alt="Clear" title="Clear Field" src="<?php echo WPIS_URL; ?>/img/remove_2.png" /></a><a href="#" class="button up-btn" data-for="6"><img alt="Up" src="<?php echo WPIS_URL; ?>/img/up_arrow.png" /></a>
 		<br/>
 		Caption: <input type="text" id='bapi_slideshow_caption6' name="bapi_slideshow_caption6" size="58" value="<?php echo get_option('bapi_slideshow_caption6'); ?>" />
 	</td>

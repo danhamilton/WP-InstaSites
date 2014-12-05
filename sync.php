@@ -2,9 +2,10 @@
 
 	require_once('bapi-php/bapi.php');
 	require_once('functions.php');
-	
+
 	$bapisync = null;
 	class BAPISync {
+		const SETTINGS_UPDATE_TIME_OPTION_NAME = 'bapi_wp_settings_update_time';
 		public $soldata = null;
 		public $textdata = null;
 		public $seodata = null;
@@ -17,15 +18,15 @@
 		public function loadtemplates() { if (empty($this->templates)) { $this->templates = BAPISync::getTemplates(); } }
 		
 		public static function getSolutionDataRaw() { global $bapi_all_options; return $bapi_all_options['bapi_solutiondata']; }
-		public static function getSolutionDataLastModRaw() { global $bapi_all_options; return $bapi_all_options['bapi_solutiondata_lastmod']; }
+		public static function getSolutionDataLastModRaw() { global $bapi_all_options; return (int)$bapi_all_options['bapi_solutiondata_lastmod']; }
 		public static function getSolutionData() { return json_decode(BAPISync::getSolutionDataRaw(), TRUE); }
 		
 		public static function getTextDataRaw() { global $bapi_all_options; return $bapi_all_options['bapi_textdata']; }
-		public static function getTextDataLastModRaw() { global $bapi_all_options; return $bapi_all_options['bapi_textdata_lastmod']; }
+		public static function getTextDataLastModRaw() { global $bapi_all_options; return (int)$bapi_all_options['bapi_textdata_lastmod']; }
 		public static function getTextData() { return json_decode(BAPISync::getTextDataRaw(), TRUE); }
 		
 		public static function getSEODataRaw() { global $bapi_all_options; return $bapi_all_options['bapi_keywords_array']; }
-		public static function getSEODataLastModRaw() { global $bapi_all_options; return $bapi_all_options['bapi_keywords_lastmod']; }
+		public static function getSEODataLastModRaw() { global $bapi_all_options; return (int)$bapi_all_options['bapi_keywords_lastmod']; }
 		public static function getSEOData() { return json_decode(BAPISync::getSEODataRaw(), TRUE); }
 		
 		public static function isMustacheOverriden() { 
@@ -202,6 +203,22 @@
 			$string = str_replace("\n", '', $string); // remove new lines
 			$string = str_replace("\r", '', $string); // remove carriage returns
 			return $string;
+		}
+
+		/**
+		 * @return bool as returned by WP’s `update_option`
+		 */
+		public static function updateLastSettingsUpdate()  {
+			return update_option( self::SETTINGS_UPDATE_TIME_OPTION_NAME, time() );
+		}
+
+		/**
+		 * @param $time int the unixtime to compare
+		 *
+		 * @return bool `true` if the stored value should be re-synced, `false` otherwise
+		 */
+		public static function obsoletedByLastSettingsUpdate( $time ) {
+			return $time < get_option( self::SETTINGS_UPDATE_TIME_OPTION_NAME, 0 );
 		}
 	}
 	
@@ -442,7 +459,7 @@
 		// check if we need to refresh textdata
 		$data = BAPISync::getTextDataRaw();
 		$lastmod = BAPISync::getTextDataLastModRaw();
-		if(empty($data) || empty($lastmod) || ((time()-$lastmod)>3600) || $do_core_update) {					
+		if(empty($data) || empty($lastmod) || ((time()-$lastmod)>3600) || $do_core_update || BAPISync::obsoletedByLastSettingsUpdate( $lastmod ) ) {
 			$data = $bapi->gettextdata(true,$syncdebugmode);			
 			if (!empty($data)) {
 				$data = $data['result']; // just get the result part
@@ -455,7 +472,7 @@
 		// check if we need to refresh solution data
 		$data = BAPISync::getSolutionDataRaw();
 		$lastmod = BAPISync::getSolutionDataLastModRaw();
-		if(empty($data) || empty($lastmod) || ((time()-$lastmod)>3600) || $do_core_update) {					
+		if(empty($data) || empty($lastmod) || ((time()-$lastmod)>3600) || $do_core_update || BAPISync::obsoletedByLastSettingsUpdate( $lastmod ) ) {
 			$data = $bapi->getcontext(true,$syncdebugmode);
 			if (!empty($data)) {
 				$tagline = $data['SolutionTagline'];
@@ -471,7 +488,7 @@
 		// check if we need to refresh seo data
 		$data = BAPISync::getSEODataRaw();
 		$lastmod = BAPISync::getSEODataLastModRaw();
-		if(empty($data) || empty($lastmod) || ((time()-$lastmod)>300) || $do_core_update) {					
+		if(empty($data) || empty($lastmod) || ((time()-$lastmod)>300) || $do_core_update || BAPISync::obsoletedByLastSettingsUpdate( $lastmod ) ) {
 			$data = $bapi->getseodata(true,$syncdebugmode);
 			if (!empty($data)) {
 				$data = $data['result']; // just get the result part
