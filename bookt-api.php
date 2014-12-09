@@ -1,18 +1,18 @@
 <?php
 /*
-Plugin Name: Bookt API Wordpress Plugin
-Plugin URI: http://www.bookt.com
-Description: This plugin is intended for use by Instamanager customers to display property and booking tools on their WP-hosted sites on any platform.
+Plugin Name: Kigo Sites
+Plugin URI: http://kigo.net
+Description: This plugin is intended for use by Kigo customers to display property and booking tools on their WP-hosted sites on any platform.
 Version: 1.0.20141003
-Author: Bookt LLC
-Author URI: http://bookt.com
+Author: Kigo.net
+Author URI: http://kigo.net
 License: GPL2
 */
 
 define( 'KIGO_PLUGIN_VERSION', '1.0.20141003' ); // KEEP THIS IN SYNC WITH PLUGIN METADATA ABOVE !!!
 
 
-/*  Copyright 2014  Bookt LLC  (email : support@bookt.com)
+/*  Copyright 2014 Kigo.net (email : support@kigo.net)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
@@ -69,7 +69,7 @@ if(
 	add_action('admin_menu', 'remove_pageattributes_meta_box' );
 	add_action('template_redirect', 'do_ossdl_off_ob_start',10);
 	add_action('wp_enqueue_scripts', 'enqueue_and_register_my_scripts_in_head',1);//scripts that load in the head of the site
-	add_action('admin_enqueue_scripts', 'enqueue_and_register_my_scripts_in_admin_head',1 );//scripts that load in the admin pages in 2 particular pages
+	add_action('admin_enqueue_scripts', 'enqueue_and_register_my_scripts_in_head',1 );//scripts that load in the admin pages (same as above)
 	add_action('wp_head','loadscriptjquery',10);//lets load this at the end of wp-head so the wp_enqueue runs first
 	add_action('wp_footer','getconfig',1);
 	add_action('wp_head','bapi_getmeta',1);
@@ -118,6 +118,8 @@ if(
 	add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_DetailOverview_Widget" );' ) );
 	add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Developments_Widget" );' ) );
 	add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_SiteSelector" );' ) );
+
+	add_filter( 'login_headertitle', 'newapp_login_headertitle' ); // Filter to display the correct brand in title attribute of login page
 
 	require_once('mustache.php-2.1.0/src/Mustache/Autoloader.php');
 	Mustache_Autoloader::register();

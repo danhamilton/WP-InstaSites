@@ -6,6 +6,7 @@
 		update_option('bapi_google_conversion_label', stripslashes($_POST['bapi_google_conversion_label']));
 		update_option('bapi_google_webmaster_htmltag', stripslashes(str_replace('"',"",$_POST['bapi_google_webmaster_htmltag'])));
 		bapi_wp_site_options();
+		BAPISync::updateLastSettingsUpdate();
 		echo '<div id="message" class="updated"><p><strong>Settings saved.</strong></p></div>';
 	}
 global $bapi_all_options;
@@ -18,8 +19,15 @@ global $bapi_all_options;
 	});
 </script>
 <div class="wrap">
-<h1><a href="http://www.bookt.com" target="_blank"><img src="<?= plugins_url('/img/logo-im.png', __FILE__) ?>" /></a></h1>
-<h2>InstaSite Plugin - Advanced Options</h2>
+<?php
+if( is_newapp_website() ) {
+	echo '<h1><img src="' . plugins_url('/img/logo_kigo.png', __FILE__) . '"/></h1>';
+}
+else{
+	echo '<h1><a href="http://www.bookt.com" target="_blank"><img src="' . plugins_url('/img/logo-im.png', __FILE__) . '" /></a></h1>';
+}
+?>
+<h2><?php echo ( is_newapp_website() ? 'Advanced Options' : 'InstaSite Plugin - Advanced Options' ); ?></h2>
 <form method="post">
 <table class="form-table">
 <tr valign="top">

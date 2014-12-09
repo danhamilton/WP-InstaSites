@@ -1,6 +1,6 @@
-WP-InstaSites
+Kigo websites
 ===================================
-The InstaSite plugin provides direct integration into the InstaManager application.  InstaManager is cloud based vacation rental software which powers vacation rental property managers around the world.
+The Kigo plugin provides direct integration into the Kigo application.  Kigo is cloud based vacation rental software which powers vacation rental property managers around the world.
 
 Features
 - Responsive themes
@@ -16,8 +16,8 @@ Features
 - Unlimited Email & Phone Support
 - Comprehensive Report Suite
 
-- Powered by InstaManager (http://www.instamanager.com)
-- Requires an *API key* from InstaManager. Go to http://www.instamanager.com/contactus to request a key.
+- Powered by Kigo (http://kigo.net)
+- Requires an *API key* from Kigo. Go to http://kigo.net/vacation-rental-software-contact to request a key.
 
 
 ============================

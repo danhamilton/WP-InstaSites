@@ -31,9 +31,15 @@ class BAPI_Header extends WP_Widget {
 				$string = $m->render($t, $wrapper);
 				echo $string;			
 			}
+			elseif( is_newapp_website() ) {
+				echo '<div id="poweredby"><a rel="nofollow" target="_blank" href="http://kigo.net">Vacation Rental Software by Kigo</a></div>';
+			}
 			else {
 				echo '<div id="poweredby"><a rel="nofollow" target="_blank" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';
 			}
+		}
+		elseif( is_newapp_website() ) {
+			echo '<div id="poweredby"><a rel="nofollow" target="_blank" href="http://kigo.net">Vacation Rental Software by Kigo</a></div>';
 		}
 		else {
 			echo '<div id="poweredby"><a rel="nofollow" target="_blank" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';
@@ -82,9 +88,15 @@ class BAPI_Footer extends WP_Widget {
 				$string = $m->render($t, $wrapper);
 				echo $string;			
 			}
+			elseif( is_newapp_website() ) {
+				echo '<div id="poweredby"><a rel="nofollow" target="_blank" href="http://kigo.net">Vacation Rental Software by Kigo</a></div>';
+			}
 			else {
 				echo '<div id="poweredby"><a rel="nofollow" target="_blank" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';
 			}
+		}
+		elseif( is_newapp_website() ) {
+			echo '<div id="poweredby"><a rel="nofollow" target="_blank" href="http://kigo.net">Vacation Rental Software by Kigo</a></div>';
 		}
 		else {
 			echo '<div id="poweredby"><a rel="nofollow" target="_blank" href="http://www.InstaManager.com">Vacation Rental Software by InstaManager</a></div>';

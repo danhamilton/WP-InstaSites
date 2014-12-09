@@ -1,4 +1,11 @@
-<?php	
+<?php
+
+$bapi = getBAPIObj();
+if(!$bapi->isvalid()) {
+	echo '<script type="text/javascript">window.location.href="' . menu_page_url('site_settings_general', false) . '"</script>';
+	exit();
+}
+
 	global $bapi_all_options;	
 	// handle if this is a post
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {				
@@ -13,6 +20,7 @@
 		
 		$sitesettings = json_encode($_POST);
 		update_option('bapi_sitesettings',  $sitesettings);
+		BAPISync::updateLastSettingsUpdate();
 		echo '<div id="message" class="updated"><p><strong>Settings saved.</strong></p></div>';		
 	}
 	else {
@@ -21,12 +29,19 @@
 /* we get BAPI */
 loadscriptjquery();
 getconfig();
-?> 
+?>
 
 
 <div class="wrap sitesettings-wrapper" style="display: none;">
-<h1><a href="http://www.bookt.com" target="_blank"><img src="<?= plugins_url('/img/logo-im.png', __FILE__) ?>" /></a></h1>
-<h2>InstaSite Plugin - Property &amp; Search Settings</h2>
+<?php
+if( is_newapp_website() ) {
+	echo '<h1><img src="' . plugins_url('/img/logo_kigo.png', __FILE__) . '"/></h1>';
+}
+else{
+	echo '<h1><a href="http://www.bookt.com" target="_blank"><img src="' . plugins_url('/img/logo-im.png', __FILE__) . '" /></a></h1>';
+}
+?>
+<h2><?php echo ( is_newapp_website() ? 'Property & Search Settings' : 'InstaSite Plugin - Property & Search Settings' ); ?></h2>
 <form method="post">
 
 <h3>Search Result Display Modes</h3>
