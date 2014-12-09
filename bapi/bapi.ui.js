@@ -942,6 +942,9 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 		BAPI.clearsession();
 		if (doSearchCallback) { doSearchCallback(); }
 		$('.' + options.dataselector).val('');
+		if( $('#amenitiesDropdownCheckbox').length ) {
+			uncheck_dropdown_checkbox( $('#amenitiesDropdownCheckbox') );
+		}
 		if (!BAPI.isempty(options.searchurl)) {
 			BAPI.savesession();
 			var rurl = options.searchurl;
@@ -955,6 +958,9 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 		BAPI.clearsession();
 		if (doSearchCallback) { doSearchCallback(); }
 		$('.' + options.dataselector).val('');
+		if( $('#amenitiesDropdownCheckbox').length ) {
+			uncheck_dropdown_checkbox( $('#amenitiesDropdownCheckbox') );
+		}
 	});
 	
 	$(".quicksearch-doadvanced").on("click", function() {
@@ -962,6 +968,21 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 		var reqdata = saveFormToSession(this, options);
 		$(targetid).unblock();
 	});	
+
+	// This function unchecked every element from dropdown checkbox element.
+	function uncheck_dropdown_checkbox( dorpdown_element ) {
+		var data =
+		dorpdown_element.dropdownCheckbox(
+			'reset',
+			$.each(
+				dorpdown_element.dropdownCheckbox('items'),
+				function(index, item)
+				{
+					item.isChecked=false;
+				}
+			)
+		);
+	}
 }
 
 function setCalendarsFromSession(session,checkinSelector,checkoutSelector){
