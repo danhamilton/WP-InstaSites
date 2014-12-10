@@ -1155,7 +1155,7 @@ context.createSimilarPropertiesWidget = function (targetid, pid, options) {
 		$(targetid).html(Mustache.to_html(options.template, data));
 	});	
 	/* Load the raiting function */	
-	loadRaitingStars();
+	context.inithelpers.loadRaitingStars();
 }
 
 context.createFeaturedPropertiesWidget = function (targetid, options) {
@@ -2397,7 +2397,7 @@ function doSearch(targetid, ids, entity, options, alldata, callback) {
 			loadmoreProperties(targetid, ids, entity, options, newAlldata, pagenumber, true, callback);
 		}
 	/* Load the raiting function */	
-	loadRaitingStars();
+	context.inithelpers.loadRaitingStars();
 	});
 	/*we remove the click event attached with live so we dont attach the vent more than 1 time, also we attach the event to the showmore of this targetid */
 	$(targetid+" .showmore").die( "click" );
