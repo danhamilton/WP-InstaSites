@@ -5,3 +5,12 @@ ul.slides > li, ul.slides > li > div {
 ul.slides > li > div > p.flex-caption {
 	padding: 17px 0;
 }
+#wpadminbar .dashicons-kigo{
+position: relative;
+font: 400 20px/1 dashicons;
+padding: 4px 0;
+margin-right: 6px;
+position:relative;
+top:6px
+}
+.ab-icon-kigo{top:2px}
