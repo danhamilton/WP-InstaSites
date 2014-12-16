@@ -1,4 +1,7 @@
 <?php
+
+// THIS IS THE ORIGINAL CLASS. WE USE A MODIFIED VERSION OF THIS.
+
 /**
  * Reperesents the CDN Linker's rewrite logic.
  *
