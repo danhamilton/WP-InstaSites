@@ -617,13 +617,8 @@
 	function bapi_getmeta(){
 		$pid = get_the_ID();
 		
-		$metak = get_post_meta($pid,'bapi_meta_keywords',true);
-		$metak = str_replace('"', "", $metak);
-		$metak = str_replace("'", "", $metak);
-		
-		$metad = get_post_meta($pid,'bapi_meta_description',true);
-		$metad = str_replace('"', "", $metad);
-		$metad = str_replace("'", "", $metad);
+		$metak = htmlspecialchars( get_post_meta( $pid,'bapi_meta_keywords', true ), ENT_COMPAT, 'UTF-8' );
+		$metad = htmlspecialchars( get_post_meta( $pid,'bapi_meta_description', true ), ENT_COMPAT, 'UTF-8' );
 		
 		$lastu = (int) get_post_meta($pid,'bapi_last_update',true);
 		$lastu = date('r',$lastu);
