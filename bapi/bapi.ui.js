@@ -69,7 +69,6 @@ context.init = function(options) {
 	context.inithelpers.setupprintlisteners(options);
 	context.inithelpers.setupbapitracker(options);
 	context.inithelpers.loadRaitingStars(options);			
-	$("img").unveil();
 
 	// ensure that searchmodes exists
 	if (BAPI.isempty(BAPI.config().searchmodes)) { BAPI.config().searchmodes = {} };
@@ -2356,6 +2355,7 @@ function doSearchRender(targetid, ids, entity, options, data, alldata, callback)
 	}
 	var html = Mustache.render(options.template, data); // do the mustache call
 	$(targetid).html(html); // update the target
+	$("img").unveil(); // since we have our template rendered, we can start showing the carousel
 	/* set the dropdown to the selected value */
 	if($("#poitypefilter-dpd").length > 0 && entity == 'poi'){
 		$("#poitypefilter-dpd").val($(targetid).data("poitypeselected"));
