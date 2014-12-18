@@ -503,7 +503,7 @@ function get_doc_template($docname,$setting){
 	global $bapi_all_options;
 	$docmod = $bapi_all_options[$setting.'_lastmod']; //settings must be registered w/ this consistent format.
 	$doctext = $bapi_all_options[$setting];
-	if(((time()+60)-$docmod)>0){
+	if(((time()-60)-$docmod)>0){
 		$getopts=array('http'=>array('method'=>"GET",'header'=>"User-Agent: InstaSites Agent\r\nReferer: http://" . $_SERVER[HTTP_HOST] . $_SERVER[REQUEST_URI] . "\r\n"));
 		$stream = stream_context_create($getopts);
 		$url = getbapiurl().'/ws/?method=get&ids=0&entity=doctemplate&docname='.urlencode($docname).'&apikey='.getbapiapikey();
