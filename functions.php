@@ -1242,8 +1242,8 @@ function myplugin_meta_box_callback( $metaId ) {
 	<!--  creats the live snippet preview box -->
 	<script>
 		jQuery(document).ready(function($) {
-   			$("#Descript_prev").text("<?php echo $meta_words['bapi_meta_description'][0];?>");
-   			$("#seoTitle").text("<?php echo $meta_words['bapi_meta_title'][0]; ?>");
+   			$("#Descript_prev").text("<?php echo addslashes($meta_words['bapi_meta_description'][0]);?>");
+   			$("#seoTitle").text("<?php echo addslashes($meta_words['bapi_meta_title'][0]); ?>");
 		$("#bapi_meta_description").keyup(function(){
 			var prevDesc = $("#bapi_meta_description").val();
 			var desc_length = prevDesc.length;
@@ -1289,11 +1289,11 @@ function myplugin_meta_box_callback( $metaId ) {
 	</tr>
 	<tr >
 		<td><label for="bapi_meta_keywords">Keywords:</label></td>
-		<td><input  style="width:100%;" id="bapi_meta_keywords" class="input" type="text" name="bapi_meta_keywords" value="<?php echo $meta_words['bapi_meta_keywords'][0];?>"></td>
+		<td><input  style="width:100%;" id="bapi_meta_keywords" class="input" type="text" name="bapi_meta_keywords" value="<?php echo htmlentities($meta_words['bapi_meta_keywords'][0]);?>"></td>
 	</tr>
 	<tr >
 		<td><label for="bapi_meta_title">SEO Title:</label></td>
-		<td><input style="width:100%;"id="bapi_meta_title" class="input" type="text" name="bapi_meta_title" value="<?php echo $meta_words['bapi_meta_title'][0]; ?>" >
+		<td><input style="width:100%;"id="bapi_meta_title" class="input" type="text" name="bapi_meta_title" value="<?php echo htmlentities($meta_words['bapi_meta_title'][0]); ?>" >
 			<br />Title display in search engines is limited to 70 chars, <span id="Title_lenght"></span> chars left.
 		</td>
 	</tr>
