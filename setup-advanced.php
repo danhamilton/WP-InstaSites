@@ -4,7 +4,7 @@
 		update_option('bapi_global_header', stripslashes($_POST['bapi_global_header']));
 		update_option('bapi_google_conversion_key', stripslashes($_POST['bapi_google_conversion_key']));
 		update_option('bapi_google_conversion_label', stripslashes($_POST['bapi_google_conversion_label']));
-		update_option('bapi_google_webmaster_htmltag', stripslashes(str_replace('"',"",$_POST['bapi_google_webmaster_htmltag'])));
+		update_option('bapi_google_webmaster_htmltag', sanitize_text_field(stripslashes($_POST['bapi_google_webmaster_htmltag'])));
 		bapi_wp_site_options();
 		BAPISync::updateLastSettingsUpdate();
 		echo '<div id="message" class="updated"><p><strong>Settings saved.</strong></p></div>';
@@ -32,11 +32,11 @@ else{
 <table class="form-table">
 <tr valign="top">
 	<td scope="row">Google AdWords Conversion Key<br/><em><small>The google_conversion_id value</small></em></td>
-	<td><input type="text" name="bapi_google_conversion_key" id="bapi_google_conversion_key" size="80" value='<?= $bapi_all_options['bapi_google_conversion_key'] ?>' /></td>
+	<td><input type="text" name="bapi_google_conversion_key" id="bapi_google_conversion_key" size="80" value="<?= esc_attr($bapi_all_options['bapi_google_conversion_key']) ?>" /></td>
 </tr>
 <tr valign="top">
 	<td scope="row">Google AdWords Conversion Label<br/><em><small>The google_conversion_label value no quotes</small></em></td>
-	<td><input type="text" name="bapi_google_conversion_label" id="bapi_google_conversion_label" size="80" value='<?= $bapi_all_options['bapi_google_conversion_label'] ?>' /></td>
+	<td><input type="text" name="bapi_google_conversion_label" id="bapi_google_conversion_label" size="80" value="<?= esc_attr($bapi_all_options['bapi_google_conversion_label']) ?>" /></td>
 </tr>
 <tr valign="top">
 	<td scope="row">Global Header Scripts<br/><em><small>JavaScript must be contained within &lt;script&gt; tags.</small></em></td>
@@ -44,7 +44,7 @@ else{
 </tr>
 <tr valign="top">
 	<td scope="row">Google Webmaster Verification <em>(HTML Tag Method)</em><br/><em><small><img id="bapi_google_webmaster_htmltag" src="<?= plugins_url('/img/gw_html_tag_verification.png', __FILE__) ?>" height="60" title="Click Here to See Sample Verification Code"/><br/><a href="https://support.google.com/webmasters/answer/35659?hl=en" target="_blank" >More information from Google Help</a></small></em></td>
-	<td><input type="text" name="bapi_google_webmaster_htmltag" id="bapi_google_webmaster_htmltag" size="80" value='<?= $bapi_all_options['bapi_google_webmaster_htmltag'] ?>' /></td>
+	<td><input type="text" name="bapi_google_webmaster_htmltag" id="bapi_google_webmaster_htmltag" size="80" value="<?= esc_attr($bapi_all_options['bapi_google_webmaster_htmltag']) ?>" /></td>
 </tr>
 </table>
 <div class="clear"></div>
