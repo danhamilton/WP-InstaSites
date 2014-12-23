@@ -4,6 +4,7 @@ class BAPI
 {
 	const BAPI_USER_AGENT = 'InstaSites Agent';
 	const WWW_FORM_URLENCODED = 'application/x-www-form-urlencoded';
+	const MAX_NB_BULK_GET_IDS = 20; // This value can not be higher than 20 by restriction of the app.
 
 	public $apikey;
 	public $language = 'en-US';
@@ -15,6 +16,9 @@ class BAPI
 			'header'=>''
 		)
 	);
+	
+	public  $cache_get_call = array();
+	private $use_cache_in_get_calls = false;
 	
 	public function __construct(
 			$apikey, 
@@ -110,8 +114,73 @@ class BAPI
 		return $c;
 	}
 	
+	/**
+	 * Generate a bulk call to the function get with an array of ids.
+	 * This allow to reduce the number of call to Kigo app
+	 * 
+	 * @param $entity string
+	 * @param $ids array
+	 * @param null $options array default value null
+	 *
+	 * @return bool
+	 */
+	public function init_get_cache( $entity, $ids, $options = null ) {
+		// Split the ids into small chunks to avoid errors
+		$ids_chunks = array_chunk( $ids, self::MAX_NB_BULK_GET_IDS );
+		
+		// Set the page size option to receive the correct amount of results
+		$options = array_merge( $options, array( 'pagesize' => self::MAX_NB_BULK_GET_IDS ) );
+		
+		// Process one call by chunks
+		foreach( $ids_chunks as $ids_chunk ) {
+			if(
+				!is_array( $response = $this->get( $entity, $ids_chunk, $options, true ) ) ||
+				
+				!isset( $response[ 'status' ] ) ||
+				1 !== $response[ 'status' ] ||
+				
+				!isset( $response[ 'result' ] ) ||
+				!is_array( $response[ 'result' ] ) ||
+				
+				count( $response[ 'result' ] ) !== count( $ids_chunk )
+			) {
+				return false;
+			}
+			
+			foreach( $response[ 'result' ] as $result ) {
+				$this->cache_get_call[ $entity ][ $result[ 'ID' ] ] = $result;
+			}
+		}
+		
+		// Set to use the cache only if all the calls have been successful 
+		$this->use_cache_in_get_calls = true;
+		
+		return true;
+	}
+	
 	public function get($entity,$ids,$options=null,$jsondecode=true,$debugmode=0) {
 		if (!$this->isvalid()) { return null; }
+		
+		// In case init_get_cache() has been called before, try to retrieve the values from the local cache
+		if( $this->use_cache_in_get_calls ) {
+			$fake_response = array(
+				'status'	=> 1,
+				'result'	=> array()
+			);
+			
+			$error = false;
+			foreach( $ids as $id ) {
+				if( !isset( $this->cache_get_call[ $entity ][ $id ] ) ) {
+					$error = true;
+				}
+				$fake_response[ 'result' ][] = $this->cache_get_call[ $entity ][ $id ];
+			}
+			
+			if( !$error ) { // In case of error, retrieving one or more id from the cache, default to the get call.
+				return $jsondecode ? $fake_response : json_encode( $fake_response );
+			}
+		}
+		
 		$url = $this->getBaseURL() . "/ws/?method=get&apikey=" . $this->apikey . "&entity=" . $entity . '&ids=' . implode(",", $ids);
 		if (!empty($options)) { $url = $url . "&" . http_build_query($options); }
 		

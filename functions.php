@@ -361,6 +361,22 @@
 		return str_replace($str,"",$url);	
 	}	
 	
+	 /**
+	 * Retrieve the plugin folder server path.
+	 * 
+	 * * IMPORTANT: This function has to be in the root folder of the plugin in order to return the correct value. 
+	 * 
+	 * @param string $file_path		Optional. Extra path (relative to the plugin folder) appended to the end of the PATH. Default empty string.
+	 *
+	 * @return string
+	 */
+	function get_kigo_plugin_path( $file_path = '' ) {
+		if( !is_string( $file_path ) ) {
+			return '';
+		}
+		return  plugin_dir_path( __FILE__ ) . $file_path;
+	}
+	
 	/* BAPI Helpers */	
 	function getbapiurl() {
 		global $bapi_all_options;
@@ -647,11 +663,20 @@
 		global $seoDataURL;
 		?><meta name="SEOURL" content="<?= $seoDataURL ?>" /><?= "\n" ?><?php
 	}
-	
+
 	function getBAPIObj() {
+		global $bapi;
 		global $bapi_all_options;
-		return new BAPI($bapi_all_options['api_key'], $bapi_all_options['bapi_language'], $bapi_all_options['bapi_baseurl']);
-	}		
+		if(
+			!isset( $bapi ) ||
+			!is_a( $bapi, 'BAPI' ) ||
+			$bapi->apikey !== $bapi_all_options['api_key']
+		) {
+			
+			return ($bapi = new BAPI($bapi_all_options['api_key'], $bapi_all_options['bapi_language'], $bapi_all_options['bapi_baseurl']));
+		}
+		return $bapi;
+	}
 	
 	function disable_kses_content() {
 		if(is_admin()||is_super_admin()){

@@ -43,6 +43,7 @@ if(
 	include_once(dirname( __FILE__ ).'/shortcodes.php');
 	include_once(dirname( __FILE__ ).'/cloudfront.php');
 	require_once( dirname( __FILE__ ) . '/sso/class-kigo-single-sign-on.php' );
+	require_once( dirname( __FILE__ ) . '/includes/class-kigo-cron.php' );
 	require_once('bapi-php/bapi.php');
 	require_once('init.php');
 
@@ -57,6 +58,13 @@ if(
 	add_action( 'wp_ajax_'.Kigo_Single_Sign_On::ACTION_LOGIN, array( 'Kigo_Single_Sign_On', 'login' ) ); // for logged-in users
 	add_action( 'wp_ajax_nopriv_'.Kigo_Single_Sign_On::ACTION_LOGIN, array( 'Kigo_Single_Sign_On', 'login' ) ); // for NON-logged-in users
 
+	// Cron sync
+	// This endpoint is called by a cron job every X minutes to do every site sync.
+	// WARMING: This endpoint can only be called when not logged in !
+	// http://<network_root>/wp-content/plugins/bookt-api/includes/class-kigo-cron.php
+	if( defined( 'USE_CRON' ) && 'USE_CRON' ) {
+		add_action( 'wp_ajax_nopriv_'.Kigo_Network_Cron::ACTION_CRON, array( 'Kigo_Network_Cron', 'do_sync' ) );
+	}
 
 	add_action('init','urlHandler_emailtrackingimage',1);	// handler for email images
 	add_filter('home_url','home_url_cdn',1,2);

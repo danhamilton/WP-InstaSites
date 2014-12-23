@@ -48,9 +48,7 @@
 			}
 			
 			// otherwise, just return the baseline version stored in the plugin folder
-			$test = plugins_url($basefilename, __FILE__);
-			$test = get_relative($test);
-			$test = realpath(substr($test,1));
+			$test = get_kigo_plugin_path( $basefilename );
 			return $test;			
 		}
 		public static function getTemplates() { 			
@@ -126,9 +124,6 @@
 		}
 		
 		public static function getMustache($entity, $pkid, $template,$debugmode=0) {
-			if(!(strpos($_SERVER['REQUEST_URI'],'wp-admin')===false)||!(strpos($_SERVER['REQUEST_URI'],'wp-login')===false)){
-				return false;
-			}
 			$bapi = getBAPIObj();
 			if (!$bapi->isvalid()) { return; }
 			$pkid = array(intval($pkid));
@@ -221,26 +216,48 @@
 			return $time < get_option( self::SETTINGS_UPDATE_TIME_OPTION_NAME, 0 );
 		}
 	}
-	
-	function bapi_sync_entity($wp) {
-		$debugmode = 0; //added by jacob for mantis #4115
+	function bapi_sync_entity() {
 		if(!(strpos($_SERVER['REQUEST_URI'],'wp-admin')===false)||!(strpos($_SERVER['REQUEST_URI'],'wp-login')===false)){
 			return false;
 		}
+		
+		
+		$post = get_page_by_path($_SERVER['REDIRECT_URL']);
+		if(empty($_SERVER['REDIRECT_URL'])){
+			$home_id = get_option('page_on_front');
+			$post = get_post($home_id);
+		}
+		
+		global $bapisync;		
+		if (empty($bapisync)) { 
+			$bapisync = new BAPISync();
+			$bapisync->init();
+		}
+		
+		// locate the SEO data stored in Bookt from the requested URL
+		$seo = $bapisync->getSEOFromUrl(str_replace("?".$_SERVER['QUERY_STRING'],'',$_SERVER['REQUEST_URI']));
+		
+		//print_r($seo);//exit();
+		if (!empty($seo) && (empty($seo["entity"]) || empty($seo["pkid"])) && empty($staticpagekey)) {
+			$seo = null; // ignore seo info if it doesn't point to a valid entity
+		}
+		
+		
+		return kigo_sync_entity( $post, $seo );
+	}
+	function kigo_sync_entity( $post, $seo, $force_sync = false ) {
+		$debugmode = 0; //added by jacob for mantis #4115
+		
 		//global $post;
 		global $bapisync;		
 		if (empty($bapisync)) { 
-			// ERROR: What should we do?
+			$bapisync = new BAPISync();
+			$bapisync->init();
 		}
 
 		$t=BAPISync::getSolutionData();
 		$maEnabled = $t['BizRules']['Has Market Area Landing Pages'];
 		
-		$post = get_page_by_path($_SERVER['REDIRECT_URL']);
-		if(empty($_SERVER['REDIRECT_URL'])){
-			$home_id = get_option('page_on_front');
-			$post = get_page($home_id);
-		}	
 		// parse out the meta attributes for the current post
 		$page_exists_in_wp = !empty($post);				
 		$meta = $page_exists_in_wp ? get_post_custom($post->ID) : null;
@@ -251,13 +268,6 @@
 		$meta_description = !empty($meta) ? $meta['bapi_meta_description'][0] : null;
 		$meta_title = !empty($meta) ? $meta['bapi_meta_title'][0] : null;
 		
-		// locate the SEO data stored in Bookt from the requested URL
-		$seo = $bapisync->getSEOFromUrl(str_replace("?".$_SERVER['QUERY_STRING'],'',$_SERVER['REQUEST_URI']));
-		
-		//print_r($seo);//exit();
-		if (!empty($seo) && (empty($seo["entity"]) || empty($seo["pkid"])) && empty($staticpagekey)) {
-			$seo = null; // ignore seo info if it doesn't point to a valid entity
-		}
 		
 		/*we get the property headline*/
 		$page_title = $seo["PageTitle"];
@@ -297,7 +307,6 @@
 			}
 			//Check for non-initialized market area page (-1) and set correct bapikey
 			if(($pktest[1]==-1)&&$pktest[0]=='marketarea'){
-				$seo = $bapisync->getSEOFromUrl(str_replace("?".$_SERVER['QUERY_STRING'],'',$_SERVER['REQUEST_URI']));
 				//print_r($post); exit();
 				update_post_meta($post->ID, "bapikey", 'marketarea:'.$seo['pkid']);	
 			}
@@ -372,7 +381,7 @@
 			$debugmode = 1;
 		}
 		
-		if ($do_page_update) {
+		if ($do_page_update || $force_sync) {
 			// do page update
 			$post->comment_status = "close";		
 			$template = $bapisync->getMustacheTemplate($seo["entity"]);		
@@ -418,7 +427,7 @@
 			}						
 			add_filter('content_save_pre', 'wp_filter_post_kses');
 		}
-		if ($do_meta_update || $do_page_update) {
+		if ($do_meta_update || $do_page_update || $force_sync) {
 			// update the meta tags					
 			does_meta_exist("bapi_last_update", $meta) ? update_post_meta($post->ID, 'bapi_last_update', time()) : add_post_meta($post->ID, 'bapi_last_update', time(), true);
 			does_meta_exist("bapi_meta_description", $meta) ? update_post_meta($post->ID, 'bapi_meta_description', $seo["MetaDescrip"]) : add_post_meta($post->ID, 'bapi_meta_description', $seo["MetaDescrip"], true);
@@ -427,6 +436,7 @@
 			does_meta_exist("bapikey", $meta) ? update_post_meta($post->ID, "bapikey", BAPISync::getPageKey($seo["entity"],$seo["pkid"])) : add_post_meta($post->ID, "bapikey", BAPISync::getPageKey($seo["entity"],$seo["pkid"]), true);
 			does_meta_exist("bapi_meta_title", $meta) ? update_post_meta($post->ID, 'bapi_meta_title', $seo["PageTitle"]) : add_post_meta($post->ID, 'bapi_meta_title', $seo["PageTitle"], true);
 		}
+		return true;
 	}
 	
 	function does_meta_exist($name, $meta) {
