@@ -51,7 +51,7 @@
 			$wp_admin_bar->add_node(
 				array(
 					'id'		=> self::PARENT_NODE_ID,
-					'title'		=> '<span class="ab-icon ab-icon-kigo"><img src="' . get_kigo_plugin_folder_url( self::PARENT_NODE_ICON ) . '"></span><span>' . self::PARENT_NODE_TITLE . '</span>',
+					'title'		=> '<span class="ab-icon ab-icon-kigo"><img src="' . get_kigo_plugin_url( self::PARENT_NODE_ICON ) . '"></span><span>' . self::PARENT_NODE_TITLE . '</span>',
 					'parent'	=> false,
 					'href'		=> self::APP_URL,
 					'meta'		=> array( 'target' => '_blank' ),
