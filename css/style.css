@@ -14,4 +14,7 @@ position:relative;
 top:6px
 }
 .ab-icon-kigo{top:2px}
-.ab-icon-kigo img{vertical-align:baseline}
+.ab-icon-kigo img{
+	vertical-align:baseline;
+	margin-bottom: 2px !important;
+}
