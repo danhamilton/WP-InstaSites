@@ -68,7 +68,7 @@ context.init = function(options) {
 	context.inithelpers.setupmapwidgets(options);
 	context.inithelpers.setupprintlisteners(options);
 	context.inithelpers.setupbapitracker(options);
-	context.inithelpers.loadRaitingStars(options);			
+	context.inithelpers.loadRatingStars(options);			
 	$("img").unveil();
 
 	// ensure that searchmodes exists
@@ -119,7 +119,7 @@ context.inithelpers = {
 			context.createSearchWidget(selector, { "searchurl": searchurl, "template": BAPI.templates.get(templatename), "log": dologging });		
 		});	
 	},
-	loadRaitingStars: function(options){
+	loadRatingStars: function(options){
 		function roundHalf(num) {
     		num = Math.round(num*2)/2;
     		return num;
@@ -1155,7 +1155,7 @@ context.createSimilarPropertiesWidget = function (targetid, pid, options) {
 		$(targetid).html(Mustache.to_html(options.template, data));
 	});	
 	/* Load the raiting function */	
-	context.inithelpers.loadRaitingStars();
+	context.inithelpers.loadRatingStars();
 }
 
 context.createFeaturedPropertiesWidget = function (targetid, options) {
@@ -2397,7 +2397,7 @@ function doSearch(targetid, ids, entity, options, alldata, callback) {
 			loadmoreProperties(targetid, ids, entity, options, newAlldata, pagenumber, true, callback);
 		}
 	/* Load the raiting function */	
-	context.inithelpers.loadRaitingStars();
+	context.inithelpers.loadRatingStars();
 	});
 	/*we remove the click event attached with live so we dont attach the vent more than 1 time, also we attach the event to the showmore of this targetid */
 	$(targetid+" .showmore").die( "click" );
