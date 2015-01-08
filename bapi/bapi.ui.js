@@ -1154,7 +1154,7 @@ context.createSimilarPropertiesWidget = function (targetid, pid, options) {
 		data.textdata = BAPI.textdata;
 		$(targetid).html(Mustache.to_html(options.template, data));
 	});	
-	/* Load the raiting function */	
+	/* Load the rating function */	
 	context.inithelpers.loadRatingStars();
 }
 
@@ -2396,7 +2396,7 @@ function doSearch(targetid, ids, entity, options, alldata, callback) {
 			/* we set the pagenumber as 2 since we already sending the first page */
 			loadmoreProperties(targetid, ids, entity, options, newAlldata, pagenumber, true, callback);
 		}
-	/* Load the raiting function */	
+	/* Load the rating function */	
 	context.inithelpers.loadRatingStars();
 	});
 	/*we remove the click event attached with live so we dont attach the vent more than 1 time, also we attach the event to the showmore of this targetid */
