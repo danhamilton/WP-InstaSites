@@ -387,6 +387,8 @@
 			$post->comment_status = "close";		
 			$template = $bapisync->getMustacheTemplate($seo["entity"]);		
 			if( !is_string( $s2s_success = $bapisync->getMustache( $seo["entity"], $seo["pkid"], $template, $debugmode ) ) ) {
+				// by "trash"ing the post, WP will display a nice 404.
+				// next time we try to sync and the property shows up, it will be reverted to an active page.
 				$post->post_status = 'trash';
 			} else {
 				$post->post_content = $s2s_success;
