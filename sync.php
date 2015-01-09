@@ -155,7 +155,7 @@
 					!$c['result'][0]['AvailableOnline']                                                   // “Do not show on site” is set
 				)
 			) {
-				return false;
+				return isset($c['error']) && isset($c['error']['code']) ? +$c['error']['code'] : null;
 			}
 			$c["config"] = BAPISync::getSolutionData();
 			$c["config"] = $c["config"]["ConfigObj"];
@@ -391,6 +391,14 @@
 				// by "trash"ing the post, WP will display a nice 404.
 				// next time we try to sync and the property shows up, it will be reverted to an active page.
 				$post->post_status = 'trash';
+
+				switch( $s2s_success ) {
+					case 500:                  // gracefully handle the case when BAPI returned 500
+						status_header( 500 );
+						nocache_headers();
+						include( plugin_dir_path( __FILE__ ) . 'insta-default-content/500.php' );
+						die();
+				}
 			} else {
 				$post->post_content = $s2s_success;
 				//if we have a bapikey
