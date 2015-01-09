@@ -146,6 +146,17 @@
 			}
 
 			$c = $bapi->get($entity,$pkid,$options,true,$debugmode);
+			if( // check the response
+				isset( $c['error'] ) || $c['status'] != '1' ||                                                 // error returned
+				!is_array( $c['result'] ) || count( $c['result'] ) < 1 || !is_array( $c['result'][0] ) ||      // result is corrupted
+				(	
+					$entity === 'property' &&
+					isset( $c['result'][0]['AvailableOnline'] ) &&
+					!$c['result'][0]['AvailableOnline']                                                   // “Do not show on site” is set
+				)
+			) {
+				return false;
+			}
 			$c["config"] = BAPISync::getSolutionData();
 			$c["config"] = $c["config"]["ConfigObj"];
 			/* we get the sitesettings */
@@ -376,11 +387,15 @@
 			// do page update
 			$post->comment_status = "close";		
 			$template = $bapisync->getMustacheTemplate($seo["entity"]);		
-			$post->post_content = $bapisync->getMustache($seo["entity"],$seo["pkid"],$template,$debugmode);
-			//print_r($post); exit();
-			//if we have a bapikey
-			if(!empty($pagekey) || $pagekey != null){
-				$dom = new DomDocument();
+			if( !is_string( $s2s_success = $bapisync->getMustache( $seo["entity"], $seo["pkid"], $template, $debugmode ) ) ) {
+				// by "trash"ing the post, WP will display a nice 404.
+				// next time we try to sync and the property shows up, it will be reverted to an active page.
+				$post->post_status = 'trash';
+			} else {
+				$post->post_content = $s2s_success;
+				//if we have a bapikey
+				if(!empty($pagekey) || $pagekey != null){
+				   $dom = new DomDocument();
 				   libxml_use_internal_errors(true);
 				   $dom->loadHTML("<!DOCTYPE html><html><head></head><body>".$post->post_content."</body></html>");
 				   libxml_use_internal_errors(false);
@@ -400,17 +415,18 @@
 					 $page_title = $entity_title[0];
 					}
 				   }
+				}
+
+				$post->post_title = $page_title;
+				$post->post_name = BAPISync::clean_post_name($seo["DetailURL"]);
+				$post->post_parent = get_page_by_path(BAPISync::getRootPath($seo["entity"]))->ID;
+				if($do_market_update){
+					$post->post_parent = ensure_ma_landing_pages($seo["DetailURL"]);
+				}
+				$post->post_type = "page";
 			}
-			
-			$post->post_title = $page_title;
-			$post->post_name = BAPISync::clean_post_name($seo["DetailURL"]);
-			$post->post_parent = get_page_by_path(BAPISync::getRootPath($seo["entity"]))->ID;
-			if($do_market_update){
-				$post->post_parent = ensure_ma_landing_pages($seo["DetailURL"]);
-			}
-			$post->post_type = "page";
+
 			remove_filter('content_save_pre', 'wp_filter_post_kses');
-			//print_r($post);exit();
 			if (empty($post->ID)) {
 				$post->ID = wp_insert_post($post, $wp_error);
 			} else {
