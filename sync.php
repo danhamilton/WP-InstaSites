@@ -149,7 +149,10 @@
 			if( // check the response
 				isset( $c['error'] ) || $c['status'] != '1' ||                                                 // error returned
 				!is_array( $c['result'] ) || count( $c['result'] ) < 1 || !is_array( $c['result'][0] ) ||      // result is corrupted
-				!array_key_exists( 'AvailableOnline', $c['result'][0] ) || !$c['result'][0]['AvailableOnline'] // “Do not show on site” is set
+				($entity === 'property' && (
+					!array_key_exists( 'AvailableOnline', $c['result'][0] ) ||
+					!$c['result'][0]['AvailableOnline']                                                        // “Do not show on site” is set
+				))
 			) {
 				return false;
 			}
