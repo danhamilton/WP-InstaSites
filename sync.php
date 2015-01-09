@@ -421,9 +421,9 @@
 					$post->post_parent = ensure_ma_landing_pages($seo["DetailURL"]);
 				}
 				$post->post_type = "page";
-				remove_filter('content_save_pre', 'wp_filter_post_kses');
 			}
-			//print_r($post);exit();
+
+			remove_filter('content_save_pre', 'wp_filter_post_kses');
 			if (empty($post->ID)) {
 				$post->ID = wp_insert_post($post, $wp_error);
 			} else {
