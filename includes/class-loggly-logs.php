@@ -28,14 +28,14 @@ class Loggly_logs {
 	private static $_url;
 	private static $_default_tags;
 	
-	static public function log( $logs,  $extraTags = array() )
+	static public function log( $logs, $extraTags = array() )
 	{
 		if(
 			!defined( 'LOGGLY_API_KEY' ) ||
 			!is_array( $logs ) ||
 			!is_array( $extraTags )
 		) {
-			return false;
+			return self::error_log( $logs );
 		}
 		
 		// Create a "cached" URL and array of tags
@@ -62,13 +62,23 @@ class Loggly_logs {
 		
 		if(
 			!is_string( $reply = @file_get_contents( self::$_url . implode( ',', array_merge( self::$_default_tags, $extraTags ) ), null, $context ) ) ||
+			
 			!is_array( $http_response_header ) || // See http://php.net/manual/en/reserved.variables.httpresponseheader.php
 			!isset( $http_response_header[0] ) ||
-			false === strpos( $http_response_header[0], '200' )
+			false === strpos( $http_response_header[0], '200' ) ||
+			
+			!is_array( $response = json_decode( $reply, true ) ) ||
+			!isset( $response[ 'response' ] ) ||
+			'ok' !== $response[ 'response' ]
 		) {
-			return false;
+			return self::error_log( $logs, true );
 		}
 		
-		return true;
+		return self::error_log( $logs );
+	}
+	
+	static private function error_log( $logs, $loggly_failled = false )
+	{
+		return error_log( ( $loggly_failled ? 'Loggly failed ' : '' ) . json_encode( $logs ) );
 	}
 }
