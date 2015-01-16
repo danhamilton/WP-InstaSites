@@ -5,8 +5,8 @@ This is the 500 Internal Server Error Template
 */
 // Exit if accessed directly
 if ( !defined('ABSPATH')) exit;
+get_header();
 ?>
-<?php get_header(); ?>
 
 <article class="default-page">
 	<header><h1>500 Internal Server Error</h1></header>
