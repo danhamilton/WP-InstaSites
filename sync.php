@@ -124,13 +124,14 @@
 			
 			return substr($this->templates, $si+1, $ei-$si-1);			
 		}
-		
-		public static function getMustache($entity, $pkid, $template,$debugmode=0) {
+
+		// string | false (resource not found)
+		public static function getMustache($entity, $pkid, $template) {
 			if(!(strpos($_SERVER['REQUEST_URI'],'wp-admin')===false)||!(strpos($_SERVER['REQUEST_URI'],'wp-login')===false)){
 				return false;
 			}
 			$bapi = getBAPIObj();
-			if (!$bapi->isvalid()) { return; }
+			if (!$bapi->isvalid()) { return false; }
 			$pkid = array(intval($pkid));
 
 			/* Its the entity a property?, if yes, lets set the options */
@@ -145,18 +146,26 @@
 				}
 			}
 
-			$c = $bapi->get($entity,$pkid,$options,true,$debugmode);
-			if( // check the response
-				isset( $c['error'] ) || $c['status'] != '1' ||                                                 // error returned
-				!is_array( $c['result'] ) || count( $c['result'] ) < 1 || !is_array( $c['result'][0] ) ||      // result is corrupted
-				(	
+			if(!is_array($c = $bapi->get($entity, $pkid, $options))) {
+				if($c === true)
+					return false;
+				else
+					wp_die('This page is temporarily unavailable. Please try again later.');
+			}
+
+			// when rendering a template, get() must result in at least one element
+			if(
+				count( $c['result'] ) < 1 ||
+				!is_array( $c['result'][0] ) ||
+				(
 					$entity === 'property' &&
 					isset( $c['result'][0]['AvailableOnline'] ) &&
-					!$c['result'][0]['AvailableOnline']                                                   // “Do not show on site” is set
+					!$c['result'][0]['AvailableOnline'] // "Do not show on site" is set
 				)
 			) {
-				return isset($c['error']) && isset($c['error']['code']) ? +$c['error']['code'] : null;
+				return false;
 			}
+
 			$c["config"] = BAPISync::getSolutionData();
 			$c["config"] = $c["config"]["ConfigObj"];
 			/* we get the sitesettings */
@@ -234,7 +243,7 @@
 	}
 	
 	function bapi_sync_entity($wp) {
-		$debugmode = 0; //added by jacob for mantis #4115
+
 		if(!(strpos($_SERVER['REQUEST_URI'],'wp-admin')===false)||!(strpos($_SERVER['REQUEST_URI'],'wp-login')===false)){
 			return false;
 		}
@@ -380,25 +389,17 @@
 		//Check if developer is using debugmode and force entity sync
 		if (isset($_GET['debugmode'])&&$_GET['debugmode']){
 			$do_page_update = true;
-			$debugmode = 1;
 		}
-		
+
 		if ($do_page_update) {
 			// do page update
 			$post->comment_status = "close";		
-			$template = $bapisync->getMustacheTemplate($seo["entity"]);		
-			if( !is_string( $s2s_success = $bapisync->getMustache( $seo["entity"], $seo["pkid"], $template, $debugmode ) ) ) {
+			$template = $bapisync->getMustacheTemplate($seo["entity"]);
+
+			if( !is_string( $s2s_success = $bapisync->getMustache( $seo["entity"], $seo["pkid"], $template ) ) ) {
 				// by "trash"ing the post, WP will display a nice 404.
 				// next time we try to sync and the property shows up, it will be reverted to an active page.
 				$post->post_status = 'trash';
-
-				switch( $s2s_success ) {
-					case 500:                  // gracefully handle the case when BAPI returned 500
-						status_header( 500 );
-						nocache_headers();
-						include( plugin_dir_path( __FILE__ ) . 'insta-default-content/500.php' );
-						die();
-				}
 			} else {
 				$post->post_content = $s2s_success;
 				//if we have a bapikey
