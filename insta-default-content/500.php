@@ -14,8 +14,8 @@ get_header();
 	<header><h1>500 Internal Server Error</h1></header>
 
 	<section>
-		<p>The application is temporarily out of service. Please try again later.</p>
-		<p>Sorry for inconvenience.</p>
+		<p>This page is temporarily unavailable. Please try again later.</p>
+		<p>Sorry for the inconvenience.</p>
 	</section>
 </article>
 
