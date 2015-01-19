@@ -4,7 +4,9 @@ This is the 500 Internal Server Error Template
 
 */
 // Exit if accessed directly
-if ( !defined('ABSPATH')) exit;
+if ( !defined('ABSPATH') ) {
+	exit;
+}
 get_header();
 ?>
 
@@ -12,7 +14,7 @@ get_header();
 	<header><h1>500 Internal Server Error</h1></header>
 
 	<section>
-		<p>KIGO Application is temporarily out of service. Please try again later.</p>
+		<p>The application is temporarily out of service. Please try again later.</p>
 		<p>Sorry for inconvenience.</p>
 	</section>
 </article>
