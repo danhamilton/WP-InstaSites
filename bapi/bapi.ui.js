@@ -67,8 +67,8 @@ context.init = function(options) {
 	context.inithelpers.applydotdotdot(options);
 	context.inithelpers.setupmapwidgets(options);
 	context.inithelpers.setupprintlisteners(options);
-	context.inithelpers.setupbapitracker(options);
-	context.inithelpers.loadRaitingStars(options);			
+	context.inithelpers.setupbapitracker(options);			
+	context.inithelpers.loadRatingStars(options);
 
 	// ensure that searchmodes exists
 	if (BAPI.isempty(BAPI.config().searchmodes)) { BAPI.config().searchmodes = {} };
@@ -118,7 +118,7 @@ context.inithelpers = {
 			context.createSearchWidget(selector, { "searchurl": searchurl, "template": BAPI.templates.get(templatename), "log": dologging });		
 		});	
 	},
-	loadRaitingStars: function(options){
+	loadRatingStars: function(options){
 		function roundHalf(num) {
     		num = Math.round(num*2)/2;
     		return num;
@@ -1181,8 +1181,8 @@ context.createSimilarPropertiesWidget = function (targetid, pid, options) {
 		data.textdata = BAPI.textdata;
 		$(targetid).html(Mustache.to_html(options.template, data));
 	});	
-	/* Load the raiting function */	
-	loadRaitingStars();
+	/* Load the rating function */	
+	context.inithelpers.loadRatingStars();
 }
 
 context.createFeaturedPropertiesWidget = function (targetid, options) {
@@ -2424,8 +2424,8 @@ function doSearch(targetid, ids, entity, options, alldata, callback) {
 			/* we set the pagenumber as 2 since we already sending the first page */
 			loadmoreProperties(targetid, ids, entity, options, newAlldata, pagenumber, true, callback);
 		}
-	/* Load the raiting function */	
-	loadRaitingStars();
+	/* Load the rating function */	
+	context.inithelpers.loadRatingStars();
 	});
 	/*we remove the click event attached with live so we dont attach the vent more than 1 time, also we attach the event to the showmore of this targetid */
 	$(targetid+" .showmore").die( "click" );
