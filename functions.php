@@ -58,11 +58,6 @@
 		return true;
 	}
 
-	// TODO(LN) Implement a proper check to see if it is currently live or dev/qa (need to work on self hosted also)
-	function kigo_is_live() {
-		return !( defined( 'KIGO_DEBUG' ) && KIGO_DEBUG );
-	}
-
 	/* Pre-Load Site Options - Utilizes Built-in Cache Functions */
 
 	global $bapi_all_options; 
