@@ -58,7 +58,6 @@
 		return true;
 	}
 
-
 	/* Pre-Load Site Options - Utilizes Built-in Cache Functions */
 
 	global $bapi_all_options; 

@@ -43,6 +43,7 @@ if(
 	include_once(dirname( __FILE__ ).'/shortcodes.php');
 	include_once(dirname( __FILE__ ).'/cloudfront.php');
 	require_once( dirname( __FILE__ ) . '/sso/class-kigo-single-sign-on.php' );
+	require_once( dirname( __FILE__ ) . '/includes/class-loggly-logs.php' );
 	require_once('bapi-php/bapi.php');
 	require_once('init.php');
 
