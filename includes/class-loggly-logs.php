@@ -44,12 +44,16 @@ class Loggly_logs {
 			self::$_url = self::LOGGLY_ENDPOINT . LOGGLY_API_KEY . '/tag/';
 			self::$_default_tags = array(
 				self::LOGLLY_HTTP_TAG,
-				LOGGLY_ENV,
-				$_SERVER['SERVER_NAME'],
-				self::KIGO_WP_PLUGIN_TAG
+				self::KIGO_WP_PLUGIN_TAG.'-'.LOGGLY_ENV
 			);
 		}
-		
+
+		$logs = array(
+			'CONTENT' => $logs,
+			'SERVER_NAME' => $_SERVER['SERVER_NAME']
+			// in the future, we could add more stuff here, like the plugin version
+		);
+
 		$context = stream_context_create( array(
 			'http' => array(
 				'method' => 'POST',
