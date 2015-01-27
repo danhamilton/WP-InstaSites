@@ -344,19 +344,48 @@ context.inithelpers = {
 			securityInfo.renterEmail = renterEmail;
 			/* we need to get the Booking id if it was not supplied*/
 			if(retrieveBid){ bid = $("#verifyBookingId").val();	}
-			BAPI.get(bid, BAPI.entities.booking, securityInfo, function (data) {
-				/* the bid was supplied we need to know if there are results */
-				if(retrieveBid && data.result.length == 0){
-					alert("Booking not Found.");
+				
+			function render_verification_error( msg ) {
+				alert( msg );
 					verifyForm.unblock();
 					processing = false;
+			}
+			
+			BAPI.get(bid, BAPI.entities.booking, securityInfo, function (data) {
+				// Unexpected error
+				if( !$.isPlainObject( data ) ) {
+					render_verification_error( 'An unexpected error occurred. Please try again later.' );// we should log this in Loggly
 					return;
 				}
-				/* wrong email */
-				if(!BAPI.isempty(data.error)){
-					alert(data.error.message);
+				
+				if( !$.isArray( data.result ) ) {
+					// Unexpected error
+					if(
+						!$.isPlainObject( data.error ) ||
+						'string' !== $.type( data.error.message )
+					){
+						render_verification_error( 'An unexpected error occurred. Please try again later.' );// we should log this in Loggly
+						return;
+					}
+					
+					/* wrong email */
+					render_verification_error( data.error.message );
 					$("#verifyEmail").focus();
-				}else{
+					return;
+				}
+				
+				/* the bid was supplied we need to know if there are results */
+				if(retrieveBid && data.result.length == 0){
+					render_verification_error( "Booking not Found." );
+					return;
+				}
+				
+				//Detect canceled bookings
+				if( 'x' === data.result[0].Status.toLowerCase() ) {
+					render_verification_error( 'This booking has been canceled.' );
+					return;
+				}
+				else{
 					//we check if this template exist for legacy purposes
 					var newpaymentpage = BAPI.isempty(BAPI.templates.get('tmpl-booking-makepayment-renter'));
 					var newCreditCardTemplate = '';
