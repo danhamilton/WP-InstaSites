@@ -1777,7 +1777,6 @@ function bookingHelper_get_description() {
 }
 
 function bookingHelper_FullLoad(targetid, options, propid) {
-    BAPI.log("in");
 	var propoptions = { avail: 1, seo: 1 }
 	propoptions = $.extend({}, propoptions, BAPI.session.searchparams);
 	BAPI.get(propid, BAPI.entities.property, propoptions, function (data) {
@@ -2027,7 +2026,7 @@ context.createMakeBookingWidget = function (targetid, options) {
 		window.location = "/"; //TODO: need to redirect back to the correct place
 		return;
 	}
-
+	BAPI.log("in");
 	bookingHelper_FullLoad(targetid, options, propid);	
 	BookingHelper_SetupFormHandlers();
 	BookingHelper_BookHandler(targetid, options, propid);
