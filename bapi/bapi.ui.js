@@ -1800,7 +1800,11 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 		BAPI.curentity = data.result[0];
 		curbooking = data.result[0].ContextData.Quote;
 		if (!data.result[0].ContextData.Quote.IsValid) { try { $('#revisedates').modal('show'); } catch(err) {} }
-		
+		if (data.result[0].RequiresDigitalAgreement) {
+            // Added by Robert 1-27 to ensure terms are not required when a digital agreement is required instead
+		    $("#accepptermscbx").removeClass("required")
+		    $("#accepptermscbx").hide();
+		}
 		function partialRender(sdata, options) {			
 			$(".modal").modal('hide');			
 			sdata.site = BAPI.site;
