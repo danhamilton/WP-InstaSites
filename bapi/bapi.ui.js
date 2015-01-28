@@ -1776,11 +1776,11 @@ function bookingHelper_get_description() {
 	);
 }
 
-function bookingHelper_FullLoad(targetid,options,propid) {
+function bookingHelper_FullLoad(targetid, options, propid) {
+    BAPI.log("in");
 	var propoptions = { avail: 1, seo: 1 }
 	propoptions = $.extend({}, propoptions, BAPI.session.searchparams);
 	BAPI.get(propid, BAPI.entities.property, propoptions, function (data) {
-	    BAPI.log(data);
 		data.site = BAPI.site;
 		data.config = BAPI.config();
 		data.textdata = BAPI.textdata;	
