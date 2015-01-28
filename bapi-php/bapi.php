@@ -9,7 +9,7 @@ class BAPI
 	public $apikey;
 	public $language = 'en-US';
     public $currency = 'USD';
-    public $baseURL = 'connect.bookt.com'; 
+    public $baseURL = 'connect.bookt.com';
 	public $getopts = array(
 		'http'=>array(
 			'method'=>"GET",
@@ -113,7 +113,7 @@ class BAPI
 		if (empty($jsondecode) || $jsondecode) { return json_decode($c,TRUE); }
 		return $c;
 	}
-	
+
 	/**
 	 * Generate a bulk call to the function get with an array of ids.
 	 * This allow to reduce the number of call to Kigo app
@@ -158,7 +158,7 @@ class BAPI
 		return true;
 	}
 	
-	public function get($entity,$ids,$options=null,$jsondecode=true,$debugmode=0) {
+	public function get($entity,$ids,$options=null) {
 		if (!$this->isvalid()) { return null; }
 		
 		// In case init_get_cache() has been called before, try to retrieve the values from the local cache
@@ -181,21 +181,64 @@ class BAPI
 			}
 			
 			if( !$error ) { // In case of error, retrieving one or more id from the cache, default to the get call.
-				return $jsondecode ? $fake_response : json_encode( $fake_response );
+				return $fake_response;
 			}
 		}
-		
+
 		$url = $this->getBaseURL() . "/ws/?method=get&apikey=" . $this->apikey . "&entity=" . $entity . '&ids=' . implode(",", $ids);
 		if (!empty($options)) { $url = $url . "&" . http_build_query($options); }
-		
+
+		// adding <meta> on the page, for debugging purposes
 		global $entityUpdateURL;
 		$entityUpdateURL = $url;
-		add_action('wp_head','bapi_add_entity_meta',1);	
-		
-		$c = file_get_contents($url,FALSE,$this->getOptions) or wp_die('Error Retrieving Entity Data','Oops!');
-		if (empty($jsondecode) || $jsondecode) { return json_decode($c,TRUE); }
-		return $c;
-	}	
+		add_action('wp_head', 'bapi_add_entity_meta', 1);
+
+		$response = wp_remote_get(
+			$url,
+			array(
+				'sslverify'	=>	!(defined('KIGO_DEBUG') && KIGO_DEBUG),
+				'timeout'	=>	50,
+				'headers'	=>	array( 'User-Agent' => 'InstaSites Agent' )
+			)
+		);
+
+		if(is_wp_error($response)) {
+			error_log( $response->get_error_message() );//TODO LOGGLY LOG
+			return false;
+		}
+
+		if(
+			is_array($response) &&
+
+			isset($response['response']) &&
+			is_array($response['response']) &&
+
+		    isset($response['response']['code']) &&
+			$response['response']['code'] == 200 &&
+
+			isset($response['body']) &&
+		    is_string($response['body'])
+		) {
+			// BAPI also returns 200 when there are problems. So if the entity doesn't seem to be correctly retrieved, consider it a resource not found (404)
+			if(
+				!self::json_decode($decoded, $response['body']) ||
+
+				isset($decoded['error']) ||
+
+				!isset($decoded['status']) ||
+					$decoded['status'] != '1' ||
+
+				!isset($decoded['result']) ||
+					!is_array($decoded['result'])
+			) {
+				return true; // "not found"
+			}
+
+			return $decoded;
+		}
+
+		return false;
+	}
 	
 	public function del($entity,$ids,$options,$jsondecode=true) {
 		if (!$this->isvalid()) { return null; }
@@ -232,7 +275,7 @@ class BAPI
 			'headers' => array('content-type'=>'application/x-www-form-urlencoded','User-Agent'=>'InstaSites Agent'),
 			'body' => $jsonObj,
 			'cookies' => array()
-    	)
+		)
 		);
 		if( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
@@ -245,5 +288,15 @@ class BAPI
  		}
 		
 	}
+
+	static private function json_decode(&$decoded, $json, $assoc=true)
+	{
+		if(!is_string($json) || !strlen($json))
+			return false;
+
+		if(($decoded = @json_decode($json, $assoc)) === null)
+			return json_last_error() == JSON_ERROR_NONE;
+
+		return true;
+	}
 }
-?>

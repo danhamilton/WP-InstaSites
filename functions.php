@@ -58,7 +58,6 @@
 		return true;
 	}
 
-
 	/* Pre-Load Site Options - Utilizes Built-in Cache Functions */
 
 	global $bapi_all_options; 
@@ -633,13 +632,8 @@
 	function bapi_getmeta(){
 		$pid = get_the_ID();
 		
-		$metak = get_post_meta($pid,'bapi_meta_keywords',true);
-		$metak = str_replace('"', "", $metak);
-		$metak = str_replace("'", "", $metak);
-		
-		$metad = get_post_meta($pid,'bapi_meta_description',true);
-		$metad = str_replace('"', "", $metad);
-		$metad = str_replace("'", "", $metad);
+		$metak = esc_attr( get_post_meta( $pid,'bapi_meta_keywords', true ) );
+		$metad = esc_attr( get_post_meta( $pid,'bapi_meta_description', true ) );
 		
 		$lastu = (int) get_post_meta($pid,'bapi_last_update',true);
 		$lastu = date('r',$lastu);
@@ -931,7 +925,7 @@ function bapi_make_link( $link ) {
 function display_gw_verification(){
 	global $bapi_all_options;
 	if(strlen($bapi_all_options['bapi_google_webmaster_htmltag'])>1){
-		?><meta name="google-site-verification" content="<?= $bapi_all_options['bapi_google_webmaster_htmltag'] ?>" />
+		?><meta name="google-site-verification" content="<?= esc_attr($bapi_all_options['bapi_google_webmaster_htmltag']) ?>" />
 <?php
 	}
 }
@@ -1272,8 +1266,8 @@ function myplugin_meta_box_callback( $metaId ) {
 	<!--  creats the live snippet preview box -->
 	<script>
 		jQuery(document).ready(function($) {
-   			$("#Descript_prev").text("<?php echo $meta_words['bapi_meta_description'][0];?>");
-   			$("#seoTitle").text("<?php echo $meta_words['bapi_meta_title'][0]; ?>");
+   			$("#Descript_prev").text("<?php echo addslashes($meta_words['bapi_meta_description'][0]);?>");
+   			$("#seoTitle").text("<?php echo addslashes($meta_words['bapi_meta_title'][0]); ?>");
 		$("#bapi_meta_description").keyup(function(){
 			var prevDesc = $("#bapi_meta_description").val();
 			var desc_length = prevDesc.length;
@@ -1319,11 +1313,11 @@ function myplugin_meta_box_callback( $metaId ) {
 	</tr>
 	<tr >
 		<td><label for="bapi_meta_keywords">Keywords:</label></td>
-		<td><input  style="width:100%;" id="bapi_meta_keywords" class="input" type="text" name="bapi_meta_keywords" value="<?php echo $meta_words['bapi_meta_keywords'][0];?>"></td>
+		<td><input  style="width:100%;" id="bapi_meta_keywords" class="input" type="text" name="bapi_meta_keywords" value="<?php echo esc_attr($meta_words['bapi_meta_keywords'][0]);?>"></td>
 	</tr>
 	<tr >
 		<td><label for="bapi_meta_title">SEO Title:</label></td>
-		<td><input style="width:100%;"id="bapi_meta_title" class="input" type="text" name="bapi_meta_title" value="<?php echo $meta_words['bapi_meta_title'][0]; ?>" >
+		<td><input style="width:100%;"id="bapi_meta_title" class="input" type="text" name="bapi_meta_title" value="<?php echo esc_attr($meta_words['bapi_meta_title'][0]); ?>" >
 			<br />Title display in search engines is limited to 70 chars, <span id="Title_lenght"></span> chars left.
 		</td>
 	</tr>

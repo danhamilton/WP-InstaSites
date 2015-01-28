@@ -67,9 +67,8 @@ context.init = function(options) {
 	context.inithelpers.applydotdotdot(options);
 	context.inithelpers.setupmapwidgets(options);
 	context.inithelpers.setupprintlisteners(options);
-	context.inithelpers.setupbapitracker(options);
-	context.inithelpers.loadRaitingStars(options);			
-	$("img").unveil();
+	context.inithelpers.setupbapitracker(options);			
+	context.inithelpers.loadRatingStars(options);
 
 	// ensure that searchmodes exists
 	if (BAPI.isempty(BAPI.config().searchmodes)) { BAPI.config().searchmodes = {} };
@@ -119,7 +118,7 @@ context.inithelpers = {
 			context.createSearchWidget(selector, { "searchurl": searchurl, "template": BAPI.templates.get(templatename), "log": dologging });		
 		});	
 	},
-	loadRaitingStars: function(options){
+	loadRatingStars: function(options){
 		function roundHalf(num) {
     		num = Math.round(num*2)/2;
     		return num;
@@ -935,13 +934,16 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 		}
 		else { $(targetid).unblock(); }
 	});
-	
-	// handle user clicking Clear
-	$(".quicksearch-doclear").on("click", function() {
+
+	// handle user clicking Clear (not home page)
+	$(".widget_bapi__search .quicksearch-doclear").on("click", function() {
 		$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });		
 		BAPI.clearsession();
 		if (doSearchCallback) { doSearchCallback(); }
 		$('.' + options.dataselector).val('');
+		if( $('#amenitiesDropdownCheckbox').length ) {
+			uncheck_dropdown_checkbox( $('#amenitiesDropdownCheckbox') );
+		}
 		if (!BAPI.isempty(options.searchurl)) {
 			BAPI.savesession();
 			var rurl = options.searchurl;
@@ -949,12 +951,37 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 			window.location.href = rurl; 
 		}		
 	});
+
+	// handle user clicking Clear on home page
+	$(".widget_bapi_hp_search .quicksearch-doclear").on("click", function() {
+		BAPI.clearsession();
+		if (doSearchCallback) { doSearchCallback(); }
+		$('.' + options.dataselector).val('');
+		if( $('#amenitiesDropdownCheckbox').length ) {
+			uncheck_dropdown_checkbox( $('#amenitiesDropdownCheckbox') );
+		}
+	});
 	
 	$(".quicksearch-doadvanced").on("click", function() {
 		$(targetid).block({ message: "<img src='" + loadingImgUrl + "' />" });
 		var reqdata = saveFormToSession(this, options);
 		$(targetid).unblock();
 	});	
+
+	// This function unchecked every element from dropdown checkbox element.
+	function uncheck_dropdown_checkbox( dorpdown_element ) {
+		var data =
+		dorpdown_element.dropdownCheckbox(
+			'reset',
+			$.each(
+				dorpdown_element.dropdownCheckbox('items'),
+				function(index, item)
+				{
+					item.isChecked=false;
+				}
+			)
+		);
+	}
 }
 
 function setCalendarsFromSession(session,checkinSelector,checkoutSelector){
@@ -1154,8 +1181,8 @@ context.createSimilarPropertiesWidget = function (targetid, pid, options) {
 		data.textdata = BAPI.textdata;
 		$(targetid).html(Mustache.to_html(options.template, data));
 	});	
-	/* Load the raiting function */	
-	loadRaitingStars();
+	/* Load the rating function */	
+	context.inithelpers.loadRatingStars();
 }
 
 context.createFeaturedPropertiesWidget = function (targetid, options) {
@@ -2356,6 +2383,7 @@ function doSearchRender(targetid, ids, entity, options, data, alldata, callback)
 	}
 	var html = Mustache.render(options.template, data); // do the mustache call
 	$(targetid).html(html); // update the target
+	$("img").unveil(); // since we have our template rendered, we can start showing the carousel
 	/* set the dropdown to the selected value */
 	if($("#poitypefilter-dpd").length > 0 && entity == 'poi'){
 		$("#poitypefilter-dpd").val($(targetid).data("poitypeselected"));
@@ -2396,8 +2424,8 @@ function doSearch(targetid, ids, entity, options, alldata, callback) {
 			/* we set the pagenumber as 2 since we already sending the first page */
 			loadmoreProperties(targetid, ids, entity, options, newAlldata, pagenumber, true, callback);
 		}
-	/* Load the raiting function */	
-	loadRaitingStars();
+	/* Load the rating function */	
+	context.inithelpers.loadRatingStars();
 	});
 	/*we remove the click event attached with live so we dont attach the vent more than 1 time, also we attach the event to the showmore of this targetid */
 	$(targetid+" .showmore").die( "click" );

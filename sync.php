@@ -122,9 +122,10 @@
 			return substr($this->templates, $si+1, $ei-$si-1);			
 		}
 		
-		public static function getMustache($entity, $pkid, $template,$debugmode=0) {
+		// string | false (resource not found)
+		public static function getMustache($entity, $pkid, $template) {
 			$bapi = getBAPIObj();
-			if (!$bapi->isvalid()) { return; }
+			if (!$bapi->isvalid()) { return false; }
 			$pkid = array(intval($pkid));
 
 			/* Its the entity a property?, if yes, lets set the options */
@@ -139,7 +140,26 @@
 				}
 			}
 
-			$c = $bapi->get($entity,$pkid,$options,true,$debugmode);
+			if(!is_array($c = $bapi->get($entity, $pkid, $options))) {
+				if($c === true)
+					return false;
+				else
+					wp_die('This page is temporarily unavailable. Please try again later.');
+			}
+
+			// when rendering a template, get() must result in at least one element
+			if(
+				count( $c['result'] ) < 1 ||
+				!is_array( $c['result'][0] ) ||
+				(
+					$entity === 'property' &&
+					isset( $c['result'][0]['AvailableOnline'] ) &&
+					!$c['result'][0]['AvailableOnline'] // "Do not show on site" is set
+				)
+			) {
+				return false;
+			}
+
 			$c["config"] = BAPISync::getSolutionData();
 			$c["config"] = $c["config"]["ConfigObj"];
 			/* we get the sitesettings */
@@ -244,9 +264,6 @@
 		return kigo_sync_entity( $post, $seo );
 	}
 	function kigo_sync_entity( $post, $seo, $force_sync = false ) {
-		$debugmode = 0; //added by jacob for mantis #4115
-		
-		//global $post;
 		global $bapisync;		
 		if (empty($bapisync)) { 
 			$bapisync = new BAPISync();
@@ -376,18 +393,22 @@
 		//Check if developer is using debugmode and force entity sync
 		if (isset($_GET['debugmode'])&&$_GET['debugmode']){
 			$do_page_update = true;
-			$debugmode = 1;
 		}
 		
 		if ($do_page_update || $force_sync) {
 			// do page update
 			$post->comment_status = "close";		
-			$template = $bapisync->getMustacheTemplate($seo["entity"]);		
-			$post->post_content = $bapisync->getMustache($seo["entity"],$seo["pkid"],$template,$debugmode);
-			//print_r($post); exit();
-			//if we have a bapikey
-			if(!empty($pagekey) || $pagekey != null){
-				$dom = new DomDocument();
+			$template = $bapisync->getMustacheTemplate($seo["entity"]);
+
+			if( !is_string( $s2s_success = $bapisync->getMustache( $seo["entity"], $seo["pkid"], $template ) ) ) {
+				// by "trash"ing the post, WP will display a nice 404.
+				// next time we try to sync and the property shows up, it will be reverted to an active page.
+				$post->post_status = 'trash';
+			} else {
+				$post->post_content = $s2s_success;
+				//if we have a bapikey
+				if(!empty($pagekey) || $pagekey != null){
+				   $dom = new DomDocument();
 				   libxml_use_internal_errors(true);
 				   $dom->loadHTML("<!DOCTYPE html><html><head></head><body>".$post->post_content."</body></html>");
 				   libxml_use_internal_errors(false);
@@ -407,17 +428,18 @@
 					 $page_title = $entity_title[0];
 					}
 				   }
+				}
+
+				$post->post_title = $page_title;
+				$post->post_name = BAPISync::clean_post_name($seo["DetailURL"]);
+				$post->post_parent = get_page_by_path(BAPISync::getRootPath($seo["entity"]))->ID;
+				if($do_market_update){
+					$post->post_parent = ensure_ma_landing_pages($seo["DetailURL"]);
+				}
+				$post->post_type = "page";
 			}
-			
-			$post->post_title = $page_title;
-			$post->post_name = BAPISync::clean_post_name($seo["DetailURL"]);
-			$post->post_parent = get_page_by_path(BAPISync::getRootPath($seo["entity"]))->ID;
-			if($do_market_update){
-				$post->post_parent = ensure_ma_landing_pages($seo["DetailURL"]);
-			}
-			$post->post_type = "page";
+
 			remove_filter('content_save_pre', 'wp_filter_post_kses');
-			//print_r($post);exit();
 			if (empty($post->ID)) {
 				$post->ID = wp_insert_post($post, $wp_error);
 			} else {
@@ -511,7 +533,7 @@ function get_doc_template($docname,$setting){
 	global $bapi_all_options;
 	$docmod = $bapi_all_options[$setting.'_lastmod']; //settings must be registered w/ this consistent format.
 	$doctext = $bapi_all_options[$setting];
-	if(((time()+60)-$docmod)>0){
+	if(((time()-60)-$docmod)>0){
 		$getopts=array('http'=>array('method'=>"GET",'header'=>"User-Agent: InstaSites Agent\r\nReferer: http://" . $_SERVER[HTTP_HOST] . $_SERVER[REQUEST_URI] . "\r\n"));
 		$stream = stream_context_create($getopts);
 		$url = getbapiurl().'/ws/?method=get&ids=0&entity=doctemplate&docname='.urlencode($docname).'&apikey='.getbapiapikey();
