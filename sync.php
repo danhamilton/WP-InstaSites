@@ -48,8 +48,7 @@
 			}
 			
 			// otherwise, just return the baseline version stored in the plugin folder
-			$test = get_kigo_plugin_path( $basefilename );
-			return $test;			
+			return get_kigo_plugin_path( $basefilename );
 		}
 		public static function getTemplates() { 			
 			return file_get_contents(BAPISync::getMustacheLocation()); 
@@ -237,7 +236,6 @@
 		// locate the SEO data stored in Bookt from the requested URL
 		$seo = $bapisync->getSEOFromUrl(str_replace("?".$_SERVER['QUERY_STRING'],'',$_SERVER['REQUEST_URI']));
 		
-		//print_r($seo);//exit();
 		if (!empty($seo) && (empty($seo["entity"]) || empty($seo["pkid"])) && empty($staticpagekey)) {
 			$seo = null; // ignore seo info if it doesn't point to a valid entity
 		}

@@ -18,7 +18,7 @@ class BAPI
 	);
 	
 	public  $cache_get_call = array();
-	private $use_cache_in_get_calls = false;
+	private $use_cache_in_get_calls = array();
 	
 	public function __construct(
 			$apikey, 
@@ -153,7 +153,7 @@ class BAPI
 		}
 		
 		// Set to use the cache only if all the calls have been successful 
-		$this->use_cache_in_get_calls = true;
+		$this->use_cache_in_get_calls[ $entity ] = true;
 		
 		return true;
 	}
@@ -162,7 +162,10 @@ class BAPI
 		if (!$this->isvalid()) { return null; }
 		
 		// In case init_get_cache() has been called before, try to retrieve the values from the local cache
-		if( $this->use_cache_in_get_calls ) {
+		if(
+			isset( $this->use_cache_in_get_calls[ $entity ] ) &&
+			$this->use_cache_in_get_calls[ $entity ]
+		) {
 			$fake_response = array(
 				'status'	=> 1,
 				'result'	=> array()
@@ -172,6 +175,7 @@ class BAPI
 			foreach( $ids as $id ) {
 				if( !isset( $this->cache_get_call[ $entity ][ $id ] ) ) {
 					$error = true;
+					break;
 				}
 				$fake_response[ 'result' ][] = $this->cache_get_call[ $entity ][ $id ];
 			}

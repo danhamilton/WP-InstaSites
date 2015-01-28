@@ -31,17 +31,13 @@ class Kigo_Network_Cron
 	
 	
 	public static function do_sync() {
-		$debug_mode = false;
-		if( defined( 'KIGO_DEBUG' ) ) {
-			$debug_mode = KIGO_DEBUG;
-		}
+		$debug_mode = defined( 'KIGO_DEBUG' ) && KIGO_DEBUG;
 		
 		// Do not allow to process the cron if the previous call is not finished
 		if(
-			self::IS_PROCESSING_OPTION === get_site_option( self::IS_PROCESSING_OPTION, false ) ||
-			!update_site_option( self::IS_PROCESSING_OPTION, self::IS_PROCESSING_OPTION )
+			!update_site_option( self::IS_PROCESSING_OPTION, self::IS_PROCESSING_OPTION ) // update_site_option() return true, only if the option has changed 
 		) {
-			self::$_sync_error_logs[] = 'Previous cron excution is not finished';
+			self::$_sync_error_logs[] = 'Previous cron execution is not finished';
 			self::handle_logs( $debug_mode );
 			exit;
 		}
@@ -56,6 +52,7 @@ class Kigo_Network_Cron
 			
 			// Initialize the list of sites
 			$sites = wp_get_sites( array( 'limit' => self::CUSTOM_WP_IS_LARGE_NETWORK, 'public' => 1 ) );
+			shuffle( $sites );
 			
 			foreach( $sites as $site )
 			{
@@ -71,7 +68,7 @@ class Kigo_Network_Cron
 					$debug_mode
 				) {
 					self::$_sync_error_logs[ $site[ 'blog_id' ] ][] = $sync_respons;
-					self::$_sync_error_logs[ $site[ 'blog_id' ] ][ 'sync_exuction_time' ] = ( microtime( true ) - $prevTimeSite );
+					self::$_sync_error_logs[ $site[ 'blog_id' ] ][ 'sync_exeuction_time' ] = ( microtime( true ) - $prevTimeSite );
 				}
 			}
 		}

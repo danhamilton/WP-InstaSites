@@ -62,7 +62,7 @@ if(
 	// This endpoint is called by a cron job every X minutes to do every site sync.
 	// WARMING: This endpoint can only be called when not logged in !
 	// http://<network_root>/wp-content/plugins/bookt-api/includes/class-kigo-cron.php
-	if( defined( 'USE_CRON' ) && 'USE_CRON' ) {
+	if( defined( 'USE_CRON' ) && USE_CRON ) {
 		add_action( 'wp_ajax_nopriv_'.Kigo_Network_Cron::ACTION_CRON, array( 'Kigo_Network_Cron', 'do_sync' ) );
 	}
 
