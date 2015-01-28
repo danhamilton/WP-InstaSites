@@ -1780,7 +1780,7 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 	var propoptions = { avail: 1, seo: 1 }
 	propoptions = $.extend({}, propoptions, BAPI.session.searchparams);
 	BAPI.get(propid, BAPI.entities.property, propoptions, function (data) {
-		
+	    BAPI.log(data);
 		data.site = BAPI.site;
 		data.config = BAPI.config();
 		data.textdata = BAPI.textdata;	
@@ -1803,7 +1803,7 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 		if (data.result[0].RequiresDigitalAgreement) {
             // Added by Robert 1-27 to ensure terms are not required when a digital agreement is required instead
 		    $("#accepptermscbx").removeClass("required")
-		    $("#accepptermscbx").hide();
+		    $(".accept").hide();
 		}
 		function partialRender(sdata, options) {			
 			$(".modal").modal('hide');			
