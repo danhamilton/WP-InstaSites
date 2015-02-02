@@ -60,11 +60,21 @@ if(
 	add_action( 'wp_ajax_nopriv_'.Kigo_Single_Sign_On::ACTION_LOGIN, array( 'Kigo_Single_Sign_On', 'login' ) ); // for NON-logged-in users
 
 	// Cron sync
-	// This endpoint is called by a cron job every X minutes to do every site sync.
-	// WARMING: This endpoint can only be called when not logged in !
-	// http://<network_root>/wp-content/plugins/bookt-api/includes/class-kigo-cron.php
-	if( defined( 'USE_CRON' ) && USE_CRON ) {
+	if( defined( 'KIGO_USE_CRON' ) && KIGO_USE_CRON ) {
+
+		// This endpoint is called by a cron job every X minutes to do every site sync.
+		// http://<network_root>/wp-admin/admin-ajax.php?action=kigo_network_cron
 		add_action( 'wp_ajax_nopriv_'.Kigo_Network_Cron::ACTION_CRON, array( 'Kigo_Network_Cron', 'do_sync' ) );
+		add_action( 'wp_ajax_'.Kigo_Network_Cron::ACTION_CRON, array( 'Kigo_Network_Cron', 'do_sync' ) );
+		
+		// Endpoint called on each websites by the execution of do_sync
+		// http://<website>.<network_root>/wp-admin/admin-ajax.php?action=kigo_site_cron
+		// Will perform a full sync if called with &forced_full_sync=1
+		add_action( 'wp_ajax_nopriv_'.Kigo_Network_Cron::ACTION_SITE_CRON, array( 'Kigo_Network_Cron', 'do_site_sync' ) );
+		add_action( 'wp_ajax_'.Kigo_Network_Cron::ACTION_SITE_CRON, array( 'Kigo_Network_Cron', 'do_site_sync' ) );
+
+		// Used by the UI to display the last cron execution
+		add_action( 'wp_ajax_'.Kigo_Site_Cron::ACTION_GET_LAST_CRON_EXEC, array( 'Kigo_Site_Cron', 'get_interval_last_update_prop' ) );
 	}
 
 	add_action('init','urlHandler_emailtrackingimage',1);	// handler for email images
@@ -79,6 +89,8 @@ if(
 	add_action('template_redirect', 'do_ossdl_off_ob_start',10);
 	add_action('wp_enqueue_scripts', 'enqueue_and_register_my_scripts_in_head',1);//scripts that load in the head of the site
 	add_action('admin_enqueue_scripts', 'enqueue_and_register_my_scripts_in_head',1 );//scripts that load in the admin pages (same as above)
+	add_action('admin_enqueue_scripts', 'enqueue_and_register_my_scripts_in_head',1 );//scripts that load in the admin pages (same as above)
+	add_action( 'admin_enqueue_scripts', 'enqueue_and_register_admin_scritps', 1 );//scripts that load in the admin pages ONLY
 	add_action('wp_head','loadscriptjquery',10);//lets load this at the end of wp-head so the wp_enqueue runs first
 	add_action('wp_footer','getconfig',1);
 	add_action('wp_head','bapi_getmeta',1);

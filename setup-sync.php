@@ -25,6 +25,28 @@ else{
 <div class="clear"></div>
 
 <br />
+<h3>Property pages synchronization information</h3>
+<table class="widefat" style="width:auto">
+	<tr>
+		<td>
+			Cron synchronization enabled:
+			<?php if( !(defined( 'KIGO_USE_CRON' ) && KIGO_USE_CRON ) ) : ?>
+			<br /><small>Note: contact support to enable it.</small>
+			<?php endif ?>
+		</td>
+		<td><span class="<?php echo ( defined( 'KIGO_USE_CRON' ) && KIGO_USE_CRON ) ? 'green' : 'red'; ?>"><?php echo ( defined( 'KIGO_USE_CRON' ) && KIGO_USE_CRON ) ? 'Yes' : 'No'; ?></span></td>
+	</tr>
+	<tr>
+		<td>Time since last successful sync:<br /><small>Note: If last successful sync was more than 1h ago, please contact support.</small></td>
+		<td id="last-exec"></td>
+	</tr>
+</table>
+
+	<br /><button type="button" id="force_full_sync" class="button-primary">Force full properties sync</button><span id="force_full_sync_spinner" class="spinner alignleft"></span>
+	<br /><small>Note: Use this if changes made on the App don't appear on your website.</small>
+	<br /><small>Note: This may take several minutes.</small>
+
+<br /><br />
 <h3>Base URLs</h3>
 <small>These base urls define where detail pages will get synced.</small>
 <table class="form-table">

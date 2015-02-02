@@ -5,3 +5,10 @@ ul.slides > li, ul.slides > li > div {
 ul.slides > li > div > p.flex-caption {
 	padding: 17px 0;
 }
+
+.green {
+	color:green;
+}
+.red {
+	color:orangered;
+}

@@ -474,6 +474,11 @@
 		wp_register_style( 'kigo-plugin-main', get_relative(plugins_url('/css/style.css', __FILE__)) );
 		wp_enqueue_style( 'kigo-plugin-main' );
 	}
+
+	function enqueue_and_register_admin_scritps() {
+		wp_register_script( 'kigo-plugin-admin-js', get_relative( plugins_url( '/js/admin.js', __FILE__) ), array( 'jquery-min'), false, true );
+		wp_enqueue_script( 'kigo-plugin-admin-js' );
+	}
 	
 	/* Load conditional script */
 	function loadscriptjquery(){	
@@ -659,17 +664,22 @@
 	}
 
 	function getBAPIObj() {
-		global $bapi;
+		global $bapi_instance;
 		global $bapi_all_options;
+
+		$baseurl = isset($bapi_all_options['bapi_baseurl']) && strlen($bapi_all_options['bapi_baseurl']) ? $bapi_all_options['bapi_baseurl'] : 'connect.bookt.com';
+		$baseurl = (strpos($baseurl, 'localhost') === 0 ? 'http://' : 'https://').$baseurl;
+
 		if(
-			!isset( $bapi ) ||
-			!is_a( $bapi, 'BAPI' ) ||
-			$bapi->apikey !== $bapi_all_options['api_key']
+			!isset( $bapi_instance ) ||
+			!is_a( $bapi_instance, 'BAPI' ) ||
+			$bapi_instance->getApikey() !== $bapi_all_options['api_key'] ||
+		    $bapi_instance->getBaseURL() !== $baseurl
 		) {
-			
-			return ($bapi = new BAPI($bapi_all_options['api_key'], $bapi_all_options['bapi_language'], $bapi_all_options['bapi_baseurl']));
+			$bapi_instance = new BAPI($bapi_all_options['api_key'], $baseurl);
 		}
-		return $bapi;
+
+		return $bapi_instance;
 	}
 	
 	function disable_kses_content() {

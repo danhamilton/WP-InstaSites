@@ -121,7 +121,7 @@
 			
 			return substr($this->templates, $si+1, $ei-$si-1);			
 		}
-		
+
 		// string | false (resource not found)
 		public static function getMustache($entity, $pkid, $template) {
 			$bapi = getBAPIObj();
@@ -254,10 +254,20 @@
 		}
 		
 		// locate the SEO data stored in Bookt from the requested URL
-		$seo = $bapisync->getSEOFromUrl(str_replace("?".$_SERVER['QUERY_STRING'],'',$_SERVER['REQUEST_URI']));
-		
-		if (!empty($seo) && (empty($seo["entity"]) || empty($seo["pkid"])) && empty($staticpagekey)) {
-			$seo = null; // ignore seo info if it doesn't point to a valid entity
+		if(
+			!is_array( $seo = $bapisync->getSEOFromUrl(str_replace("?".$_SERVER['QUERY_STRING'],'',$_SERVER['REQUEST_URI'])) ) ||
+			
+			!isset( $seo[ "entity" ] ) ||
+			!strlen( $seo[ "entity" ] ) ||
+			
+			!isset( $seo[ "pkid" ] ) ||
+			(	// Entity 'system' have pkid = 0 but are valid SEO
+				empty( $seo["pkid"] ) &&
+				'system' !== $seo["entity"]
+			)
+		){
+			// ignore seo info if it doesn't point to a valid entity
+			$seo = null;
 		}
 		
 		
@@ -283,9 +293,22 @@
 		$meta_description = !empty($meta) ? $meta['bapi_meta_description'][0] : null;
 		$meta_title = !empty($meta) ? $meta['bapi_meta_title'][0] : null;
 		
+		//Only for properties pages: Retrieve the timestamp of first cron call and the latest successful diff call on this website
+		if(
+			!is_array( $seo ) ||
+			!isset( $seo[ 'entity' ] ) ||
+			'property' !== $seo[ 'entity' ] ||
+			!is_array( $cron_info = Kigo_Site_Cron::get_cron_info_option( 'property' ) )
+		) {
+			$last_successful_diff = $first_cron_execution = 0;
+		}
+		else {
+			$last_successful_diff = $cron_info[ 'last_update_timestamp' ];
+			$first_cron_execution = $cron_info[ 'first_cron_execution' ];
+		}
 		
 		/*we get the property headline*/
-		$page_title = $seo["PageTitle"];
+		$page_title = ( !is_array( $seo ) || !is_string( $seo["PageTitle"] ) ) ? '' : $seo["PageTitle"];
 
 		$do_page_update = false;
 		$do_meta_update = false;
@@ -296,6 +319,7 @@
 			$do_market_update = true;
 		}
 		
+		// Static pages (entity = system ?) are not updated, but their meta data are updated
 		if($page_exists_in_wp && !empty($staticpagekey)){
 			// update the meta tags		
 			if(empty($meta['bapi_last_update'])||((time()-$meta['bapi_last_update'][0])>300)){			
@@ -338,11 +362,21 @@
 		// case 2: pages exists in wp and in Bookt
 		else if ($page_exists_in_wp && !empty($seo)) {
 			//Move from trashcan to publish if exists and no published
-			if($post->post_status=='trash'){ $post->post_status='publish'; $do_page_update = true; } 
-			//print_r("case 2");
-			if(empty($meta['bapi_last_update'])||((time()-$meta['bapi_last_update'][0])>300)){	$changes = $changes."|bapi_last_update"; $do_page_update = true; }
+			if($post->post_status=='trash'){ $post->post_status='publish'; $do_page_update = true; }
+			
+			$do_page_update = (
+				//If the meta is missing, or it has not been update since the first cron execution: update
+				empty( $meta['bapi_last_update'] ) ||
+				$meta['bapi_last_update'][0] <= $first_cron_execution ||
+				
+				(	 // If the cron didn't run a diff since 15 minutes (or it's not a property) and the page has not been update since 5 minute: update
+					( time() - $last_successful_diff ) > 900 &&
+					( time() - $meta['bapi_last_update'][0]) > 300
+				)
+			);
+			
 			// check for difference in meta description
-			if ($meta['bapi_meta_description'][0] != $seo["MetaDescrip"]) { $changes = $changes."|meta_description"; $do_meta_update = true; }
+			if ($meta['bapi_meta_description'][0] != stripslashes($seo["MetaDescrip"])) { $changes = $changes."|meta_description"; $do_meta_update = true; }
 			if ($meta['bapi_meta_title'][0] != $seo["PageTitle"]) { $changes = $changes."|meta_title"; $do_meta_update = true; }
 			// check for difference in meta keywords
 			if ($meta['bapi_meta_keywords'][0] != $seo["MetaKeywords"]) { $changes = $changes."|meta_keywords"; $do_meta_update = true; }
@@ -394,7 +428,7 @@
 		if (isset($_GET['debugmode'])&&$_GET['debugmode']){
 			$do_page_update = true;
 		}
-		
+
 		if ($do_page_update || $force_sync) {
 			// do page update
 			$post->comment_status = "close";		
@@ -534,7 +568,9 @@ function get_doc_template($docname,$setting){
 	$docmod = $bapi_all_options[$setting.'_lastmod']; //settings must be registered w/ this consistent format.
 	$doctext = $bapi_all_options[$setting];
 	if(((time()-60)-$docmod)>0){
-		$getopts=array('http'=>array('method'=>"GET",'header'=>"User-Agent: InstaSites Agent\r\nReferer: http://" . $_SERVER[HTTP_HOST] . $_SERVER[REQUEST_URI] . "\r\n"));
+
+		// FIXME: WHY NOT USING BAPI object?
+		$getopts=array('http'=>array('method'=>"GET",'header'=>"User-Agent: InstaSites Agent\r\nReferer: http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . "\r\n"));
 		$stream = stream_context_create($getopts);
 		$url = getbapiurl().'/ws/?method=get&ids=0&entity=doctemplate&docname='.urlencode($docname).'&apikey='.getbapiapikey();
 		$d = file_get_contents($url,FALSE,$stream);

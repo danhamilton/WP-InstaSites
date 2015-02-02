@@ -5,31 +5,25 @@ class BAPI
 	const BAPI_USER_AGENT = 'InstaSites Agent';
 	const WWW_FORM_URLENCODED = 'application/x-www-form-urlencoded';
 	const MAX_NB_BULK_GET_IDS = 20; // This value can not be higher than 20 by restriction of the app.
+	const MAX_CACHED_IDS = 250; // This is to avoid exploding the memory when caching the get calls
 
-	public $apikey;
-	public $language = 'en-US';
-    public $currency = 'USD';
-    public $baseURL = 'connect.bookt.com';
-	public $getopts = array(
-		'http'=>array(
-			'method'=>"GET",
-			'header'=>''
-		)
-	);
+	private $apikey;
+    private $baseURL;
+	private $getOptions;
 	
 	public  $cache_get_call = array();
 	private $use_cache_in_get_calls = array();
 	
-	public function __construct(
-			$apikey, 
-			$language="en-US", 
-			$baseURL='connect.bookt.com'
-	) {
-		$getopts=array('http'=>array('method'=>"GET",'header'=>"User-Agent: InstaSites Agent\r\nReferer: http://" . $_SERVER[HTTP_HOST] . $_SERVER[REQUEST_URI] . "\r\n"));
+	public function __construct($apikey, $baseURL) {
 		$this->apikey = $apikey;
-		$this->language = $language;
 		$this->baseURL = $baseURL;
-		$this->getOptions = stream_context_create($getopts);
+
+		$this->getOptions = stream_context_create(array(
+			'http' => array(
+				'method' => "GET",
+				'header' => "User-Agent: InstaSites Agent\r\nReferer: http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."\r\n"
+			)
+		));
 	}
 	
 	public function isvalid() {
@@ -37,18 +31,18 @@ class BAPI
 		if (empty($this->baseURL)) return false;
 		return true;
 	}
-	
+
+	public function getApikey() {
+		return $this->apikey;
+	}
+
 	public function getBaseURL() {
-		if (!strncmp("localhost", $this->baseURL, strlen("localhost"))) {
-			return "http://" . $this->baseURL;
-		} else {
-			return "https://" . $this->baseURL;
-		}
+		return $this->baseURL;
 	}
 		
 	public function getcontext($jsondecode,$debugmode=0) {
 		if (!$this->isvalid()) { return null; }
-		$url = $this->getBaseURL() . '/js/bapi.context?apikey=' . $this->apikey;
+		$url = $this->baseURL . '/js/bapi.context?apikey=' . $this->apikey;
 		$c = file_get_contents($url,FALSE,$this->getOptions) or wp_die('Error Retrieving Context','Oops!');
 		
 		global $getContextURL;
@@ -61,7 +55,7 @@ class BAPI
 	
 	public function gettextdata($jsondecode,$debugmode=0) {
 		if (!$this->isvalid()) { return null; }
-		$url = $this->getBaseURL() . '/ws/?method=get&entity=textdata&apikey=' . $this->apikey;
+		$url = $this->baseURL . '/ws/?method=get&entity=textdata&apikey=' . $this->apikey;
 		$c = file_get_contents($url,FALSE,$this->getOptions) or wp_die('Error Retrieving TextData','Oops!');
 		
 		global $textDataURL;
@@ -74,7 +68,7 @@ class BAPI
 	
 	public function getseodata($jsondecode=true,$debugmode=0) {
 		if (!$this->isvalid()) { return null; }
-		$url = $this->getBaseURL() . '/ws/?method=get&entity=seo&apikey=' . $this->apikey;
+		$url = $this->baseURL . '/ws/?method=get&entity=seo&apikey=' . $this->apikey;
 		$c = file_get_contents($url,FALSE,$this->getOptions) or wp_die('Error Retrieving Keywords','Oops!');
 		
 		global $seoDataURL;
@@ -86,7 +80,7 @@ class BAPI
 	}
 	
 	public function getSolutionConfig($apikey,$debugmode=0){
-		$url = $this->getBaseURL() . "/ws/?method=getconfig&apikey=".$apikey;
+		$url = $this->baseURL . "/ws/?method=getconfig&apikey=".$apikey;
 		$json = file_get_contents($url,FALSE,$this->getOptions) or wp_die('Error Retrieving Solution Config','Oops!');
 		$data = json_decode($json, TRUE);
 		if($data['status']==1){
@@ -99,7 +93,7 @@ class BAPI
 	
 	public function search($entity,$options=null,$jsondecode=true) {
 		if (!$this->isvalid()) { return null; }
-		$url = $this->getBaseURL() . "/ws/?method=search&apikey=" . $this->apikey . "&entity=" . $entity;
+		$url = $this->baseURL . "/ws/?method=search&apikey=" . $this->apikey . "&entity=" . $entity;
 		if (!empty($options)) { $url = $url . "&" . http_build_query($options); }		
 		$c = file_get_contents($url,FALSE,$this->getOptions) or wp_die('Error Retrieving Search Results','Oops!');		
 		if (empty($jsondecode) || $jsondecode) { return json_decode($c,TRUE); }
@@ -107,7 +101,7 @@ class BAPI
 	}
 	public function quicksearch($entity,$options=null,$jsondecode=true) {
 		if (!$this->isvalid()) { return null; }
-		$url = $this->getBaseURL() . "/ws/?method=quicksearch&apikey=" . $this->apikey . "&entity=" . $entity;
+		$url = $this->baseURL . "/ws/?method=quicksearch&apikey=" . $this->apikey . "&entity=" . $entity;
 		if (!empty($options)) { $url = $url . "&" . http_build_query($options); }		
 		$c = file_get_contents($url,FALSE,$this->getOptions) or wp_die('Error Retrieving Search Results','Oops!');		
 		if (empty($jsondecode) || $jsondecode) { return json_decode($c,TRUE); }
@@ -125,6 +119,11 @@ class BAPI
 	 * @return bool
 	 */
 	public function init_get_cache( $entity, $ids, $options = null ) {
+		if( count($ids ) > self::MAX_CACHED_IDS ) {
+			$this->use_cache_in_get_calls[ $entity ] = false;
+			return false;
+		}
+		$this->cache_get_call[ $entity ] = array();
 		// Split the ids into small chunks to avoid errors
 		$ids_chunks = array_chunk( $ids, self::MAX_NB_BULK_GET_IDS );
 		
@@ -134,7 +133,7 @@ class BAPI
 		// Process one call by chunks
 		foreach( $ids_chunks as $ids_chunk ) {
 			if(
-				!is_array( $response = $this->get( $entity, $ids_chunk, $options, true ) ) ||
+				!is_array( $response = $this->get( $entity, $ids_chunk, $options ) ) ||
 				
 				!isset( $response[ 'status' ] ) ||
 				1 !== $response[ 'status' ] ||
@@ -185,7 +184,7 @@ class BAPI
 			}
 		}
 
-		$url = $this->getBaseURL() . "/ws/?method=get&apikey=" . $this->apikey . "&entity=" . $entity . '&ids=' . implode(",", $ids);
+		$url = $this->baseURL . "/ws/?method=get&apikey=" . $this->apikey . "&entity=" . $entity . '&ids=' . implode(",", $ids);
 		if (!empty($options)) { $url = $url . "&" . http_build_query($options); }
 
 		// adding <meta> on the page, for debugging purposes
@@ -203,7 +202,7 @@ class BAPI
 		);
 
 		if(is_wp_error($response)) {
-			error_log( $response->get_error_message() );//TODO LOGGLY LOG
+			Loggly_logs::log( array( 'BAPI get faillure',  $response->get_error_message() ), array( 'wp_bapi' ) );
 			return false;
 		}
 
@@ -239,18 +238,8 @@ class BAPI
 
 		return false;
 	}
-	
-	public function del($entity,$ids,$options,$jsondecode=true) {
-		if (!$this->isvalid()) { return null; }
-		$optionsURL = implode("&", $options);
-		$url = $this->getBaseURL . "/ws/?method=get&apikey=" . $this->apikey . "&entity=" . $entity . '&ids' . implode(",", $ids);
-		echo $url; exit();
-		$json = file_get_contents($url);
-		$data = json_decode($json, TRUE);
-		return $data;		
-		return null;
-	}
-	//erro testing for send objects to the api
+
+	//error testing for send objects to the api
 	public function error($response){
 		if( is_wp_error( $response ) ) {
    		$error_message = $response->get_error_message();
@@ -264,7 +253,7 @@ class BAPI
 	//saves to our api
 	public function save($jsonObj, $apiKey) {
 		if (!$this->isvalid()) { return null; }
-		$url =$this->getBaseURL()."/ws/?method=save&apikey=".$apiKey."&entity=seo";
+		$url =$this->baseURL."/ws/?method=save&apikey=".$apiKey."&entity=seo";
 		//print_r($url); exit();
 		$response = wp_remote_post( $url, array(
 			'method' => 'POST',
@@ -280,7 +269,7 @@ class BAPI
 		if( is_wp_error( $response ) ) {
 			$error_message = $response->get_error_message();
 			echo "Something went wrong: $error_message";
-			echo $response;
+			//echo $response;
 		} else {
 			 // print_r($jsonObj);
 	   		 // print_r($response);
