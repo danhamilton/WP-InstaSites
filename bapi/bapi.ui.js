@@ -1776,6 +1776,25 @@ function bookingHelper_get_description() {
 	);
 }
 
+/**
+ * Add the HasLocalCurrency param to statement info.
+ * This is needed to display correctly the Total yelow box
+ * 
+ * @param data
+ * @returns data
+ */
+function has_local_currency( data ) {
+	if(
+		$.isPlainObject( data.result[0] ) &&
+		$.isPlainObject( data.result[0].ContextData ) &&
+		$.isPlainObject( data.result[0].ContextData.Quote ) &&
+		$.isPlainObject( data.result[0].ContextData.Quote.Statement )
+	) {
+		data.result[0].ContextData.Quote.Statement.HasLocalCurrency = ( data.result[0].ContextData.Quote.Statement.TotalDue.Currency !== data.result[0].ContextData.Quote.Statement.TotalDue.LocalCurrency );
+	}
+	return data;
+}
+
 function bookingHelper_FullLoad(targetid,options,propid) {
 	var propoptions = { avail: 1, seo: 1 }
 	propoptions = $.extend({}, propoptions, BAPI.session.searchparams);
@@ -1785,9 +1804,10 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 		data.config = BAPI.config();
 		data.textdata = BAPI.textdata;	
 		data.session = BAPI.session;
-		$(targetid).html(Mustache.render(options.mastertemplate, data));	
+		$(targetid).html(Mustache.render(options.mastertemplate, data));
 		$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, data));
 		/* we render the statements mustache */
+		data = has_local_currency( data );
 		$(options.targetids.statement).html(Mustache.render(options.templates.statement, data));
 		$(options.targetids.renter).html(Mustache.render(options.templates.renter, data));
 		$(options.targetids.creditcard).html(Mustache.render(options.templates.creditcard, data));
@@ -1808,10 +1828,11 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 			sdata.textdata = BAPI.textdata;	
 			sdata.session = BAPI.session;	
 			/* we render the statements mustache */
+			sdata = has_local_currency( sdata );
 			$(options.targetids.statement).html(Mustache.render(options.templates.statement, sdata));
 			$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, sdata));
 			$(options.targetids.accept).html(Mustache.render(options.templates.accept, sdata));			
-			$(options.targetids.stayinfo).unblock();
+			$(options.targetids.stayinfo).parent('div').unblock();
 			context.createDatePicker('#makebookingcheckin', { "property": BAPI.curentity, "checkoutID": '#makebookingcheckout' });
 			context.createDatePicker('#makebookingcheckout', { "property": BAPI.curentity, "checkinID": '#makebookingcheckout' });	
 
@@ -1823,7 +1844,7 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 			var reqdata = saveFormToSession($('.revisedates'), { dataselector: "revisedates" });
 			reqdata.pid = propid;
 			reqdata.quoteonly = 1;
-			$(options.targetids.stayinfo).block({ message: "<img src='" + loadingImgUrl + "' />" });
+			$(options.targetids.stayinfo).parent('div').block({ message: "<img src='" + loadingImgUrl + "' />" });
 			BAPI.get(propid, BAPI.entities.property, reqdata, function (sdata) {
 				curbooking = sdata.result[0].ContextData.Quote;
 				partialRender(sdata, options);
@@ -1845,7 +1866,7 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 				reqdata.optionalfees.push(ofee);
 			});
 			reqdata.numoptionalfees = reqdata.optionalfees.length;
-			$(options.targetids.stayinfo).block({ message: "<img src='" + loadingImgUrl + "' />" });
+            $(options.targetids.stayinfo).parent('div').block({ message: "<img src='" + loadingImgUrl + "' />" });
 			BAPI.get(propid, BAPI.entities.property, reqdata, function (sdata) {
 				curbooking = sdata.result[0].ContextData.Quote;
 				partialRender(sdata, options);
@@ -2309,6 +2330,7 @@ context.createCurrencySelectorWidget = function (id, options) {
 		var newcurrency = $(this).attr('data-currency');
 		$('#currencypopup').dialog("close");
 		BAPI.session.currency = newcurrency;
+		BAPI.session.searchparams.currency = newcurrency;
 		BAPI.savesession();
 		document.location.reload(true);
 	});
