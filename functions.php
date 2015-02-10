@@ -102,12 +102,16 @@
 
 		$data = getbapicontext();
 
-		return (
-			is_array($data) &&
-			isset( $data[ 'App' ] ) &&
-			isset( $data[ 'App' ][ 'Data' ] ) &&
-		    false !== strpos( $data['App']['Data'], 'newapp.kigo.net' )
-		);
+		if(
+			!is_array( $data ) ||
+			!isset( $data[ 'App' ] ) ||
+			!isset( $data[ 'App' ][ 'Data' ] )
+		) {
+			// By default any new website is a kigo site
+			return true;
+		}
+
+		return ( false !== strpos( $data[ 'App '][ 'Data' ], 'newapp.kigo.net' ) );
 	}
 
 	function newapp_login_headertitle( $title ) {
