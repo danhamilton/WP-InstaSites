@@ -354,7 +354,7 @@ context.inithelpers = {
 			BAPI.get(bid, BAPI.entities.booking, securityInfo, function (data) {
 				// Unexpected error
 				if( !$.isPlainObject( data ) ) {
-					render_verification_error( 'An unexpected error occurred. Please try again later.' );// we should log this in Loggly
+					render_verification_error( BAPI.textdata['An unexpected error occurred'] + '. ' + BAPI.textdata['Please try again later'] + '.' );// we should log this in Loggly
 					return;
 				}
 				
@@ -364,7 +364,7 @@ context.inithelpers = {
 						!$.isPlainObject( data.error ) ||
 						'string' !== $.type( data.error.message )
 					){
-						render_verification_error( 'An unexpected error occurred. Please try again later.' );// we should log this in Loggly
+						render_verification_error( BAPI.textdata['An unexpected error occurred'] + '. ' + BAPI.textdata['Please try again later'] + '.' );// we should log this in Loggly
 						return;
 					}
 					
@@ -376,13 +376,13 @@ context.inithelpers = {
 				
 				/* the bid was supplied we need to know if there are results */
 				if(retrieveBid && data.result.length == 0){
-					render_verification_error( "Booking not Found." );
+					render_verification_error( BAPI.textdata['Booking not found'] );
 					return;
 				}
 				
 				//Detect canceled bookings
 				if( 'x' === data.result[0].Status.toLowerCase() ) {
-					render_verification_error( 'This booking has been canceled.' );
+					render_verification_error( BAPI.textdata['This booking has been canceled'] );
 					return;
 				}
 				else{
