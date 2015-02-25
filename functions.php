@@ -111,7 +111,7 @@
 			return true;
 		}
 
-		return ( false !== strpos( $data[ 'App '][ 'Data' ], 'newapp.kigo.net' ) );
+		return ( false !== strpos( $data[ 'App' ][ 'Data' ], 'newapp.kigo.net' ) );
 	}
 
 	function newapp_login_headertitle( $title ) {
