@@ -665,7 +665,7 @@ context.setupmapwidgetshelper = function() {
 			info_window_selector: '.info-html',
 			category_icon_options: caticons,
 			map_config: {
-				mapTypeId: google.maps.MapTypeId.TERRAIN,
+				mapTypeId: google.maps.MapTypeId.ROADMAP,
 				zoom: 7
 			}
 		};
