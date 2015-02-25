@@ -655,26 +655,29 @@ context.setupmapwidgetshelper = function() {
 				}
 			}
 		catch(err) {}
-		var infowindowmaxwidth = ctl.attr('data-info-window-max-width');
-		if (infowindowmaxwidth!==null) { infowindowmaxwidth = parseInt(infowindowmaxwidth); }
+		
 		BAPI.log("Creating map widget for " + selector + ', location selector=' + locsel + ', link selector=' + linksel);
-		ctl.jMapping({
+		/* Setup the jMapping params */
+		var jMapping_params = {
 			side_bar_selector: '#map-locations:first',
 			location_selector: locsel,
 			link_selector: linksel,
 			info_window_selector: '.info-html',
 			category_icon_options: caticons,
-			info_window_max_width: infowindowmaxwidth,
 			map_config: {
-				navigationControlOptions: {
-				style: google.maps.NavigationControlStyle.DEFAULT,
-				streetViewControl: false
-			  },
-			  //mapTypeId: google.maps.MapTypeId.HYBRID,
-			  mapTypeId: google.maps.MapTypeId.ROADMAP,
-			  zoom: 7
+				mapTypeId: google.maps.MapTypeId.TERRAIN,
+				zoom: 7
 			}
-		});
+		};
+		
+		if(
+			'string' === $.type( ctl.attr( 'data-info-window-max-width' ) ) &&
+			$.isNumeric( infowindowmaxwidth = parseInt( ctl.attr( 'data-info-window-max-width' ) ) )
+		) {
+			jMapping_params.info_window_max_width = infowindowmaxwidth;
+		}
+		
+		ctl.jMapping( jMapping_params );
 		
 		if (typeof(lsel)!=="undefined" && lsel!==null && lsel!='') {
 			$(lsel).on(lselevent, function() {
