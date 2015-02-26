@@ -319,7 +319,8 @@ context.inithelpers = {
 				bid = u.param('ebid');
 			}
 			if (BAPI.isempty(bid) || bid == ''){
-				$('#verifybookingid-block').removeClass('hide');
+			    $('#verifybookingid-block').removeClass('hide');
+			    $('#verifyBookingId').val(u.param("keyid"));
 				retrieveBid = true;
 			}else{
 				$('#verifybookingid-block').remove();
@@ -343,7 +344,7 @@ context.inithelpers = {
 			securityInfo.LastName = $("#verifyLastName").val();
 			securityInfo.renterEmail = renterEmail;
 			/* we need to get the Booking id if it was not supplied*/
-			if(retrieveBid){ bid = $("#verifyBookingId").val();	}
+			if(retrieveBid){ bid = u.param("keyid");	}
 			BAPI.get(bid, BAPI.entities.booking, securityInfo, function (data) {
 				/* the bid was supplied we need to know if there are results */
 				if(retrieveBid && data.result.length == 0){
@@ -552,6 +553,7 @@ context.inithelpers = {
 		});				
 	}
 }
+
 
 // Toggle truncation for dotdotdot
 function toggleRead(caller) {
@@ -1779,11 +1781,10 @@ function bookingHelper_get_description() {
 	);
 }
 
-function bookingHelper_FullLoad(targetid,options,propid) {
+function bookingHelper_FullLoad(targetid, options, propid) {
 	var propoptions = { avail: 1, seo: 1 }
 	propoptions = $.extend({}, propoptions, BAPI.session.searchparams);
 	BAPI.get(propid, BAPI.entities.property, propoptions, function (data) {
-		
 		data.site = BAPI.site;
 		data.config = BAPI.config();
 		data.textdata = BAPI.textdata;	
@@ -1803,7 +1804,7 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 		BAPI.curentity = data.result[0];
 		curbooking = data.result[0].ContextData.Quote;
 		if (!data.result[0].ContextData.Quote.IsValid) { try { $('#revisedates').modal('show'); } catch(err) {} }
-		
+
 		function partialRender(sdata, options) {			
 			$(".modal").modal('hide');			
 			sdata.site = BAPI.site;
@@ -2026,7 +2027,6 @@ context.createMakeBookingWidget = function (targetid, options) {
 		window.location = "/"; //TODO: need to redirect back to the correct place
 		return;
 	}
-
 	bookingHelper_FullLoad(targetid, options, propid);	
 	BookingHelper_SetupFormHandlers();
 	BookingHelper_BookHandler(targetid, options, propid);
