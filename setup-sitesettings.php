@@ -71,6 +71,12 @@ else{
 	</td>	
 </tr>
 <tr valign="top">
+	<td scope="row">Google Default Map View:</td>
+	<td>
+		<select id="map-settings-select" name="mapviewType" id="mapview_type"></select>
+	</td>
+</tr>
+<tr valign="top">
  <td scope="row">Avg Review Stars:</td>
  <td><input class="averagestarsreviews-cbx" type="checkbox" checked="" />
  <input type="hidden" id="averagestarsreviews" name="averagestarsreviews" data-prevalue="BAPI.config().hidestarsreviews=" value="" />
