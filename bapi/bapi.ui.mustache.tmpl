@@ -374,8 +374,7 @@
 {{/result}}
 </div>
 <div class="clearfix"></div>
-{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalitemsleft}})</a></span></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
+{{> partial_showmore_nomore}}
 </script>
 
 <script id="tmpl-propertysearch-listview" type="text/html">
@@ -447,8 +446,13 @@
 {{/result}}
 </div>
 <div class="clearfix"></div>
-{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalitemsleft}})</a></span></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
+
+{{> partial_showmore_nomore}}
+</script>
+
+<script id="partial_showmore_nomore" type="text/html">
+	{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalitemsleft}})</a></span></div>{{/islastpage}}
+	{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
 </script>
 
 <script id="tmpl-propertysearch-widephotoview" type="text/html">
@@ -490,8 +494,7 @@
 {{/result}}
 </div>
 <div class="clearfix"></div>
-{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalitemsleft}})</a></span></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
+{{> partial_showmore_nomore}}
 </script>
 
 <script id="tmpl-allpropertiespage" type="text/html">
@@ -541,8 +544,7 @@
 {{/result}}
 </div>
 <div class="clearfix"></div>
-{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalitemsleft}})</a></span></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
+{{> partial_showmore_nomore}}
 </script>
 
 <script id="tmpl-allproperties" type="text/html">
@@ -592,8 +594,7 @@
 </tbody>
 </table>
 <div class="clearfix"></div>
-{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalitemsleft}})</a></span></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
+{{> partial_showmore_nomore}}
 </script>
 
 <script id="tmpl-properties-ratetable" type="text/html">
@@ -1045,8 +1046,7 @@
 {{/result}}
 </div>
 <div class="clearfix"></div>
-{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalitemsleft}})</a></span></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
+{{> partial_showmore_nomore}}
 </script>
 
 <script id="tmpl-developments-detail" type="text/html">
@@ -1195,8 +1195,7 @@
 {{/result}}
 </div>
 <div class="clearfix"></div>
-{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalitemsleft}})</a></span></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
+{{> partial_showmore_nomore}}
 </script>
 
 <script id="tmpl-marketarea-detail" type="text/html">
@@ -1364,8 +1363,7 @@
 {{/site.office.ShowOnMap}}
 </div>
 <div class="clearfix"></div>
-{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalitemsleft}})</a></span></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
+{{> partial_showmore_nomore}}
 </script>
 
 <script id="tmpl-attractions-detail" type="text/html">
@@ -1538,8 +1536,7 @@
 </div>
 {{/result}}
 <div class="clearfix"></div>
-{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalitemsleft}})</a></span></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
+{{> partial_showmore_nomore}}
 </script>
 
 <script id="tmpl-specials-detail" type="text/html">
@@ -1671,8 +1668,7 @@
 </div>
 {{/result}}  
 <div class="clearfix"></div>
-{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalitemsleft}})</a></span></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
+{{> partial_showmore_nomore}}
 </script>
 
 <script id="tmpl-searches-detail" type="text/html">

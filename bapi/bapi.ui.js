@@ -265,7 +265,7 @@ context.inithelpers = {
 						}
 					 }
 					 var nData = data;
-					$(rateselector).html(Mustache.render(ratetemplate, nData));
+					$(rateselector).html(context.mustacheHelpers.render(ratetemplate, nData));
 				});
 			}
 		});
@@ -311,7 +311,7 @@ context.inithelpers = {
 			var data = {};
 			data.textdata = BAPI.textdata;
 			/* render the form */
-			verifyForm.html(Mustache.render(verifyUserTemplate, data));
+			verifyForm.html(context.mustacheHelpers.render(verifyUserTemplate, data));
 			/* check if there is booking ID */
 			var u = $.url(window.location.href);
 			var bid = u.param('bid');
@@ -554,6 +554,33 @@ context.inithelpers = {
 	}
 }
 
+context.mustacheHelpers = {
+	render: function( template, data ) {
+		var html = null;
+		if(
+			'string' !== $.type( template ) ||
+			template.length < 1 ||
+			!$.isPlainObject( data ) ||
+			
+			'string' !== $.type( html = Mustache.render( template, data, context.mustacheHelpers.getPartials ) )
+		) {
+			return '';
+		}
+		
+		return html;
+	},
+	getPartials: function( partial_name ) {
+		if(
+			'string' !== $.type( partial_name ) ||
+			'string' !== $.type( partial_template = BAPI.templates.get( partial_name ) )
+		) {
+			return '';
+		}
+		
+		return partial_template;
+	}
+}
+
 
 // Toggle truncation for dotdotdot
 function toggleRead(caller) {
@@ -710,7 +737,7 @@ context.createRateBlockWidget = function (targetid, options) {
 		data.textdata = BAPI.textdata;
 		data.session = BAPI.session;
 		//if (options.log) { BAPI.log("--createSearchWidget.res--"); BAPI.log(data); }
-		$(targetid).html(Mustache.render(options.template, data));
+		$(targetid).html(context.mustacheHelpers.render(options.template, data));
 		
 		context.createDatePicker('#rateblockcheckin', { "property": p, "checkoutID": '#rateblockcheckout' });
 		context.createDatePicker('#rateblockcheckout', { "property": p, "checkinID": '#rateblockcheckin' });		
@@ -834,7 +861,7 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 	res.config = options.config;
 	res.textdata = options.textdata;
 	if (options.log) { BAPI.log("--createSearchWidget.res--"); BAPI.log(res); }
-	$(targetid).html(Mustache.render(options.template, res));
+	$(targetid).html(context.mustacheHelpers.render(options.template, res));
 	// see if there is some quote info to display
 	var p = options.property;
 	
@@ -1197,7 +1224,7 @@ context.createFeaturedPropertiesWidget = function (targetid, options) {
 		var pids = data.result;
 		BAPI.get(pids, BAPI.entities.property, { pagesize: options.pagesize, seo: true }, function (res) {			
 			res.textdata = options.textdata;
-			$(targetid).html(Mustache.render(options.template, res));		
+			$(targetid).html(context.mustacheHelpers.render(options.template, res));		
 		});
 	});
 }
@@ -1214,7 +1241,7 @@ context.createInquiryForm = function (targetid, options) {
 	context.loading.ctlshow(targetid);
 	/* we add the InquiryFormFields object to data so the values can get into account when rendereing the mustache template */
 	var data = { "config": options.config, "site": options.site, "textdata": options.textdata, "InquiryFormFields": options.InquiryFormFields }
-	$(targetid).html(Mustache.render(options.template, data));
+	$(targetid).html(context.mustacheHelpers.render(options.template, data));
 	/* do we have the date fields ? */
 	if(options.InquiryFormFields.Dates){
 		/* lets attach the datepickers */
@@ -1789,13 +1816,13 @@ function bookingHelper_FullLoad(targetid, options, propid) {
 		data.config = BAPI.config();
 		data.textdata = BAPI.textdata;	
 		data.session = BAPI.session;
-		$(targetid).html(Mustache.render(options.mastertemplate, data));	
-		$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, data));
+		$(targetid).html(context.mustacheHelpers.render(options.mastertemplate, data));	
+		$(options.targetids.stayinfo).html(context.mustacheHelpers.render(options.templates.stayinfo, data));
 		/* we render the statements mustache */
-		$(options.targetids.statement).html(Mustache.render(options.templates.statement, data));
-		$(options.targetids.renter).html(Mustache.render(options.templates.renter, data));
-		$(options.targetids.creditcard).html(Mustache.render(options.templates.creditcard, data));
-		$(options.targetids.accept).html(Mustache.render(options.templates.accept, data));
+		$(options.targetids.statement).html(context.mustacheHelpers.render(options.templates.statement, data));
+		$(options.targetids.renter).html(context.mustacheHelpers.render(options.templates.renter, data));
+		$(options.targetids.creditcard).html(context.mustacheHelpers.render(options.templates.creditcard, data));
+		$(options.targetids.accept).html(context.mustacheHelpers.render(options.templates.accept, data));
 		$('.specialform').hide(); // hide the spam control
 		context.createDatePicker('#makebookingcheckin', { "property": data.result[0], "checkoutID": '#makebookingcheckout' });
 		context.createDatePicker('#makebookingcheckout', { "property": data.result[0], "checkinID": '#makebookingcheckin' });		
@@ -1812,9 +1839,9 @@ function bookingHelper_FullLoad(targetid, options, propid) {
 			sdata.textdata = BAPI.textdata;	
 			sdata.session = BAPI.session;	
 			/* we render the statements mustache */
-			$(options.targetids.statement).html(Mustache.render(options.templates.statement, sdata));
-			$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, sdata));
-			$(options.targetids.accept).html(Mustache.render(options.templates.accept, sdata));			
+			$(options.targetids.statement).html(context.mustacheHelpers.render(options.templates.statement, sdata));
+			$(options.targetids.stayinfo).html(context.mustacheHelpers.render(options.templates.stayinfo, sdata));
+			$(options.targetids.accept).html(context.mustacheHelpers.render(options.templates.accept, sdata));			
 			$(options.targetids.stayinfo).unblock();
 			context.createDatePicker('#makebookingcheckin', { "property": BAPI.curentity, "checkoutID": '#makebookingcheckout' });
 			context.createDatePicker('#makebookingcheckout', { "property": BAPI.curentity, "checkinID": '#makebookingcheckout' });	
@@ -2052,9 +2079,9 @@ function PaymentHelper_FullLoad(targetid, options, bid) {
         data.config = BAPI.config();
         data.textdata = BAPI.textdata;
         data.session = BAPI.session;
-        $(targetid).html(Mustache.render(options.mastertemplate, data));
-        $(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, data));
-        $(options.targetids.statement).html(Mustache.render(options.templates.statement, data));
+        $(targetid).html(context.mustacheHelpers.render(options.mastertemplate, data));
+        $(options.targetids.stayinfo).html(context.mustacheHelpers.render(options.templates.stayinfo, data));
+        $(options.targetids.statement).html(context.mustacheHelpers.render(options.templates.statement, data));
         /* check if this is the new payment page*/
         if(options.newpaymentpage){
 			var stringArrayTotalDueNow = data.result[0].TotalDueNow.toString().split('.');
@@ -2062,14 +2089,14 @@ function PaymentHelper_FullLoad(targetid, options, bid) {
 			stringTotalDueNow.Integer = BAPI.isempty(stringArrayTotalDueNow[0]) ? "0" : stringArrayTotalDueNow[0];
 			stringTotalDueNow.Decimal = BAPI.isempty(stringArrayTotalDueNow[1]) ? "00" : stringArrayTotalDueNow[1];
 			data.result[0].sTotalDueNow = stringTotalDueNow;
-			$(options.targetids.creditcard).html(Mustache.render(options.templates.creditcard2, data));
+			$(options.targetids.creditcard).html(context.mustacheHelpers.render(options.templates.creditcard2, data));
 		}else{
 			/* this is legacy */
-			$(options.targetids.renter).html(Mustache.render(options.templates.renter, data));
-			$(options.targetids.creditcard).html(Mustache.render(options.templates.creditcard, data));
+			$(options.targetids.renter).html(context.mustacheHelpers.render(options.templates.renter, data));
+			$(options.targetids.creditcard).html(context.mustacheHelpers.render(options.templates.creditcard, data));
 		}
         
-        $(options.targetids.accept).html(Mustache.render(options.templates.accept, data));
+        $(options.targetids.accept).html(context.mustacheHelpers.render(options.templates.accept, data));
         $('.specialform').hide(); // hide the spam control
 
         function partialRender(sdata, options) {
@@ -2078,9 +2105,9 @@ function PaymentHelper_FullLoad(targetid, options, bid) {
             sdata.config = BAPI.config();
             sdata.textdata = BAPI.textdata;
             sdata.session = BAPI.session;
-            $(options.targetids.statement).html(Mustache.render(options.templates.statement, sdata));
-            $(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, sdata));
-            $(options.targetids.accept).html(Mustache.render(options.templates.accept, sdata));
+            $(options.targetids.statement).html(context.mustacheHelpers.render(options.templates.statement, sdata));
+            $(options.targetids.stayinfo).html(context.mustacheHelpers.render(options.templates.stayinfo, sdata));
+            $(options.targetids.accept).html(context.mustacheHelpers.render(options.templates.accept, sdata));
             $(options.targetids.stayinfo).unblock();
         }
 
@@ -2305,7 +2332,7 @@ context.createCurrencySelectorWidget = function (id, options) {
 	
 	var wrapper = { "session": BAPI.session, "config": BAPI.config() }
 	var template = BAPI.templates.get('tmpl-currencyselector');
-	var html = Mustache.render(template, wrapper);
+	var html = context.mustacheHelpers.render(template, wrapper);
 	c.html(html);
 	$('.dropdown-toggle').dropdown();
 	$(".changecurrency").live("click", function () {
@@ -2384,7 +2411,7 @@ function doSearchRender(targetid, ids, entity, options, data, alldata, callback)
 	if(entity == 'poi'){
 		data.site = options.site;
 	}
-	var html = Mustache.render(options.template, data); // do the mustache call
+	var html = context.mustacheHelpers.render(options.template, data); // do the mustache call
 	$(targetid).html(html); // update the target
 	$("img").unveil(); // since we have our template rendered, we can start showing the carousel
 	/* set the dropdown to the selected value */
