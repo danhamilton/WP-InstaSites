@@ -139,11 +139,9 @@
 			if(!(strpos($_SERVER['REQUEST_URI'],'wp-admin')===false)||!(strpos($_SERVER['REQUEST_URI'],'wp-login')===false)){
 				return false;
 			}
-			
 			$bapi = getBAPIObj();
-			if (!$bapi->isvalid()) {
-				return false;
-			}
+			if (!$bapi->isvalid()) { return false; }
+			$pkid = array(intval($pkid));
 
 			// Set the options for get call
 			switch( $entity ) {
@@ -160,7 +158,7 @@
 					break;
 			}
 
-			if(!is_array($c = $bapi->get($entity, array( intval( $pkid ) ), $options))) {
+			if(!is_array($c = $bapi->get($entity, $pkid, $options))) {
 				if($c === true)
 					return false;
 				else
@@ -180,74 +178,66 @@
 				return false;
 			}
 
-			// load the sitesettings
 			$c["config"] = BAPISync::getSolutionData();
 			$c["config"] = $c["config"]["ConfigObj"];
+			/* we get the sitesettings */
 			global $bapi_all_options;
-			if (
-				is_array( $sitesettings = json_decode( $bapi_all_options['bapi_sitesettings'], TRUE ) )
-			) {
+			$sitesettings = json_decode($bapi_all_options['bapi_sitesettings'],TRUE);
+			if (!empty($sitesettings)) {
 				/* we get the review value from the sitesettings*/
-				if(
-					is_string( $sitesettings[ "propdetail-reviewtab" ] ) &&
-					strlen( $sitesettings[ "propdetail-reviewtab" ] )
-				) {
-					$c["config"]["hasreviews"] = ( strpos( $sitesettings[ "propdetail-reviewtab" ], 'true' ) !== false );
+				$hasreviews = $sitesettings["propdetail-reviewtab"];
+				if (!empty($hasreviews)){
+					/* we make an array using = and ; as delimiters */
+					$hasreviews = split('[=;]', $hasreviews);
+					/* we assign the value to var in the config array - reviews*/
+					$hasreviews = $hasreviews[1];
+					$c["config"]["hasreviews"] = ($hasreviews === 'true');
 				}
-				
 				/* the same as review but for the availability calendar */
-				if(
-					is_string( $sitesettings[ "propdetail-availcal" ] ) &&
-					strlen( $sitesettings[ "propdetail-availcal" ] )
-				) {
-					foreach( explode( ';', $sitesettings[ "propdetail-availcal" ] ) as $setting ) {
-						if(
-							is_array( $tmp = explode( '=', $setting ) ) ||
-							2 === count( $tmp )
-						) {
-							if( 'BAPI.config().displayavailcalendar' === trim( $tmp[0] ) ) {
-								$c["config"]["displayavailcalendar"] = ( trim( $tmp[1] ) === 'true' );
-							}
-							elseif( 'BAPI.config().availcalendarmonths' === trim( $tmp[0] ) ) {
-								$c["config"]["availcalendarmonths"] = intval( trim( $tmp[1] ) );
-							}
-						}
-					}
+				$displayavailcalendar = $sitesettings["propdetail-availcal"];
+				if (!empty($displayavailcalendar)){
+					$displayavailcalendar = split('[=;]', $displayavailcalendar);
+					$availcalendarmonths = (int) $displayavailcalendar[3];
+					$displayavailcalendar = $displayavailcalendar[1];
+					$c["config"]["displayavailcalendar"] = ($displayavailcalendar === 'true');
+					$c["config"]["availcalendarmonths"] =  $availcalendarmonths;
 				}
-				
 				/* the same as review but for the rates and availability tab */
-				if(
-					is_string( $sitesettings[ "propdetailrateavailtab" ] ) &&
-					strlen( $sitesettings[ "propdetailrateavailtab" ] )
-				) {
-					$c["config"]["hideratesandavailabilitytab"] = ( strpos( $sitesettings[ "propdetailrateavailtab" ], 'true' ) !== false );
+				$hiderateavailtab = $sitesettings["propdetailrateavailtab"];
+				if (!empty($hiderateavailtab)){
+					$hiderateavailtab = split('[=;]', $hiderateavailtab);
+					/* we assign the value to var in the config array */
+					$hiderateavailtab = $hiderateavailtab[1];
+					$c["config"]["hideratesandavailabilitytab"] = ($hiderateavailtab === 'true');
 				}
-				
 				/* the same as review but for star reviews */
-				if(
-					is_string( $sitesettings[ "averagestarsreviews" ] ) &&
-					strlen( $sitesettings[ "averagestarsreviews" ] )
-				) {
-					$c["config"]["hidestarsreviews"] = ( strpos( $sitesettings[ "averagestarsreviews" ], 'true' ) !== false );
+				$hidestarsreviews = $sitesettings["averagestarsreviews"];
+				if (!empty($hidestarsreviews)){
+					$hidestarsreviews = split('[=;]', $hidestarsreviews);
+					/* we assign the value to var in the config array */
+					$hidestarsreviews = $hidestarsreviews[1];
+					$c["config"]["hidestarsreviews"] = ($hidestarsreviews === 'true');
 				}
-				
 				/* the same as review but for the rates table */
-				if(
-					is_string( $sitesettings[ "propdetailratestable" ] ) &&
-					strlen( $sitesettings[ "propdetailratestable" ] )
-				) {
-					$c["config"]["hideratestable"] = ( strpos( $sitesettings[ "propdetailratestable" ], 'true' ) !== false );
+				$hideratestable = $sitesettings["propdetailratestable"];
+				if (!empty($hideratestable)){
+					$hideratestable = split('[=;]', $hideratestable);
+					/* we assign the value to var in the config array */
+					$hideratestable = $hideratestable[1];
+					$c["config"]["hideratestable"] = ($hideratestable === 'true');
 				}
 			}
 			
-			// Load bapisync singleton 
+			$c["textdata"] = BAPISync::getTextData();
+			
+			// Load bapisync 
 			global $bapisync;
 			if( is_a( $bapisync, 'BAPISync' ) ) {
 				$bapisync = new BAPISync();
 				$bapisync->init();
 			}
 			
-			$c["textdata"] = BAPISync::getTextData();
+
 			$m = new Mustache_Engine( array( 'partials_loader' => new Kigo_Mustache_Loader_By_Name( $bapisync->get_templates() ) ) );
 			return str_replace( array( "\t", "\n", "\r" ), '', $m->render( $bapisync->getMustacheTemplateByEntity( $entity ), $c ) );
 		}
