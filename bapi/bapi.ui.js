@@ -69,7 +69,6 @@ context.init = function(options) {
 	context.inithelpers.setupprintlisteners(options);
 	context.inithelpers.setupbapitracker(options);			
 	context.inithelpers.loadRatingStars(options);
-	context.inithelpers.setupMapSettings(options);
 
 	// ensure that searchmodes exists
 	if (BAPI.isempty(BAPI.config().searchmodes)) { BAPI.config().searchmodes = {} };
@@ -494,51 +493,26 @@ context.inithelpers = {
     
 		});	
 	},
-	setupMapSettings: function(options) {
-		/* Only process on property and search setting page */
-		if( $('#map-settings-select').length > 0 ) {
-			context.inithelpers.loadgooglemaps('BAPI.UI.createMapTypeConfigDropdown');
-		}
-	},
 	setupmapwidgets: function(options) {
-		if ($('.bapi-map').length>0) {
-			context.inithelpers.loadgooglemaps('BAPI.UI.setupmapwidgetshelper');
-		}
-	},
-	loadgooglemaps: function( jsonp_callback_name ) {
-		if(
-			0 === $('#google-map-script').length &&
-			(
-				!$.isPlainObject( window.google ) ||
-				!$.isPlainObject( window.google.maps )
-			)
-		) {
-			BAPI.log("loading google maps.");
-			var script = document.createElement("script");
-			script.type = "text/javascript";
-			script.id = "google-map-script";
-			script.src = "//maps.google.com/maps/api/js?sensor=false&callback=" + jsonp_callback_name;
-			document.body.appendChild(script);
-		}
-		else {
-			BAPI.log("google maps already loaded.");
-			var callbackFunction = window;
-			$.each(
-				jsonp_callback_name.split('.'),
-				function( key, value ) {
-					if( 'undefined' === $.type( callbackFunction[ value ] ) ) {
-						return false;
-					}
-					callbackFunction = callbackFunction[ value ];
-				}
-			);
-			
-			if( 'function' !== $.type(callbackFunction) ) {
-				BAPI.log( "The callback invoked is not a function: " + callbackFunction );
-				return;
+		if( $('.bapi-map').length > 0 ) {
+			if(
+				0 === $('#google-map-script').length &&
+				(
+					!$.isPlainObject( window.google ) ||
+					!$.isPlainObject( window.google.maps )
+				)
+			) {
+				BAPI.log("loading google maps.");
+				var script = document.createElement("script");
+				script.type = "text/javascript";
+				script.id = "google-map-script";
+				script.src = "//maps.google.com/maps/api/js?sensor=false&callback=BAPI.UI.setupmapwidgetshelper";
+				document.body.appendChild(script);
 			}
-			
-			callbackFunction(); 
+			else {
+				BAPI.log("google maps already loaded.");
+				BAPI.UI.setupmapwidgetshelper();
+			}
 		}
 	},
 	applymovemes: function(options) {
@@ -726,33 +700,6 @@ context.setupmapwidgetshelper = function() {
 			});
 		}
 	});	
-}
-	
-context.createMapTypeConfigDropdown = function() {
-	
-	if(
-		!$.isPlainObject( window.google ) ||
-		!$.isPlainObject( window.google.maps ) ||
-		!$.isPlainObject( window.google.maps.MapTypeId )
-	) {
-		return;
-	}
-	
-	/* On first run after plugin updates, BAPI.config().mapviewType is not going to be defined. This allows to default select roadmap type  */
-	if( 'string' !== $.type( BAPI.config().mapviewType ) ) {
-		BAPI.config().mapviewType = window.google.maps.MapTypeId.ROADMAP;
-	}
-	
-	$.each(
-		google.maps.MapTypeId,
-		function( key, value ) {
-			$('#map-settings-select').append( 
-				'<option ' + ( ( key === BAPI.config().mapviewType ) ? 'selected ' : '' ) + 'value="BAPI.config().mapviewType=\'' + key + '\';">' +
-					value +
-				'</option>'
-			);
-		}
-	);
 }
 	
 
