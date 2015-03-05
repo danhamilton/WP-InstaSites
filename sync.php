@@ -15,9 +15,10 @@
 			$this->textdata = BAPISync::getTextData();
 			$this->seodata = BAPISync::getSEOData();			
 		}
-		public function loadtemplates() { if (empty($this->templates)) { $this->templates = BAPISync::getTemplates(); } }
 		public function get_templates() {
-			$this->loadtemplates();
+			if (empty($this->templates)) {
+				$this->templates = BAPISync::getTemplates();
+			}
 			return $this->templates;
 		}
 		
@@ -108,8 +109,7 @@
 			return '/rentals/';
 		}
 		
-		public function getMustacheTemplateByEntity($entity) {
-			$mustache_loader = new Kigo_Mustache_Loader_By_Name( $this->get_templates() );
+		public function getMustacheTemplateByEntity($entity, $mustache_loader) {
 			switch( $entity ) {
 				case "property":
 					return $mustache_loader->load( "tmpl-properties-detail" );
@@ -236,10 +236,10 @@
 				$bapisync = new BAPISync();
 				$bapisync->init();
 			}
-			
 
-			$m = new Mustache_Engine( array( 'partials_loader' => new Kigo_Mustache_Loader_By_Name( $bapisync->get_templates() ) ) );
-			return str_replace( array( "\t", "\n", "\r" ), '', $m->render( $bapisync->getMustacheTemplateByEntity( $entity ), $c ) );
+			$mustache_loader = new Kigo_Mustache_Loader_By_Name( $bapisync->get_templates() );
+			$m = new Mustache_Engine( array( 'partials_loader' => $mustache_loader ) );
+			return str_replace( array( "\t", "\n", "\r" ), '', $m->render( $bapisync->getMustacheTemplateByEntity( $entity, $mustache_loader ), $c ) );
 		}
 
 		/**

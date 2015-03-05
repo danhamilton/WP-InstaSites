@@ -2401,7 +2401,7 @@ function doSearchRender(targetid, ids, entity, options, data, alldata, callback)
 	data.result = applyMyList(alldata,entity);
 	data.totalcount = ids.length;
 	data.isfirstpage = (options.searchoptions.page == 1);
-	data.islastpage = (options.searchoptions.page*options.searchoptions.pagesize) > data.totalcount;		
+	data.islastpage = (options.searchoptions.page*options.searchoptions.pagesize) >= data.totalcount;
 	data.curpage = options.searchoptions.page - 1;
 	data.config = BAPI.config(); 						
 	data.session = BAPI.session.searchparams;
