@@ -311,7 +311,7 @@
 			if ($url == "/bapi.combined.min.js") {	
 				header('Content-Type: application/javascript');	
 				header('Cache-Control: public');
-				$js = urlHandler_bapi_js_combined_helper();
+				$js = urlHandler_bapi_js_combined_helper(); echo $js; exit;
 				$jsh = md5($js);
 				if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 					$cacheFile = sys_get_temp_dir().'\\'.$jsh.'.js';
