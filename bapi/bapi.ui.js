@@ -1783,16 +1783,18 @@ function bookingHelper_get_description() {
  * @param data
  * @returns data
  */
-function has_local_currency( data ) {
+function calculate_has_local_currency( data ) {
 	if(
+		$.isPlainObject( data ) &&
+		$.isArray( data.result ) &&
 		$.isPlainObject( data.result[0] ) &&
 		$.isPlainObject( data.result[0].ContextData ) &&
 		$.isPlainObject( data.result[0].ContextData.Quote ) &&
-		$.isPlainObject( data.result[0].ContextData.Quote.Statement )
+		$.isPlainObject( data.result[0].ContextData.Quote.Statement ) &&
+		$.isPlainObject( data.result[0].ContextData.Quote.Statement.TotalDue )
 	) {
 		data.result[0].ContextData.Quote.Statement.HasLocalCurrency = ( data.result[0].ContextData.Quote.Statement.TotalDue.Currency !== data.result[0].ContextData.Quote.Statement.TotalDue.LocalCurrency );
 	}
-	return data;
 }
 
 function bookingHelper_FullLoad(targetid,options,propid) {
@@ -1807,7 +1809,7 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 		$(targetid).html(Mustache.render(options.mastertemplate, data));
 		$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, data));
 		/* we render the statements mustache */
-		data = has_local_currency( data );
+		calculate_has_local_currency( data );
 		$(options.targetids.statement).html(Mustache.render(options.templates.statement, data));
 		$(options.targetids.renter).html(Mustache.render(options.templates.renter, data));
 		$(options.targetids.creditcard).html(Mustache.render(options.templates.creditcard, data));
@@ -1820,7 +1822,7 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 		BAPI.curentity = data.result[0];
 		curbooking = data.result[0].ContextData.Quote;
 		if (!data.result[0].ContextData.Quote.IsValid) { try { $('#revisedates').modal('show'); } catch(err) {} }
-		
+
 		function partialRender(sdata, options) {			
 			$(".modal").modal('hide');			
 			sdata.site = BAPI.site;
@@ -1828,7 +1830,7 @@ function bookingHelper_FullLoad(targetid,options,propid) {
 			sdata.textdata = BAPI.textdata;	
 			sdata.session = BAPI.session;	
 			/* we render the statements mustache */
-			sdata = has_local_currency( sdata );
+			calculate_has_local_currency( sdata );
 			$(options.targetids.statement).html(Mustache.render(options.templates.statement, sdata));
 			$(options.targetids.stayinfo).html(Mustache.render(options.templates.stayinfo, sdata));
 			$(options.targetids.accept).html(Mustache.render(options.templates.accept, sdata));			
