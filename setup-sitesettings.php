@@ -71,6 +71,12 @@ else{
 	</td>	
 </tr>
 <tr valign="top">
+	<td scope="row">Google Default Map View:</td>
+	<td>
+		<select id="map-settings-select" name="mapviewType"></select>
+	</td>
+</tr>
+<tr valign="top">
  <td scope="row">Avg Review Stars:</td>
  <td><input class="averagestarsreviews-cbx" type="checkbox" checked="" />
  <input type="hidden" id="averagestarsreviews" name="averagestarsreviews" data-prevalue="BAPI.config().hidestarsreviews=" value="" />
@@ -472,6 +478,24 @@ else{
 ?>
 
 jQuery(document).ready(function () {
+
+	/* On first run after plugin updates, BAPI.config().mapviewType is not going to be defined. This allows to default select roadmap type  */
+	if( 'string' !== $.type( BAPI.config().mapviewType ) ) {
+		BAPI.config().mapviewType = 'ROADMAP';
+	}
+
+	var mapOptions = {ROADMAP: "Roadmap", SATELLITE: "Satellite", HYBRID: "Hybrid", TERRAIN: "Terrain"};
+	$.each(
+		mapOptions,
+		function( key, value ) {
+			$('#map-settings-select').append(
+				'<option ' + ( ( key === BAPI.config().mapviewType ) ? 'selected ' : '' ) + 'value="BAPI.config().mapviewType=\'' + key + '\';">' +
+					value +
+				'</option>'
+			);
+		}
+	);
+
 /* we are not showing this yet */
 settings["roomsearch"] = "BAPI.config().rooms.enabled=false;";
 

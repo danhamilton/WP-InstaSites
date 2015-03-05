@@ -523,19 +523,24 @@ context.inithelpers = {
 		});	
 	},
 	setupmapwidgets: function(options) {
-		if ($('.bapi-map').length>0) {
-			try {
-				if (!BAPI.isempty(google)) { 
-					BAPI.log("google maps already loaded.");
-					BAPI.UI.setupmapwidgetshelper(); 
-				} 
-			} catch(err) {			
+		if( $('.bapi-map').length > 0 ) {
+			if(
+				0 === $('#google-map-script').length &&
+				(
+					!$.isPlainObject( window.google ) ||
+					!$.isPlainObject( window.google.maps )
+				)
+			) {
 				BAPI.log("loading google maps.");
-				BAPI.log(err);
 				var script = document.createElement("script");
 				script.type = "text/javascript";
+				script.id = "google-map-script";
 				script.src = "//maps.google.com/maps/api/js?sensor=false&callback=BAPI.UI.setupmapwidgetshelper";
 				document.body.appendChild(script);
+			}
+			else {
+				BAPI.log("google maps already loaded.");
+				BAPI.UI.setupmapwidgetshelper();
 			}
 		}
 	},
@@ -735,6 +740,13 @@ context.setupmapwidgetshelper = function() {
 			jMapping_params.info_window_max_width = infowindowmaxwidth;
 		}
 		
+		if(
+			'string' === $.type( BAPI.config().mapviewType ) &&
+			'string' === $.type( mapTypeValue = google.maps.MapTypeId[ BAPI.config().mapviewType ] )
+		) {
+			jMapping_params.map_config.mapTypeId = mapTypeValue;
+		}
+
 		ctl.jMapping( jMapping_params );
 		
 		if (typeof(lsel)!=="undefined" && lsel!==null && lsel!='') {
