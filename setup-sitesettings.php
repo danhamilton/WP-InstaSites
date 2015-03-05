@@ -187,24 +187,9 @@ else{
 </tr>
 <tr valign="top">
 	<td scope="row">Max Bedrooms In List:</td>
-	<td><select name="maxbedsearch" id="maxbedsearch">
-		<option value="BAPI.config().beds.values=BAPI.config().beds.values.splice(0,1);">1</option>
-		<option value="BAPI.config().beds.values=BAPI.config().beds.values.splice(0,2);">2</option>
-		<option value="BAPI.config().beds.values=BAPI.config().beds.values.splice(0,3);">3</option>
-		<option value="BAPI.config().beds.values=BAPI.config().beds.values.splice(0,4);">4</option>
-		<option value="BAPI.config().beds.values=BAPI.config().beds.values.splice(0,5);">5</option>
-		<option value="BAPI.config().beds.values=BAPI.config().beds.values.splice(0,6);">6</option>
-		<option value="BAPI.config().beds.values=BAPI.config().beds.values.splice(0,7);">7</option>
-		<option value="BAPI.config().beds.values=BAPI.config().beds.values.splice(0,8);">8</option>
-		<option value="BAPI.config().beds.values=BAPI.config().beds.values.splice(0,9);">9</option>
-		<option value="BAPI.config().beds.values=BAPI.config().beds.values.splice(0,10);">10</option>
-		<option value="BAPI.config().beds.values=BAPI.config().beds.values.splice(0,11);">11</option>
-		<option value="BAPI.config().beds.values=BAPI.config().beds.values.splice(0,12);">12</option>
-		<option value="BAPI.config().beds.values=BAPI.config().beds.values.splice(0,13);">13</option>
-		<option value="BAPI.config().beds.values=BAPI.config().beds.values.splice(0,14);">14</option>
-		<option value="BAPI.config().beds.values=BAPI.config().beds.values.splice(0,15);">15</option>
-	    </select>
-	</td>	
+	<td>
+		<select name="maxbedsearch" id="maxbedsearch"></select>
+	</td>
 </tr>
 <tr valign="top">
 	<td scope="row">Amenity Search:</td>
@@ -390,7 +375,7 @@ else{
 	$categorysearch = ($bapiSolutionDataConfig["category"]["enabled"]) ? 'true' : 'false';
 	$sleepexactlysearch = ($bapiSolutionDataConfig["sleeps"]["enabled"]) ? 'true' : 'false';
 	$bedexactlysearch = ($bapiSolutionDataConfig["beds"]["enabled"]) ? 'true' : 'false';
-	$maxbedsearch = $bapiSolutionDataConfig["beds"]["maxval"];
+	$maxbedsearch = +$bapiSolutionDataConfig["beds"]["maxval"];
 	$roomsearch = ($bapiSolutionDataConfig["rooms"]["enabled"]) ? 'true' : 'false';
 	$city = ($bapiSolutionDataConfig["city"]["enabled"]) ? 'true' : 'false';
 	$location = ($bapiSolutionDataConfig["location"]["enabled"]) ? 'true' : 'false';
@@ -498,6 +483,13 @@ jQuery(document).ready(function () {
 
 /* we are not showing this yet */
 settings["roomsearch"] = "BAPI.config().rooms.enabled=false;";
+
+	for(var i = 0; i <= +BAPI.config().beds.maxval; i++) {
+		$('#maxbedsearch').append(
+			'<option value="BAPI.config().beds.values=BAPI.config().beds.values.splice(0,' + (i+1) +
+						 ');BAPI.config().beds.minvalues=BAPI.config().beds.minvalues.splice(0,' + (i+1) + ');">' + i + '</option>'
+		);
+	}
 
 /* there can be only 1 bedroom setting */
 $('.bedsearch-cbx').change(function(){
