@@ -374,8 +374,7 @@
 {{/result}}
 </div>
 <div class="clearfix"></div>
-{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalitemsleft}})</a></span></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
+{{> partial-more-results}}
 </script>
 
 <script id="tmpl-propertysearch-listview" type="text/html">
@@ -447,8 +446,13 @@
 {{/result}}
 </div>
 <div class="clearfix"></div>
-{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalitemsleft}})</a></span></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
+
+{{> partial-more-results}}
+</script>
+
+<script id="partial-more-results" type="text/html">
+	{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalitemsleft}})</a></span></div>{{/islastpage}}
+	{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
 </script>
 
 <script id="tmpl-propertysearch-widephotoview" type="text/html">
@@ -490,8 +494,7 @@
 {{/result}}
 </div>
 <div class="clearfix"></div>
-{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalitemsleft}})</a></span></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
+{{> partial-more-results}}
 </script>
 
 <script id="tmpl-allpropertiespage" type="text/html">
@@ -541,8 +544,7 @@
 {{/result}}
 </div>
 <div class="clearfix"></div>
-{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalitemsleft}})</a></span></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
+{{> partial-more-results}}
 </script>
 
 <script id="tmpl-allproperties" type="text/html">
@@ -592,8 +594,7 @@
 </tbody>
 </table>
 <div class="clearfix"></div>
-{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalitemsleft}})</a></span></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
+{{> partial-more-results}}
 </script>
 
 <script id="tmpl-properties-ratetable" type="text/html">
@@ -901,18 +902,18 @@
 			</div>
 			<div class="span10">
 				<h5 class="title">{{Title}}</h5>
-				<div class="rating"><span class="reviewrating-{{Rating}}"></span> <span>Posted on: {{SubmittedOn.ShortDate}}</span></div>
+				<div class="rating"><span class="reviewrating-{{Rating}}"></span> <span>{{textdata.Posted on}}: {{SubmittedOn.ShortDate}}</span></div>
 				<div class="comment">
 				{{&Comment}}
 				</div>
 				{{#Response}}
 				<div class="response-block">
-				<h5 class="response-title">Response</h5>
+				<h5 class="response-title">{{textdata.Response}}</h5>
 				<div class="response">{{&Response}}</div>
 				</div>
 				{{/Response}}
 				{{#ExternalLink}}				
-				<a class="full-rev-link" href="{{ExternalLink}}" target="_blank">See full review on Flipkey</a>
+				<a class="full-rev-link" href="{{ExternalLink}}" target="_blank">{{textdata.See full review on}} Flipkey</a>
 				{{/ExternalLink}}
 			</div>
 		</div>
@@ -1045,8 +1046,7 @@
 {{/result}}
 </div>
 <div class="clearfix"></div>
-{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalitemsleft}})</a></span></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
+{{> partial-more-results}}
 </script>
 
 <script id="tmpl-developments-detail" type="text/html">
@@ -1195,8 +1195,7 @@
 {{/result}}
 </div>
 <div class="clearfix"></div>
-{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalitemsleft}})</a></span></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
+{{> partial-more-results}}
 </script>
 
 <script id="tmpl-marketarea-detail" type="text/html">
@@ -1291,10 +1290,10 @@
 <div class="span6 form-horizontal">
 	<div class="control-group control-group-attraction">
 			{{#config.haspoitypefilter.enabled}}
-			<label class="control-label" for="poitypefilter-dpd">Filter by:</label>
+			<label class="control-label" for="poitypefilter-dpd">{{textdata.Filter by}}:</label>
 			<div class="controls">
 			<select id="poitypefilter-dpd">
-				<option value="">- Select -</option>
+				<option value="">- {{textdata.Select}} -</option>
 				{{#config.haspoitypefilter.values}}
 				<option value="{{ID}}">{{Name}}</option>
 				{{/config.haspoitypefilter.values}}
@@ -1364,8 +1363,7 @@
 {{/site.office.ShowOnMap}}
 </div>
 <div class="clearfix"></div>
-{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalitemsleft}})</a></span></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
+{{> partial-more-results}}
 </script>
 
 <script id="tmpl-attractions-detail" type="text/html">
@@ -1538,8 +1536,7 @@
 </div>
 {{/result}}
 <div class="clearfix"></div>
-{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalitemsleft}})</a></span></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
+{{> partial-more-results}}
 </script>
 
 <script id="tmpl-specials-detail" type="text/html">
@@ -1671,8 +1668,7 @@
 </div>
 {{/result}}  
 <div class="clearfix"></div>
-{{^islastpage}}<div class="showmore"><a href='javascript:void(0)'><span class="span12 alert alert-info">{{textdata.Show More Results}} ({{totalitemsleft}})</a></span></div>{{/islastpage}}
-{{#islastpage}}<div class="nomore"><a href='javascript:void(0)'><span class="span12 alert alert-warn">{{textdata.There are no more results}}</a></span></div>{{/islastpage}}
+{{> partial-more-results}}
 </script>
 
 <script id="tmpl-searches-detail" type="text/html">
@@ -1917,16 +1913,16 @@
 <div id="charges" class="item row-fluid">
 <h5>{{textdata.Charges}} <small class="charges-detail"><a href="#statement-details" data-toggle="modal">({{textdata.Details}})</a></small></h5>
 <p>
-	{{textdata.Rent}}<span class="pull-right">{{ServicesTotal.CurrencySymbol}}{{ServicesTotal.SValue2}}</span>
+	{{textdata.Rent}}<span class="pull-right">{{ServicesTotal.LocalCurrencySymbol}}{{ServicesTotal.LocalSValue2}}</span>
 	<span class="glyphicons circle_question_mark" style="display:none"><a><i></i></a></span>
 </p>
 <p>
-	{{textdata.Taxes & Fees}}<span class="pull-right">{{TaxesAndFeesTotal.CurrencySymbol}}{{TaxesAndFeesTotal.SValue2}}</span>
+	{{textdata.Taxes & Fees}}<span class="pull-right">{{TaxesAndFeesTotal.LocalCurrencySymbol}}{{TaxesAndFeesTotal.LocalSValue2}}</span>
 	<span class="glyphicons circle_question_mark" style="display:none"><a><i></i></a></span>
 </p>
 {{#DepositsTotal.Value}}
 <p>
-	{{textdata.Refundable Security Deposit}}<span class="pull-right">{{DepositsTotal.CurrencySymbol}}{{DepositsTotal.SValue2}}</span>
+	{{textdata.Refundable Security Deposit}}<span class="pull-right">{{DepositsTotal.LocalCurrencySymbol}}{{DepositsTotal.LocalSValue2}}</span>
 	<span class="glyphicons circle_question_mark" style="display:none"><a><i></i></a></span>
 </p>
 {{/DepositsTotal.Value}}
@@ -1940,33 +1936,36 @@
 	{{#BoolField}}<input type="checkbox" class="bapi-optionalfee" {{#Quantity}}checked{{/Quantity}} data-rid="{{RelatedToID}}" data-reid="{{RelatedToEntityID}}" />{{/BoolField}}
 	{{^BoolField}}<input type="number" class="span2 bapi-optionalfee" {{#MinQty}}min="{{MinQty}}"{{/MinQty}}{{^MinQty}}min="0"{{/MinQty}} max="{{MaxQty}}" value="{{Quantity}}" data-rid="{{RelatedToID}}" data-reid="{{RelatedToEntityID}}" />{{/BoolField}}
 	{{{Notes}}}
-	<span class="pull-right">{{#SubTotal}}{{OptionalFeesTotal.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span>
+	<span class="pull-right">{{#SubTotal}}{{OptionalFeesTotal.LocalCurrencySymbol}}{{SubTotal2.LocalSValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span>
 	</p>
 {{/OptionalFees}}
 {{#OptionalFees.length}}
 </div>
 {{/OptionalFees.length}}
-{{#Discounts.length}}
-<div id="discount" class="item row-fluid">
+
 <hr />
-{{/Discounts.length}}
-{{#Discounts}}
-<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{DiscountsTotal.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
-{{/Discounts}}
-{{#Discounts.length}}
+<div id="discount" class="item row-fluid">
+	<h5>{{textdata.Discounts}}</h5>
+	{{#Discounts}}
+	<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{DiscountsTotal.LocalCurrencySymbol}}{{SubTotal2.LocalSValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
+	{{/Discounts}}
+	<label>
+		<input type="text" placeholder="{{textdata.Coupon Code}}" class="span6 revisedates" value="{{session.searchparams.coupon}}" data-field="Coupon" />
+		<small><a href="javascript:void(0)" class="bapi-applyspecial">{{textdata.Apply}}</a></small>
+		<span class="pull-right">----</span>
+	</label>
 </div>
-{{/Discounts.length}}
-<label>
-	<input type="text" placeholder="{{textdata.Coupon Code}}" class="span6 revisedates" value="{{session.searchparams.coupon}}" data-field="Coupon" />
-	<small><a href"javascript:void(0)" class="bapi-applyspecial">{{textdata.Apply}}</a></small>
-	<span class="pull-right">----</span>
-</label>
 </div>
 <div id="msgs" class="item row-fluid">
 	<div class="msg-yellow">
-	  <p><i class="halflings-icon star"></i> <strong>{{textdata.Total}}</strong><span class="pull-right"><strong>{{TotalDueNow.CurrencySymbol}} {{Total}}</strong></span></p>
-	  {{#DiscountsTotal.Value}}<p><strong>You saved<span class="pull-right">{{DiscountsTotal.CurrencySymbol}}{{DiscountsTotal.SValue2}}</span></strong></p>{{/DiscountsTotal.Value}}
-	  <p><strong>{{textdata.Amount Due Now}}:</strong><span class="pull-right">{{TotalDueNow.CurrencySymbol}} {{TotalDueNow.SValue2}}</span></p>	  
+		<p><strong>{{textdata.Total}}<span class="pull-right">{{TotalDue.LocalCurrencySymbol}} {{TotalDue.LocalSValue2}}</span></strong></p>
+		<p><strong>{{textdata.Amount Due Now}}<span class="pull-right">{{TotalDueNow.LocalCurrencySymbol}} {{TotalDueNow.LocalSValue2}}</span></strong></p>
+		{{#HasLocalCurrency}}
+		<hr />
+		<p>{{textdata.You will pay in}} {{Currency}}</p>
+		<p><strong>{{textdata.Total}}<span class="pull-right">{{TotalDueNow.CurrencySymbol}} {{Total}}</span></strong></p>
+		<p><strong>{{textdata.Amount Due Now}}<span class="pull-right">{{TotalDueNow.CurrencySymbol}} {{TotalDueNow.SValue2}}</span></strong></p>
+		{{/HasLocalCurrency}}
 	</div>
 	{{#ContextData.Quote.PaymentTerms}}
 	<div class="msg-gray msg-center"><p class="text-center">{{&ContextData.Quote.PaymentTerms}}</p></div>
@@ -1991,20 +1990,20 @@
 {{#Services}}
 {{#config.statementsettings.lumpfees}}
 {{#config.statementsettings.lumptaxes}}
-<p>{{{Notes}}} <small>Incl. Fees & Taxes</small><span class="pull-right">{{#TaxesFeesAndServicesTotal}}{{TaxesFeesAndServicesTotal.CurrencySymbol}}{{TaxesFeesAndServicesTotal.SValue2}}{{/TaxesFeesAndServicesTotal}}{{^TaxesFeesAndServicesTotal}}--{{/TaxesFeesAndServicesTotal}}</span></p>
+<p>{{{Notes}}} <small>Incl. Fees & Taxes</small><span class="pull-right">{{#TaxesFeesAndServicesTotal}}{{TaxesFeesAndServicesTotal.LocalCurrencySymbol}}{{TaxesFeesAndServicesTotal.LocalSValue2}}{{/TaxesFeesAndServicesTotal}}{{^TaxesFeesAndServicesTotal}}--{{/TaxesFeesAndServicesTotal}}</span></p>
 {{/config.statementsettings.lumptaxes}}
 {{^config.statementsettings.lumptaxes}}
-<p>{{{Notes}}} <small>Incl. Fees</small><span class="pull-right">{{#FeesAndServicesTotal}}{{FeesAndServicesTotal.CurrencySymbol}}{{FeesAndServicesTotal.SValue2}}{{/FeesAndServicesTotal}}{{^FeesAndServicesTotal}}--{{/FeesAndServicesTotal}}</span></p>
+<p>{{{Notes}}} <small>Incl. Fees</small><span class="pull-right">{{#FeesAndServicesTotal}}{{FeesAndServicesTotal.LocalCurrencySymbol}}{{FeesAndServicesTotal.LocalSValue2}}{{/FeesAndServicesTotal}}{{^FeesAndServicesTotal}}--{{/FeesAndServicesTotal}}</span></p>
 {{/config.statementsettings.lumptaxes}}
 {{/config.statementsettings.lumpfees}}
 {{^config.statementsettings.lumpfees}}
 {{#config.statementsettings.lumptaxes}}
-<p>{{{Notes}}} <small>Incl. Taxes</small><span class="pull-right">{{#TaxesAndServicesTotal}}{{TaxesAndServicesTotal.CurrencySymbol}}{{TaxesAndServicesTotal.SValue2}}{{/TaxesAndServicesTotal}}{{^TaxesAndServicesTotal}}--{{/TaxesAndServicesTotal}}</span></p>
+<p>{{{Notes}}} <small>Incl. Taxes</small><span class="pull-right">{{#TaxesAndServicesTotal}}{{TaxesAndServicesTotal.LocalCurrencySymbol}}{{TaxesAndServicesTotal.LocalSValue2}}{{/TaxesAndServicesTotal}}{{^TaxesAndServicesTotal}}--{{/TaxesAndServicesTotal}}</span></p>
 {{/config.statementsettings.lumptaxes}}
 {{/config.statementsettings.lumpfees}}
 {{^config.statementsettings.lumpfees}}
 {{^config.statementsettings.lumptaxes}}
-<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
+<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.LocalCurrencySymbol}}{{SubTotal2.LocalSValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
 {{/config.statementsettings.lumptaxes}}
 {{/config.statementsettings.lumpfees}}
 {{/Services}}
@@ -2018,7 +2017,7 @@
 <h5>{{textdata.Fees}}</h5>
 {{/Fees.length}}
 {{#Fees}}
-<p>{{{Notes}}} <span class="glyphicons circle_question_mark"><a data-toggle="collapse" data-target="#description{{RelatedToID}}" class="load_desc" data-entity="fee" data-related-id="{{RelatedToID}}"><i></i></a></span><span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p><div id="description{{RelatedToID}}" class="collapse charges-description">{{{Description}}}</div>
+<p>{{{Notes}}} <span class="glyphicons circle_question_mark"><a data-toggle="collapse" data-target="#description{{RelatedToID}}" class="load_desc" data-entity="fee" data-related-id="{{RelatedToID}}"><i></i></a></span><span class="pull-right">{{#SubTotal}}{{SubTotal2.LocalCurrencySymbol}}{{SubTotal2.LocalSValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p><div id="description{{RelatedToID}}" class="collapse charges-description">{{{Description}}}</div>
 {{/Fees}}
 {{#Fees.length}}
 </div>
@@ -2031,7 +2030,7 @@
 <h5>{{textdata.Taxes}}</h5>
 {{/Taxes.length}}
 {{#Taxes}}
-<p>{{{Notes}}} <span class="glyphicons circle_question_mark"><a data-toggle="collapse" data-target="#description{{RelatedToID}}" class="load_desc" data-entity="tax" data-related-id="{{RelatedToID}}"><i></i></a></span><span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p><div id="description{{RelatedToID}}" class="collapse charges-description">{{{Description}}}</div>
+<p>{{{Notes}}} <span class="glyphicons circle_question_mark"><a data-toggle="collapse" data-target="#description{{RelatedToID}}" class="load_desc" data-entity="tax" data-related-id="{{RelatedToID}}"><i></i></a></span><span class="pull-right">{{#SubTotal}}{{SubTotal2.LocalCurrencySymbol}}{{SubTotal2.LocalSValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p><div id="description{{RelatedToID}}" class="collapse charges-description">{{{Description}}}</div>
 {{/Taxes}}
 {{#Taxes.length}}
 </div>
@@ -2043,7 +2042,7 @@
 <h5>{{textdata.Optional Fees & Services}}</h5>
 {{/OptionalFees.length}}
 {{#OptionalFees}}
-<p>{{{Notes}}} <span class="glyphicons circle_question_mark"><a data-toggle="collapse" data-target="#description{{RelatedToID}}" class="load_desc" data-entity="fee" data-related-id="{{RelatedToID}}"><i></i></a></span><span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p><div id="description{{RelatedToID}}" class="collapse charges-description">{{{Description}}}</div>
+<p>{{{Notes}}} <span class="glyphicons circle_question_mark"><a data-toggle="collapse" data-target="#description{{RelatedToID}}" class="load_desc" data-entity="fee" data-related-id="{{RelatedToID}}"><i></i></a></span><span class="pull-right">{{#SubTotal}}{{SubTotal2.LocalCurrencySymbol}}{{SubTotal2.LocalSValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p><div id="description{{RelatedToID}}" class="collapse charges-description">{{{Description}}}</div>
 {{/OptionalFees}}
 {{#OptionalFees.length}}
 </div>
@@ -2054,7 +2053,7 @@
 <h5>{{textdata.Discounts}}</h5>
 {{/Discounts.length}}
 {{#Discounts}}
-<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
+<p>{{{Notes}}}<span class="pull-right">{{#SubTotal}}{{SubTotal2.LocalCurrencySymbol}}{{SubTotal2.LocalSValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p>
 {{/Discounts}}
 {{#Discounts.length}}
 </div>
@@ -2065,7 +2064,7 @@
 <h5>{{textdata.Deposits}}</h5>
 {{/Deposits.length}}
 {{#Deposits}}
-<p>{{{Notes}}} <span class="glyphicons circle_question_mark"><a data-toggle="collapse" data-target="#description{{RelatedToID}}" class="load_desc" data-entity="fee" data-related-id="{{RelatedToID}}"><i></i></a></span><span class="pull-right">{{#SubTotal}}{{SubTotal2.CurrencySymbol}}{{SubTotal2.SValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p><div id="description{{RelatedToID}}" class="collapse charges-description">{{{Description}}}</div>
+<p>{{{Notes}}} <span class="glyphicons circle_question_mark"><a data-toggle="collapse" data-target="#description{{RelatedToID}}" class="load_desc" data-entity="fee" data-related-id="{{RelatedToID}}"><i></i></a></span><span class="pull-right">{{#SubTotal}}{{SubTotal2.LocalCurrencySymbol}}{{SubTotal2.LocalSValue2}}{{/SubTotal}}{{^SubTotal}}--{{/SubTotal}}</span></p><div id="description{{RelatedToID}}" class="collapse charges-description">{{{Description}}}</div>
 {{/Deposits}}
 {{#Deposits.length}}
 </div>
@@ -2284,8 +2283,8 @@
 <div class="row-fluid">
 <div class="verify-user text-center">
 <div class="span12">
-<h3>Make a Payment</h3>
-<p>Please verify this booking belongs to you</p>
+<h3>{{textdata.Make a Payment}}</h3>
+<p>{{textdata.Please verify this booking belongs to you}}</p>
 <div class="greybox">
 <div id="verifybookingid-block" class="control-group hide">
 	<div class="controls">
@@ -2580,7 +2579,7 @@
 	<div class="msg-yellow">
 	  <p><i class="halflings-icon star"></i> <strong>{{textdata.Total}}</strong><span class="pull-right"><strong>{{TotalDueNow.CurrencySymbol}} {{Total2.SValue2}}</strong></span></p>
 	  {{#DiscountsTotal.Value}}<p><strong>You saved<span class="pull-right">{{DiscountsTotal.CurrencySymbol}}{{DiscountsTotal.SValue2}}{{/DiscountsTotal.Value}}</strong></span></p>
-	    <p><strong>Amount Paid:</strong><span class="pull-right">{{AmountPaid.CurrencySymbol}} {{AmountPaid.SValue2}}</span></p>	
+	    <p><strong>{{textdata.Amount Paid}}:</strong><span class="pull-right">{{AmountPaid.CurrencySymbol}} {{AmountPaid.SValue2}}</span></p>	
 	<p><strong>{{textdata.Amount Due Now}}:</strong><span class="pull-right">{{AmountPaid.CurrencySymbol}} {{TotalDueNow.SValue2}}</span></p>	  
 	 </div>
 	{{#PaymentTerms}}
@@ -2692,7 +2691,7 @@
 	<div class="controls-rows">
 		<div class="btn-book-header span6">
 			<span class="line1">
-				<a href="javascript:void(0);" class="btn btn-large btn-primary span12 makepayment" data-field-selector="bookingfield">{{textdata.Pay Now}}Pay Now</a>
+				<a href="javascript:void(0);" class="btn btn-large btn-primary span12 makepayment" data-field-selector="bookingfield">{{textdata.Pay Now}}</a>
 			</span>
 		</div>
 		{{#result}}

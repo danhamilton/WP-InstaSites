@@ -312,6 +312,13 @@
 				header('Content-Type: application/javascript');	
 				header('Cache-Control: public');
 				$js = urlHandler_bapi_js_combined_helper();
+				if( // In debug mode, do not minify or use cache for the combined JS file
+					defined('KIGO_DEBUG') &&
+					true === KIGO_DEBUG
+				) {
+					echo $js;
+					exit();
+				}
 				$jsh = md5($js);
 				if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 					$cacheFile = sys_get_temp_dir().'\\'.$jsh.'.js';

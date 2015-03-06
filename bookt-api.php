@@ -32,6 +32,9 @@ if(
 	!is_multisite() ||
 	( ( $blog = get_blog_details() ) && $blog->deleted != '1' && $blog->archived != '1' ) // Only load the plugin if the blog is active on the site (network)
 ) {
+	require_once('mustache.php-2.1.0/src/Mustache/Autoloader.php');
+	Mustache_Autoloader::register();
+	require_once( dirname( __FILE__ ) . '/includes/class-kigo-mustache.php' );
 	include_once(dirname( __FILE__ ).'/timthumb-config.php');
 	include_once(dirname( __FILE__ ).'/functions.php');
 	include_once(dirname( __FILE__ ).'/admin.php');
@@ -122,8 +125,7 @@ if(
 
 	add_filter( 'login_headertitle', 'newapp_login_headertitle' ); // Filter to display the correct brand in title attribute of login page
 
-	require_once('mustache.php-2.1.0/src/Mustache/Autoloader.php');
-	Mustache_Autoloader::register();
+	
 	require_once('JShrink/Minifier.php');
 }
 ?>
