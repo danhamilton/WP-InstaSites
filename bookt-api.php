@@ -123,6 +123,7 @@ if(
 	add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Developments_Widget" );' ) );
 	add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_SiteSelector" );' ) );
 
+	add_filter( 'page_row_actions', 'kigo_disable_quick_edit', 10, 2 );
 	add_filter( 'login_headertitle', 'newapp_login_headertitle' ); // Filter to display the correct brand in title attribute of login page
 
 	
