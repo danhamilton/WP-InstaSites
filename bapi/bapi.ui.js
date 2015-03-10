@@ -772,7 +772,7 @@ context.createRateBlockWidget = function (targetid, options) {
 	BAPI.datamanager.get(BAPI.entities.property, cur.ID, function(p) {
 		$(targetid).unblock();
 		var data = {};
-		data.result = applyMyList([p],cur.entity);;
+		data.result = applyMyList([p],cur.entity);
 		data.site = BAPI.site;
 		data.config = BAPI.config();
 		data.textdata = BAPI.textdata;
@@ -1087,7 +1087,8 @@ context.createSummaryWidget = function (targetid, options, callback) {
 	var ids=[], alldata=[];
 	context.loading.show();	
 	
-	if (options.usemylist) {
+	// Case for the Wishlist page
+	if(options.usemylist) {
 		ids = [];
 		$.each(BAPI.session.mylist, function (index, item) {
 			ids.push(parseInt(item.ID));			
@@ -2472,6 +2473,14 @@ function doSearchRender(targetid, ids, entity, options, data, alldata, callback)
 	data.session = BAPI.session.searchparams;
 	data.textdata = options.textdata;
 	data.totalitemsleft = ids.length - data.result.length;
+
+	// The search is triggered by my list page
+	if( 1 === options.usemylist )
+	{
+		data.usemylist = (options.usemylist == 1); // we identify that the widget in question is a wishlist
+		data.mylist = BAPI.session.mylist; // contains the wishlist itself
+	}
+	
 	/* we need this only for the attractions page */
 	if(entity == 'poi'){
 		data.site = options.site;
