@@ -82,33 +82,6 @@ else{
 	jQuery(document).ready(function($){
 	
 		$("#tabs").tabs();  			
-		
-		var pagedefs = [
-			{ "title": "Home", "url": "", "intid": "bapi_home", "parent": "", "order": 1, "template": "page-templates/front-page.php", "content": '/default-content/home.php', "addtomenu": false },
-			{ "title": "Rentals", "url": "rentals", "intid": "bapi_rentals", "parent": "", "order": 2, "template": "page-templates/search-page.php", "content": '', "addtomenu": true },
-				{ "title": "Search", "url": "rentalsearch", "intid": "bapi_search", "parent": "rentals", "order": 1, "template": "page-templates/search-page.php", "content": '/default-content/rentalsearch.php', "addtomenu": true },
-				{ "title": "All Rentals", "url": "allrentals", "intid": "bapi_property_grid", "parent": "rentals", "order": 2, "template": "page-templates/full-width.php", "content": '/default-content/allrentals.php', "addtomenu": true },
-				{ "title": "Search Buckets", "url": "searchbuckets", "intid": "bapi_search_buckets", "parent": "rentals", "order": 3, "template": "page-templates/full-width.php", "content": '/default-content/propertyfinders.php', "addtomenu": true },				
-				{ "title": "Developments", "url": "developments", "intid": "bapi_developments", "parent": "rentals", "order": 4, "template": "page-templates/search-page.php", "content": '/default-content/developments.php', "addtomenu": true },
-				{ "title": "My List", "url": "mylist", "intid": "bapi_mylist", "parent": "rentals", "order": 5, "template": "page-templates/search-page.php", "content": '/default-content/mylist.php', "addtomenu": false },
-			{ "title": "Specials", "url": "specials", "intid": "bapi_specials", "parent": "", "order": 3, "template": "page-templates/full-width.php", "content": '/default-content/specials.php', "addtomenu": true },			
-			{ "title": "Attractions", "url": "attractions", "intid": "bapi_attractions", "parent": "", "order": 4, "template": "page-templates/full-width.php", "content": '/default-content/attractions.php', "addtomenu": true },
-			{ "title": "Company", "url": "company", "intid": "bapi_company", "parent": "", "order": 5, "template": "page-templates/full-width.php", "content": '', "addtomenu": true },
-				{ "title": "Services", "url": "services", "intid": "bapi_services", "parent": "company", "order": 1, "template": "page-templates/full-width.php", "content": '/default-content/services.php', "addtomenu": true },
-				{ "title": "About Us", "url": "aboutus", "intid": "bapi_about_us", "parent": "company", "order": 2, "template": "page-templates/full-width.php", "content": '/default-content/aboutus.php', "addtomenu": true },
-				{ "title": "Owner Information", "url": "companyowner", "intid": "bapi_company_owner", "parent": "company", "order": 3, "template": "page-templates/full-width.php", "content": '/default-content/infoforowners.php', "addtomenu": true },
-				{ "title": "Guest Information", "url": "companyguest", "intid": "bapi_company_guest", "parent": "company", "order": 4, "template": "page-templates/full-width.php", "content": '/default-content/infoforguests.php', "addtomenu": true },
-				{ "title": "Travel Insurance", "url": "travelinsurance", "intid": "bapi_travel_insurance", "parent": "company", "order": 5, "template": "page-templates/full-width.php", "content": '/default-content/travelinsurance.php', "addtomenu": true },	
-				{ "title": "Contact Us", "url": "contact", "intid": "bapi_contact", "parent": "company", "order": 6, "template": "page-templates/full-width.php", "content": '/default-content/contactus.php', "addtomenu": true },
-				{ "title": "Blog", "url": "blog", "intid": "bapi_blog", "parent": "company", "order": 7, "template": "", "content": '', "addtomenu": true },
-			{ "title": "Make Booking", "url": "makebooking", "intid": "bapi_makebooking", "parent": "", "order": 9, "template": "page-templates/full-width.php", "content": '/default-content/makebooking.php', "addtomenu": false },
-			{ "title": "Make a Payment", "url": "makepayment", "intid": "bapi_makepayment", "parent": "", "order": 10, "template": "page-templates/full-width.php", "content": '/default-content/makepayment.php', "addtomenu": false },
-			{ "title": "Booking Confirmation", "url": "bookingconfirmation", "intid": "bapi_booking_confirm", "parent": "", "order": 11, "template": "page-templates/full-width.php", "content": '/default-content/bookingconfirmation.php', "addtomenu": false },
-			{ "title": "Rental Policy", "url": "rentalpolicy", "intid": "bapi_rental_policy", "parent": "", "order": 12, "template": "page-templates/full-width.php", "content": '/default-content/rentalpolicy.php', "addtomenu": false },
-			{ "title": "Privacy Policy", "url": "privacypolicy", "intid": "bapi_privacy_policy", "parent": "", "order": 13, "template": "page-templates/full-width.php", "content": '/default-content/privacypolicy.php', "addtomenu": false },
-			{ "title": "Terms of Use", "url": "termsofuse", "intid": "bapi_tos", "parent": "", "order": 14, "template": "page-templates/full-width.php", "content": '/default-content/termsofuse.php', "addtomenu": false }
-		];
-		//$defpages[] = array("Title"=>"Owner Login", "URL"=>"/Owners", "IntID"=>"bapi_owners", "Parent"=>''); //TO be added to footer menu only
 
 		$(".setuppages").on("click", function () {			
 			if (confirm("Are you sure you want to setup the menu system")) {
@@ -116,7 +89,7 @@ else{
 				var txtresult = $('#dlg-txtresult');
 				txtresult.html('<h5>Setting up menu system</h5>');
 				var url = '/bapi.init?p=1';
-				BAPI.utils.dopost(url, { "pagedefs": pagedefs }, function(res) {
+				BAPI.utils.dopost(url, {}, function(res) {
 					txtresult.append(res);
 				});
 				/*

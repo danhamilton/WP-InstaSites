@@ -202,7 +202,8 @@ class BAPI
 			'blocking' => true,
 			'headers' => array('content-type'=>'application/x-www-form-urlencoded','User-Agent'=>'InstaSites Agent'),
 			'body' => $jsonObj,
-			'cookies' => array()
+			'cookies' => array(),
+			'sslverify' => !( defined( 'KIGO_DEBUG' ) && KIGO_DEBUG ) // in dev mode, allow self-signed certs
 		)
 		);
 		if( is_wp_error( $response ) ) {
