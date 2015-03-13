@@ -371,6 +371,22 @@
 		return str_replace($str,"",$url);	
 	}	
 	
+	/**
+	 * Retrieve the plugin folder URL.
+	 * 
+	 * * IMPORTANT: This function has to be in the root folder of the plugin in order to return the correct value. 
+	 * 
+	 * @param string $file_path		Optional. Extra path (relative to the plugin folder) appended to the end of the URL. Default empty string.
+	 *
+	 * @return string
+	 */
+	function get_kigo_plugin_url( $file_path = '' ) {
+		if( !is_string( $file_path ) ) {
+			return '';
+		}
+		return plugins_url( $file_path, __FILE__ );
+	}
+	
 	/* BAPI Helpers */	
 	function getbapiurl() {
 		global $bapi_all_options;
@@ -699,12 +715,20 @@
 			/* this is a super admin we do nothing */
 			return $return;
 	}
+
+	// This function is called by templates (this could be replaced by a shortcode allowing client to decide wheater or not to display SSL)
 	function getSSL(){
 		global $wp_query;
 		$postid = $wp_query->post->ID;
 		$thePostMeta = get_post_meta($postid, 'bapi_page_id', true);
-		$SSLscriptBlock = '<div id="SSLcontent"><script pin type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=135640565046fb4bc11011f1400b8da37ea394266002690762020641"></script></div>';
-		if($thePostMeta == 'bapi_makebooking'){echo $SSLscriptBlock;}
+
+		if(
+			'bapi_makepayment' === $thePostMeta ||
+			'bapi_makebooking' === $thePostMeta
+		) {
+			$ssl_config = new Kigo_Ssl_Config();
+			echo $ssl_config->get_ssl_seal();
+		}
 	}
 	
 	function bapi_setup_default_pages() {
