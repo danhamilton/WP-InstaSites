@@ -371,6 +371,22 @@
 		return str_replace($str,"",$url);	
 	}	
 	
+	/**
+	 * Retrieve the plugin folder URL.
+	 * 
+	 * * IMPORTANT: This function has to be in the root folder of the plugin in order to return the correct value. 
+	 * 
+	 * @param string $file_path		Optional. Extra path (relative to the plugin folder) appended to the end of the URL. Default empty string.
+	 *
+	 * @return string
+	 */
+	function get_kigo_plugin_url( $file_path = '' ) {
+		if( !is_string( $file_path ) ) {
+			return '';
+		}
+		return plugins_url( $file_path, __FILE__ );
+	}
+	
 	/* BAPI Helpers */	
 	function getbapiurl() {
 		global $bapi_all_options;
@@ -1050,7 +1066,9 @@ function bapi_register_dashboard_metabox() {
 /* Add the custom Instansite Metaboxes */	
 	global $wp_meta_boxes;	
 	  add_meta_box('bapi-gs', 'Getting Started', 'register_started_box', 'dashboard', 'normal', 'high');
-	  add_meta_box('bapi-instaapp', ( is_newapp_website() ? 'Kigo App Actions' : 'InstaApp Actions' ), 'register_instaapp_box', 'dashboard', 'side', 'high');
+	if( !is_newapp_website() ) {
+	  add_meta_box('bapi-instaapp', 'InstaApp Actions', 'register_instaapp_box', 'dashboard', 'side', 'high');
+	}
 	  add_meta_box('bapi-action', 'Advanced Actions', 'register_action_box', 'dashboard', 'normal', 'high');
 	  add_meta_box('bapi-tips', 'Tips', 'register_tips_box', 'dashboard', 'side', 'high');
 	  wp_enqueue_style( 'custom-dashboard', plugins_url('css/custom-dashboard.css', __FILE__) );
