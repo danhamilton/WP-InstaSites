@@ -674,28 +674,27 @@
 		echo $bapi_all_options['bapi_global_header'];
 	}
 	
-	function perm($return, $id, $new_title, $new_slug){
-		/* if the user is not super admin */
-		if (!is_super_admin()) {
-			/* if the post var is set this var show when editing post and pages like this /wp-admin/post.php?post=2468&action=edit */
-			if(isset($_GET['post']) && $_GET['post'] != ''){
-			/* its set we get the post ID */
-			$thePostID = $_GET['post'];
-			/* we get the meta data array for this post */
-			$metaArray = get_post_meta($thePostID);
-				/* we check if our custom fields exists */
-				if(!empty($metaArray) && array_key_exists('bapi_page_id', $metaArray) || array_key_exists('bapikey', $metaArray) || array_key_exists('bapi_last_update', $metaArray)){
-					/* this is not a super admin and the page is a BAPI page we remove the permalink edit button*/
-					$ret2 = preg_replace('/<span id="edit-slug-buttons">.*<\/span>/i', '', $return);
-					return $ret2;
-				}else{
-					/* this is a page created by the user , we do nothing */
-					return $return;
-				}
-			}
+	function perm($return) {
+		if (
+			!is_super_admin() &&
+			isset($_GET['post']) && strlen($_GET['post']) &&
+			is_array($metaArray = get_post_meta($_GET['post'])) &&
+			(
+				array_key_exists('bapi_page_id', $metaArray) ||
+				array_key_exists('bapikey', $metaArray) ||
+				array_key_exists('bapi_last_update', $metaArray)
+			)
+		) {
+			// the user is not super admin AND our custom fields exist (it's a BAPI page)
+			//     hence we remove the permalink editing possibilities
+			$return = preg_replace( '/<span id="edit-slug-buttons">(.*?)<\/span>/i', '', $return);
+			$return = preg_replace_callback(
+				'/<span id="editable-post-name([^"]*)">(.*?)<\/span>/i',
+				function($mtch) {
+					return ($mtch[1] === '-full') ? '' : $mtch[2];
+				}, $return);
 		}
-			/* this is a super admin we do nothing */
-			return $return;
+		return $return;
 	}
 	function getSSL(){
 		global $wp_query;
@@ -1370,6 +1369,17 @@ function myplugin_meta_box_callback( $metaId ) {
 	update_option( 'bapi_keywords_lastmod', 0 );
 	bapi_sync_coredata();
 }
+
+/* Since quick_edit_custom_box action hook is fired for **custom columns** only, we simply eliminate QuickEdit link here.
+ * http://phpxref.ftwr.co.uk/wordpress/nav.html?wp-admin/includes/list-table-posts.php.source.html#l972
+ */
+function kigo_disable_quick_edit( $actions ) {
+	if( !is_super_admin() ) {
+		unset( $actions['inline hide-if-no-js'] );
+	}
+	return $actions;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	add_action( 'wp_insert_post',  'save_seo_meta');
 }
