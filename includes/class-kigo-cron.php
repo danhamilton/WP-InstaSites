@@ -25,6 +25,7 @@ class Kigo_Network_Cron
 	const ACTION_CRON					= 'kigo_network_cron';
 	const ACTION_SITE_CRON				= 'kigo_site_cron';
 	const GET_PARAM_FORCED_SYNC			= 'force_full_sync';
+	const GET_PARAM_CRON_SECRET			= 'cron_secret';
 
 	const ADV_LOCK_PROCESSING			= 'KIGO_CRON_LOCK';
 	const LOGGLY_TAG					= 'wp_cron_sync';
@@ -37,6 +38,20 @@ class Kigo_Network_Cron
 		global $wpdb;
 
 		$debug_mode = defined( 'KIGO_DEBUG' ) && KIGO_DEBUG;
+
+		//Check that cron is "enabled" and that the secret is correct
+		if(
+			!defined( 'KIGO_CRON_SECRET' ) ||
+			!isset( $_GET[ self::GET_PARAM_CRON_SECRET ] ) ||
+			$_GET[ self::GET_PARAM_CRON_SECRET ] !== KIGO_CRON_SECRET
+		) {
+			self::$_sync_error_logs[] = array(
+				'msg'	=> 'Missing/Invalid cron secret',
+				'info'	=> $_SERVER
+			);
+			self::handle_logs( $debug_mode );
+			exit;
+		}
 
 		// Ensure that no other cron will run concurrently by acquiring an advisory lock (at MySQL database)
 		if( ! $wpdb->get_var( $wpdb->prepare( 'SELECT GET_LOCK(%s, 0)', self::ADV_LOCK_PROCESSING ) ) ) {

@@ -60,7 +60,7 @@ if(
 	add_action( 'wp_ajax_nopriv_'.Kigo_Single_Sign_On::ACTION_LOGIN, array( 'Kigo_Single_Sign_On', 'login' ) ); // for NON-logged-in users
 
 	// Cron sync
-	if( defined( 'KIGO_USE_CRON' ) && KIGO_USE_CRON ) {
+	if( defined( 'KIGO_CRON_SECRET' ) ) {
 
 		// This endpoint is called by a cron job every X minutes to do every site sync.
 		// http://<network_root>/wp-admin/admin-ajax.php?action=kigo_network_cron

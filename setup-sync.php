@@ -30,11 +30,11 @@ else{
 	<tr>
 		<td>
 			Cron synchronization enabled:
-			<?php if( !(defined( 'KIGO_USE_CRON' ) && KIGO_USE_CRON ) ) : ?>
+			<?php if( !(defined( 'KIGO_CRON_SECRET' ) ) ) : ?>
 			<br /><small>Note: contact support to enable it.</small>
 			<?php endif ?>
 		</td>
-		<td><span class="<?php echo ( defined( 'KIGO_USE_CRON' ) && KIGO_USE_CRON ) ? 'green' : 'red'; ?>"><?php echo ( defined( 'KIGO_USE_CRON' ) && KIGO_USE_CRON ) ? 'Yes' : 'No'; ?></span></td>
+		<td><span class="<?php echo ( defined( 'KIGO_CRON_SECRET' ) ) ? 'green' : 'red'; ?>"><?php echo ( defined( 'KIGO_CRON_SECRET' ) ) ? 'Yes' : 'No'; ?></span></td>
 	</tr>
 	<tr>
 		<td>Time since last successful sync:<br /><small>Note: If last successful sync was more than 1h ago, please contact support.</small></td>
