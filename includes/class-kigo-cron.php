@@ -71,8 +71,7 @@ class Kigo_Network_Cron
 			$sites = wp_get_sites( array( 'limit' => self::CUSTOM_WP_IS_LARGE_NETWORK, 'public' => 1, 'deleted' => 0, 'archived' => 0 ) );
 			shuffle( $sites );
 			
-			if( $debug_mode )
-				self::$_sync_error_logs[ 'nb_sites' ] = count( $sites );
+			self::$_sync_error_logs[ 'nb_sites' ] = count( $sites );
 			
 			//Do the Zebra cURL call (asynchronous calls)
 			$curl = new Zebra_cURL();
@@ -97,9 +96,8 @@ class Kigo_Network_Cron
 			restore_error_handler();
 		}
 		
-		if( $debug_mode ) {
-			self::$_sync_error_logs[ 'total_execution_time' ] = ( microtime( true ) - $prevTimeTotal );
-		}
+
+		self::$_sync_error_logs[ 'total_execution_time' ] = ( microtime( true ) - $prevTimeTotal );
 
 		if( ! $wpdb->query( $wpdb->prepare( 'SELECT RELEASE_LOCK(%s)', self::ADV_LOCK_PROCESSING ) ) ) {
 			self::$_sync_error_logs[] = 'Could not release cron lock';
@@ -271,7 +269,7 @@ class Kigo_Site_Cron
 	private $_default_entity_diff_meth_ids = array(
 		//'entity'	=> array( 'diff_method_name' => <diff_method_name>, 'diff_id' => <diff_id>, 'last_update_timestamp' = 0 )
 		'property'	=> array(
-						'diff_method_name'		=> 'pricingdiffid',
+						'diff_method_name'		=> 'detailsdiffid',
 						'diff_id'				=> -1,
 						'last_update_timestamp'	=> 0,
 						'first_cron_execution'	=> null
@@ -374,6 +372,8 @@ class Kigo_Site_Cron
 						continue 2;
 					}
 				}
+				
+				$this->log_error( 10, 'Correct update', array( 'entity' => $entity, 'nb_of_updates' => count( $ids_to_update ) ) );
 			}
 			
 			// If this point is reached that means the sync has been done without error, we can update the diff_id and save the timestamp
