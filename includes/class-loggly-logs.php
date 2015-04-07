@@ -58,7 +58,7 @@ class Loggly_logs {
 			'http' => array(
 				'method' => 'POST',
 				'header' => 'Content-type: application/x-www-form-urlencoded',
-				'content' => http_build_query( $logs )
+				'content' => json_encode( $logs )
 			)
 		) );
 		

@@ -18,3 +18,10 @@ top:6px
 	vertical-align:baseline;
 	margin-bottom: 2px !important;
 }
+
+.green {
+	color:green;
+}
+.red {
+	color:orangered;
+}

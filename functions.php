@@ -371,6 +371,22 @@
 		return str_replace($str,"",$url);	
 	}	
 	
+	 /**
+	 * Retrieve the plugin folder server path.
+	 * 
+	 * * IMPORTANT: This function has to be in the root folder of the plugin in order to return the correct value. 
+	 * 
+	 * @param string $file_path		Optional. Extra path (relative to the plugin folder) appended to the end of the PATH. Default empty string.
+	 *
+	 * @return string
+	 */
+	function get_kigo_plugin_path( $file_path = '' ) {
+		if( !is_string( $file_path ) ) {
+			return '';
+		}
+		return  plugin_dir_path( __FILE__ ) . $file_path;
+	}
+	
 	/**
 	 * Retrieve the plugin folder URL.
 	 * 
@@ -483,6 +499,11 @@
 		
 		wp_register_style( 'jquery-ui', '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.min.css', array(), '1.10.3' );
 		wp_enqueue_style( 'jquery-ui' );
+	}
+
+	function enqueue_and_register_admin_scritps() {
+		wp_register_script( 'kigo-plugin-admin-js', get_relative( plugins_url( '/js/admin.js', __FILE__) ), array( 'jquery-min'), false, true );
+		wp_enqueue_script( 'kigo-plugin-admin-js' );
 	}
 	
 	/* Load conditional script */
@@ -666,11 +687,25 @@
 		global $seoDataURL;
 		?><meta name="SEOURL" content="<?= $seoDataURL ?>" /><?= "\n" ?><?php
 	}
-	
+
 	function getBAPIObj() {
+		global $bapi_instance;
 		global $bapi_all_options;
-		return new BAPI($bapi_all_options['api_key'], $bapi_all_options['bapi_language'], $bapi_all_options['bapi_baseurl']);
-	}		
+
+		$baseurl = isset($bapi_all_options['bapi_baseurl']) && strlen($bapi_all_options['bapi_baseurl']) ? $bapi_all_options['bapi_baseurl'] : 'connect.bookt.com';
+		$baseurl = (strpos($baseurl, 'localhost') === 0 ? 'http://' : 'https://').$baseurl;
+
+		if(
+			!isset( $bapi_instance ) ||
+			!is_a( $bapi_instance, 'BAPI' ) ||
+			$bapi_instance->getApikey() !== $bapi_all_options['api_key'] ||
+		    $bapi_instance->getBaseURL() !== $baseurl
+		) {
+			$bapi_instance = new BAPI($bapi_all_options['api_key'], $baseurl);
+		}
+
+		return $bapi_instance;
+	}
 	
 	function disable_kses_content() {
 		if(is_admin()||is_super_admin()){
