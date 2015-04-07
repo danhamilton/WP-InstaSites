@@ -47,6 +47,7 @@ if(
 	include_once(dirname( __FILE__ ).'/cloudfront.php');
 	require_once( dirname( __FILE__ ) . '/sso/class-kigo-single-sign-on.php' );
 	require_once( dirname( __FILE__ ) . '/includes/class-loggly-logs.php' );
+	require_once( dirname( __FILE__ ) . '/includes/class-kigo-admin-bar-menu.php' );
 	require_once('bapi-php/bapi.php');
 	require_once('init.php');
 
@@ -103,6 +104,7 @@ if(
 
 	// create custom plugin settings menu
 	add_action('admin_menu', 'bapi_create_menu');
+	add_action( 'admin_bar_menu', array( 'Kigo_App_Admin_Bar_Menu', 'register_admin_bar_node' ), 999 ); // Only new app clients have this extra toolbar to link to the app
 	add_action('update_option_update_action', 'bapi_option_update', 10, 2);
 	add_action('update_option_property_category_name', 'bapi_option_category', 10, 2);
 
@@ -123,6 +125,7 @@ if(
 	add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_Developments_Widget" );' ) );
 	add_action( 'widgets_init', create_function( '', 'register_widget( "BAPI_SiteSelector" );' ) );
 
+	add_filter( 'page_row_actions', 'kigo_disable_quick_edit', 10, 2 );
 	add_filter( 'login_headertitle', 'newapp_login_headertitle' ); // Filter to display the correct brand in title attribute of login page
 
 	
