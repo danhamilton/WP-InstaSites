@@ -68,7 +68,7 @@ class Kigo_Network_Cron
 			add_filter( 'wp_is_large_network', array( 'Kigo_Network_Cron', 'custom_wp_is_large_network' ), 1, 3 );
 			
 			// Initialize the list of sites
-			$sites = wp_get_sites( array( 'limit' => self::CUSTOM_WP_IS_LARGE_NETWORK, 'public' => 1, 'deleted' => 0, 'archived' => 0 ) );
+			$sites = wp_get_sites( array( 'limit' => self::CUSTOM_WP_IS_LARGE_NETWORK, 'deleted' => 0, 'archived' => 0 ) );
 			shuffle( $sites );
 			
 			self::$_sync_error_logs[ 'nb_sites' ] = count( $sites );
@@ -327,6 +327,7 @@ class Kigo_Site_Cron
 			return false;
 		}
 		
+		$success_log= array();
 		foreach( $this->_entity_diff_meth_ids as $entity => $options ) {
 			// In case of error propagate, the error, don't update the diff_id and continue with the next entity
 			
@@ -373,7 +374,7 @@ class Kigo_Site_Cron
 					}
 				}
 				
-				$this->log_error( 10, 'Correct update', array( 'entity' => $entity, 'nb_of_updates' => count( $ids_to_update ) ) );
+				$success_log[] = array( 'entity' => $entity, 'nb_of_updates' => count( $ids_to_update ) );
 			}
 			
 			// If this point is reached that means the sync has been done without error, we can update the diff_id and save the timestamp
@@ -389,6 +390,10 @@ class Kigo_Site_Cron
 			)
 		) {
 			$this->log_error( 5, 'Unable to update the option', array( 'entity_diff_meth_ids' => $this->_entity_diff_meth_ids ) );
+		}
+		
+		if( count( $success_log ) ) {
+			$this->log_error( 10, 'Correct update', $success_log );
 		}
 		
 		return ( 0 === count( $this->_errors ) );
