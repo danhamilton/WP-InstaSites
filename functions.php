@@ -102,12 +102,16 @@
 
 		$data = getbapicontext();
 
-		return (
-			is_array($data) &&
-			isset( $data[ 'App' ] ) &&
-			isset( $data[ 'App' ][ 'Data' ] ) &&
-		    false !== strpos( $data['App']['Data'], 'newapp.kigo.net' )
-		);
+		if(
+			!is_array( $data ) ||
+			!isset( $data[ 'App' ] ) ||
+			!isset( $data[ 'App' ][ 'Data' ] )
+		) {
+			// By default any new website is a kigo site
+			return true;
+		}
+
+		return ( false !== strpos( $data[ 'App' ][ 'Data' ], 'newapp.kigo.net' ) );
 	}
 
 	function newapp_login_headertitle( $title ) {
@@ -308,6 +312,13 @@
 				header('Content-Type: application/javascript');	
 				header('Cache-Control: public');
 				$js = urlHandler_bapi_js_combined_helper();
+				if( // In debug mode, do not minify or use cache for the combined JS file
+					defined('KIGO_DEBUG') &&
+					true === KIGO_DEBUG
+				) {
+					echo $js;
+					exit();
+				}
 				$jsh = md5($js);
 				if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 					$cacheFile = sys_get_temp_dir().'\\'.$jsh.'.js';
@@ -376,6 +387,22 @@
 		return  plugin_dir_path( __FILE__ ) . $file_path;
 	}
 	
+	/**
+	 * Retrieve the plugin folder URL.
+	 * 
+	 * * IMPORTANT: This function has to be in the root folder of the plugin in order to return the correct value. 
+	 * 
+	 * @param string $file_path		Optional. Extra path (relative to the plugin folder) appended to the end of the URL. Default empty string.
+	 *
+	 * @return string
+	 */
+	function get_kigo_plugin_url( $file_path = '' ) {
+		if( !is_string( $file_path ) ) {
+			return '';
+		}
+		return plugins_url( $file_path, __FILE__ );
+	}
+	
 	/* BAPI Helpers */	
 	function getbapiurl() {
 		global $bapi_all_options;
@@ -411,11 +438,7 @@
 	}
 
 	function getbapijsurl($apiKey) {
-		return getbapiurl() . "/js/bapi.js?apikey=" . $apiKey;
-	}
-
-	function getbapiuijsurl() {
-		return getbapiurl() . "/ws/js/bapi.ui.js";
+		return getbapiurl() . "/js/bapi.min.js?apikey=" . $apiKey;
 	}
 	
 	function getbapiapikey() {
@@ -473,6 +496,9 @@
 
 		wp_register_style( 'kigo-plugin-main', get_relative(plugins_url('/css/style.css', __FILE__)) );
 		wp_enqueue_style( 'kigo-plugin-main' );
+		
+		wp_register_style( 'jquery-ui', '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.min.css', array(), '1.10.3' );
+		wp_enqueue_style( 'jquery-ui' );
 	}
 
 	function enqueue_and_register_admin_scritps() {
@@ -482,8 +508,7 @@
 	
 	/* Load conditional script */
 	function loadscriptjquery(){	
-	?>
-		<link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/jquery.ui.all.css" rel="stylesheet" />    
+	?>  
 		<!--[if lt IE 8]>
 		<script type="text/javascript" src="<?= get_relative(plugins_url('/js/pickadate/source/legacy.js', __FILE__)) ?>" ></script>
 		<![endif]-->
@@ -700,28 +725,27 @@
 		echo $bapi_all_options['bapi_global_header'];
 	}
 	
-	function perm($return, $id, $new_title, $new_slug){
-		/* if the user is not super admin */
-		if (!is_super_admin()) {
-			/* if the post var is set this var show when editing post and pages like this /wp-admin/post.php?post=2468&action=edit */
-			if(isset($_GET['post']) && $_GET['post'] != ''){
-			/* its set we get the post ID */
-			$thePostID = $_GET['post'];
-			/* we get the meta data array for this post */
-			$metaArray = get_post_meta($thePostID);
-				/* we check if our custom fields exists */
-				if(!empty($metaArray) && array_key_exists('bapi_page_id', $metaArray) || array_key_exists('bapikey', $metaArray) || array_key_exists('bapi_last_update', $metaArray)){
-					/* this is not a super admin and the page is a BAPI page we remove the permalink edit button*/
-					$ret2 = preg_replace('/<span id="edit-slug-buttons">.*<\/span>/i', '', $return);
-					return $ret2;
-				}else{
-					/* this is a page created by the user , we do nothing */
-					return $return;
-				}
-			}
+	function perm($return) {
+		if (
+			!is_super_admin() &&
+			isset($_GET['post']) && strlen($_GET['post']) &&
+			is_array($metaArray = get_post_meta($_GET['post'])) &&
+			(
+				array_key_exists('bapi_page_id', $metaArray) ||
+				array_key_exists('bapikey', $metaArray) ||
+				array_key_exists('bapi_last_update', $metaArray)
+			)
+		) {
+			// the user is not super admin AND our custom fields exist (it's a BAPI page)
+			//     hence we remove the permalink editing possibilities
+			$return = preg_replace( '/<span id="edit-slug-buttons">(.*?)<\/span>/i', '', $return);
+			$return = preg_replace_callback(
+				'/<span id="editable-post-name([^"]*)">(.*?)<\/span>/i',
+				function($mtch) {
+					return ($mtch[1] === '-full') ? '' : $mtch[2];
+				}, $return);
 		}
-			/* this is a super admin we do nothing */
-			return $return;
+		return $return;
 	}
 	function getSSL(){
 		global $wp_query;
@@ -1077,7 +1101,9 @@ function bapi_register_dashboard_metabox() {
 /* Add the custom Instansite Metaboxes */	
 	global $wp_meta_boxes;	
 	  add_meta_box('bapi-gs', 'Getting Started', 'register_started_box', 'dashboard', 'normal', 'high');
-	  add_meta_box('bapi-instaapp', ( is_newapp_website() ? 'Kigo App Actions' : 'InstaApp Actions' ), 'register_instaapp_box', 'dashboard', 'side', 'high');
+	if( !is_newapp_website() ) {
+	  add_meta_box('bapi-instaapp', 'InstaApp Actions', 'register_instaapp_box', 'dashboard', 'side', 'high');
+	}
 	  add_meta_box('bapi-action', 'Advanced Actions', 'register_action_box', 'dashboard', 'normal', 'high');
 	  add_meta_box('bapi-tips', 'Tips', 'register_tips_box', 'dashboard', 'side', 'high');
 	  wp_enqueue_style( 'custom-dashboard', plugins_url('css/custom-dashboard.css', __FILE__) );
@@ -1396,6 +1422,17 @@ function myplugin_meta_box_callback( $metaId ) {
 	update_option( 'bapi_keywords_lastmod', 0 );
 	bapi_sync_coredata();
 }
+
+/* Since quick_edit_custom_box action hook is fired for **custom columns** only, we simply eliminate QuickEdit link here.
+ * http://phpxref.ftwr.co.uk/wordpress/nav.html?wp-admin/includes/list-table-posts.php.source.html#l972
+ */
+function kigo_disable_quick_edit( $actions ) {
+	if( !is_super_admin() ) {
+		unset( $actions['inline hide-if-no-js'] );
+	}
+	return $actions;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	add_action( 'wp_insert_post',  'save_seo_meta');
 }

@@ -15,7 +15,12 @@
 			$this->textdata = BAPISync::getTextData();
 			$this->seodata = BAPISync::getSEOData();			
 		}
-		public function loadtemplates() { if (empty($this->templates)) { $this->templates = BAPISync::getTemplates(); } }
+		public function get_templates() {
+			if (empty($this->templates)) {
+				$this->templates = BAPISync::getTemplates();
+			}
+			return $this->templates;
+		}
 		
 		public static function getSolutionDataRaw() { global $bapi_all_options; return $bapi_all_options['bapi_solutiondata']; }
 		public static function getSolutionDataLastModRaw() { global $bapi_all_options; return (int)$bapi_all_options['bapi_solutiondata_lastmod']; }
@@ -101,43 +106,50 @@
 			return '/rentals/';
 		}
 		
-		public function getMustacheTemplate($entity) {
-			$template_name = "";
-			if ($entity == "property") { $template_name = "tmpl-properties-detail"; }
-			else if ($entity == "development") { $template_name = "tmpl-developments-detail"; }
-			else if ($entity == "specials") { $template_name = "tmpl-specials-detail"; }
-			else if ($entity == "poi") { $template_name = "tmpl-attractions-detail"; }
-			else if ($entity == "searches") { $template_name = "tmpl-searches-detail"; }
-			else if ($entity == "marketarea") { $template_name = "tmpl-marketarea-detail"; }
-			if (empty($template_name)) { return ""; } // not a valid entity to get a template
-			
-			$this->loadtemplates();
-			$si = strpos($this->templates, $template_name);
-			if (!$si) { return ""; }			
-			$si = strpos($this->templates, ">", $si+1);
-			if (!si) { return ""; }
-			$ei = strpos($this->templates, "</script>", $si);
-			if (!ei) { return ""; }
-			
-			return substr($this->templates, $si+1, $ei-$si-1);			
+		public function getMustacheTemplateByEntity($entity, $mustache_loader) {
+			switch( $entity ) {
+				case "property":
+					return $mustache_loader->load( "tmpl-properties-detail" );
+				
+				case "development":
+					return $mustache_loader->load( "tmpl-developments-detail" );
+				
+				case "specials":
+					return $mustache_loader->load( "tmpl-specials-detail" );
+				
+				case "poi":
+					return $mustache_loader->load( "tmpl-attractions-detail" );
+				
+				case "searches":
+					return $mustache_loader->load( "tmpl-searches-detail" );
+				
+				case "marketarea":
+					return $mustache_loader->load( "tmpl-marketarea-detail" );
+				
+				default:
+					return '';
+			}
 		}
 
 		// string | false (resource not found)
-		public static function getMustache($entity, $pkid, $template) {
+		public static function getMustache($entity, $pkid) {
 			$bapi = getBAPIObj();
 			if (!$bapi->isvalid()) { return false; }
 			$pkid = array(intval($pkid));
 
-			/* Its the entity a property?, if yes, lets set the options */
-			if($entity == "property"){
-				$options = array("seo" => 1, "descrip" => 1, "avail" => 1, "rates" => 1, "reviews" => 1,"poi"=>1);	
-			}else{
-				/* Its the entity a poi?, if yes, lets set the options */
-				if($entity == "poi"){
-					$options = array("nearbyprops" => 1,"seo" => 1);	
-				}else{
+			// Set the options for get call
+			switch( $entity ) {
+				case "property":
+					$options = array("seo" => 1, "descrip" => 1, "avail" => 1, "rates" => 1, "reviews" => 1,"poi"=>1);
+					break;
+				
+				case "poi":
+					$options = array("nearbyprops" => 1,"seo" => 1);
+					break;
+				
+				default:
 					$options = null;
-				}
+					break;
 			}
 
 			if(!is_array($c = $bapi->get($entity, $pkid, $options))) {
@@ -211,12 +223,17 @@
 			}
 			
 			$c["textdata"] = BAPISync::getTextData();
-			$m = new Mustache_Engine();
-			$string = $m->render($template, $c);
-			$string = str_replace("\t", '', $string); // remove tabs
-			$string = str_replace("\n", '', $string); // remove new lines
-			$string = str_replace("\r", '', $string); // remove carriage returns
-			return $string;
+			
+			// Load bapisync 
+			global $bapisync;
+			if( is_a( $bapisync, 'BAPISync' ) ) {
+				$bapisync = new BAPISync();
+				$bapisync->init();
+			}
+
+			$mustache_loader = new Kigo_Mustache_Loader_By_Name( $bapisync->get_templates() );
+			$m = new Mustache_Engine( array( 'partials_loader' => $mustache_loader ) );
+			return str_replace( array( "\t", "\n", "\r" ), '', $m->render( $bapisync->getMustacheTemplateByEntity( $entity, $mustache_loader ), $c ) );
 		}
 
 		/**
@@ -432,9 +449,8 @@
 		if ($do_page_update || $force_sync) {
 			// do page update
 			$post->comment_status = "close";		
-			$template = $bapisync->getMustacheTemplate($seo["entity"]);
 
-			if( !is_string( $s2s_success = $bapisync->getMustache( $seo["entity"], $seo["pkid"], $template ) ) ) {
+			if( !is_string( $s2s_success = $bapisync->getMustache( $seo["entity"], $seo["pkid"] ) ) ) {
 				// by "trash"ing the post, WP will display a nice 404.
 				// next time we try to sync and the property shows up, it will be reverted to an active page.
 				$post->post_status = 'trash';
