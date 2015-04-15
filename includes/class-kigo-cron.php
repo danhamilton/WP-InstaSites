@@ -173,11 +173,11 @@ class Kigo_Network_Cron
 	 * @param array $args
 	 */
 	public static function kigo_cron_wp_die_handler( $message, $title = '', $args = array() ) {
-		self::log( array(
+		self::$wp_die_logs[] = array(
 			'message'	=> $message,
 			'title'		=> $title,
 			'args'		=> $args
-		) );
+		);
 	}
 
 	/**
@@ -208,12 +208,12 @@ class Kigo_Network_Cron
 	}
 	
 	public static function php_error_handler( $code, $msg, $file, $line ) {
-		self::log( array(
+		Kigo_Network_Cron::$sync_error_logs[] = array(
 			'code'	=> $code,
 			'msg'	=> $msg,
 			'file'	=> $file,
 			'line'	=> $line
-		) );
+		);
 	}
 
 	/**
