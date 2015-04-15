@@ -29,9 +29,12 @@ class Kigo_Network_Cron
 
 	const ADV_LOCK_PROCESSING			= 'KIGO_CRON_LOCK';
 	const LOGGLY_TAG					= 'wp_cron_sync';
+
+	const MAX_SOLUTION_DATA_AGE			= 8035200; // If the solution's data from a websites hasn't been updated since 3 months we don't call the diff method. (This is done to prevent executing the cron on legacy sites)
 	
-	static public $_wp_die_logs = array();
-	static public $_sync_error_logs = array();
+	
+	static public $wp_die_logs = array();
+	static public $sync_error_logs = array();
 	
 	
 	public static function do_sync() {
@@ -45,17 +48,17 @@ class Kigo_Network_Cron
 			!isset( $_GET[ self::GET_PARAM_CRON_SECRET ] ) ||
 			$_GET[ self::GET_PARAM_CRON_SECRET ] !== KIGO_CRON_SECRET
 		) {
-			self::$_sync_error_logs[] = array(
-				'msg'	=> 'Missing/Invalid cron secret',
+			self::log( array(
+				'message'	=> 'Missing/Invalid cron secret',
 				'info'	=> $_SERVER
-			);
+			) );
 			self::handle_logs( $debug_mode );
 			exit;
 		}
 
 		// Ensure that no other cron will run concurrently by acquiring an advisory lock (at MySQL database)
 		if( ! $wpdb->get_var( $wpdb->prepare( 'SELECT GET_LOCK(%s, 0)', self::ADV_LOCK_PROCESSING ) ) ) {
-			self::$_sync_error_logs[] = 'Previous cron execution is not finished, could not acquire cron lock';
+			self::log( 'Previous cron execution is not finished, could not acquire cron lock' );
 			self::handle_logs( $debug_mode );
 			exit;
 		}
@@ -68,10 +71,13 @@ class Kigo_Network_Cron
 			add_filter( 'wp_is_large_network', array( 'Kigo_Network_Cron', 'custom_wp_is_large_network' ), 1, 3 );
 			
 			// Initialize the list of sites
-			$sites = wp_get_sites( array( 'limit' => self::CUSTOM_WP_IS_LARGE_NETWORK, 'public' => 1, 'deleted' => 0, 'archived' => 0 ) );
+			$sites = wp_get_sites( array( 'limit' => self::CUSTOM_WP_IS_LARGE_NETWORK, 'deleted' => 0, 'archived' => 0 ) );
 			shuffle( $sites );
 			
-			self::$_sync_error_logs[ 'nb_sites' ] = count( $sites );
+			// Filter the sites, not to trigger a sync for site where the solution data have not been updated since X months
+			self::filter_old_sites( $sites );
+			
+			self::log( array( 'nb_sites' => count( $sites ) ) );
 			
 			//Do the Zebra cURL call (asynchronous calls)
 			$curl = new Zebra_cURL();
@@ -91,16 +97,16 @@ class Kigo_Network_Cron
 			add_filter( 'wp_die_ajax_handler', array( 'Kigo_Network_Cron', 'kigo_cron_wp_die_handler_filter' ) );
 			
 			$site_cron = new Kigo_Site_Cron();
-			self::$_sync_error_logs[] = $site_cron->sync_entities() ? true : $site_cron->_errors;
+			self::log( $site_cron->sync_entities() ? true : $site_cron->_errors );
 			
 			restore_error_handler();
 		}
 		
 
-		self::$_sync_error_logs[ 'total_execution_time' ] = ( microtime( true ) - $prevTimeTotal );
+		self::log( array( 'total_execution_time' => ( microtime( true ) - $prevTimeTotal ) ) );
 
 		if( ! $wpdb->query( $wpdb->prepare( 'SELECT RELEASE_LOCK(%s)', self::ADV_LOCK_PROCESSING ) ) ) {
-			self::$_sync_error_logs[] = 'Could not release cron lock';
+			self::log( 'Could not release cron lock' );
 		}
 
 		// Echo the logs in debug mode or send them by mail
@@ -119,20 +125,20 @@ class Kigo_Network_Cron
 			CURLE_OK !== $result->response[1] ||
 			200 !== $result->info['http_code']
 		) {
-			Kigo_Network_Cron::$_sync_error_logs[] = $result;
+			self::log( $result );
 			return;
 		}
 		
-		if( true === ( $body = json_decode( $result->body ) ) ) {
+		if( true === ( $body = json_decode( $result->body, true ) ) ) {
 			return;
 		}
 		
 		if( !is_array( $body ) ) {
-			Kigo_Network_Cron::$_sync_error_logs[] = array( $result->info, $body );
+			self::log( array( $result->info, $body ) );
 			return;
 		}
 		
-		Kigo_Network_Cron::$_sync_error_logs[] = $body;
+		self::log( $body );
 	}
 	
 	/**
@@ -167,11 +173,11 @@ class Kigo_Network_Cron
 	 * @param array $args
 	 */
 	public static function kigo_cron_wp_die_handler( $message, $title = '', $args = array() ) {
-		self::$_wp_die_logs[] = array(
+		self::log( array(
 			'message'	=> $message,
 			'title'		=> $title,
 			'args'		=> $args
-		);
+		) );
 	}
 
 	/**
@@ -202,12 +208,12 @@ class Kigo_Network_Cron
 	}
 	
 	public static function php_error_handler( $code, $msg, $file, $line ) {
-		Kigo_Network_Cron::$_sync_error_logs[] = array(
+		self::log( array(
 			'code'	=> $code,
 			'msg'	=> $msg,
 			'file'	=> $file,
 			'line'	=> $line
-		);
+		) );
 	}
 
 	/**
@@ -236,13 +242,63 @@ class Kigo_Network_Cron
 	 * @param $debug_mode
 	 */
 	private static function handle_logs( $echo_logs = false ) {
-		if( count( $logs = array_merge( self::$_sync_error_logs, self::$_wp_die_logs ) ) ) {
+		if( count( $logs = array_merge( self::$sync_error_logs, self::$wp_die_logs ) ) ) {
 			if( $echo_logs ){
-				header('Content-type: application/json');
-				echo json_encode( $logs );
+				echo '<pre>';
+				print_r( $logs );
+				echo '</pre>';
 			}
 			else
 				Loggly_logs::log( $logs, array( self::LOGGLY_TAG ) );
+		}
+	}
+
+	/**
+	 * Store the logs in a static array, or print_r and flush to display it in browser
+	 * 
+	 * @param $logs
+	 */
+	public static function log( $logs ) {
+		if( defined( 'KIGO_DEBUG' ) && KIGO_DEBUG ) {
+			echo '<pre>';
+			print_r( $logs );
+			echo '</pre>';
+			ob_flush();
+			flush();
+		}
+		else {
+			self::$sync_error_logs[] = $logs;
+		}
+	}
+
+	/**
+	 * Filter the list of sites by checking whether the solution data has been updated since 3 months. 
+	 * 
+	 * @param $sites
+	 */
+	private static function filter_old_sites( &$sites ) {
+		global $table_prefix;
+		global $wpdb;
+		
+		$sites_considered_as_garbage = array();
+		$sites = array_filter(
+			$sites,
+			function( $blog ) use ( $wpdb, $table_prefix, &$sites_considered_as_garbage ) {
+				$ret = true;
+				if(
+					is_string( $bapi_solutiondata_lastmod = $wpdb->get_var( $wpdb->prepare( 'SELECT option_value FROM ' . $table_prefix . $blog[ 'blog_id' ] . '_options WHERE option_name=%s LIMIT 1', 'bapi_solutiondata_lastmod' ) ) ) &&
+					intval( $bapi_solutiondata_lastmod ) < ( time() - Kigo_Network_Cron::MAX_SOLUTION_DATA_AGE )
+				) {
+					$ret = false;
+					$sites_considered_as_garbage[] = $blog[ 'blog_id' ];
+				}
+				return $ret;
+			}
+		);
+		
+		// Log the list of sites considered as garbage
+		if( count( $sites_considered_as_garbage ) ) {
+			self::log( array( 'code' => 0, 'message' => 'Solution data not updated since more than ' . self::MAX_SOLUTION_DATA_AGE .'s', 'site_id' => $sites_considered_as_garbage ) );
 		}
 	}
 }
@@ -256,7 +312,6 @@ class Kigo_Site_Cron
 	const KIGO_CRON_DIFF_OPTION			= 'kigo_cron_diff';
 	const ACTION_GET_LAST_CRON_EXEC		= 'kigo_get_last_cron_execution';
 	
-	const MAX_SOLUTION_DATA_AGE			= 8035200; // If the solution's data from a websites hasn't been updated since 3 months we don't call the diff method. (This is done to prevent executing the cron on legacy sites)
 	
 	public $_errors = array();
 	
@@ -319,14 +374,7 @@ class Kigo_Site_Cron
 			return false;
 		}
 		
-		if(
-			is_string( $bapi_solutiondata_lastmod = get_option( 'bapi_solutiondata_lastmod', null ) ) &&
-			$bapi_solutiondata_lastmod < ( time() - self::MAX_SOLUTION_DATA_AGE )
-		) {
-			$this->log_error( 0, 'Solution data not updated since: ' . date( 'c', intval( $bapi_solutiondata_lastmod ) ) );
-			return false;
-		}
-		
+		$success_log= array();
 		foreach( $this->_entity_diff_meth_ids as $entity => $options ) {
 			// In case of error propagate, the error, don't update the diff_id and continue with the next entity
 			
@@ -372,8 +420,7 @@ class Kigo_Site_Cron
 						continue 2;
 					}
 				}
-				
-				$this->log_error( 10, 'Correct update', array( 'entity' => $entity, 'nb_of_updates' => count( $ids_to_update ) ) );
+				$success_log[] = array( 'entity' => $entity, 'nb_of_updates' => count( $ids_to_update ) );
 			}
 			
 			// If this point is reached that means the sync has been done without error, we can update the diff_id and save the timestamp
@@ -389,6 +436,10 @@ class Kigo_Site_Cron
 			)
 		) {
 			$this->log_error( 5, 'Unable to update the option', array( 'entity_diff_meth_ids' => $this->_entity_diff_meth_ids ) );
+		}
+		
+		if( count( $success_log ) ) {
+			$this->log_error( 10, 'Correct update', $success_log );
 		}
 		
 		return ( 0 === count( $this->_errors ) );
