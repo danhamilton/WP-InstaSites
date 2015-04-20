@@ -25,3 +25,13 @@ top:6px
 .red {
 	color:orangered;
 }
+
+/* Translation edition page */
+.overwritten-translation {
+	width: 70%;
+	margin-right: 5px;
+}
+a.i18n-save {
+	margin-left: 10px !important;
+	float: right;
+}

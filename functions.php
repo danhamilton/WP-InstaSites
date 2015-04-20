@@ -49,6 +49,10 @@
 
 	function kigo_on_plugin_update( $current_version ) {
 
+		if( !kigo_I18n::update_i18n_network_option() ) {
+			Loggly_logs::log( array( 'msg' => ( 'Failed to update network option translations' ), 'current_version' => $current_version ) );
+		}
+
 		if( strcmp( $current_version, '1.0.20141002' ) < 0 ) { // The auto sign on table was introduced in version 1.0.20141002 2014/10/02, every previous version should create it now!
 			if( !Kigo_Single_Sign_On::create_table() ) {
 				return false;
@@ -69,12 +73,6 @@
 		}
 		if(!isset($bapi_all_options['bapi_solutiondata_lastmod'])){
 			$bapi_all_options['bapi_solutiondata_lastmod'] = 0;
-		}
-		if(!isset($bapi_all_options['bapi_textdata'])){
-			$bapi_all_options['bapi_textdata'] = '';
-		}
-		if(!isset($bapi_all_options['bapi_textdata_lastmod'])){
-			$bapi_all_options['bapi_textdata_lastmod'] = 0;
 		}
 		if(!isset($bapi_all_options['bapi_keywords_array'])){
 			$bapi_all_options['bapi_keywords_array'] = '';
@@ -140,6 +138,10 @@
 		}
 	}
 	
+	/**
+	 * This is not used anymore but might be useful for debugging purpose
+	 * @Deprecated 
+	 */
 	function urlHandler_bapitextdata() {
 		$url = get_relative($_SERVER['REQUEST_URI']);
 		if (strtolower($url) != "/bapi.textdata.js")
@@ -157,12 +159,10 @@
 	}
 	
 	function urlHandler_bapitextdata_helper() {
-		global $bapi_all_options; 
-		$js = $bapi_all_options['bapi_textdata']; // core data should have been synced prior to this
+		$js = json_encode( kigo_I18n::get_translations( $lang = kigo_get_site_language() ) );
 		$jsn = "/*\r\n";
 		$jsn .= "	BAPI TextData\r\n";
-		$jsn .= "	Last updated: " . date('r',$lastupdatetime) . "\r\n";	
-		$jsn .= "	Language: " . getbapilanguage() . "\r\n";
+		$jsn .= "	Language: " . $lang . "\r\n";
 		$jsn .= "*/\r\n\r\n";
 		$jsn .= "BAPI.textdata = " . $js . ";\r\n";	
 		return $jsn;
@@ -433,6 +433,18 @@
 		return $language;	
 	}
 	
+	function kigo_get_site_language() {
+		if(
+			!is_array( $solution_data = BAPISync::getSolutionData() ) ||
+			!is_array( $solution_data[ 'Site' ] ) ||
+			!is_string( $solution_data[ 'Site' ][ 'Language' ] )
+		) {
+			Loggly_logs::log( array( 'msg' => 'Unable to retrieve site language from solution data.', 'blog_id' => get_current_blog_id() ) );
+			return 'en-US';
+		}
+		return $solution_data[ 'Site' ][ 'Language' ];
+	}
+	
 	function bapi_language_attributes($doctype) {
 		return 'lang="'.getbapilanguage().'"';
 	}
@@ -449,7 +461,7 @@
 	function getbapisolutiondata() {
 		$wrapper = array();
 		$wrapper['site'] = getbapicontext();
-		$wrapper['textdata'] = getbapitextdata();			
+		$wrapper['textdata'] = kigo_I18n::get_translations( kigo_get_site_language() );
 		return $wrapper;
 	}	
 
@@ -465,9 +477,11 @@
 		return $BAPI_ALL_OPTIONS__BAPI_SOLUTIONDATA_DECODED;
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	function getbapitextdata() {
-		global $bapi_all_options;
-		return json_decode($bapi_all_options['bapi_textdata'],TRUE); 		
+		return kigo_I18n::get_translations( kigo_get_site_language() );
 	}	
 	
 	/* Page Helpers */
@@ -679,6 +693,10 @@
 		global $getContextURL;
 		?><meta name="CONTEXTURL" content="<?= $getContextURL ?>" /><?= "\n" ?><?php
 	}
+
+	/**
+	 * @Deprecated
+	 */
 	function bapi_add_textdata_meta(){
 		global $textDataURL;
 		?><meta name="TEXTDATAURL" content="<?= $textDataURL ?>" /><?= "\n" ?><?php
@@ -964,8 +982,9 @@ function display_gw_verification(){
 	}
 }
 
+// Used by themes to retrieve the textdata
 function getTextDataArray(){
-	return BAPISync::getTextData();
+	return kigo_I18n::get_translations( kigo_get_site_language() );
 }
 	/**
 	* Remove quick edit link in the list of all pages for non super users.

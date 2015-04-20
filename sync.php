@@ -7,12 +7,10 @@
 	class BAPISync {
 		const SETTINGS_UPDATE_TIME_OPTION_NAME = 'bapi_wp_settings_update_time';
 		public $soldata = null;
-		public $textdata = null;
 		public $seodata = null;
 		public $templates = null;
 		public function init() {
 			$this->soldata = BAPISync::getSolutionData();
-			$this->textdata = BAPISync::getTextData();
 			$this->seodata = BAPISync::getSEOData();			
 		}
 		public function get_templates() {
@@ -25,10 +23,6 @@
 		public static function getSolutionDataRaw() { global $bapi_all_options; return $bapi_all_options['bapi_solutiondata']; }
 		public static function getSolutionDataLastModRaw() { global $bapi_all_options; return (int)$bapi_all_options['bapi_solutiondata_lastmod']; }
 		public static function getSolutionData() { return json_decode(BAPISync::getSolutionDataRaw(), TRUE); }
-		
-		public static function getTextDataRaw() { global $bapi_all_options; return $bapi_all_options['bapi_textdata']; }
-		public static function getTextDataLastModRaw() { global $bapi_all_options; return (int)$bapi_all_options['bapi_textdata_lastmod']; }
-		public static function getTextData() { return json_decode(BAPISync::getTextDataRaw(), TRUE); }
 		
 		public static function getSEODataRaw() { global $bapi_all_options; return $bapi_all_options['bapi_keywords_array']; }
 		public static function getSEODataLastModRaw() { global $bapi_all_options; return (int)$bapi_all_options['bapi_keywords_lastmod']; }
@@ -222,7 +216,7 @@
 				}
 			}
 			
-			$c["textdata"] = BAPISync::getTextData();
+			$c["textdata"] = kigo_I18n::get_translations( kigo_get_site_language() );
 			
 			// Load bapisync 
 			global $bapisync;
@@ -535,19 +529,6 @@
 		
 		$bapi = getBAPIObj();
 		if (!$bapi->isvalid()) { return; }
-		
-		// check if we need to refresh textdata
-		$data = BAPISync::getTextDataRaw();
-		$lastmod = BAPISync::getTextDataLastModRaw();
-		if(empty($data) || empty($lastmod) || ((time()-$lastmod)>3600) || $do_core_update || BAPISync::obsoletedByLastSettingsUpdate( $lastmod ) ) {
-			$data = $bapi->gettextdata(true,$syncdebugmode);			
-			if (!empty($data)) {
-				$data = $data['result']; // just get the result part
-				$data = json_encode($data); // convert back to text
-				update_option('bapi_textdata',$data);
-				update_option('bapi_textdata_lastmod',time());
-			}					
-		}	
 		
 		// check if we need to refresh solution data
 		$data = BAPISync::getSolutionDataRaw();
