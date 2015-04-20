@@ -283,7 +283,7 @@ class BAPI
 		if(!is_string($json) || !strlen($json))
 			return false;
 
-		if(($decoded = @json_decode($json, $assoc, 512, defined('JSON_BIGINT_AS_STRING') ? JSON_BIGINT_AS_STRING : 0)) === null)
+		if(($decoded = @json_decode($json, $assoc)) === null)
 			return json_last_error() == JSON_ERROR_NONE;
 
 		return true;
