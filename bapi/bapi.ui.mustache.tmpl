@@ -149,6 +149,9 @@
 			<option value="{{Data}}" class="level2">&nbsp;&nbsp;{{Label}}&nbsp;({{PropertyCount}})</option>
 				{{#Children}}
 					<option value="{{Data}}" class="level3">&nbsp;&nbsp;--&nbsp;{{Label}}&nbsp;({{PropertyCount}})</option>
+					{{#Children}}
+						<option value="{{Data}}" class="level4">&nbsp;&nbsp;&nbsp;--&nbsp;{{Label}}&nbsp;({{PropertyCount}})</option>
+					{{/Children}}
 				{{/Children}}
 			{{/Children}}
 		{{/config.location.hierarchicalValues}}
