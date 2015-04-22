@@ -143,7 +143,18 @@
 <div class="category-block">
 	<select class="span12 property-search-input quicksearch sessionlocation" data-field="location">
 		<option value="">{{config.location.prompt}}</option>
-		{{#config.location.values}}<option value="{{Data}}">{{Label}}</option>{{/config.location.values}}
+		{{#config.location.hierarchicalValues}}
+			<option value="{{Data}}" class="level1">{{Label}}&nbsp;({{PropertyCount}})</option>
+			{{#Children}}
+			<option value="{{Data}}" class="level2">&nbsp;&nbsp;{{Label}}&nbsp;({{PropertyCount}})</option>
+				{{#Children}}
+					<option value="{{Data}}" class="level3">&nbsp;&nbsp;--&nbsp;{{Label}}&nbsp;({{PropertyCount}})</option>
+					{{#Children}}
+						<option value="{{Data}}" class="level4">&nbsp;&nbsp;&nbsp;--&nbsp;{{Label}}&nbsp;({{PropertyCount}})</option>
+					{{/Children}}
+				{{/Children}}
+			{{/Children}}
+		{{/config.location.hierarchicalValues}}
 	</select>
 </div>
 {{/config.location.autocomplete}}
