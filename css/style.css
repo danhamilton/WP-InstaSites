@@ -25,3 +25,13 @@ top:6px
 .red {
 	color:orangered;
 }
+
+/* Market Area drop down */
+select.property-search-input option.level1 {
+	background-color:#e5e5e5;
+	padding:2px 0;
+}
+
+select.property-search-input option.level2 {
+	background-color:#f5f5f5;
+}
