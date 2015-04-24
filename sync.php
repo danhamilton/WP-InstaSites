@@ -53,10 +53,7 @@
 			}
 			
 			// otherwise, just return the baseline version stored in the plugin folder
-			$test = plugins_url($basefilename, __FILE__);
-			$test = get_relative($test);
-			$test = realpath(substr($test,1));
-			return $test;			
+			return get_kigo_plugin_path( $basefilename );
 		}
 		public static function getTemplates() { 			
 			return file_get_contents(BAPISync::getMustacheLocation()); 
@@ -136,9 +133,6 @@
 
 		// string | false (resource not found)
 		public static function getMustache($entity, $pkid) {
-			if(!(strpos($_SERVER['REQUEST_URI'],'wp-admin')===false)||!(strpos($_SERVER['REQUEST_URI'],'wp-login')===false)){
-				return false;
-			}
 			$bapi = getBAPIObj();
 			if (!$bapi->isvalid()) { return false; }
 			$pkid = array(intval($pkid));
@@ -258,26 +252,54 @@
 			return $time < get_option( self::SETTINGS_UPDATE_TIME_OPTION_NAME, 0 );
 		}
 	}
-	
-	function bapi_sync_entity($wp) {
-
+	function bapi_sync_entity() {
 		if(!(strpos($_SERVER['REQUEST_URI'],'wp-admin')===false)||!(strpos($_SERVER['REQUEST_URI'],'wp-login')===false)){
 			return false;
 		}
-		//global $post;
+		
+		
+		$post = get_page_by_path($_SERVER['REDIRECT_URL']);
+		if(empty($_SERVER['REDIRECT_URL'])){
+			$home_id = get_option('page_on_front');
+			$post = get_post($home_id);
+		}
+		
 		global $bapisync;		
 		if (empty($bapisync)) { 
-			// ERROR: What should we do?
+			$bapisync = new BAPISync();
+			$bapisync->init();
+		}
+		
+		// locate the SEO data stored in Bookt from the requested URL
+		if(
+			!is_array( $seo = $bapisync->getSEOFromUrl(str_replace("?".$_SERVER['QUERY_STRING'],'',$_SERVER['REQUEST_URI'])) ) ||
+			
+			!isset( $seo[ "entity" ] ) ||
+			!strlen( $seo[ "entity" ] ) ||
+			
+			!isset( $seo[ "pkid" ] ) ||
+			(	// Entity 'system' have pkid = 0 but are valid SEO
+				empty( $seo["pkid"] ) &&
+				'system' !== $seo["entity"]
+			)
+		){
+			// ignore seo info if it doesn't point to a valid entity
+			$seo = null;
+		}
+		
+		
+		return kigo_sync_entity( $post, $seo );
+	}
+	function kigo_sync_entity( $post, $seo, $force_sync = false ) {
+		global $bapisync;		
+		if (empty($bapisync)) { 
+			$bapisync = new BAPISync();
+			$bapisync->init();
 		}
 
 		$t=BAPISync::getSolutionData();
 		$maEnabled = $t['BizRules']['Has Market Area Landing Pages'];
 		
-		$post = get_page_by_path($_SERVER['REDIRECT_URL']);
-		if(empty($_SERVER['REDIRECT_URL'])){
-			$home_id = get_option('page_on_front');
-			$post = get_page($home_id);
-		}	
 		// parse out the meta attributes for the current post
 		$page_exists_in_wp = !empty($post);				
 		$meta = $page_exists_in_wp ? get_post_custom($post->ID) : null;
@@ -288,16 +310,22 @@
 		$meta_description = !empty($meta) ? $meta['bapi_meta_description'][0] : null;
 		$meta_title = !empty($meta) ? $meta['bapi_meta_title'][0] : null;
 		
-		// locate the SEO data stored in Bookt from the requested URL
-		$seo = $bapisync->getSEOFromUrl(str_replace("?".$_SERVER['QUERY_STRING'],'',$_SERVER['REQUEST_URI']));
-		
-		//print_r($seo);//exit();
-		if (!empty($seo) && (empty($seo["entity"]) || empty($seo["pkid"])) && empty($staticpagekey)) {
-			$seo = null; // ignore seo info if it doesn't point to a valid entity
+		//Only for properties pages: Retrieve the timestamp of first cron call and the latest successful diff call on this website
+		if(
+			!is_array( $seo ) ||
+			!isset( $seo[ 'entity' ] ) ||
+			'property' !== $seo[ 'entity' ] ||
+			!is_array( $cron_info = Kigo_Site_Cron::get_cron_info_option( 'property' ) )
+		) {
+			$last_successful_diff = $first_cron_execution = 0;
+		}
+		else {
+			$last_successful_diff = $cron_info[ 'last_update_timestamp' ];
+			$first_cron_execution = $cron_info[ 'first_cron_execution' ];
 		}
 		
 		/*we get the property headline*/
-		$page_title = $seo["PageTitle"];
+		$page_title = ( !is_array( $seo ) || !is_string( $seo["PageTitle"] ) ) ? '' : $seo["PageTitle"];
 
 		$do_page_update = false;
 		$do_meta_update = false;
@@ -308,6 +336,7 @@
 			$do_market_update = true;
 		}
 		
+		// Static pages (entity = system ?) are not updated, but their meta data are updated
 		if($page_exists_in_wp && !empty($staticpagekey)){
 			// update the meta tags		
 			if(empty($meta['bapi_last_update'])||((time()-$meta['bapi_last_update'][0])>300)){			
@@ -334,7 +363,6 @@
 			}
 			//Check for non-initialized market area page (-1) and set correct bapikey
 			if(($pktest[1]==-1)&&$pktest[0]=='marketarea'){
-				$seo = $bapisync->getSEOFromUrl(str_replace("?".$_SERVER['QUERY_STRING'],'',$_SERVER['REQUEST_URI']));
 				//print_r($post); exit();
 				update_post_meta($post->ID, "bapikey", 'marketarea:'.$seo['pkid']);	
 			}
@@ -351,11 +379,21 @@
 		// case 2: pages exists in wp and in Bookt
 		else if ($page_exists_in_wp && !empty($seo)) {
 			//Move from trashcan to publish if exists and no published
-			if($post->post_status=='trash'){ $post->post_status='publish'; $do_page_update = true; } 
-			//print_r("case 2");
-			if(empty($meta['bapi_last_update'])||((time()-$meta['bapi_last_update'][0])>300)){	$changes = $changes."|bapi_last_update"; $do_page_update = true; }
+			if($post->post_status=='trash'){ $post->post_status='publish'; $do_page_update = true; }
+			
+			$do_page_update = (
+				//If the meta is missing, or it has not been update since the first cron execution: update
+				empty( $meta['bapi_last_update'] ) ||
+				$meta['bapi_last_update'][0] <= $first_cron_execution ||
+				
+				(	 // If the cron didn't run a diff since 15 minutes (or it's not a property) and the page has not been update since 5 minute: update
+					( time() - $last_successful_diff ) > 900 &&
+					( time() - $meta['bapi_last_update'][0]) > 300
+				)
+			);
+			
 			// check for difference in meta description
-			if ($meta['bapi_meta_description'][0] != $seo["MetaDescrip"]) { $changes = $changes."|meta_description"; $do_meta_update = true; }
+			if ($meta['bapi_meta_description'][0] != stripslashes($seo["MetaDescrip"])) { $changes = $changes."|meta_description"; $do_meta_update = true; }
 			if ($meta['bapi_meta_title'][0] != $seo["PageTitle"]) { $changes = $changes."|meta_title"; $do_meta_update = true; }
 			// check for difference in meta keywords
 			if ($meta['bapi_meta_keywords'][0] != $seo["MetaKeywords"]) { $changes = $changes."|meta_keywords"; $do_meta_update = true; }
@@ -408,7 +446,7 @@
 			$do_page_update = true;
 		}
 
-		if ($do_page_update) {
+		if ($do_page_update || $force_sync) {
 			// do page update
 			$post->comment_status = "close";		
 
@@ -459,7 +497,7 @@
 			}						
 			add_filter('content_save_pre', 'wp_filter_post_kses');
 		}
-		if ($do_meta_update || $do_page_update) {
+		if ($do_meta_update || $do_page_update || $force_sync) {
 			// update the meta tags					
 			does_meta_exist("bapi_last_update", $meta) ? update_post_meta($post->ID, 'bapi_last_update', time()) : add_post_meta($post->ID, 'bapi_last_update', time(), true);
 			does_meta_exist("bapi_meta_description", $meta) ? update_post_meta($post->ID, 'bapi_meta_description', $seo["MetaDescrip"]) : add_post_meta($post->ID, 'bapi_meta_description', $seo["MetaDescrip"], true);
@@ -468,6 +506,7 @@
 			does_meta_exist("bapikey", $meta) ? update_post_meta($post->ID, "bapikey", BAPISync::getPageKey($seo["entity"],$seo["pkid"])) : add_post_meta($post->ID, "bapikey", BAPISync::getPageKey($seo["entity"],$seo["pkid"]), true);
 			does_meta_exist("bapi_meta_title", $meta) ? update_post_meta($post->ID, 'bapi_meta_title', $seo["PageTitle"]) : add_post_meta($post->ID, 'bapi_meta_title', $seo["PageTitle"], true);
 		}
+		return true;
 	}
 	
 	function does_meta_exist($name, $meta) {
@@ -545,7 +584,9 @@ function get_doc_template($docname,$setting){
 	$docmod = $bapi_all_options[$setting.'_lastmod']; //settings must be registered w/ this consistent format.
 	$doctext = $bapi_all_options[$setting];
 	if(((time()-60)-$docmod)>0){
-		$getopts=array('http'=>array('method'=>"GET",'header'=>"User-Agent: InstaSites Agent\r\nReferer: http://" . $_SERVER[HTTP_HOST] . $_SERVER[REQUEST_URI] . "\r\n"));
+
+		// FIXME: WHY NOT USING BAPI object?
+		$getopts=array('http'=>array('method'=>"GET",'header'=>"User-Agent: InstaSites Agent\r\nReferer: http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . "\r\n"));
 		$stream = stream_context_create($getopts);
 		$url = getbapiurl().'/ws/?method=get&ids=0&entity=doctemplate&docname='.urlencode($docname).'&apikey='.getbapiapikey();
 		$d = file_get_contents($url,FALSE,$stream);
