@@ -26,41 +26,41 @@ var KIGO_SEARCH = KIGO_SEARCH || (function(){
 		'scheckin':{
 			'enabled':	true,
 			'label':	'Check-in date',
-			'class':	'checkin'
+			'class':	'kigo_checkin'
 		},
 		'scheckout':{
 			'enabled':	false,
 			'label':	'Check-out date',
-			'class':	'checkout'
+			'class':	'kigo_checkout'
 		},
 		'los':{
 			'enabled':	true,
 			'label':	'Night(s)',
-			'class':	'los',
+			'class':	'kigo_los',
 			'min':		3,
 			'max':		31
 		},
 		'location': {
 			'enabled':	false,
 			'label':	'Location',
-			'class':	'location',
+			'class':	'kigo_location',
 			'values':	[]
 		},
 		'beds[exactly]': {
 			'enabled':	true,
 			'label':	'Bed(s)',
-			'class':	'bed',
+			'class':	'kigo_bed',
 			'min':		1,
 			'max':		20
 		},
 		'search_btn': {
 			'label':	'Search',
-			'class':	'search btn btn-primary'
+			'class':	'kigo_search btn btn-primary'
 		},
 		'clear_btn': {
 			'enabled':	true,
 			'label':	'Clear',
-			'class':	'clear'
+			'class':	'kigo_clear'
 		},
 		'label':		false,
 		'placeholder':	true
@@ -165,7 +165,13 @@ var KIGO_SEARCH = KIGO_SEARCH || (function(){
 						continue;
 					}
 					
-					config[ field_name ][ field_attr_name ] = arguments[1][ field_name ][ field_attr_name ];
+					//For classes we concatenat with the default class !
+					if( 'class' === field_attr_name ) {
+						config[ field_name ][ field_attr_name ] = default_config[ field_name ][ field_attr_name ] + ' ' + arguments[1][ field_name ][ field_attr_name ];
+					}
+					else {
+						config[ field_name ][ field_attr_name ] = arguments[1][ field_name ][ field_attr_name ];
+					}
 				}
 			}
 		}
@@ -217,7 +223,7 @@ var KIGO_SEARCH = KIGO_SEARCH || (function(){
 		var form_container,form, wrapper, select, search_btn, clear_btn = null;
 
 		// Create the container
-		script.parent().append( form_container = kj( '<div>', { 'class':'kigo-search' } ) );
+		script.parent().append( form_container = kj( '<div>', { 'class':'kigo_search_container' } ) );
 
 		// Create the form
 		form_container.append( form = kj(
@@ -226,7 +232,7 @@ var KIGO_SEARCH = KIGO_SEARCH || (function(){
 				'id':		'kigo-search-form',
 				'method':	'GET',
 				'action':	'http://' + site_prefix + '.' + domaine + search_path,
-				'class':	'kigo-search',
+				'class':	'kigo_search_form',
 				'target':	'_blank'
 			}
 		) );
@@ -255,7 +261,7 @@ var KIGO_SEARCH = KIGO_SEARCH || (function(){
 				}
 				
 				//Create the wrapper div
-				form.append( wrapper = kj( '<div>', { 'class': 'wrapper-' + config[ key ].name } ) );
+				form.append( wrapper = kj( '<div>', { 'class': 'wrapper_' + fields_config[ key ].name } ) );
 				
 				// Render the Label if asked
 				if( config.label ) {
@@ -327,7 +333,7 @@ var KIGO_SEARCH = KIGO_SEARCH || (function(){
 			function() {
 				
 				// Disable any field that is empty: like this this fields won't be send by the get call
-				kj( 'div.kigo-search input, div.kigo-search select' ).each(
+				kj( 'div.kigo_search_container input, div.kigo_search_container select' ).each(
 					function() {
 						if( !kj(this).val().length ) {
 							kj(this).prop( 'disabled', true );
@@ -337,11 +343,11 @@ var KIGO_SEARCH = KIGO_SEARCH || (function(){
 				
 				// Submit the form
 				kj( '#kigo-search-form' ).submit();
-				kj( 'div.kigo-search input, div.kigo-search select' ).prop( 'disabled', false );
+				kj( 'div.kigo_search_container input, div.kigo_search_container select' ).prop( 'disabled', false );
 				
 				// Disable checkout date picker if checkin is empty
-				if( !kj( 'input.checkin' ).val().length ) {
-					kj( 'input.checkout' ).prop( 'disabled', true );
+				if( !kj( 'input.kigo_checkin' ).val().length ) {
+					kj( 'input.kigo_checkout' ).prop( 'disabled', true );
 				}
 			}
 		);
@@ -352,15 +358,15 @@ var KIGO_SEARCH = KIGO_SEARCH || (function(){
 			form.append( clear_btn = kj( '<a>', { 'class': config.clear_btn.class, 'href': 'javascript:void(0)' } ).html( config.clear_btn.label ) );
 			clear_btn.click(
 				function() {
-					kj( 'div.kigo-search input, div.kigo-search select' ).val('');
-					kj( 'input.checkout' ).prop( 'disabled', true );
+					kj( 'div.kigo_search_container input[type="text"], div.kigo_search_container select' ).val('');
+					kj( 'input.kigo_checkout' ).prop( 'disabled', true );
 				}
 			);
 		}
 
 
 		// Load the pickadate library to the inout fields 
-		kj( 'input.checkin' ).pickadate( kj.extend(
+		kj( 'input.kigo_checkin' ).pickadate( kj.extend(
 			{},
 			pickadate_config,
 			{
@@ -373,15 +379,15 @@ var KIGO_SEARCH = KIGO_SEARCH || (function(){
 					}
 					
 					// Once a checkin date is selected, set checkout min date to checkin + min los times a day (86400000ms) and enabled checkout date picker
-					kj( 'input.checkout' ).data( 'pickadate' ).set( 'min', new Date( event.select + ( 86400000 * config.los.min ) ) );
-					kj( 'input.checkout' ).prop( 'disabled', false );
+					kj( 'input.kigo_checkout' ).data( 'pickadate' ).set( 'min', new Date( event.select + ( 86400000 * config.los.min ) ) );
+					kj( 'input.kigo_checkout' ).prop( 'disabled', false );
 				}
 			}
 		) );
-		kj( 'input.checkout' ).pickadate( pickadate_config );
+		kj( 'input.kigo_checkout' ).pickadate( pickadate_config );
 
 		// Disable the checkout date picker until a checking date is entered.
-		kj( 'input.checkout' ).prop( 'disabled', true );
+		kj( 'input.kigo_checkout' ).prop( 'disabled', true );
 	}
 
 }());
