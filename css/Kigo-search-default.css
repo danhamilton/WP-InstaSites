@@ -6,63 +6,63 @@
 
 
 /* Specific rules, partially taken from Bootstrap v2.2.2 */
-.kigo-search button, .kigo-search input, .kigo-search select, .kigo-search textarea{
+.kigo_search_container button, .kigo_search_container input, .kigo_search_container select, .kigo_search_container textarea{
 	margin:0;
 	font-size:100%;
 	vertical-align:middle
 }
 
-.kigo-search button, .kigo-search input{
+.kigo_search_container button, .kigo_search_container input{
 	*overflow:visible;
 	line-height:normal
 }
 
-.kigo-search button::-moz-focus-inner, .kigo-search input::-moz-focus-inner{
+.kigo_search_container button::-moz-focus-inner, .kigo_search_container input::-moz-focus-inner{
 	padding:0;
 	border:0
 }
 
-.kigo-search button, .kigo-search html input[type="button"], .kigo-search input[type="reset"], .kigo-search input[type="submit"]{
+.kigo_search_container button, .kigo_search_container html input[type="button"], .kigo_search_container input[type="reset"], .kigo_search_container input[type="submit"]{
 	cursor:pointer;
 	-webkit-appearance:button
 }
 
-.kigo-search label, select, button, input[type="button"], .kigo-search input[type="reset"], .kigo-search input[type="submit"], .kigo-search input[type="radio"], .kigo-search input[type="checkbox"]{
+.kigo_search_container label, select, button, input[type="button"], .kigo_search_container input[type="reset"], .kigo_search_container input[type="submit"], .kigo_search_container input[type="radio"], .kigo_search_container input[type="checkbox"]{
 	cursor:pointer
 }
 
-.kigo-search input[type="search"]{
+.kigo_search_container input[type="search"]{
 	-webkit-box-sizing:content-box;
 	-moz-box-sizing:content-box;
 	box-sizing:content-box;
 	-webkit-appearance:textfield
 }
 
-.kigo-search input[type="search"]::-webkit-search-decoration, .kigo-search input[type="search"]::-webkit-search-cancel-button{
+.kigo_search_container input[type="search"]::-webkit-search-decoration, .kigo_search_container input[type="search"]::-webkit-search-cancel-button{
 	-webkit-appearance:none
 }
 
-.kigo-search textarea{
+.kigo_search_container textarea{
 	overflow:auto;
 	vertical-align:top
 }
 
-.kigo-search label, .kigo-search input, .kigo-search button, .kigo-search select, .kigo-search textarea{
+.kigo_search_container label, .kigo_search_container input, .kigo_search_container button, .kigo_search_container select, .kigo_search_container textarea{
 	font-size:14px;
 	font-weight:normal;
 	line-height:20px
 }
 
-.kigo-search input, .kigo-search button, .kigo-search select, .kigo-search textarea{
+.kigo_search_container input, .kigo_search_container button, .kigo_search_container select, .kigo_search_container textarea{
 	font-family:"Helvetica Neue", Helvetica, Arial, sans-serif
 }
 
-.kigo-search label{
+.kigo_search_container label{
 	display:block;
 	margin-bottom:5px
 }
 
-.kigo-search select, .kigo-search textarea, .kigo-search input[type="text"], .kigo-search input[type="password"], .kigo-search input[type="datetime"], .kigo-search input[type="datetime-local"], .kigo-search input[type="date"], .kigo-search input[type="month"], .kigo-search input[type="time"], .kigo-search input[type="week"], .kigo-search input[type="number"], .kigo-search input[type="email"], .kigo-search input[type="url"], .kigo-search input[type="search"], .kigo-search input[type="tel"], .kigo-search input[type="color"], .uneditable-input{
+.kigo_search_container select, .kigo_search_container textarea, .kigo_search_container input[type="text"], .kigo_search_container input[type="password"], .kigo_search_container input[type="datetime"], .kigo_search_container input[type="datetime-local"], .kigo_search_container input[type="date"], .kigo_search_container input[type="month"], .kigo_search_container input[type="time"], .kigo_search_container input[type="week"], .kigo_search_container input[type="number"], .kigo_search_container input[type="email"], .kigo_search_container input[type="url"], .kigo_search_container input[type="search"], .kigo_search_container input[type="tel"], .kigo_search_container input[type="color"], .uneditable-input{
 	display:inline-block;
 	height:20px;
 	padding:4px 6px;
@@ -76,15 +76,15 @@
 	border-radius:4px
 }
 
-.kigo-search input, .kigo-search textarea, .uneditable-input{
+.kigo_search_container input, .kigo_search_container textarea, .uneditable-input{
 	width:206px
 }
 
-.kigo-search textarea{
+.kigo_search_container textarea{
 	height:auto
 }
 
-.kigo-search textarea, .kigo-search input[type="text"], .kigo-search input[type="password"], .kigo-search input[type="datetime"], .kigo-search input[type="datetime-local"], .kigo-search input[type="date"], .kigo-search input[type="month"], .kigo-search input[type="time"], .kigo-search input[type="week"], .kigo-search input[type="number"], .kigo-search input[type="email"], .kigo-search input[type="url"], .kigo-search input[type="search"], .kigo-search input[type="tel"], .kigo-search input[type="color"], .uneditable-input{
+.kigo_search_container textarea, .kigo_search_container input[type="text"], .kigo_search_container input[type="password"], .kigo_search_container input[type="datetime"], .kigo_search_container input[type="datetime-local"], .kigo_search_container input[type="date"], .kigo_search_container input[type="month"], .kigo_search_container input[type="time"], .kigo_search_container input[type="week"], .kigo_search_container input[type="number"], .kigo_search_container input[type="email"], .kigo_search_container input[type="url"], .kigo_search_container input[type="search"], .kigo_search_container input[type="tel"], .kigo_search_container input[type="color"], .uneditable-input{
 	background-color:#fff;
 	border:1px solid #ccc;
 	-webkit-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.075);
@@ -96,7 +96,7 @@
 	transition:border linear .2s, box-shadow linear .2s
 }
 
-.kigo-search textarea:focus, .kigo-search input[type="text"]:focus, .kigo-search input[type="password"]:focus, .kigo-search input[type="datetime"]:focus, .kigo-search input[type="datetime-local"]:focus, .kigo-search input[type="date"]:focus, .kigo-search input[type="month"]:focus, .kigo-search input[type="time"]:focus, .kigo-search input[type="week"]:focus, .kigo-search input[type="number"]:focus, .kigo-search input[type="email"]:focus, .kigo-search input[type="url"]:focus, .kigo-search input[type="search"]:focus, .kigo-search input[type="tel"]:focus, .kigo-search input[type="color"]:focus, .uneditable-input:focus{
+.kigo_search_container textarea:focus, .kigo_search_container input[type="text"]:focus, .kigo_search_container input[type="password"]:focus, .kigo_search_container input[type="datetime"]:focus, .kigo_search_container input[type="datetime-local"]:focus, .kigo_search_container input[type="date"]:focus, .kigo_search_container input[type="month"]:focus, .kigo_search_container input[type="time"]:focus, .kigo_search_container input[type="week"]:focus, .kigo_search_container input[type="number"]:focus, .kigo_search_container input[type="email"]:focus, .kigo_search_container input[type="url"]:focus, .kigo_search_container input[type="search"]:focus, .kigo_search_container input[type="tel"]:focus, .kigo_search_container input[type="color"]:focus, .uneditable-input:focus{
 	border-color:rgba(82, 168, 236, 0.8);
 	outline:0;
 	outline:thin dotted \9;
@@ -105,34 +105,34 @@
 	box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6)
 }
 
-.kigo-search input[type="radio"], .kigo-search input[type="checkbox"]{
+.kigo_search_container input[type="radio"], .kigo_search_container input[type="checkbox"]{
 	margin:4px 0 0;
 	margin-top:1px \9;
 	*margin-top:0;
 	line-height:normal
 }
 
-.kigo-search input[type="file"], .kigo-search input[type="image"], .kigo-search input[type="submit"], .kigo-search input[type="reset"], .kigo-search input[type="button"], .kigo-search input[type="radio"], .kigo-search input[type="checkbox"]{
+.kigo_search_container input[type="file"], .kigo_search_container input[type="image"], .kigo_search_container input[type="submit"], .kigo_search_container input[type="reset"], .kigo_search_container input[type="button"], .kigo_search_container input[type="radio"], .kigo_search_container input[type="checkbox"]{
 	width:auto
 }
 
-.kigo-search select, .kigo-search input[type="file"]{
+.kigo_search_container select, .kigo_search_container input[type="file"]{
 	height:30px;
 	*margin-top:4px;
 	line-height:30px
 }
 
-.kigo-search select{
+.kigo_search_container select{
 	width:220px;
 	background-color:#fff;
 	border:1px solid #ccc
 }
 
-.kigo-search select[multiple], .kigo-search select[size]{
+.kigo_search_container select[multiple], .kigo_search_container select[size]{
 	height:auto
 }
 
-.kigo-search select:focus, .kigo-search input[type="file"]:focus, .kigo-search input[type="radio"]:focus, .kigo-search input[type="checkbox"]:focus{
+.kigo_search_container select:focus, .kigo_search_container input[type="file"]:focus, .kigo_search_container input[type="radio"]:focus, .kigo_search_container input[type="checkbox"]:focus{
 	outline:thin dotted #333;
 	outline:5px auto -webkit-focus-ring-color;
 	outline-offset:-2px
@@ -158,33 +158,33 @@
 	height:auto
 }
 
-.kigo-search input:-moz-placeholder, .kigo-search textarea:-moz-placeholder{
+.kigo_search_container input:-moz-placeholder, .kigo_search_container textarea:-moz-placeholder{
 	color:#999
 }
 
-.kigo-search input:-ms-input-placeholder, .kigo-search textarea:-ms-input-placeholder{
+.kigo_search_container input:-ms-input-placeholder, .kigo_search_container textarea:-ms-input-placeholder{
 	color:#999
 }
 
-.kigo-search input::-webkit-input-placeholder, .kigo-search textarea::-webkit-input-placeholder{
+.kigo_search_container input::-webkit-input-placeholder, .kigo_search_container textarea::-webkit-input-placeholder{
 	color:#999
 }
 
-.kigo-search .radio, .kigo-search .checkbox{
+.kigo_search_container .radio, .kigo_search_container .checkbox{
 	min-height:20px;
 	padding-left:20px
 }
 
-.kigo-search .radio input[type="radio"], .kigo-search .checkbox input[type="checkbox"]{
+.kigo_search_container .radio input[type="radio"], .kigo_search_container .checkbox input[type="checkbox"]{
 	float:left;
 	margin-left:-20px
 }
 
-.kigo-search .controls > .radio:first-child, .kigo-search .controls > .checkbox:first-child{
+.kigo_search_container .controls > .radio:first-child, .kigo_search_container .controls > .checkbox:first-child{
 	padding-top:5px
 }
 
-.kigo-search .radio.inline, .kigo-search .checkbox.inline{
+.kigo_search_container .radio.inline, .kigo_search_container .checkbox.inline{
 	display:inline-block;
 	padding-top:5px;
 	margin-bottom:0;
@@ -417,15 +417,15 @@ button.btn.btn-mini, input[type="submit"].btn.btn-mini{
 }
 
 
-.kigo-search input[disabled],
-.kigo-search select[disabled],
-.kigo-search textarea[disabled]{
+.kigo_search_container input[disabled],
+.kigo_search_container select[disabled],
+.kigo_search_container textarea[disabled]{
   cursor: not-allowed;
   background-color: #eeeeee;
 }
 
 
-.kigo-search input{
+.kigo_search_container input{
 	min-height: 30px;
 	width: 220px;
 }
@@ -440,7 +440,7 @@ button.btn.btn-mini, input[type="submit"].btn.btn-mini{
   font-size: 14px;
 }
 
-div.kigo-search{
+div.kigo_search_container{
 	max-width: 220px;  
 	margin: 5px;
 }
