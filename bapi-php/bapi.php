@@ -53,6 +53,14 @@ class BAPI
 		return $res;
 	}
 	
+	/**
+	 * @Deprecated
+	 * 
+	 * @param $jsondecode
+	 * @param int $debugmode
+	 *
+	 * @return array|mixed|null|string
+	 */
 	public function gettextdata($jsondecode,$debugmode=0) {
 		if (!$this->isvalid()) { return null; }
 		$url = $this->baseURL . '/ws/?method=get&entity=textdata&apikey=' . $this->apikey;
