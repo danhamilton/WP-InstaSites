@@ -121,6 +121,65 @@
 	}
 
 
+	/* Ajax handler for restore_default_content request */
+	function restore_default_content_callback() {
+		if(
+			!isset( $_POST[ 'post_name' ] ) ||
+			!strlen( $_POST[ 'post_name' ] )
+		) {
+			kigo_ajax_json_response( false, __FUNCTION__ . '_1' );
+		}
+		
+		if(
+			!is_int( $menu_id = initmenu( "Main Navigation Menu" ) ) ||
+			!is_array( $page_def = get_default_pages_def( $_POST['post_name'] ) ) ||
+			!is_array( $add_page = addpage( $page_def, $menu_id ) )
+		) {
+			kigo_ajax_json_response( false, __FUNCTION__ . '_2', array(
+				'post_name'	=>	$_POST[ 'post_name' ],
+				'menu_id'	=>	$menu_id,
+				'page_def'	=>	$page_def,
+				'add_page'	=>	$add_page,
+			) );
+		}
+		
+		kigo_ajax_json_response( true, '', $add_page );
+	}
+
+	/**
+	 * Write a Json response, and exit
+	 * 
+	 * @param bool $success
+	 * @param string $error_code 	__FUNCTION__ . '_' . <int>
+	 * @param array $result
+	 */
+	function kigo_ajax_json_response( $success, $error_code = '', $result = array() ) {
+		header('Content-Type: application/json');
+		if(
+			!is_bool( $success ) ||
+			!is_string( $error_code ) ||
+			!is_array( $result )
+		) {
+			echo json_encode( array(
+				'success'		=>	false,
+				'error_code'	=>	__FUNCTION__ . '_1',
+				'result'		=>	array(
+					'success'	=>	var_export( $success, true ),
+					'msg'		=>	var_export( $error_code, true ),
+					'result'	=>	var_export( $result, true )
+				)
+			));
+			exit();
+		}
+		
+		echo json_encode( array(
+			'success'		=>	$success,
+			'error_code'	=>	$error_code,
+			'result'		=>	$result
+		));
+		exit();
+	}
+
 	/* BAPI url handlers */
 	function urlHandler_emailtrackingimage() {
 		$url = get_relative($_SERVER['REQUEST_URI']);		
@@ -515,6 +574,11 @@
 		wp_enqueue_style( 'jquery-ui' );
 	}
 
+	function enqueue_and_register_admin_scritps() {
+		wp_register_script( 'kigo-plugin-admin-js', get_relative( plugins_url( '/js/admin.js', __FILE__) ), array( 'jquery-min'), false, true );
+		wp_enqueue_script( 'kigo-plugin-admin-js' );
+	}
+	
 	function enqueue_and_register_admin_scritps() {
 		wp_register_script( 'kigo-plugin-admin-js', get_relative( plugins_url( '/js/admin.js', __FILE__) ), array( 'jquery-min'), false, true );
 		wp_enqueue_script( 'kigo-plugin-admin-js' );
@@ -1015,29 +1079,30 @@ function getTextDataArray(){
 	* @uses		remove_meta_box()
 	*/
 	function remove_pageattributes_meta_box() {
-		/* if the user is not super admin */
-		if (!is_super_admin()) {
-			/* if the post var is set this var show when editing post and pages like this /wp-admin/post.php?post=2468&action=edit */
-			if(isset($_GET['post']) && $_GET['post'] != ''){
-			/* its set we get the post ID */
-			$thePostID = $_GET['post'];
-			/* we get the meta data array for this post */
-			$metaArray = get_post_meta($thePostID);
-				/* we check if our custom fields exists */
-				if(!empty($metaArray) && array_key_exists('bapi_page_id', $metaArray) || array_key_exists('bapikey', $metaArray) || array_key_exists('bapi_last_update', $metaArray)){
+		/* if the post var is set this var show when editing post and pages like this /wp-admin/post.php?post=2468&action=edit */
+		if(isset($_GET['post']) && $_GET['post'] != ''){
+		/* its set we get the post ID */
+		$thePostID = $_GET['post'];
+		/* we get the meta data array for this post */
+		$metaArray = get_post_meta($thePostID);
+			/* we check if our custom fields exists */
+			if(!empty($metaArray) && array_key_exists('bapi_page_id', $metaArray) || array_key_exists('bapikey', $metaArray) || array_key_exists('bapi_last_update', $metaArray)){
+				if (!is_super_admin()) {
 					/* this is not a super admin and the page is a BAPI page we remove the metabox*/
 					remove_meta_box( 'pageparentdiv', 'page', 'normal' );
-					/* lets add a metabox with a message as to why there is no page Attributes metabox */
-					if(!array_key_exists('bapi_page_id', $metaArray)){
-						add_meta_box( 'pageattributesmessage_meta_box_id', 'Type: Data-Driven', 'create_DataDriventDetailPagesmessage_meta_box', 'page', 'side', 'high' );
-						remove_post_type_support('page', 'title');
+				}
+				/* lets add a metabox with a message as to why there is no page Attributes metabox */
+				if(!array_key_exists('bapi_page_id', $metaArray)){
+					add_meta_box( 'pageattributesmessage_meta_box_id', 'Type: Data-Driven', 'create_DataDriventDetailPagesmessage_meta_box', 'page', 'side', 'high' );
+					if (!is_super_admin()) {
 						remove_post_type_support('page', 'editor');
-					}else{
-						add_meta_box( 'pageattributesmessage_meta_box_id', 'Type: BAPI-Initialized', 'create_BAPIInitializedPagesmessage_meta_box', 'page', 'side', 'high' );
+						remove_post_type_support('page', 'title');
 					}
 				}else{
-					add_meta_box( 'pageattributesmessage_meta_box_id', 'Type: Static', 'create_StaticPagesmessage_meta_box', 'page', 'side', 'high' );
+					add_meta_box( 'pageattributesmessage_meta_box_id', 'Type: BAPI-Initialized', 'create_BAPIInitializedPagesmessage_meta_box', 'page', 'side', 'high' );
 				}
+			}else{
+				add_meta_box( 'pageattributesmessage_meta_box_id', 'Type: Static', 'create_StaticPagesmessage_meta_box', 'page', 'side', 'high' );
 			}
 		}
 	}
@@ -1048,7 +1113,21 @@ function getTextDataArray(){
 	}
 	function create_BAPIInitializedPagesmessage_meta_box()
 	{
-		echo '<div class="updated inline"><p>This page is synchronized with ' . ( is_newapp_website() ? 'Kigo' : 'InstaManager' ) . '. You may only edit the page content. All other editing functions have been disabled.</p> <a href="' . ( is_newapp_website() ? '//supportdocs.imbookingsecure.com/missing_attributes_on_shared_pages' : '//support.bookt.com/customer/portal/articles/1455747-missing-attributes-on-shared-pages' ) . '" target="_blank">Learn More</a></div>';
+		// Retrieve the current post_name
+		if(
+			!is_a( $post = get_post(), 'WP_Post' ) ||
+			!is_string( $post_name = $post->post_name )
+		) {
+			$post_name = '';
+		}
+		echo '<div class="updated inline">
+				<p>This page is synchronized with ' . ( is_newapp_website() ? 'Kigo' : 'InstaManager' ) . '. You may only edit the page content. All other editing functions have been disabled.</p>
+				<a href="' . ( is_newapp_website() ? '//supportdocs.imbookingsecure.com/missing_attributes_on_shared_pages' : '//support.bookt.com/customer/portal/articles/1455747-missing-attributes-on-shared-pages' ) . '" target="_blank">Learn More</a>
+			</div>
+			<div>
+				<button id="restore-default-content-button" class="button button-primary button-large" data-post-name="' . $post_name . '">Restore default content</button>
+				<span id="restore-default-content-spiner" class="spinner"></span>
+			</div>';
 	}
 	function create_StaticPagesmessage_meta_box()
 	{

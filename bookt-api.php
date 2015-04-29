@@ -65,6 +65,7 @@ if(
 	add_action( 'wp_ajax_'.Kigo_Single_Sign_On::ACTION_LOGIN, array( 'Kigo_Single_Sign_On', 'login' ) ); // for logged-in users
 	add_action( 'wp_ajax_nopriv_'.Kigo_Single_Sign_On::ACTION_LOGIN, array( 'Kigo_Single_Sign_On', 'login' ) ); // for NON-logged-in users
 
+
 	// Cron sync
 	if( defined( 'KIGO_CRON_SECRET' ) ) {
 
@@ -89,6 +90,9 @@ if(
 	
 	// Save custom translation endpoint
 	add_action( 'wp_ajax_'.kigo_I18n::ACTION_SAVE_CUSTOM_TRANSLATION, array( 'kigo_I18n', 'save_custom_translations' ) );
+
+	// Ajax endpoint to restore a page to it's default content 
+	add_action( 'wp_ajax_restore_default_content', 'restore_default_content_callback' );
 
 
 	add_action('init','urlHandler_emailtrackingimage',1);	// handler for email images
