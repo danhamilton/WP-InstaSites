@@ -9,7 +9,7 @@ Author URI: http://kigo.net
 License: GPL2
 */
 
-define( 'KIGO_PLUGIN_VERSION', '1.0.20150420' ); // KEEP THIS IN SYNC WITH PLUGIN METADATA ABOVE !!!
+define( 'KIGO_PLUGIN_VERSION', '1.0.20150430' ); // KEEP THIS IN SYNC WITH PLUGIN METADATA ABOVE !!!
 
 
 /*  Copyright 2014 Kigo.net (email : support@kigo.net)

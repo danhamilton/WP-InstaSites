@@ -24,7 +24,8 @@ class Kigo_Translations_List_Table extends WP_List_Table {
 
 	public function __construct( $args = array( 'plural' => 'translations' ) ) {
 		parent::__construct( $args );
-
+		
+		self::$columns['default_value'] .= ' (' .  kigo_get_site_language() . ')';
 		$this->_column_headers = array( self::$columns, array(), self::$sortable_colums );
 	}
 

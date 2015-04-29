@@ -34,7 +34,7 @@ class kigo_I18n {
 		//'be'	=> 'Belarusian',
 		//'bn'	=> 'Bengali',
 		//'bs'	=> 'Bosnian',
-		//'bg'	=> 'Bulgarian',
+		'bg'	=> 'Bulgarian',
 		'ca'	=> 'Catalan',
 		//'ceb'	=> 'Cebuano',
 		//'ny'	=> 'Chichewa',
@@ -90,6 +90,7 @@ class kigo_I18n {
 		//'fa'	=> 'Persian',
 		//'pl'	=> 'Polish',
 		'pt'	=> 'Portuguese',
+		'pt-BR'	=> 'Portuguese Brazil',
 		//'pa'	=> 'Punjabi',
 		'ro'	=> 'Romanian',
 		'ru'	=> 'Russian',
@@ -609,7 +610,7 @@ class kigo_I18n {
 				!is_string( $key_val[1] ) ||
 				!strlen( $key_val[1] )
 			) {
-				return null;
+				continue;
 			}
 			$trad[ $key_val[0] ] = $key_val[1];
 
