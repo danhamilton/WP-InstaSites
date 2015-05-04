@@ -579,11 +579,6 @@
 		wp_enqueue_script( 'kigo-plugin-admin-js' );
 	}
 	
-	function enqueue_and_register_admin_scritps() {
-		wp_register_script( 'kigo-plugin-admin-js', get_relative( plugins_url( '/js/admin.js', __FILE__) ), array( 'jquery-min'), false, true );
-		wp_enqueue_script( 'kigo-plugin-admin-js' );
-	}
-	
 	/* Load conditional script */
 	function loadscriptjquery(){	
 	?>  
