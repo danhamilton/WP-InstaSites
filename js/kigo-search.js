@@ -17,11 +17,14 @@ var translations={ar:{monthsFull:["يناير","فبراير","مارس","ابر
 var kj = jQuery.noConflict(true);
 
 var KIGO_SEARCH = KIGO_SEARCH || (function(){
-	var domaine =		'imbookingsecure.com';
+	var prod_domaine =		'imbookingsecure.com';
+	var dev_domaine =		'lodgingcloud.com';
+	
 	var plugin_path =	'/wp-content/plugins/bookt-api/';
 	var search_path =	'/rentals/rentalsearch/';
 
 	var default_config = {
+		'dev': false,
 		'calendar_language':'en',
 		'scheckin':{
 			'enabled':	true,
@@ -150,8 +153,12 @@ var KIGO_SEARCH = KIGO_SEARCH || (function(){
 			
 			for( var field_name in default_config ) {
 				// Check if this config is overwriten
-				if( 'object' !== kj.type( arguments[1][ field_name ] ) ) {
+				if( kj.type( default_config[ field_name ] ) !== kj.type( arguments[1][ field_name ] ) ) {
 					config[ field_name ] = default_config[ field_name ];
+					continue;
+				}
+				else if ( 'objcet' !== kj.type( arguments[1][ field_name ] ) ) {
+					config[ field_name ] = arguments[1][ field_name ];
 					continue;
 				}
 				
@@ -193,7 +200,7 @@ var KIGO_SEARCH = KIGO_SEARCH || (function(){
 			'<link>',
 			{
 				'rel':		'stylesheet',
-				'href':		'http://' + domaine + plugin_path + 'css/kigo-search-default.css',
+				'href':		'http://' + ( config.dev ? dev_domaine : prod_domaine ) + plugin_path + 'css/kigo-search-default.css',
 				'media':	'screen'
 			}
 		) );
@@ -231,7 +238,7 @@ var KIGO_SEARCH = KIGO_SEARCH || (function(){
 			{
 				'id':		'kigo-search-form',
 				'method':	'GET',
-				'action':	'http://' + site_prefix + '.' + domaine + search_path,
+				'action':	'http://' + site_prefix + '.' + ( config.dev ? dev_domaine : prod_domaine ) + search_path,
 				'class':	'kigo_search_form',
 				'target':	'_blank'
 			}
