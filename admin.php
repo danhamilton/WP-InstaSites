@@ -14,6 +14,7 @@ function bapi_create_menu() {
 	add_submenu_page( $parentSlug, 'Data Sync',                  'Data Sync',                  'administrator', 'site_settings_sync',       function(){ require('setup-sync.php'); }         );
 	add_submenu_page( $parentSlug, 'Initial Setup',              'Initial Setup',              'administrator', 'site_settings_initial',    function(){ require('setup-initial.php'); }      );
 	add_submenu_page( $parentSlug, 'Advanced Options',           'Advanced',                   'administrator', 'site_settings_advanced',   function(){ require('setup-advanced.php'); }     );
+	add_submenu_page( $parentSlug, 'Translations',				'Translations',					'administrator', 'site_settings_translations',   array( 'Kigo_Setups', 'translation_gui' )     );
 
 	// call register settings function
 	// (Why is this done here? because the options should only be init'ed if we are inside a site-specific admin. Not when we are in the Network admin panel, nor in the /wp-admin/user/ panel.)
@@ -28,8 +29,6 @@ function bapi_options_init(){
 	register_setting('bapi_options','bapi_secureurl');	
 	register_setting('bapi_options','bapi_solutiondata');
 	register_setting('bapi_options','bapi_solutiondata_lastmod');	
-	register_setting('bapi_options','bapi_textdata');
-	register_setting('bapi_options','bapi_textdata_lastmod');
 	register_setting('bapi_options','bapi_site_cdn_domain'); 
 	register_setting('bapi_options','bapi_cloudfronturl');
 	register_setting('bapi_options','bapi_cloudfrontid'); 

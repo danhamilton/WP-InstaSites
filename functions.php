@@ -49,6 +49,10 @@
 
 	function kigo_on_plugin_update( $current_version ) {
 
+		if( !kigo_I18n::update_i18n_network_option() ) {
+			Loggly_logs::log( array( 'msg' => ( 'Failed to update network option translations' ), 'current_version' => $current_version ) );
+		}
+
 		if( strcmp( $current_version, '1.0.20141002' ) < 0 ) { // The auto sign on table was introduced in version 1.0.20141002 2014/10/02, every previous version should create it now!
 			if( !Kigo_Single_Sign_On::create_table() ) {
 				return false;
@@ -69,12 +73,6 @@
 		}
 		if(!isset($bapi_all_options['bapi_solutiondata_lastmod'])){
 			$bapi_all_options['bapi_solutiondata_lastmod'] = 0;
-		}
-		if(!isset($bapi_all_options['bapi_textdata'])){
-			$bapi_all_options['bapi_textdata'] = '';
-		}
-		if(!isset($bapi_all_options['bapi_textdata_lastmod'])){
-			$bapi_all_options['bapi_textdata_lastmod'] = 0;
 		}
 		if(!isset($bapi_all_options['bapi_keywords_array'])){
 			$bapi_all_options['bapi_keywords_array'] = '';
@@ -123,6 +121,65 @@
 	}
 
 
+	/* Ajax handler for restore_default_content request */
+	function restore_default_content_callback() {
+		if(
+			!isset( $_POST[ 'post_name' ] ) ||
+			!strlen( $_POST[ 'post_name' ] )
+		) {
+			kigo_ajax_json_response( false, __FUNCTION__ . '_1' );
+		}
+		
+		if(
+			!is_int( $menu_id = initmenu( "Main Navigation Menu" ) ) ||
+			!is_array( $page_def = get_default_pages_def( $_POST['post_name'] ) ) ||
+			!is_array( $add_page = addpage( $page_def, $menu_id ) )
+		) {
+			kigo_ajax_json_response( false, __FUNCTION__ . '_2', array(
+				'post_name'	=>	$_POST[ 'post_name' ],
+				'menu_id'	=>	$menu_id,
+				'page_def'	=>	$page_def,
+				'add_page'	=>	$add_page,
+			) );
+		}
+		
+		kigo_ajax_json_response( true, '', $add_page );
+	}
+
+	/**
+	 * Write a Json response, and exit
+	 * 
+	 * @param bool $success
+	 * @param string $error_code 	__FUNCTION__ . '_' . <int>
+	 * @param array $result
+	 */
+	function kigo_ajax_json_response( $success, $error_code = '', $result = array() ) {
+		header('Content-Type: application/json');
+		if(
+			!is_bool( $success ) ||
+			!is_string( $error_code ) ||
+			!is_array( $result )
+		) {
+			echo json_encode( array(
+				'success'		=>	false,
+				'error_code'	=>	__FUNCTION__ . '_1',
+				'result'		=>	array(
+					'success'	=>	var_export( $success, true ),
+					'msg'		=>	var_export( $error_code, true ),
+					'result'	=>	var_export( $result, true )
+				)
+			));
+			exit();
+		}
+		
+		echo json_encode( array(
+			'success'		=>	$success,
+			'error_code'	=>	$error_code,
+			'result'		=>	$result
+		));
+		exit();
+	}
+
 	/* BAPI url handlers */
 	function urlHandler_emailtrackingimage() {
 		$url = get_relative($_SERVER['REQUEST_URI']);		
@@ -140,6 +197,10 @@
 		}
 	}
 	
+	/**
+	 * This is not used anymore but might be useful for debugging purpose
+	 * @Deprecated 
+	 */
 	function urlHandler_bapitextdata() {
 		$url = get_relative($_SERVER['REQUEST_URI']);
 		if (strtolower($url) != "/bapi.textdata.js")
@@ -157,12 +218,10 @@
 	}
 	
 	function urlHandler_bapitextdata_helper() {
-		global $bapi_all_options; 
-		$js = $bapi_all_options['bapi_textdata']; // core data should have been synced prior to this
+		$js = json_encode( kigo_I18n::get_translations( $lang = kigo_get_site_language() ) );
 		$jsn = "/*\r\n";
 		$jsn .= "	BAPI TextData\r\n";
-		$jsn .= "	Last updated: " . date('r',$lastupdatetime) . "\r\n";	
-		$jsn .= "	Language: " . getbapilanguage() . "\r\n";
+		$jsn .= "	Language: " . $lang . "\r\n";
 		$jsn .= "*/\r\n\r\n";
 		$jsn .= "BAPI.textdata = " . $js . ";\r\n";	
 		return $jsn;
@@ -433,6 +492,18 @@
 		return $language;	
 	}
 	
+	function kigo_get_site_language() {
+		if(
+			!is_array( $solution_data = BAPISync::getSolutionData() ) ||
+			!is_array( $solution_data[ 'Site' ] ) ||
+			!is_string( $solution_data[ 'Site' ][ 'Language' ] )
+		) {
+			Loggly_logs::log( array( 'msg' => 'Unable to retrieve site language from solution data.', 'blog_id' => get_current_blog_id() ) );
+			return 'en-US';
+		}
+		return $solution_data[ 'Site' ][ 'Language' ];
+	}
+	
 	function bapi_language_attributes($doctype) {
 		return 'lang="'.getbapilanguage().'"';
 	}
@@ -449,7 +520,7 @@
 	function getbapisolutiondata() {
 		$wrapper = array();
 		$wrapper['site'] = getbapicontext();
-		$wrapper['textdata'] = getbapitextdata();			
+		$wrapper['textdata'] = kigo_I18n::get_translations( kigo_get_site_language() );
 		return $wrapper;
 	}	
 
@@ -465,9 +536,11 @@
 		return $BAPI_ALL_OPTIONS__BAPI_SOLUTIONDATA_DECODED;
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	function getbapitextdata() {
-		global $bapi_all_options;
-		return json_decode($bapi_all_options['bapi_textdata'],TRUE); 		
+		return kigo_I18n::get_translations( kigo_get_site_language() );
 	}	
 	
 	/* Page Helpers */
@@ -679,6 +752,10 @@
 		global $getContextURL;
 		?><meta name="CONTEXTURL" content="<?= $getContextURL ?>" /><?= "\n" ?><?php
 	}
+
+	/**
+	 * @Deprecated
+	 */
 	function bapi_add_textdata_meta(){
 		global $textDataURL;
 		?><meta name="TEXTDATAURL" content="<?= $textDataURL ?>" /><?= "\n" ?><?php
@@ -964,8 +1041,9 @@ function display_gw_verification(){
 	}
 }
 
+// Used by themes to retrieve the textdata
 function getTextDataArray(){
-	return BAPISync::getTextData();
+	return kigo_I18n::get_translations( kigo_get_site_language() );
 }
 	/**
 	* Remove quick edit link in the list of all pages for non super users.
@@ -996,29 +1074,30 @@ function getTextDataArray(){
 	* @uses		remove_meta_box()
 	*/
 	function remove_pageattributes_meta_box() {
-		/* if the user is not super admin */
-		if (!is_super_admin()) {
-			/* if the post var is set this var show when editing post and pages like this /wp-admin/post.php?post=2468&action=edit */
-			if(isset($_GET['post']) && $_GET['post'] != ''){
-			/* its set we get the post ID */
-			$thePostID = $_GET['post'];
-			/* we get the meta data array for this post */
-			$metaArray = get_post_meta($thePostID);
-				/* we check if our custom fields exists */
-				if(!empty($metaArray) && array_key_exists('bapi_page_id', $metaArray) || array_key_exists('bapikey', $metaArray) || array_key_exists('bapi_last_update', $metaArray)){
+		/* if the post var is set this var show when editing post and pages like this /wp-admin/post.php?post=2468&action=edit */
+		if(isset($_GET['post']) && $_GET['post'] != ''){
+		/* its set we get the post ID */
+		$thePostID = $_GET['post'];
+		/* we get the meta data array for this post */
+		$metaArray = get_post_meta($thePostID);
+			/* we check if our custom fields exists */
+			if(!empty($metaArray) && array_key_exists('bapi_page_id', $metaArray) || array_key_exists('bapikey', $metaArray) || array_key_exists('bapi_last_update', $metaArray)){
+				if (!is_super_admin()) {
 					/* this is not a super admin and the page is a BAPI page we remove the metabox*/
 					remove_meta_box( 'pageparentdiv', 'page', 'normal' );
-					/* lets add a metabox with a message as to why there is no page Attributes metabox */
-					if(!array_key_exists('bapi_page_id', $metaArray)){
-						add_meta_box( 'pageattributesmessage_meta_box_id', 'Type: Data-Driven', 'create_DataDriventDetailPagesmessage_meta_box', 'page', 'side', 'high' );
-						remove_post_type_support('page', 'title');
+				}
+				/* lets add a metabox with a message as to why there is no page Attributes metabox */
+				if(!array_key_exists('bapi_page_id', $metaArray)){
+					add_meta_box( 'pageattributesmessage_meta_box_id', 'Type: Data-Driven', 'create_DataDriventDetailPagesmessage_meta_box', 'page', 'side', 'high' );
+					if (!is_super_admin()) {
 						remove_post_type_support('page', 'editor');
-					}else{
-						add_meta_box( 'pageattributesmessage_meta_box_id', 'Type: BAPI-Initialized', 'create_BAPIInitializedPagesmessage_meta_box', 'page', 'side', 'high' );
+						remove_post_type_support('page', 'title');
 					}
 				}else{
-					add_meta_box( 'pageattributesmessage_meta_box_id', 'Type: Static', 'create_StaticPagesmessage_meta_box', 'page', 'side', 'high' );
+					add_meta_box( 'pageattributesmessage_meta_box_id', 'Type: BAPI-Initialized', 'create_BAPIInitializedPagesmessage_meta_box', 'page', 'side', 'high' );
 				}
+			}else{
+				add_meta_box( 'pageattributesmessage_meta_box_id', 'Type: Static', 'create_StaticPagesmessage_meta_box', 'page', 'side', 'high' );
 			}
 		}
 	}
@@ -1029,7 +1108,21 @@ function getTextDataArray(){
 	}
 	function create_BAPIInitializedPagesmessage_meta_box()
 	{
-		echo '<div class="updated inline"><p>This page is synchronized with ' . ( is_newapp_website() ? 'Kigo' : 'InstaManager' ) . '. You may only edit the page content. All other editing functions have been disabled.</p> <a href="' . ( is_newapp_website() ? '//supportdocs.imbookingsecure.com/missing_attributes_on_shared_pages' : '//support.bookt.com/customer/portal/articles/1455747-missing-attributes-on-shared-pages' ) . '" target="_blank">Learn More</a></div>';
+		// Retrieve the current post_name
+		if(
+			!is_a( $post = get_post(), 'WP_Post' ) ||
+			!is_string( $post_name = $post->post_name )
+		) {
+			$post_name = '';
+		}
+		echo '<div class="updated inline">
+				<p>This page is synchronized with ' . ( is_newapp_website() ? 'Kigo' : 'InstaManager' ) . '. You may only edit the page content. All other editing functions have been disabled.</p>
+				<a href="' . ( is_newapp_website() ? '//supportdocs.imbookingsecure.com/missing_attributes_on_shared_pages' : '//support.bookt.com/customer/portal/articles/1455747-missing-attributes-on-shared-pages' ) . '" target="_blank">Learn More</a>
+			</div>
+			<div>
+				<button id="restore-default-content-button" class="button button-primary button-large" data-post-name="' . $post_name . '">Restore default content</button>
+				<span id="restore-default-content-spiner" class="spinner"></span>
+			</div>';
 	}
 	function create_StaticPagesmessage_meta_box()
 	{

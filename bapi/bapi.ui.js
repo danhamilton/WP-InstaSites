@@ -52,6 +52,7 @@ context.jsroot = '/';
 context.init = function(options) {
 	BAPI.log("BAPI.UI initializing.");
 	if (typeof(options)==="undefined" || options===null) { options = {} };	
+	context.inithelpers.getParamToSession();
 	context.inithelpers.applyentityadvisor(options);
 	context.inithelpers.setupsummarywidgets(options);
 	context.inithelpers.setupsearchformwidgets(options);
@@ -585,6 +586,60 @@ context.inithelpers = {
 			}
 			BAPI.savesession();
 		});				
+	},
+	getParamToSession: function() {
+		if( 'object' !== $.type( BAPI.session ) ) {
+			return;
+		}
+		
+		// Check first if any params is sent
+		var search_string;
+		if(
+			'string' !== $.type( window.location.search ) ||
+			!window.location.search.length ||
+			'?' !== window.location.search[0] ||
+			!( search_string = window.location.search.substring(1) ).length
+		) {
+			return;
+		}
+		
+		// Retrieve all the get parameters. 
+		// if beds[min]=1 is sent we need to store it as beds.min = 1 and  beds=1 to ensure compatibility with existing code
+		var get_params = {};
+		$.each(
+			search_string.split( '&' ),
+			function() {
+				var key_value_array;
+				if(
+					'string' !== $.type( this ) ||
+					!this.length ||
+					2 !== ( key_value_array = this.split( '=' ) ).length
+				) {
+					return true;
+				}
+				
+				var key = decodeURIComponent( key_value_array[0] );
+				var brackets_key = null;
+				if(
+					'array' === $.type( brackets_key = key.match(/([^\[\]]*)\[([^\]]*)\]/) ) &&
+					3 === brackets_key.length
+				) {
+					get_params[ brackets_key[1] ] = {};
+					get_params[ brackets_key[1] ][ brackets_key[2] ] = decodeURIComponent( key_value_array[1] );
+				}
+				get_params[ key_value_array[0] ] = decodeURIComponent( key_value_array[1] );
+			}
+		);
+		
+		// Control parameter, if the param search=1 is sent, we overwrite the session saved with the get parameters.
+		if(
+			'string' !== $.type( get_params.search ) ||
+			'1' !== get_params.search
+		) {
+			return;
+		}
+		
+		BAPI.session.searchparams = get_params;
 	}
 }
 
@@ -1003,7 +1058,62 @@ context.createSearchWidget = function (targetid, options, doSearchCallback) {
 		if (!BAPI.isempty(options.searchurl)) {
 			var rurl = options.searchurl;
 			if (rurl[rurl.length-1]!='/') { rurl = rurl + '/'; }
-			window.location.href = rurl; 
+			// Check if the form in embed into an iframe
+			if( window != window.parent ) {
+				// Hack: some browser support cross domain cookies (chrome, firefox) some don't (IE, safarie) let's check if the cookie is set.
+				// If the browser used by the client doesn't accept cross domain cookies, let's send everything into get parameters
+				if(
+					'string' !== $.type( $.cookie( 'BAPI2' ) ) &&
+					'object' === $.type( reqdata )
+				) {
+					rurl += '?search=1'; // Adding this parameters, tell the page displaying result to disregard session, and overwite it with this information sent through get
+					$.each(
+						reqdata,
+						function( key, value ) {
+							if(
+								'string' !== $.type( key ) ||
+								!key.length
+							) {
+								return;
+							}
+							
+							if(
+								(
+									'string' === $.type( value ) &&
+									value.length > 0
+								) ||
+								'number' === $.type( value )
+							) {
+								rurl += '&' + encodeURIComponent( key ) + '=' + encodeURIComponent( value );
+								return;
+							}
+							
+							if( 'object' === $.type( value ) ) {
+								$.each(
+									value,
+									function( sub_key, sub_value ) {
+										if(
+											'string' !== $.type( sub_key ) ||
+											!sub_key.length ||
+											'string' !== $.type( sub_value ) ||
+											!sub_value.length
+										) {
+											return;
+										}
+										rurl += '&' + encodeURIComponent( key + '[' + sub_key + ']' ) + '=' + encodeURIComponent( sub_value );
+									}
+								);
+								return;
+							}
+						}
+					);
+				}
+				window.open( rurl );
+				$(targetid).unblock();
+			}
+			else {
+				window.location.href = rurl;
+			}
 		}
 		else { $(targetid).unblock(); }
 	});

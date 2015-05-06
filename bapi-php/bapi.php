@@ -53,6 +53,14 @@ class BAPI
 		return $res;
 	}
 	
+	/**
+	 * @Deprecated
+	 * 
+	 * @param $jsondecode
+	 * @param int $debugmode
+	 *
+	 * @return array|mixed|null|string
+	 */
 	public function gettextdata($jsondecode,$debugmode=0) {
 		if (!$this->isvalid()) { return null; }
 		$url = $this->baseURL . '/ws/?method=get&entity=textdata&apikey=' . $this->apikey;
@@ -263,7 +271,8 @@ class BAPI
 			'blocking' => true,
 			'headers' => array('content-type'=>'application/x-www-form-urlencoded','User-Agent'=>'InstaSites Agent'),
 			'body' => $jsonObj,
-			'cookies' => array()
+			'cookies' => array(),
+			'sslverify' => !( defined( 'KIGO_DEBUG' ) && KIGO_DEBUG ) // in dev mode, allow self-signed certs
 		)
 		);
 		if( is_wp_error( $response ) ) {

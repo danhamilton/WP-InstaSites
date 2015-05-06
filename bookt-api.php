@@ -3,13 +3,13 @@
 Plugin Name: Kigo Sites
 Plugin URI: http://kigo.net
 Description: This plugin is intended for use by Kigo customers to display property and booking tools on their WP-hosted sites on any platform.
-Version: 1.0.20141003
+Version: 1.0.20150504
 Author: Kigo.net
 Author URI: http://kigo.net
 License: GPL2
 */
 
-define( 'KIGO_PLUGIN_VERSION', '1.0.20141003' ); // KEEP THIS IN SYNC WITH PLUGIN METADATA ABOVE !!!
+define( 'KIGO_PLUGIN_VERSION', '1.0.20150504' ); // KEEP THIS IN SYNC WITH PLUGIN METADATA ABOVE !!!
 
 
 /*  Copyright 2014 Kigo.net (email : support@kigo.net)
@@ -49,6 +49,8 @@ if(
 	require_once( dirname( __FILE__ ) . '/includes/class-kigo-cron.php' );
 	require_once( dirname( __FILE__ ) . '/includes/class-loggly-logs.php' );
 	require_once( dirname( __FILE__ ) . '/includes/class-kigo-admin-bar-menu.php' );
+	require_once( dirname( __FILE__ ) . '/includes/class-kigo-i18n.php' );
+	require_once( dirname( __FILE__ ) . '/includes/class-kigo-setups.php' );
 	require_once('bapi-php/bapi.php');
 	require_once('init.php');
 
@@ -62,6 +64,7 @@ if(
 	add_action( 'wp_ajax_nopriv_'.Kigo_Single_Sign_On::ACTION_CREATE_TOKEN, array( 'Kigo_Single_Sign_On', 'create_token' ) );
 	add_action( 'wp_ajax_'.Kigo_Single_Sign_On::ACTION_LOGIN, array( 'Kigo_Single_Sign_On', 'login' ) ); // for logged-in users
 	add_action( 'wp_ajax_nopriv_'.Kigo_Single_Sign_On::ACTION_LOGIN, array( 'Kigo_Single_Sign_On', 'login' ) ); // for NON-logged-in users
+
 
 	// Cron sync
 	if( defined( 'KIGO_CRON_SECRET' ) ) {
@@ -81,6 +84,17 @@ if(
 		add_action( 'wp_ajax_'.Kigo_Site_Cron::ACTION_GET_LAST_CRON_EXEC, array( 'Kigo_Site_Cron', 'get_interval_last_update_prop' ) );
 	}
 
+	// Specific endpoint to update translation files requires KIGO_PRIVATE_GOOGLE_TRANSLATE_KEY in wp-config 
+	add_action( 'wp_ajax_' . kigo_I18n::ACTION_UPDATE_TRANSLATION_FILES, array( 'kigo_I18n', 'update_default_translations' ) ); // for logged-in users
+	add_action( 'wp_ajax_nopriv_' . kigo_I18n::ACTION_UPDATE_TRANSLATION_FILES, array( 'kigo_I18n', 'update_default_translations' ) ); // for NON-logged-in users
+	
+	// Save custom translation endpoint
+	add_action( 'wp_ajax_'.kigo_I18n::ACTION_SAVE_CUSTOM_TRANSLATION, array( 'kigo_I18n', 'save_custom_translations' ) );
+
+	// Ajax endpoint to restore a page to it's default content 
+	add_action( 'wp_ajax_restore_default_content', 'restore_default_content_callback' );
+
+
 	add_action('init','urlHandler_emailtrackingimage',1);	// handler for email images
 	add_filter('home_url','home_url_cdn',1,2);
 	add_filter('wp_head','add_server_name_meta',1);
@@ -92,7 +106,6 @@ if(
 	add_action('admin_menu', 'remove_pageattributes_meta_box' );
 	add_action('template_redirect', 'do_ossdl_off_ob_start',10);
 	add_action('wp_enqueue_scripts', 'enqueue_and_register_my_scripts_in_head',1);//scripts that load in the head of the site
-	add_action('admin_enqueue_scripts', 'enqueue_and_register_my_scripts_in_head',1 );//scripts that load in the admin pages (same as above)
 	add_action('admin_enqueue_scripts', 'enqueue_and_register_my_scripts_in_head',1 );//scripts that load in the admin pages (same as above)
 	add_action( 'admin_enqueue_scripts', 'enqueue_and_register_admin_scritps', 1 );//scripts that load in the admin pages ONLY
 	add_action('wp_head','loadscriptjquery',10);//lets load this at the end of wp-head so the wp_enqueue runs first
@@ -108,9 +121,8 @@ if(
 	add_action('init','bapi_wp_site_options',1);  //Preload Site Data to help reduce DB usage
 	add_action('init','bapi_sync_coredata',2); 	// syncing BAPI core data
 	add_action('init','bapi_sync_entity',3);	// syncing BAPI entities (such as properties, developments, etc...)
-	add_action('init','urlHandler_bapitextdata',4);	// handler for /bapi.textdata.js
+	add_action('init','urlHandler_bapitextdata',4);	// handler for /bapi.textdata.js FIXME make sure there are no usage any more to this
 	add_action('init','urlHandler_bapitemplates',4);	// handler for /bapi.templates.js
-	add_action('init','urlHandler_bapitextdata',4);	// handler for /bapi.textdata.js
 	add_action('init','urlHandler_bapiconfig',4);	// handler for /bapi.config.js
 	add_action('init','urlHandler_sitelist',4);	// handler for /sitelist (possible warmup list)
 	add_action('init','urlHandler_timthumb',1);	// handler for /img.php 
