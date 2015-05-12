@@ -287,17 +287,11 @@
 		exit();
 	}
 	
+	// Used to create the combined file
 	function urlHandler_bapitemplates_helper() {		 
-		$c = file_get_contents(BAPISync::getMustacheLocation());
-		$j2 = rawurlencode($c); //addslashes($c);		
+		$c = BAPISync::getTemplates();
+		$j2 = rawurlencode($c);
 		$js = "";
-		
-		if (BAPISync::isMustacheOverriden()) {
-			$js .= "// custom bapi template file\r\n";
-		} else {
-			$js .= "// baseline bapi template file\r\n";
-		}
-		
 		$js .= "var t = '" . $j2 . "';\r\n";	
 		$js .= "t = decodeURIComponent(t);\r\n";
 		$js .= "BAPI.templates.set(t);\r\n";	
