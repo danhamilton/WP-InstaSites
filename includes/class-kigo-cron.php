@@ -42,6 +42,11 @@ class Kigo_Network_Cron
 
 		$debug_mode = defined( 'KIGO_DEBUG' ) && KIGO_DEBUG;
 
+		// Do not log into New Relic, because this function is slow and we know why
+		if( extension_loaded( 'newrelic' ) ) {
+			newrelic_ignore_transaction();
+		}
+
 		//Check that cron is "enabled" and that the secret is correct
 		if(
 			!defined( 'KIGO_CRON_SECRET' ) ||
@@ -186,6 +191,11 @@ class Kigo_Network_Cron
 	 * @return array|bool
 	 */
 	public static function do_site_sync() {
+		// Do not log into New Relic, because this function is slow and we know why
+		if( extension_loaded( 'newrelic' ) ) {
+			newrelic_ignore_transaction();
+		}
+
 		// Do not let the sync happen on the network blog
 		if( BLOG_ID_CURRENT_SITE == get_current_blog_id() ) {
 			header('Content-type: application/json');
