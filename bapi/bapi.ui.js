@@ -450,6 +450,7 @@ context.inithelpers = {
 		});
 	},
 	applyflexsliders: function(options) {
+		$('.bapi-flexslider img').unveil();
 		$('.bapi-flexslider').each(function (i) {
 			/* check if the fullScreen Carousel is present so we attach the click event to the flexslider viewport */
 			if($('#fullScreenCarousel').length > 0){
