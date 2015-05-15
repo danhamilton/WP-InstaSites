@@ -377,7 +377,7 @@ context.inithelpers = {
 				}
 				
 				/* the bid was supplied we need to know if there are results */
-				if(retrieveBid && data.result.length == 0){
+				if( !data.result.length ){
 					render_verification_error( BAPI.textdata['Booking not found'] );
 					return;
 				}
