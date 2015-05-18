@@ -95,6 +95,7 @@ if(
 	add_action( 'wp_ajax_restore_default_content', 'restore_default_content_callback' );
 
 
+	add_action( 'init', 'disable_newrelic', 1 ); // Hook to disable logging in new relic in some specific cases.
 	add_action('init','urlHandler_emailtrackingimage',1);	// handler for email images
 	add_filter('home_url','home_url_cdn',1,2);
 	add_filter('wp_head','add_server_name_meta',1);
