@@ -346,6 +346,12 @@ context.inithelpers = {
 			securityInfo.renterEmail = renterEmail;
 			/* we need to get the Booking id if it was not supplied*/
 			if(retrieveBid){ bid = u.param("keyid");	}
+			if(
+				BAPI.isempty( bid ) &&
+				'string' !== $.type( bid = $( '#verifyBookingId').val() )
+			) {
+				bid = '';
+			}
 				
 			function render_verification_error( msg ) {
 				alert( msg );
@@ -377,7 +383,7 @@ context.inithelpers = {
 				}
 				
 				/* the bid was supplied we need to know if there are results */
-				if(retrieveBid && data.result.length == 0){
+				if( data.result.length == 0 ){
 					render_verification_error( BAPI.textdata['Booking not found'] );
 					return;
 				}
