@@ -1998,6 +1998,7 @@ function bookingHelper_FullLoad(targetid, options, propid) {
 		$(options.targetids.renter).html(context.mustacheHelpers.render(options.templates.renter, data));
 		$(options.targetids.creditcard).html(context.mustacheHelpers.render(options.templates.creditcard, data));
 		$(options.targetids.accept).html(context.mustacheHelpers.render(options.templates.accept, data));
+		move_loaded_ssl();
 		$('.specialform').hide(); // hide the spam control
 		context.createDatePicker('#makebookingcheckin', { "property": data.result[0], "checkoutID": '#makebookingcheckout' });
 		context.createDatePicker('#makebookingcheckout', { "property": data.result[0], "checkinID": '#makebookingcheckin' });		
@@ -2018,6 +2019,7 @@ function bookingHelper_FullLoad(targetid, options, propid) {
 			$(options.targetids.statement).html(context.mustacheHelpers.render(options.templates.statement, sdata));
 			$(options.targetids.stayinfo).html(context.mustacheHelpers.render(options.templates.stayinfo, sdata));
 			$(options.targetids.accept).html(context.mustacheHelpers.render(options.templates.accept, sdata));			
+			move_loaded_ssl();
 			$(options.targetids.stayinfo).parent('div').unblock();
 			context.createDatePicker('#makebookingcheckin', { "property": BAPI.curentity, "checkoutID": '#makebookingcheckout' });
 			context.createDatePicker('#makebookingcheckout', { "property": BAPI.curentity, "checkinID": '#makebookingcheckout' });	
@@ -2233,13 +2235,15 @@ context.createMakeBookingWidget = function (targetid, options) {
 	bookingHelper_FullLoad(targetid, options, propid);	
 	BookingHelper_SetupFormHandlers();
 	BookingHelper_BookHandler(targetid, options, propid);
+}
+
+/* This function needs to be called eachtime templates.accept is render by mustache ! */
+function move_loaded_ssl() {
 	/* we wait for the mustache templates to render then we move the SSL to his repective place */
-	$(window).load(function(){
-		if ($('#SSLcontent').length > 0 && $('#SSL').length > 0)
-		{
-			$('#SSLcontent').appendTo("#SSL");
-		}
-	});
+	if( $('#SSLcontent').length > 0 && $('#SSL').length > 0)
+	{
+		$("#SSL").html( $('#SSLcontent').html() );//We want to keep the original hidden one !
+	}
 }
 
 function PaymentHelper_FullLoad(targetid, options, bid) {
@@ -2273,6 +2277,7 @@ function PaymentHelper_FullLoad(targetid, options, bid) {
 		}
         
         $(options.targetids.accept).html(context.mustacheHelpers.render(options.templates.accept, data));
+		move_loaded_ssl();
         $('.specialform').hide(); // hide the spam control
 
         function partialRender(sdata, options) {
@@ -2284,6 +2289,7 @@ function PaymentHelper_FullLoad(targetid, options, bid) {
             $(options.targetids.statement).html(context.mustacheHelpers.render(options.templates.statement, sdata));
             $(options.targetids.stayinfo).html(context.mustacheHelpers.render(options.templates.stayinfo, sdata));
             $(options.targetids.accept).html(context.mustacheHelpers.render(options.templates.accept, sdata));
+			move_loaded_ssl();
             $(options.targetids.stayinfo).unblock();
         }
 

@@ -284,5 +284,38 @@ $(function() {
 		});
 	});
 
+	
+	/* SSL config JS */
+	if( $( '#ssl_config').length ) {
+		
+		// Change image on the fly when script is being updated
+		$('#ssl-input').bind('input', function() {
+			$('#ssl-preview').attr( 'src', 'data:text/html;charset=utf-8,' + $(this).val() );
+		});
+
+		// Trigger change on select
+		$('#ssl-select').change( function() {
+			change_selected_trigger( $(this).children( 'option:selected' ) );
+		});
+
+		// Fill the select
+		$.each(
+			sslProviders,
+			function ( key ) {
+			var option  = $('<option />').attr( 'value', key ).text( this.label );
+			$('#ssl-select').append( option );
+			if( this.selected ) {
+				change_selected_trigger( option );
+			}
+		});
+
+
+		function change_selected_trigger( option ) {
+			option.attr( 'selected', 'selected' );
+			$('#ssl-input').prop('disabled', ( 'godaddy' === option.val() ) );
+			$('#ssl-input').val( sslProviders[ option.val() ]['content'] ).trigger( 'input' );
+		}
+	}
+
 });
 

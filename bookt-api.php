@@ -51,6 +51,7 @@ if(
 	require_once( dirname( __FILE__ ) . '/includes/class-kigo-admin-bar-menu.php' );
 	require_once( dirname( __FILE__ ) . '/includes/class-kigo-i18n.php' );
 	require_once( dirname( __FILE__ ) . '/includes/class-kigo-setups.php' );
+	require_once( dirname( __FILE__ ) . '/includes/class-kigo-ssl-config.php' );
 	require_once('bapi-php/bapi.php');
 	require_once('init.php');
 
