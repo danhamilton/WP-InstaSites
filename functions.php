@@ -62,6 +62,20 @@
 		return true;
 	}
 
+	/*
+	 * Disable new relic if doing cron or ajax
+	 */
+	function disable_newrelic() {
+		if(
+			defined('DOING_CRON') ||
+			defined('DOING_AJAX')
+		) {
+			if( extension_loaded( 'newrelic' ) ) {
+				newrelic_ignore_transaction();
+			}
+		}
+	}
+
 	/* Pre-Load Site Options - Utilizes Built-in Cache Functions */
 
 	global $bapi_all_options; 
