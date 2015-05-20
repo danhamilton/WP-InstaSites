@@ -38,19 +38,44 @@
 			return false;			
 		}
 		
-		public static function getMustacheLocation() { 
+		public static function getTemplates() {
 			$basefilename = "bapi/bapi.ui.mustache.tmpl";
-			// see if there is a custom theme in the theme's folder
-			$test = get_stylesheet_directory() . '/' . $basefilename;
-			if (file_exists($test)) {
-				return $test;
+
+			// Retrieve the custom templates file in the theme's folder
+			if(
+				!file_exists( $overwritten_tmpl_path = get_stylesheet_directory() . '/' . $basefilename ) ||
+				!is_string( $overwritten_tmpl = file_get_contents( $overwritten_tmpl_path ) ) ||
+				!preg_match_all( '/<script\s+id=["\']([^\s\'"]*)["\']\s+[^>]*?>.*?<\/script>/s', $overwritten_tmpl, $overwritten_tmpl_parts )
+			) {
+				$overwritten_tmpl_parts = array();
 			}
 			
-			// otherwise, just return the baseline version stored in the plugin folder
-			return get_kigo_plugin_path( $basefilename );
-		}
-		public static function getTemplates() { 			
-			return file_get_contents(BAPISync::getMustacheLocation()); 
+			// Retrieve the default templates file in the plugin folder
+			if(
+				!file_exists( $default_tmpl_path = realpath( plugin_dir_path( __FILE__ ) . $basefilename ) ) ||
+				!is_string( $default_tmpl = file_get_contents( $default_tmpl_path ) )
+			) {
+				wp_die( "Couldn't retrieve the mustache template.\nPlease contact support." );
+			}
+			if(
+				!count( $overwritten_tmpl_parts ) ||
+				!preg_match_all( '/<script\s+id=["\']([^\s\'"]*)["\']\s+[^>]*?>.*?<\/script>/s', $default_tmpl, $default_tmpl_parts )
+			) {
+				return $default_tmpl;
+			}
+			
+			//All the default templates are overwritten in the custom file (legacy default behaviour)
+			if( count( $overwritten_tmpl_parts[0] ) === count( $default_tmpl_parts[0] ) ) {
+				return $overwritten_tmpl;
+			}
+			
+			// For every template defined in the custom mustache, overwrite the default template that has the same id (<script id="[..]"><script>)
+			foreach( $overwritten_tmpl_parts[1] as $position => $id ) {
+				$default_tmpl_parts[0][array_search( $id, $default_tmpl_parts[1] )] = $overwritten_tmpl_parts[0][$position];
+			}
+			
+			return implode( '', $default_tmpl_parts[0] ); 
+
 		}
 		
 		public static function cleanurl($url) {
