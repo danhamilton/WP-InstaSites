@@ -832,12 +832,20 @@
 		}
 		return $return;
 	}
+
+	// This function is called by templates (this could be replaced by a shortcode allowing client to decide wheater or not to display SSL)
 	function getSSL(){
 		global $wp_query;
 		$postid = $wp_query->post->ID;
 		$thePostMeta = get_post_meta($postid, 'bapi_page_id', true);
-		$SSLscriptBlock = '<div id="SSLcontent"><script pin type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=135640565046fb4bc11011f1400b8da37ea394266002690762020641"></script></div>';
-		if($thePostMeta == 'bapi_makebooking'){echo $SSLscriptBlock;}
+
+		if(
+			'bapi_makepayment' === $thePostMeta ||
+			'bapi_makebooking' === $thePostMeta
+		) {
+			$ssl_config = new Kigo_Ssl_Config();
+			echo $ssl_config->get_ssl_seal();
+		}
 	}
 	
 	function bapi_setup_default_pages() {

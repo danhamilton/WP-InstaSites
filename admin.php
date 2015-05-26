@@ -14,7 +14,8 @@ function bapi_create_menu() {
 	add_submenu_page( $parentSlug, 'Data Sync',                  'Data Sync',                  'administrator', 'site_settings_sync',       function(){ require('setup-sync.php'); }         );
 	add_submenu_page( $parentSlug, 'Initial Setup',              'Initial Setup',              'administrator', 'site_settings_initial',    function(){ require('setup-initial.php'); }      );
 	add_submenu_page( $parentSlug, 'Advanced Options',           'Advanced',                   'administrator', 'site_settings_advanced',   function(){ require('setup-advanced.php'); }     );
-	add_submenu_page( $parentSlug, 'Translations',				'Translations',					'administrator', 'site_settings_translations',   array( 'Kigo_Setups', 'translation_gui' )     );
+	add_submenu_page( $parentSlug, 'Translations',				'Translations',					'administrator', 'site_settings_translations',	array( 'Kigo_Setups', 'translation_gui' )     );
+	add_submenu_page( $parentSlug, 'SSL Config',				'SSL Config',					'administrator', 'site_settings_sslconfig',		array( 'Kigo_Setups', 'ssl_config' )    );
 
 	// call register settings function
 	// (Why is this done here? because the options should only be init'ed if we are inside a site-specific admin. Not when we are in the Network admin panel, nor in the /wp-admin/user/ panel.)
