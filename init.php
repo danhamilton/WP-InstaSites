@@ -309,7 +309,7 @@
 		
 		$qs = $_SERVER['QUERY_STRING'];
 		if(strtolower($qs) == 'mode=initial-setup'){
-			switch_theme('instatheme01');
+			switch_theme('booking-engine-theme');
 			$toptions = get_option('instaparent_theme_options');
 			$toptions['presetStyle'] = 'style01';
 			update_option('instaparent_theme_options',$toptions);

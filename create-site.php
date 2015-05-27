@@ -188,7 +188,7 @@ function bapi_create_site(){
 			switch_to_blog($s);
 			//echo get_site_url();exit();
 			
-			switch_theme('instatheme01');
+			switch_theme('booking-engine-theme');
 			bapi_wp_site_options();
 			
 			//Initialize menu and pages
