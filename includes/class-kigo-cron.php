@@ -20,7 +20,7 @@ class Kigo_Network_Cron
 	const CUSTOM_WP_IS_LARGE_NETWORK	= 100000; //default (wp_is_large_network) value 10 000
 
 	const CURL_TIMEOUT					= 300;
-	const CURL_PARALLEL_CALLS			= 10;
+	const CURL_PARALLEL_CALLS			= 5;
 
 	const ACTION_CRON					= 'kigo_network_cron';
 	const ACTION_SITE_CRON				= 'kigo_site_cron';
@@ -348,7 +348,27 @@ class Kigo_Site_Cron
 		bapi_wp_site_options();
 		$this->_blog_id = get_current_blog_id();
 		$this->_api_key = getbapiapikey();
-		$this->_bapi = getBAPIObj();
+
+		// Retrieve the correct bapi object
+		// In this case all bapi calls (diff, get etc..) during cron execution are going to be called on this endpoint
+		if(
+			defined( 'BAPI_CRON_ENDPOINT' ) &&
+			is_string( BAPI_CRON_ENDPOINT ) &&
+			strlen( $cron_host = BAPI_CRON_ENDPOINT )
+		) {
+			//Check if "http(s)://" is included
+			if(
+				0 !== strpos( $cron_host, 'http://' ) ||
+				0 !== strpos( $cron_host, 'https://' )
+			) {
+				$cron_host = 'http://' . $cron_host;
+			}
+			
+			$this->_bapi = new BAPI( $this->_api_key, $cron_host );
+		}
+		else {
+			$this->_bapi = getBAPIObj();
+		}
 
 		// Get the stored diff ids/methods for each entity and merge it with the default (allow to add entity in future)
 		if(
