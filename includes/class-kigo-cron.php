@@ -348,34 +348,27 @@ class Kigo_Site_Cron
 		bapi_wp_site_options();
 		$this->_blog_id = get_current_blog_id();
 		$this->_api_key = getbapiapikey();
-		
-		// Retrieve the correct host URL to call, give priority to BAPI_CRON_ENDPOINT const
-		global $bapi_all_options;
+
+		// Retrieve the correct bapi object
+		// In this case all bapi calls (diff, get etc..) during cron execution are going to be called on this endpoint
 		if(
 			defined( 'BAPI_CRON_ENDPOINT' ) &&
 			is_string( BAPI_CRON_ENDPOINT ) &&
-			strlen( BAPI_CRON_ENDPOINT )
-		) { // In this case all bapi calls (diff, get etc..) during cron execution are going to be called on this endpoint
-			$cron_host = BAPI_CRON_ENDPOINT;
-		}
-		elseif(
-			is_string( $bapi_all_options[ 'bapi_baseurl' ] ) &&
-			strlen( $bapi_all_options[ 'bapi_baseurl' ] )
+			strlen( $cron_host = BAPI_CRON_ENDPOINT )
 		) {
-			$cron_host = $bapi_all_options[ 'bapi_baseurl' ];
+			//Check if "http(s)://" is included
+			if(
+				0 !== strpos( $cron_host, 'http://' ) ||
+				0 !== strpos( $cron_host, 'https://' )
+			) {
+				$cron_host = 'http://' . $cron_host;
+			}
+			
+			$this->_bapi = new BAPI( $this->_api_key, $cron_host );
 		}
 		else {
-			$cron_host = 'connect.bookt.com';
+			$this->_bapi = getBAPIObj();
 		}
-		
-		//Check if "http(s)://" is included
-		if(
-			0 !== strpos( $cron_host, 'http://' ) ||
-			0 !== strpos( $cron_host, 'https://' )
-		) {
-			$cron_host = 'http://' . $cron_host;
-		}
-		$this->_bapi = new BAPI( $this->_api_key, $cron_host );
 
 		// Get the stored diff ids/methods for each entity and merge it with the default (allow to add entity in future)
 		if(
