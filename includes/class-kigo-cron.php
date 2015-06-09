@@ -271,8 +271,6 @@ class Kigo_Network_Cron
 	public static function log( $logs ) {
 		if( defined( 'KIGO_DEBUG' ) && KIGO_DEBUG ) {
 			echo '<pre>';
-			$logs['cron_endpoint'] = BAPI_CRON_ENDPOINT;
-			$logs['cron_endpoint_class'] = $this->_bapi;
 			print_r( $logs );
 			echo '</pre>';
 			ob_flush();
@@ -412,7 +410,7 @@ class Kigo_Site_Cron
 			
 			// Call the diff method to get the changed entity's ids
 			if( !is_array( $ids_to_update = $this->get_entity_diff( $entity, array( $options[ 'diff_method_name' ] => $options[ 'diff_id' ] ), $new_diff_id ) ) ) {
-				$this->log_error( 1, 'Unable to process diff method', array( 'entity' => $entity, $options[ 'diff_method_name' ] => $options[ 'diff_id' ] ) );
+				$this->log_error( 1, 'Unable to process diff method', array( 'entity' => $entity, $options[ 'diff_method_name' ] => $options[ 'diff_id' ], 'url' => $this->url, 'cron_endpoint' => BAPI_CRON_ENDPOINT ) );
 				continue;
 			}
 			
