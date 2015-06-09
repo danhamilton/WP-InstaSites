@@ -272,6 +272,7 @@ class Kigo_Network_Cron
 		if( defined( 'KIGO_DEBUG' ) && KIGO_DEBUG ) {
 			echo '<pre>';
 			$logs['cron_endpoint'] = BAPI_CRON_ENDPOINT;
+			$logs['cron_endpoint_class'] = $this->_bapi;
 			print_r( $logs );
 			echo '</pre>';
 			ob_flush();
