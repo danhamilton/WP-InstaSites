@@ -358,8 +358,8 @@ class Kigo_Site_Cron
 		) {
 			//Check if "http(s)://" is included
 			if(
-				0 !== strpos( $cron_host, 'http://' ) ||
-				0 !== strpos( $cron_host, 'https://' )
+				0 == strpos( $cron_host, 'http://' ) ||
+				0 == strpos( $cron_host, 'https://' )
 			) {
 				$cron_host = 'http://' . $cron_host;
 			}
