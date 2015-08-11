@@ -276,8 +276,9 @@
 			return false;
 		}
 		
-		
+		//getting the page by URL
 		$post = get_page_by_path($_SERVER['REDIRECT_URL']);
+		//if the URL is empty this is the Home Page
 		if(empty($_SERVER['REDIRECT_URL'])){
 			$home_id = get_option('page_on_front');
 			$post = get_post($home_id);
@@ -305,8 +306,28 @@
 			// ignore seo info if it doesn't point to a valid entity
 			$seo = null;
 		}
-		
-		
+		// if we didnt find the page using the URL maybe we can search by entity:ID
+		// we can only do that if we have the entity and ID from the SEO
+		if($post == null && $seo != null){
+			//we concat the custom field
+			$pageBapiKey = $seo['entity'] .':' . $seo['pkid'];
+			//we form the search criteria
+			$args = array(              	
+				'post_type' => 'page',
+				'post_status' => 'publish',
+				'meta_query' => array(
+					array(
+						'key' => 'bapikey',
+						'value' => $pageBapiKey
+					)
+				)
+            );
+			//we search a post with the entity_ID
+			$result = get_posts( $args );
+			//it will be null if there is no result		
+			$post = $result[0];
+		}
+
 		return kigo_sync_entity( $post, $seo );
 	}
 	function kigo_sync_entity( $post, $seo, $force_sync = false ) {
