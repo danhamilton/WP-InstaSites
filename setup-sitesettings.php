@@ -193,8 +193,13 @@ else{
 </tr>
 <tr valign="top">
 	<td scope="row">Amenity Search:</td>
-	<td><input class="amenitysearch-cbx" type="checkbox" checked="" />
-	<input type="hidden" id="amenitysearch" name="amenitysearch" data-prevalue="BAPI.config().amenity.enabled=" value="" />
+	<td>
+		
+	<select name="amenitysearchfilter" id="amenitysearchfilter">
+		<option value="BAPI.config().amenity.enabled=false; BAPI.config().amenity.filter=false;">Disabled</option>
+		<option value="BAPI.config().amenity.enabled=true; BAPI.config().amenity.filter=false;">Search</option>
+		<option value="BAPI.config().amenity.enabled=false; BAPI.config().amenity.filter=true;">Filter</option>
+	</select>
 	</td>
 </tr>
 <tr valign="top">
@@ -345,9 +350,20 @@ else{
 			update_option('bapi_sitesettings', $newSiteSettings);
 			echo 'settings.propdetailratestable = "BAPI.config().hideratestable=false;";';
 		}
-		if(strpos($sitesettings,'BAPI.config().amenity.enabled') == false){
-			echo 'settings.amenitysearch = "BAPI.config().amenity.enabled=false;";';
+		
+		//we need to check the amenitysearch value
+		if(strpos($sitesettings,'amenitysearchfilter') == false){
+			if(strpos($sitesettings,'BAPI.config().amenity.enabled=true') != false){
+				echo 'settings.amenitysearchfilter = "BAPI.config().amenity.enabled=true; BAPI.config().amenity.filter=false;";';
+			}else{
+				echo 'settings.amenitysearchfilter = "BAPI.config().amenity.enabled=false; BAPI.config().amenity.filter=false;";';
+			}
 		}
+		//we delete this property since it will be in amenitysearchfilter
+		if(strpos($sitesettings,'amenitysearch') != false){
+			echo 'delete settings.amenitysearch;';
+		}
+		
 		if(strpos($sitesettings,'BAPI.config().sleeps.enabled') == false){
 			echo 'settings.sleepsearch = "BAPI.config().sleeps.enabled=false;";';
 		}
@@ -357,6 +373,7 @@ else{
 	$bapiSolutionDataConfig = $bapiSolutionData["ConfigObj"];
 	$maxratesearch = ($bapiSolutionDataConfig["rate"]["enabled"]) ? 'true' : 'false';
 	$amenitysearch = ($bapiSolutionDataConfig["amenity"]["enabled"]) ? 'true' : 'false';
+	//$amenityfilter = ($bapiSolutionDataConfig["amenity"]["filter"]) ? 'true' : 'false';
 	$devsearch = ($bapiSolutionDataConfig["dev"]["enabled"]) ? 'true' : 'false';
 	$adultsearch = ($bapiSolutionDataConfig["adults"]["enabled"]) ? 'true' : 'false';
 	$childsearch = ($bapiSolutionDataConfig["children"]["enabled"]) ? 'true' : 'false';
@@ -434,7 +451,7 @@ else{
 			"searchmode-widephotoview": "BAPI.config().searchmodes.widephotoview=false;",
 			"searchmode-hotelview": "BAPI.config().searchmodes.hotelview=false;",
 			"searchmode-mapview": "BAPI.config().searchmodes.mapview=true;",
-			"amenitysearch": "BAPI.config().amenity.enabled=false;",
+			"amenitysearchfilter": "BAPI.config().amenity.enabled=false; BAPI.config().amenity.filter=false;",
 			"averagestarsreviews": "BAPI.config().hidestarsreviews=false;",
 			"devsearch": "BAPI.config().dev.enabled='.$devsearch.';",
 			"adultsearch": "BAPI.config().adults.enabled='.$adultsearch.';",
@@ -539,7 +556,6 @@ $('.minbedsearch-cbx').change(function(){
 	
 	
 	jQuery(window).load(function (){
-		
 		$('#propdetail-availcal,.propdetailratestable-cbx').change(function(){
 			setHideRatesAndAvailTab();
 		});
@@ -548,8 +564,6 @@ $('.minbedsearch-cbx').change(function(){
 				alert("This Setting requires data synchronization, there could be a delay of up to one hour for the changes to appear on all property detail pages.");
 			}
 		});
-		
-		
 	});
 	
 	/*$.each(BAPI.config().beds.values,function(key,value) {
@@ -586,7 +600,7 @@ $('.minbedsearch-cbx').change(function(){
 					{
 						//console.log("its true");
 						jQuery(theKey).prop('checked',true );
-						jQuery(theKey).iButton("toggle", true)
+						jQuery(theKey).iButton("toggle", true);
 					}else{
 						jQuery(theKey).prop('checked', false);
 						jQuery(theKey).iButton("toggle", false);

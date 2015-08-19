@@ -205,6 +205,18 @@
 	<a class="quicksearch-doclear"  data-field-selector="quicksearch" href="javascript:void(0)">{{textdata.Clear}}</a>&nbsp;
 	<a class="quicksearch-doadvanced" style="display:none" data-field-selector="quicksearch" href="javascript:void(0)">{{textdata.Advanced}}</a>&nbsp;
 </div>
+
+
+<h3>Filter Results</h3>
+{{#config.amenity.filter}}
+{{#config.amenity.values}}
+<div class="checkbox">
+    <label>
+      <input type="checkbox"> {{Label}}
+    </label>
+</div>
+{{/config.amenity.values}}
+{{/config.amenity.filter}}
 </script> 
 
 <script id="tmpl-search-rateblock" type="text/html">
