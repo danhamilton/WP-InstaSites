@@ -9,6 +9,10 @@
 			wp_die('Error activating Kigo Sites plugin');
 		}
 
+		if( !kigo_I18n::update_i18n_network_option() ) {
+			Loggly_logs::log( array( 'msg' => ( 'Failed to update network option translations' ), 'current_version' => KIGO_PLUGIN_VERSION ) );
+		}
+
 		add_site_option( 'wp_plugin_kigo_sites_current_version', KIGO_PLUGIN_VERSION );
 	}
 
@@ -81,32 +85,31 @@
 	global $bapi_all_options; 
 	function bapi_wp_site_options(){
 		global $bapi_all_options;
-		$bapi_all_options = wp_load_alloptions();
-		if(!isset($bapi_all_options['bapi_solutiondata'])){
-			$bapi_all_options['bapi_solutiondata'] = '';
-		}
-		if(!isset($bapi_all_options['bapi_solutiondata_lastmod'])){
-			$bapi_all_options['bapi_solutiondata_lastmod'] = 0;
-		}
-		if(!isset($bapi_all_options['bapi_keywords_array'])){
-			$bapi_all_options['bapi_keywords_array'] = '';
-		}
-		if(!isset($bapi_all_options['bapi_keywords_lastmod'])){
-			$bapi_all_options['bapi_keywords_lastmod'] = 0;
-		}
-		if(!isset($bapi_all_options['bapi_language'])){
-			$bapi_all_options['bapi_language'] = 'en-US';
-		}
-		if(!isset($bapi_all_options['bapi_baseurl'])){
-			$bapi_all_options['bapi_baseurl'] = 'connect.bookt.com';
-		}
+
+		$bapi_all_options_defaults = array(
+			'api_key' => '',
+			'bapi_solutiondata' => '',
+			'bapi_site_cdn_domain' => '',
+			'bapi_secureurl' => '',
+			'bapi_solutiondata_lastmod' => 0,
+			'bapi_keywords_lastmod' => 0,
+			'bapi_keywords_array' => '',
+			'bapi_language' => 'en-US',
+			'bapi_baseurl' => 'connect.bookt.com',
+			'bapi_first_look' => 0,
+			'bapi_global_header' => '',
+			'bapi_google_webmaster_htmltag' => '',
+			'bapi_sitesettings' => '',
+			'bapi_meta_keywords' => '',
+			'bapi_meta_title' => '',
+			'bapi_meta_description' => ''
+		);
+
+		$bapi_all_options = array_merge($bapi_all_options_defaults, wp_load_alloptions());
+
 		if(defined('BAPI_BASEURL')){
 			$bapi_all_options['bapi_baseurl'] = BAPI_BASEURL;
 		}
-		if(!isset($bapi_all_options['bapi_first_look'])){
-			$bapi_all_options['bapi_first_look'] = 0;
-		}
-		//print_r($bapi_all_options); exit();
 	}
 
 	/* Rebranding functions */
@@ -1346,27 +1349,33 @@ echo '<ul>';
 }
 function register_tips_box() {
 /* Tips Metabox */
-	$items = array( array( url => "https://codex.wordpress.org/WordPress_Widgets",
-                      icon => "welcome-icon dashicons-editor-help",
-                      name => "What are widgets"
-                    ),
-               array( url => ( is_newapp_website() ? '//supportdocs.imbookingsecure.com/managing_seo_keywords' : "http://support.bookt.com/customer/portal/articles/1200398-managing-seo-and-keywords-for-your-instasite" ),
-                      icon => 'welcome-icon dashicons-analytics',
-                      name => 'How to Manage SEO',
-                    ),
-			   array( url => ( is_newapp_website() ? '//supportdocs.imbookingsecure.com/featured_properties_widget' : "http://support.bookt.com/customer/portal/articles/1394482-featured-properties-widget"),
-                      icon => "welcome-icon dashicons-admin-post",
-                      name => "Change your Featured Properties settings"
-                    ),
-			   array( url => ( is_newapp_website() ? '//supportdocs.imbookingsecure.com/websites' : "http://support.bookt.com/customer/portal/topics/566455-instasites/articles"),
-                      icon => "welcome-icon dashicons-sos",
-                      name => "View All " . ( is_newapp_website() ? 'Kigo sites' : 'InstaSite' ) . " Help Topics"
-                    ),
-               array( url => ( is_newapp_website() ? '//supportdocs.imbookingsecure.com' : "http://support.bookt.com/"),
-                      icon => "welcome-icon welcome-view-site",
-                      name => "Visit Support"
-                    )
-             );
+	$items = array(
+			array(
+					'url'  => "https://codex.wordpress.org/WordPress_Widgets",
+					'icon' => "welcome-icon dashicons-editor-help",
+					'name' => "What are widgets"
+			),
+			array(
+					'url'  => (is_newapp_website() ? '//supportdocs.imbookingsecure.com/managing_seo_keywords' : "http://support.bookt.com/customer/portal/articles/1200398-managing-seo-and-keywords-for-your-instasite"),
+					'icon' => 'welcome-icon dashicons-analytics',
+					'name' => 'How to Manage SEO',
+			),
+			array(
+					'url'  => (is_newapp_website() ? '//supportdocs.imbookingsecure.com/featured_properties_widget' : "http://support.bookt.com/customer/portal/articles/1394482-featured-properties-widget"),
+					'icon' => "welcome-icon dashicons-admin-post",
+					'name' => "Change your Featured Properties settings"
+			),
+			array(
+					'url'  => (is_newapp_website() ? '//supportdocs.imbookingsecure.com/websites' : "http://support.bookt.com/customer/portal/topics/566455-instasites/articles"),
+					'icon' => "welcome-icon dashicons-sos",
+					'name' => "View All ".(is_newapp_website() ? 'Kigo sites' : 'InstaSite')." Help Topics"
+			),
+			array(
+					'url'  => (is_newapp_website() ? '//supportdocs.imbookingsecure.com' : "http://support.bookt.com/"),
+					'icon' => "welcome-icon welcome-view-site",
+					'name' => "Visit Support"
+			)
+	);
 	// Display the container
 	echo '<div class="welcome-panel rss-widget custom">';
 echo '<ul>';
