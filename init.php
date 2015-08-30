@@ -318,7 +318,7 @@
 				$toptions = get_option('instaparent_theme_options');
 				$toptions['presetStyle'] = 'style01';
 				update_option('instaparent_theme_options', $toptions);
-				setSlideshowImages();
+				setSlideshowImages(); // dependency on the theme!
 			}
 			bapi_wp_site_options();
 			$blog_url = get_site_url();
@@ -397,7 +397,7 @@
 						
 		$action = "Added";
 		if ($pid == 0) {			
-			$pid = wp_insert_post($post, $error);			
+			$pid = wp_insert_post($post);
 		}
 		else {
 			$action = "Edited";

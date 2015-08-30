@@ -276,12 +276,16 @@
 			return false;
 		}
 		
-		//getting the page by URL
-		$post = get_page_by_path($_SERVER['REDIRECT_URL']);
+
 		//if the URL is empty this is the Home Page
 		if(empty($_SERVER['REDIRECT_URL'])){
 			$home_id = get_option('page_on_front');
 			$post = get_post($home_id);
+		}
+		else
+		{
+			//getting the page by URL
+			$post = get_page_by_path($_SERVER['REDIRECT_URL']);
 		}
 		
 		global $bapisync;		
@@ -312,7 +316,7 @@
 			//we concat the custom field
 			$pageBapiKey = $seo['entity'] .':' . $seo['pkid'];
 			//we form the search criteria
-			$args = array(              	
+			$args = array(
 				'post_type' => 'page',
 				'post_status' => 'publish',
 				'meta_query' => array(
@@ -324,8 +328,8 @@
             );
 			//we search a post with the entity_ID
 			$result = get_posts( $args );
-			//it will be null if there is no result		
-			$post = $result[0];
+			//it will be null if there is no result
+			$post = @$result[0];
 		}
 
 		return kigo_sync_entity( $post, $seo );
@@ -343,12 +347,12 @@
 		// parse out the meta attributes for the current post
 		$page_exists_in_wp = !empty($post);				
 		$meta = $page_exists_in_wp ? get_post_custom($post->ID) : null;
-		$last_update = !empty($meta) ? $meta['bapi_last_update'][0] : null;
-		$staticpagekey = !empty($meta) ? $meta['bapi_page_id'][0] : null;
-		$pagekey = !empty($meta) ? $meta['bapikey'][0] : null;
-		$meta_keywords = !empty($meta) ? $meta['bapi_meta_keywords'][0] : null;
-		$meta_description = !empty($meta) ? $meta['bapi_meta_description'][0] : null;
-		$meta_title = !empty($meta) ? $meta['bapi_meta_title'][0] : null;
+		$last_update = !empty($meta) ? @$meta['bapi_last_update'][0] : null;
+		$staticpagekey = !empty($meta) ? @$meta['bapi_page_id'][0] : null;
+		$pagekey = !empty($meta) ? @$meta['bapikey'][0] : null;
+		$meta_keywords = !empty($meta) ? @$meta['bapi_meta_keywords'][0] : null;
+		$meta_description = !empty($meta) ? @$meta['bapi_meta_description'][0] : null;
+		$meta_title = !empty($meta) ? @$meta['bapi_meta_title'][0] : null;
 		
 		//Only for properties pages: Retrieve the timestamp of first cron call and the latest successful diff call on this website
 		if(
@@ -382,9 +386,9 @@
 			if(empty($meta['bapi_last_update'])||((time()-$meta['bapi_last_update'][0])>300)){			
 				does_meta_exist("bapi_last_update", $meta) ? update_post_meta($post->ID, 'bapi_last_update', time()) : add_post_meta($post->ID, 'bapi_last_update', time(), true);
 				if(!empty($seo)){
-					if ($meta['bapi_meta_description'][0] != $seo["MetaDescrip"]) { update_post_meta($post->ID, 'bapi_meta_description', $seo["MetaDescrip"]); }
-					if ($meta['bapi_meta_title'][0] != $seo["PageTitle"]) { update_post_meta($post->ID, 'bapi_meta_title', $seo["PageTitle"]); }
-					if ($meta['bapi_meta_keywords'][0] != $seo["MetaKeywords"]) { update_post_meta($post->ID, 'bapi_meta_keywords', $seo["MetaKeywords"]); }
+					if (@$meta['bapi_meta_description'][0] != $seo["MetaDescrip"]) { update_post_meta($post->ID, 'bapi_meta_description', $seo["MetaDescrip"]); }
+					if (@$meta['bapi_meta_title'][0] != $seo["PageTitle"]) { update_post_meta($post->ID, 'bapi_meta_title', $seo["PageTitle"]); }
+					if (@$meta['bapi_meta_keywords'][0] != $seo["MetaKeywords"]) { update_post_meta($post->ID, 'bapi_meta_keywords', $seo["MetaKeywords"]); }
 					//does_meta_exist("bapi_meta_description", $meta) ? update_post_meta($post->ID, 'bapi_meta_description', $seo["MetaDescrip"]) : add_post_meta($post->ID, 'bapi_meta_description', $seo["MetaDescrip"], true);
 					//does_meta_exist("bapi_meta_keywords", $meta) ? update_post_meta($post->ID, 'bapi_meta_keywords', $seo["MetaKeywords"]) : add_post_meta($post->ID, 'bapi_meta_keywords', $seo["MetaKeywords"], true);
 				}
@@ -531,7 +535,7 @@
 
 			remove_filter('content_save_pre', 'wp_filter_post_kses');
 			if (empty($post->ID)) {
-				$post->ID = wp_insert_post($post, $wp_error);
+				$post->ID = wp_insert_post($post);
 			} else {
 				wp_update_post($post);
 			}						

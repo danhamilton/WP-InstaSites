@@ -269,7 +269,7 @@ class BAPI_HP_Logo extends WP_Widget {
 		$cdndomain = parse_url(get_option('bapi_site_cdn_domain')); //echo $cdndomain['host']; exit();
 		//$url = ($_SERVER['SERVER_PORT']==443 ? get_option('bapi_site_cdn_domain') : "/");
 		//if (empty($url)) { $url = "/"; }
-		if(($currdomain==$cdndomain['host'])||is_admin()||is_super_admin()){ //Always link to subdomain if logged in as admin [Jacob]
+		if(($currdomain==@$cdndomain['host'])||is_admin()||is_super_admin()){ //Always link to subdomain if logged in as admin [Jacob]
 			$url = '/';
 			if($_SERVER['SERVER_PORT']==443){
 				$url = 'http://'.$currdomain.'/';
@@ -804,8 +804,8 @@ class BAPI_Specials_Widget extends WP_Widget {
 	public function widget( $args, $instance ) {
 		extract($args);
 		$title = apply_filters('widget_title',$instance['title']);
-		$pagesize = esc_textarea($instance['text']);
-		$rowsize = intval($instance['rowsize']);
+		$pagesize = esc_textarea(@$instance['text']);
+		$rowsize = intval(@$instance['rowsize']);
 		if($rowsize<=0) { $rowsize=1; }
 		echo $before_widget;
 		if(!empty($title))
@@ -866,9 +866,9 @@ class BAPI_Similar_Properties extends WP_Widget {
 	public function widget( $args, $instance ) {
 		extract($args);
 		$title = apply_filters('widget_title',$instance['title']);
-		$pagesize = esc_textarea($instance['text']);
+		$pagesize = esc_textarea(@$instance['text']);
 		if(empty($pagesize)) { $pagesize = 3; }
-		$rowsize = intval($instance['rowsize']);
+		$rowsize = intval(@$instance['rowsize']);
 		if($rowsize<=0) { $rowsize=1; }
 		
 		echo $before_widget;
@@ -920,8 +920,8 @@ class BAPI_Weather_Widget extends WP_Widget {
 	public function widget( $args, $instance ) {
 		extract($args);
 		$title = apply_filters('widget_title',$instance['title']);
-		$woid = esc_textarea($instance['text']);
-		$unit = $instance['unit'];
+		$woid = esc_textarea(@$instance['text']);
+		$unit = @$instance['unit'];
 		if(empty($woid)) return;
 		if(empty($unit)){
 			$unit = 'f';
@@ -1010,7 +1010,7 @@ class BAPI_DetailOverview_Widget extends WP_Widget {
 	public function widget( $args, $instance ) {
 		extract($args);
 		$title = apply_filters('widget_title',$instance['title']);
-		$woid = esc_textarea($instance['text']);
+		$woid = esc_textarea(@$instance['text']);
 		echo $before_widget;
 		if(!empty($title))
 			echo $before_title.$title.$after_title;

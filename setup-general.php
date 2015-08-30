@@ -42,7 +42,7 @@ else{
 <table class="form-table">
 <tr valign="top">
 	<td scope="row">Site Live:</td>
-	<td><?php $st=array(); echo $sitelive; ?></td>
+	<td><?php $st=array(); echo @$sitelive; ?></td>
 </tr>
 <tr valign="top">
 	<td scope="row">API Key:</td>

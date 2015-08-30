@@ -103,12 +103,14 @@ function site_config_error(){
 	$contains2 = strpos($bapi_secure_url, "imbookingsecure.com");
 
 
-	if($bapi_unique_prefx != array_shift(explode(".",$_SERVER['HTTP_HOST']))){ //throw error - ""
+	$explodedHost = explode(".",$_SERVER['HTTP_HOST']);
+	$prefix = array_shift($explodedHost);
+	if($bapi_unique_prefx != $prefix){ //throw error - ""
 		if( is_newapp_website() ) {
-			echo '<div id="mis-match-config" class="error"><p>Kigo site domain prefix (<em>"' . array_shift(explode(".",$_SERVER['HTTP_HOST'])) . '"</em>) is mis-matched with Kigo app (<em>"' . $bapi_unique_prefx . '"</em>). Please contact <a href="mailto:support@kigo.net?subject=Kigo site%20Error%20Report%20for%20'.$bapi_cdn_domain.'&amp;body=Kigo%20site%20domain%20prefix%20%27' . array_shift(explode(".",$_SERVER['HTTP_HOST'])) . '%27%20is%20mis-matched%20with%20Kigo%20app%20%27' . $bapi_unique_prefx .'%27">support@kigo.net</a> and provide this error message for expedited assistance.</p></div>';
+			echo '<div id="mis-match-config" class="error"><p>Kigo site domain prefix (<em>"' . $prefix . '"</em>) is mis-matched with Kigo app (<em>"' . $bapi_unique_prefx . '"</em>). Please contact <a href="mailto:support@kigo.net?subject=Kigo site%20Error%20Report%20for%20'.$bapi_cdn_domain.'&amp;body=Kigo%20site%20domain%20prefix%20%27' . $prefix . '%27%20is%20mis-matched%20with%20Kigo%20app%20%27' . $bapi_unique_prefx .'%27">support@kigo.net</a> and provide this error message for expedited assistance.</p></div>';
 		}
 		else {
-			echo '<div id="mis-match-config" class="error"><p>InstaSite domain prefix (<em>"' . array_shift(explode(".",$_SERVER['HTTP_HOST'])) . '"</em>) is mis-matched with InstaApp (<em>"' . $bapi_unique_prefx . '"</em>). Please contact <a href="mailto:support@instamanager.com?subject=InstaSite%20Error%20Report%20for%20'.$bapi_cdn_domain.'&amp;body=InstaSite%20domain%20prefix%20%27' . array_shift(explode(".",$_SERVER['HTTP_HOST'])) . '%27%20is%20mis-matched%20with%20InstaApp%20%27' . $bapi_unique_prefx .'%27">support@instamanager.com</a> and provide this error message for expedited assistance.</p></div>';
+			echo '<div id="mis-match-config" class="error"><p>InstaSite domain prefix (<em>"' . $prefix . '"</em>) is mis-matched with InstaApp (<em>"' . $bapi_unique_prefx . '"</em>). Please contact <a href="mailto:support@instamanager.com?subject=InstaSite%20Error%20Report%20for%20'.$bapi_cdn_domain.'&amp;body=InstaSite%20domain%20prefix%20%27' . $prefix . '%27%20is%20mis-matched%20with%20InstaApp%20%27' . $bapi_unique_prefx .'%27">support@instamanager.com</a> and provide this error message for expedited assistance.</p></div>';
 		}
 	}
 	if($bapi_cdn_domain != $primaryUrl){

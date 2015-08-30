@@ -29,6 +29,10 @@ class Kigo_Translations_List_Table extends WP_List_Table {
 		$this->_column_headers = array( self::$columns, array(), self::$sortable_colums );
 	}
 
+	public function get_columns() {
+		return self::$columns;
+	}
+
 	/**
 	 * Prepare the list of items to be rendered
 	 * 
