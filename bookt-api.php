@@ -3,13 +3,13 @@
 Plugin Name: Kigo Sites
 Plugin URI: http://kigo.net
 Description: This plugin is intended for use by Kigo customers to display property and booking tools on their WP-hosted sites on any platform.
-Version: 1.0.20150504
+Version: 1.0.20150830
 Author: Kigo.net
 Author URI: http://kigo.net
 License: GPL2
 */
 
-define( 'KIGO_PLUGIN_VERSION', '1.0.20150504' ); // KEEP THIS IN SYNC WITH PLUGIN METADATA ABOVE !!!
+define( 'KIGO_PLUGIN_VERSION', '1.0.20150830' ); // KEEP THIS IN SYNC WITH PLUGIN METADATA ABOVE !!!
 
 
 /*  Copyright 2014 Kigo.net (email : support@kigo.net)
@@ -74,16 +74,16 @@ if(
 		// http://<network_root>/wp-admin/admin-ajax.php?action=kigo_network_cron
 		add_action( 'wp_ajax_nopriv_'.Kigo_Network_Cron::ACTION_CRON, array( 'Kigo_Network_Cron', 'do_sync' ) );
 		add_action( 'wp_ajax_'.Kigo_Network_Cron::ACTION_CRON, array( 'Kigo_Network_Cron', 'do_sync' ) );
-		
-		// Endpoint called on each websites by the execution of do_sync
-		// http://<website>.<network_root>/wp-admin/admin-ajax.php?action=kigo_site_cron
-		// Will perform a full sync if called with &forced_full_sync=1
-		add_action( 'wp_ajax_nopriv_'.Kigo_Network_Cron::ACTION_SITE_CRON, array( 'Kigo_Network_Cron', 'do_site_sync' ) );
-		add_action( 'wp_ajax_'.Kigo_Network_Cron::ACTION_SITE_CRON, array( 'Kigo_Network_Cron', 'do_site_sync' ) );
-
-		// Used by the UI to display the last cron execution
-		add_action( 'wp_ajax_'.Kigo_Site_Cron::ACTION_GET_LAST_CRON_EXEC, array( 'Kigo_Site_Cron', 'get_interval_last_update_prop' ) );
 	}
+
+	// Used by the UI to display the last cron execution
+	add_action( 'wp_ajax_'.Kigo_Site_Cron::ACTION_GET_LAST_CRON_EXEC, array( 'Kigo_Site_Cron', 'get_interval_last_update_prop' ) );
+
+	// Endpoint called on each websites by the execution of do_sync
+	// http://<website>.<network_root>/wp-admin/admin-ajax.php?action=kigo_site_cron
+	// Will perform a full sync if called with &forced_full_sync=1
+	add_action( 'wp_ajax_nopriv_'.Kigo_Network_Cron::ACTION_SITE_CRON, array( 'Kigo_Network_Cron', 'do_site_sync' ) );
+	add_action( 'wp_ajax_'.Kigo_Network_Cron::ACTION_SITE_CRON, array( 'Kigo_Network_Cron', 'do_site_sync' ) );
 
 	// Specific endpoint to update translation files requires KIGO_PRIVATE_GOOGLE_TRANSLATE_KEY in wp-config 
 	add_action( 'wp_ajax_' . kigo_I18n::ACTION_UPDATE_TRANSLATION_FILES, array( 'kigo_I18n', 'update_default_translations' ) ); // for logged-in users
