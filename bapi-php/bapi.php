@@ -203,7 +203,7 @@ class BAPI
 		$response = wp_remote_get(
 			$url,
 			array(
-				'sslverify'	=>	!(defined('KIGO_DEBUG') && KIGO_DEBUG),
+				'sslverify'	=>	($this->baseURL === 'https://connect.bookt.com'),
 				'timeout'	=>	50,
 				'headers'	=>	array( 'User-Agent' => 'InstaSites Agent' )
 			)
