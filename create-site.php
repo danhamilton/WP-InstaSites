@@ -187,8 +187,14 @@ function bapi_create_site(){
 			//success
 			switch_to_blog($s);
 			//echo get_site_url();exit();
-			
-			switch_theme('instatheme01');
+
+			if( defined('KIGO_SELF_HOSTED') && !KIGO_SELF_HOSTED ) {
+				switch_theme(WP_DEFAULT_THEME);
+			}
+			else {
+				switch_theme('instatheme01');
+			}
+
 			bapi_wp_site_options();
 			
 			//Initialize menu and pages
