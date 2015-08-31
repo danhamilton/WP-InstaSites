@@ -1,47 +1,14 @@
 /* slideshow on property pages */
-ul.slides > li, ul.slides > li > div {
-	position: relative;
-}
-ul.slides > li > div > p.flex-caption {
-	padding: 17px 0;
-}
-#wpadminbar .dashicons-kigo{
-position: relative;
-font: 400 20px/1 dashicons;
-padding: 4px 0;
-margin-right: 6px;
-position:relative;
-top:6px
-}
+ul.slides >li,ul.slides >li >div{position:relative;}
+ul.slides >li >div >p.flex-caption{padding:17px 0;}
+#wpadminbar .dashicons-kigo{position:relative;font:400 20px/1 dashicons;padding:4px 0;margin-right:6px;position:relative;top:6px}
 .ab-icon-kigo{top:2px}
-.ab-icon-kigo img{
-	vertical-align:baseline;
-	margin-bottom: 2px !important;
-}
-
-.green {
-	color:green;
-}
-.red {
-	color:orangered;
-}
-
+.ab-icon-kigo img{vertical-align:baseline;margin-bottom:2px !important;}
+.green{color:green;}
+.red{color:orangered;}
 /* Market Area drop down */
-select.property-search-input option.level1 {
-	background-color:#e5e5e5;
-	padding:2px 0;
-}
-
-select.property-search-input option.level2 {
-	background-color:#f5f5f5;
-}
-
+select.property-search-input option.level1{background-color:#e5e5e5;padding:2px 0;}
+select.property-search-input option.level2{background-color:#f5f5f5;}
 /* Translation edition page */
-.overwritten-translation {
-	width: 70%;
-	margin-right: 5px;
-}
-a.i18n-save {
-	margin-left: 10px !important;
-	float: right;
-}
+.overwritten-translation{width:70%;margin-right:5px;}
+a.i18n-save{margin-left:10px !important;float:right;}
